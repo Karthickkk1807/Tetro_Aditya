@@ -1,0 +1,18 @@
+﻿#qrTable {
+    width: 100% !important;
+}
+
+#qrTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table{
+    width: 100% !important;
+}
+
+.quickbillbtn-outline {
+    color: #1c3c5c;
+    background-color: #a3c1df;
+    /* background-image: linear-gradient(to right, #c4c2ff, #7c78f7); */
+    background-repeat: no-repeat;
+    border-color: #5b7d9e;
+    transition: all 0.6sease;
+    font-size: 12px !important;
+    font-weight: 700;
+}

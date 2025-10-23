@@ -1,0 +1,24 @@
+﻿#LeaveTable, #PermissionTable, #DocumentTable, #CompOffTable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    height: 358px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+table.dataTable {
+    clear: both;
+    margin-top: 6px !important;
+    margin-bottom: 15px !important;
+    max-width: none !important;
+    /* border-collapse: separate !important; */
+}
+
+#LeaveTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody,
+#PermissionTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody,
+#CompOffTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+    max-height: 354px !important;
+}

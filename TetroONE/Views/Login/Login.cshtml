@@ -1,0 +1,124 @@
+﻿@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="~/assets/moduleusedtetroone/tetroone_loadedicon.svg" type="image/x-icon" />
+
+    <title>TetroOne</title>
+
+    <link href="~/assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/login.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="~/assets/css/sweetalert2.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="toast-backdrop" id="toastBackdrop"></div>
+    <div>
+        <div class="card log-in forgotpass" id="loginCard">
+            <article class="card-body">
+                <div class="log-head">
+                    <h4 class="card-title text-center"><span class="log"> Login</span></h4>
+                </div>
+                <p class="text-center log-text"></p>
+                <br>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text icon"><i class="fa fa-user"></i> </span></div>
+                            <input id="UserName" name="UserName" class="form-control mail" placeholder="Mobile No / Email" tabindex="1" type="text" oninput="Common.allowEmailAndNumber(this, 50)">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <i id="ToggleEye" class="fa fa-eye" aria-hidden="true"></i>
+                        <div class="input-group-prepend"><span class="input-group-text icon"><i class="fa fa-lock"></i> </span></div>
+                        <input id="Password" name="Password" class="form-control mail" placeholder="Password" type="password" minlength="5" tabindex="2" oninput="Common.allowTextNumberAndWithoutSpace(this, 15)">
+                    </div>
+                    <div><label id="passerrorMessage"></label><label id="validation-error"></label></div>
+                    <div class="form-group"><a id="LoginBtn" class="btn btn-block log-btn" tabindex="3"> LET'S GO <i class=""></i></a></div>
+                    @* <div class="d-flex justify-content-between">
+						@*	<p class="text-left pass"><a class="signUp" id="showSignUp">Sign Up  &#8594;</a></p>
+						<p class="text-left pass"><a class="signUp" id="showSignUp"></a></p>
+						<p class="text-right pass d-none"><a class="forgetPass" id="forgetPassword">Forgot password?</a></p>
+					</div> *@
+                    <div class="d-flex justify-content-center ml-3 mainDivForPoweredBy">
+                        <label class="poweredBy">Powered By</label>
+                    </div>
+                    <a href="https://www.tetrosoft.co.in/" target="_blank">
+                        <div class="d-flex justify-content-center ml-3">
+                            <img src="~/assets/commonimages/tetrosot_logo.png" class="companylogo" />
+                        </div>
+                    </a>
+                </form>
+            </article>
+        </div>
+        <div class="card log-in forgotpass d-none" id="signUpCard">
+            <article class="card-body">
+                <div class="log-head">
+                    <h4 class="card-title text-center"><span class="log">Sign Up</span></h4>
+                </div>
+                <p class="text-center log-text"></p>
+                <br>
+                <form id="signUpForm">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text icon"><i class="fa fa-user"></i> </span></div>
+                            <input id="FirstName" name="FirstName" class="form-control mail" placeholder="FirstName" tabindex="1" type="text" required oninput="Common.allowOnlyTextLength(this, 50)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text icon"><i class="fa fa-user"></i> </span></div>
+                            <input id="LastName" name="LastName" class="form-control mail" placeholder="LastName" tabindex="2" type="text" required oninput="Common.allowOnlyTextLength(this, 50)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text icon"><i class="fa fa-user"></i> </span></div>
+                            <input id="CompanyName" name="CompanyName" class="form-control mail" placeholder="CompanyName" tabindex="3" type="text" required oninput="Common.allowOnlyTextAndampersand(this, 100)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text icon"><i class="fa fa-user"></i> </span></div>
+                            <input id="ContactNumber" name="ContactNumber" class="form-control mail" placeholder="ContactNumber" tabindex="4" type="text" required minlength="10" oninput="Common.allowOnlyContactNumberLength(this,16)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text icon"><i class="fa fa-user"></i> </span></div>
+                            <input id="Email" name="Email" class="form-control" placeholder="Email" tabindex="5" type="text" required oninput="Common.allowEmailAndNumber(this, 50)">
+                        </div>
+                    </div>
+                    <div><label id="signUpPassErrorMessage"></label><label id="signUpValidationError"></label></div>
+                    <div class="form-group"><a id="ForgotBtn" class="btn btn-block log-btn" tabindex="6"> SignUp <i class=""></i></a></div>
+                    <div class="d-flex justify-content-between">
+                        <p class="text-left pass"><a class="signUp" id="showLogin">&larr; Login</a></p>
+                    </div>
+                    <div class="d-flex justify-content-center"><label class="poweredBy mt-1">Powered By</label></div>
+                    <a href="https://www.tetrosoft.co.in/" target="_blank">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/tetrosot_logo.png" class="companylogo" />
+                        </div>
+                    </a>
+                </form>
+            </article>
+        </div>
+    </div>
+
+
+    <script src="~/assets/js/jquery.3.2.1.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/jquery.validate.js"></script>
+    <script src="~/js/common.js"></script>
+    <script src="~/js/login.js"></script>
+    <script src="~/js/sweetalert2.min.js"></script>
+</body>
+</html>
+

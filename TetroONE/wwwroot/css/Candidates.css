@@ -1,0 +1,739 @@
+﻿.ActiveTopButton {
+    background-color: #007bff;
+    color: white;
+}
+
+.likebutton {
+    border: 1px solid #cccccc !important
+}
+
+#candidateTable {
+    margin-top: -19px !important;
+    width: 100% !important;
+}
+
+#candidateTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table {
+    width: 100% !important;
+}
+
+.circular-chart {
+    display: block;
+    margin: auto;
+    max-width: 23px;
+    max-height: 23px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 3.8;
+}
+
+.circle {
+    fill: none;
+    stroke: green;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+}
+
+.percentage {
+    fill: #000;
+    font-size: 10px;
+    text-anchor: middle;
+}
+
+.ana-span.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+}
+
+.custom-file-upload {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ebedf2;
+    border-radius: 6px;
+    padding: 3px 15px;
+    cursor: pointer;
+    position: relative;
+    background-color: #fff;
+}
+
+    .custom-file-upload input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+.file-label {
+    color: #999;
+    font-size: 12px;
+}
+
+.upload-icon {
+    font-size: 18px;
+    color: #666;
+}
+
+.custom-date-picker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ebedf2;
+    border-radius: 6px;
+    padding: 3px 15px;
+    background-color: #fff;
+    position: relative;
+}
+
+    .custom-date-picker input[type="date"] {
+        border: none;
+        outline: none;
+        flex: 1;
+        font-size: 11px;
+        color: #3e3e3e;
+    }
+
+        .custom-date-picker input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0; /* hide default calendar icon */
+            position: absolute;
+            right: 15px;
+            cursor: pointer;
+            height: 100%;
+            width: 20px;
+        }
+
+.calendar-icon {
+    font-size: 18px;
+    color: #666;
+    pointer-events: none; /* so click still opens date picker */
+}
+
+#FirstName {
+    width: 100% !important;
+}
+
+/*-------------------------------------------------Candidates Edit------------------------------------------------------*/
+.card-custom {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+}
+
+    .profile-header .avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #c2deff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0a7aff;
+        font-size: 32px;
+        font-weight: 800;
+    }
+
+.profile-info {
+    margin-left: 15px;
+}
+
+    .profile-info h5 {
+        margin: 0;
+        font-weight: 700;
+        font-family: sans-serif;
+    }
+
+    .profile-info small {
+        color: #d1cece;
+    }
+
+/* Stepper */
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 0;
+    position: relative;
+}
+
+    /* base gray line (hidden edges) */
+    .stepper::before {
+        content: "";
+        position: absolute;
+        top: 11px;
+        left: 48px;
+        left: 48px;
+        height: 3px;
+        background: #dcdcdc;
+        z-index: 0;
+    }
+
+    .stepper .step {
+        text-align: center;
+        flex: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stepper .circle {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 12px;
+        margin: 0 auto 5px;
+    }
+
+/* connector line only between steps */
+.step:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    top: 11px;
+    left: -43%;
+    width: 100%;
+    height: 3px;
+    background: #007bff;
+    z-index: -1;
+}
+
+.stepper > .step > p {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.circle.blue {
+    background: #007bff;
+}
+
+.circle.green {
+    background: #28a745;
+}
+
+/* Interview card */
+.interview-card {
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+    .interview-card h6 {
+        font-weight: 800;
+        font-size: 16px;
+    }
+
+    .interview-card .meta {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+.badge-status {
+    border-radius: 15px;
+    padding: 5px 12px;
+    font-size: 13px;
+}
+
+    .badge-status.green {
+        background: #28a745;
+        color: #fff;
+    }
+
+    .badge-status.gray {
+        background: #d6d6d6;
+        color: #333;
+    }
+
+.rating i {
+    color: #ffc107;
+    margin-right: 2px;
+}
+
+#CandidatesEditScreen > div:nth-child(1) > div.profile-header > div.profile-info > p {
+    font-weight: 600;
+    font-size: 11px;
+    font-family: monospace;
+}
+
+    #CandidatesEditScreen > div:nth-child(1) > div.profile-header > div.profile-info > p > img {
+        width: 16px;
+        margin-right: 5px;
+    }
+
+#CandidatesEditScreen > div:nth-child(1) > div > div.col-3.p-0 > div > div.profile-info > p {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+    #CandidatesEditScreen > div:nth-child(1) > div > div.col-3.p-0 > div > div.profile-info > p > img {
+        width: 16px;
+        margin-right: 8px;
+    }
+
+.text-muted > div > img {
+    width: 18px;
+    margin-right: 10px;
+}
+
+.text-muted > div > span {
+    font-size: 11px;
+    font-weight: 600 !important;
+}
+
+.editScreen {
+    border-radius: 0px !important;
+}
+
+
+/* Tabs */
+.nav-tabs .Nav-Screen.active {
+    background: white !important;
+    font-weight: 600;
+    color: blue !important;
+}
+
+.Nav-Screen {
+    background: white !important;
+    border-radius: 0px !important;
+    color: black;
+    border-color: #dee2e6 #dee2e6 #fff !important;
+}
+
+.nav-tabs .Nav-Screen:focus, .nav-tabs .Nav-Screen:hover {
+    border-radius: 0px !important;
+}
+
+.DetailsView {
+    border: 1px solid #dee2e6 !important
+}
+
+.pippline-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.pippline-name {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.badgeLevel {
+    background-color: #ffffff !important;
+    border-radius: 0px;
+    border-bottom-left-radius: 12px;
+    font-size: 12px !important;
+    font-weight: 800;
+    border-top-right-radius: 11px;
+}
+
+.Leave-btn {
+    position: absolute;
+    right: -36px;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #333;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.AddCandidate-btn {
+    position: absolute;
+    right: -36px;
+    top: 52px;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #333;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .AddCandidate-btn:hover, .Leave-btn:hover {
+        background: #f5f5f5;
+    }
+
+
+
+
+.doc-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+}
+
+.doc-item {
+    display: flex;
+    flex-direction: column; /* text on top, toggle below */
+    align-items: center;
+    font-size: 14px;
+    color: #444;
+    text-align: center;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    margin-top: 6px; /* space between label & toggle */
+}
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider {
+    background-color: #007bff;
+}
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
+
+.doc-item > span {
+    font-size: 12px;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.upload-container {
+    display: flex;
+    gap: 20px;
+}
+
+.upload-box {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    width: 326px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+    .upload-box h3 {
+        margin: 0 0 12px;
+    }
+
+.drop-area {
+    border: 1px dashed #007bff !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+}
+
+    .drop-area:hover {
+        background: #f9f9f9;
+    }
+
+    .drop-area span {
+        color: #007bff;
+        cursor: pointer;
+    }
+
+.info {
+    font-size: 9px;
+    color: #9c9393;
+    margin-top: 4px;
+    margin-bottom: -7px;
+}
+
+.progress-container {
+    margin-top: 12px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 2px;
+}
+
+.progress-text {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+    .progress-bar div {
+        height: 100%;
+        width: 0%;
+        background: #007bff;
+        transition: width 0.3s;
+    }
+
+#fileInput {
+    display: none;
+}
+
+.customBrowse {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+.PauseButton {
+    font-size: 12px;
+    border-radius: 55%;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #665858;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #dddddd;
+    color: #665858;
+}
+
+.CloseXButton {
+    font-size: 12px;
+    border-radius: 55%;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #f40909;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: red;
+    font-weight: 800;
+    background: #f0bebe;
+}
+
+.text > p, .text > small {
+    font-size: 10px;
+    line-height: 5px;
+    margin-left: 33px !important;
+}
+ 
+.card-left {
+    flex: 1;
+}
+
+.degree-title {
+    font-size: 16px;
+    color: #555;
+}
+
+.degree-level {
+    font-size: 14px;
+    color: #222;
+    margin-top: 4px;
+}
+
+.institution {
+    font-size: 14px;
+    color: #777;
+    margin-top: 4px;
+}
+
+.card-right {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    font-size: 14px;
+    color: #444;
+    flex-wrap: wrap;
+}
+
+.icons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.edit-btn, .delete-btn {
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.edit-btn {
+    color: #007bff;
+}
+
+.delete-btn {
+    color: red;
+}
+
+.stepper-vertical {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: -23px;
+    padding-left: 19px;
+    margin-top: 83px;
+}
+
+    /* Vertical background line */
+    .stepper-vertical::before {
+        content: "";
+        position: absolute;
+        left: 31px;
+        top: 2px;
+        bottom: 104px;
+        width: 2px;
+        background: #dcdcdc;
+        z-index: 0;
+    }
+
+    /* Each step item */
+    .stepper-vertical .step {
+        position: relative;
+        margin-bottom: 99px;
+        z-index: 1;
+    }
+
+        /* Colored connector line from previous step */
+        .stepper-vertical .step::before {
+            content: "";
+            position: absolute;
+            top: -101px;
+            left: 11px;
+            width: 2px;
+            height: 105px;
+            background: #007bff;
+            z-index: -1;
+        }
+
+        /* Remove connector from first circle */
+        .stepper-vertical .step:first-child::before {
+            content: none;
+        }
+
+    /* Circle styles */
+    .stepper-vertical .circle {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: white;
+        background-color: #007bff;
+    }
+
+        .stepper-vertical .circle.green {
+            background-color: #28a745;
+        }
+
+/* Right-side content (cards) */
+.timeline-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.timeline-container {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+
+.menu-dot {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-list {
+    display: none;
+    position: absolute;
+    right: -12px;
+    top: 12px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px; 
+    min-width: 101px;
+    z-index: 1000;
+    padding: 5px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    list-style-type: none;
+}
+
+    .menu-list.show {
+        display: block;
+    }
+
+.menu-item {
+    padding: 6px 12px;
+}
+
+    .menu-item:hover {
+        background-color: #f0f0f0;
+    }
+
+    .menu-item a {
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+.imgiconInTable {
+    text-align: center;
+}

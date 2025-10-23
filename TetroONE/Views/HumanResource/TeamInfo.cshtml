@@ -1,0 +1,25 @@
+﻿@using System.Security.Claims;
+@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.TeamInfo, Context.Session);
+    var EmployeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
+}
+
+<link href="~/css/teaminfo.css" rel="stylesheet" />
+
+<div class="row d-flex justify-content-center">
+    <h2 class="col-2 d-flex justify-content-center header m-0" style="border: 2px solid black;text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);background: cornsilk;">Teams</h2>
+</div>
+<div class="" id="orgTreeContainer"></div>
+
+<script>
+    var employeeId = "@EmployeeId";
+
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+
+<script src="~/js/teaminfo.js"></script>
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+
+<!-- Bootstrap (Tooltip support) -->
+@* <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> *@
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

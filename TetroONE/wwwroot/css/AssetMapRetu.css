@@ -1,0 +1,15 @@
+﻿#assetMapRetuTable {
+    width: 100% !important;
+    margin-top: -16px !important;
+}
+
+.MappingThreadrow th, .ReturnThreadrow th, #DeleteThead th {
+    position: sticky;
+    top: -1px;
+    z-index: 2;
+    background: #a3c1df;
+}
+
+#AssetMapRetuTableDynamic {
+    margin-top: -12px;
+}

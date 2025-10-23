@@ -1,0 +1,493 @@
+﻿
+/*Mine*/
+table.calendar {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    table-layout: fixed;
+}
+
+    table.calendar th {
+        background: #e3c8f3;
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-weight: 600;
+    }
+
+    table.calendar td {
+        width: 14.2%;
+        height: 120px;
+        vertical-align: top;
+        border: 1px solid #ccc;
+        padding: 5px;
+        position: relative;
+        background: #fff;
+    }
+
+.day-number {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 4px;
+    text-align: left;
+}
+
+.card-event {
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 6px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    position: relative;
+    height: 74px;
+    cursor: pointer;
+}
+
+    .card-event::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 4px;
+        border-radius: 3px;
+    }
+
+/* Specific styles for each type */
+.general-shift {
+    background: #c7f6c7;
+    color: #0b4d00;
+}
+
+    .general-shift::before {
+        background-color: #018c0f;
+    }
+
+.holiday {
+    background: #e4e4e4;
+    color: #666;
+    text-align: center;
+    align-content: center;
+}
+
+    .holiday::before {
+        background-color: gray;
+    }
+
+.weekend {
+    background: #fff3d4;
+    color: #d99200;
+    text-align: center;
+    align-content: center;
+}
+
+    .weekend::before {
+        background-color: #ff9d00;
+    }
+
+
+.today {
+    border: 2px solid #007bff;
+    border-radius: 6px;
+}
+
+#calendar {
+    margin-top: 8px;
+}
+
+.showingGrid {
+    background: #9d9c9c;
+}
+
+    .showingGrid.show {
+        background: blue;
+    }
+
+.RequestGrid {
+    background: blue;
+}
+
+/*My Team */
+.calendarScrollWrapper_1 {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.calendarTable_1 {
+    border-collapse: collapse;
+    width: max-content;
+    min-width: 100%;
+    table-layout: fixed;
+}
+
+    .calendarTable_1 th,
+    .calendarTable_1 td {
+        min-width: 120px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+        vertical-align: top;
+        white-space: normal;
+    }
+
+.projectRow_1 {
+    background-color: #f2f4f8;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 10px;
+    font-size: 16px;
+    border-bottom: 1px solid #cccccc;
+    line-height: normal;
+}
+
+.employeeInfo_1 {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 8px;
+}
+
+.employeePhoto_1 {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ddd;
+}
+
+.shiftCard_1 {
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 4px;
+    font-size: 12px;
+    text-align: left;
+    line-height: 1.3;
+    position: relative;
+    cursor: pointer;
+}
+
+    .shiftCard_1::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 4px;
+        border-radius: 3px;
+    }
+
+.generalShift_1 {
+    background: #c7f6c7;
+    color: #0b4d00;
+}
+
+    .generalShift_1::before {
+        background-color: #018c0f;
+    }
+
+.holiday_1 {
+    background: #e4e4e4;
+    color: #666;
+}
+
+    .holiday_1::before {
+        background-color: gray;
+    }
+
+.weekend_1 {
+    background: #fff3d4;
+    color: #d99200;
+    height: 64px;
+    text-align: center;
+    align-content: center;
+}
+
+    .weekend_1::before {
+        background-color: #ff9d00;
+    }
+
+/* Accordion effect */
+
+.projectRow_1:hover {
+    background: #e0e3eb;
+}
+
+.hiddenRow {
+    display: none;
+}
+
+.projectRow_1 td {
+    border: none !important;
+    background: #f8f9fa;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.projectNameCell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .projectNameCell .arrow {
+        transition: transform 0.3s;
+        font-size: 12px;
+        color: #333;
+    }
+
+        .projectNameCell .arrow.open {
+            transform: rotate(90deg);
+        }
+
+.arrow.open {
+    transform: rotate(90deg);
+}
+
+.arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+
+.hiddenRow {
+    display: none;
+}
+
+.calendarTable_1 tr td:first-child {
+    border-left: none;
+    height: 87px;
+    border-right: none;
+    border-top: none;
+}
+
+.projectNameCell {
+    height: auto !important;
+}
+
+.calendarScrollWrapper_1 {
+    overflow: auto;
+    max-height: 600px;
+    position: relative;
+}
+
+.calendarTable_1 {
+    border-collapse: collapse;
+    width: max-content;
+    min-width: 100%;
+}
+
+    .calendarTable_1 th,
+    .calendarTable_1 td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        background: white;
+        min-width: 120px;
+    }
+
+    .calendarTable_1 th {
+        position: sticky;
+        top: 0;
+        background-color: #e3c8f3;
+        z-index: 10;
+    }
+
+        .calendarTable_1 td:first-child,
+        .calendarTable_1 th:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #f9f9f9;
+            z-index: 9;
+            border-right: 2px solid #ddd;
+            white-space: nowrap;
+        }
+
+        .calendarTable_1 th:first-child {
+            z-index: 11;
+            background-color: #e3c8f3;
+        }
+
+
+
+/*POP Calender date picker*/
+.custom-date-picker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ebedf2;
+    border-radius: 6px;
+    padding: 3px 15px;
+    background-color: #fff;
+    position: relative;
+}
+
+    .custom-date-picker input[type="date"] {
+        border: none;
+        outline: none;
+        flex: 1;
+        font-size: 11px;
+        color: #3e3e3e;
+    }
+
+        .custom-date-picker input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0; /* hide default calendar icon */
+            position: absolute;
+            right: 15px;
+            cursor: pointer;
+            height: 100%;
+            width: 20px;
+        }
+
+.calendar-icon {
+    font-size: 18px;
+    color: #666;
+    pointer-events: none; /* so click still opens date picker */
+}
+
+.EmpName {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.custom-date-picker input:disabled {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+#CreatedDate {
+    background-color: #e9ecef;
+}
+
+.InputDateCreatedDate {
+    background-color: #e9ecef !important;
+}
+
+.RequestCard {
+    width: 100%;
+    padding: 7px 7px;
+    border: 1px solid #c3c7cc !important;
+    border-radius: 10px !important;
+    cursor: pointer;
+    position: relative;
+}
+
+
+.badgeLevel {
+    position: absolute;
+    top: -8px;
+    right: 7px;
+    width: 77px;
+    background-color: #ffffff !important;
+    border-radius: 0px;
+    border-bottom-left-radius: 9px;
+    font-size: 9px !important;
+    font-weight: 800;
+    border-top-right-radius: 5px;
+    color: green;
+}
+
+
+.today-badge {
+    background-color: #3498db;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 50%;
+    font-size: 12px;
+    margin-left: 8px;
+}
+
+.close-btn {
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 16px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.employee-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dfdfdf;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #4a90e2;
+}
+
+.separator {
+    width: 2px;
+    height: 35px;
+    background-color: #ccc;
+    margin-right: 12px;
+    margin-left: 12px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+    .avatar.rs {
+        background-color: #d94a26;
+    }
+
+    .avatar.sa {
+        background-color: #26d9d0;
+    }
+
+.employee-details {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+}
+
+.shift-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    font-size: 14px;
+    color: #444;
+}
+
+.shift-time {
+    display: flex;
+    align-items: center;
+    color: #444444;
+}
+
+    .shift-time i {
+        margin-right: 5px;
+    }
+
+.badge-circle {
+    background-color: #6c18a4 !important;
+    border-radius: 50% !important;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+}

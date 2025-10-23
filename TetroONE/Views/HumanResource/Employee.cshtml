@@ -1,0 +1,617 @@
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Employee, Context.Session);
+    bool isAdmin = false, isEmployee = false;
+    if (User.IsInRole("Executive") || User.IsInRole("GeneralUser"))
+        isEmployee = true;
+    else
+        isAdmin = true;
+}
+<link href="~/css/employee.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img id="CounterImage1" src="~/assets/moduleimages/employee/employeeicon_1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="TotalEmployeesText"></div>
+                                    <h4 class="card-title" id="TotalEmployeesVal"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img id="CounterImage2" src="~/assets/moduleimages/employee/employeeicon_2.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="DayOffText"></div>
+                                    <h4 class="card-title" id="DayOffVal"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img id="CounterImage3" src="~/assets/moduleimages/employee/employeeicon_3.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="AtWorkText"></div>
+                                    <h4 class="card-title" id="AtWorkVal"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img id="CounterImage4" src="~/assets/moduleimages/employee/employeeicon_4.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="ActiveAtCurrentShiftText"></div>
+                                    <h4 class="card-title" id="ActiveAtCurrentShiftVal"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isAdmin)
+{
+    <ul b-kt7ppxredz="" class="nav nav-tabs pl-2" id="myTab" role="tablist">
+        <li b-kt7ppxredz="" class="nav-item submenu" role="presentation">
+            <a b-kt7ppxredz="" class="nav-link navbar-tab active" id="Permanent-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Permanent </a>
+        </li>
+
+        <li b-kt7ppxredz="" class="nav-item submenu" role="presentation">
+            <a b-kt7ppxredz="" class="nav-link navbar-tab" id="Labour-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Labour</a>
+        </li>
+        <li style="margin-left: auto;">
+            <div class="tab-pane" id="Permanent-Tab" role="tabpanel" aria-labelledby="Permanent-TabBtnn">
+                <div class="row justify-content-end mr-2">
+                    <div class="searchbar">
+                        <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                        <button type="submit" class="searchbar__button">
+                            <img src="~/assets/commonimages/search.svg" />
+                        </button>
+                    </div>
+
+                    <div class="datapiker ml-2 mt-1" style="position: relative;">
+                        <div class="add-imp-exp-btn">
+                            <div class="exportsiconpop">
+                                @{
+                                    if (access.Create)
+                                    {
+                                        <span class="pop">
+                                            <a id="AddEmployee" title="Add Employee">
+                                                <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                            </a>
+                                        </span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+}
+
+
+<div class="table-responsive">
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="EmployeeTable"></table>
+</div>
+
+<div id="employeeCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="employeeHeader">Add New Client</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormEmployee">
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="accordion-header">
+                    <h2 id="Styleentery" class="mb-0 Styleentery">
+                        <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                <strong class="text-white">
+                                    Employee Info
+                                </strong>
+                                <i class="fas fa-angle-down text-white"></i>
+                            </p>
+                        </a>
+                    </h2>
+                </div>
+                <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="Styleenterydetalis" class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2 d-flex justify-content-center">
+                                <div class="employee-avatar-upload">
+                                    <div class="avatar-edit">
+                                        <input type="file" id="imageUploadlabel-manageuser2"
+                                               class="imageUpload2-manageuser" accept=".png, .jpg, .jpeg">
+                                        <label for="imageUploadlabel-manageuser2">
+                                            <img src="~/assets/commonimages/camera.svg">
+                                        </label>
+                                    </div>
+                                    <div class="avatar-preview">
+                                        <div class="imagePreview-manageuser2"><img class="employeeImage" id="EmpImage" /></div>
+                                    </div>
+                                    <label class="d-none" id="ExistingImage"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <div class="form-group">
+                                            <label>Employee Type  <span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="EmployeeTypeId" name="EmployeeTypeId" required>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mt-2">
+                                        <div class="form-group">
+                                            <label>Employee Id  <span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Employee Id" id="EmployeeCompanyId" name="EmployeeCompanyId" oninput="Common.allowOnlyTextAndUnderscore(this, 15)" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <div class="form-group">
+                                    <label>Employee Name <span id="Asterisk">*</span></label>
+                                    <div class="input-group">
+                                        <select class="Salutation form-control" id="Salutation" name="Salutation">
+                                            <option value="Mr">Mr</option>
+                                            <option value="Ms">Ms</option>
+                                            <option value="Mrs">Mrs</option>
+                                        </select>
+                                        <input type="text" class="form-control ContactPerson" placeholder="Employee Name" name="EmployeeName" id="EmployeeName" oninput="Common.allowOnlyTextLength(this, 50)" required />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-12 mt-2">
+                                <div class="form-group">
+                                    <label>Department  <span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="DepartmentId" name="DepartmentId" required>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <div class="form-group">
+                                    <label>Designation  <span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Designation" id="Designation" name="Designation" required oninput="Common.allowOnlyTextLength(this, 100)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <div class="form-group">
+                                    <label>Mobile Number  <span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Mobile Number" id="MobileNumber" name="MobileNumber" minlength="10" oninput="Common.allowOnlyNumberLength(this,10)" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <div class="form-group">
+                                    <label>Alternate Mobile No </label>
+                                    <input type="text" class="form-control" placeholder="Alt Mobile No " id="AlternateNo" name="AlternateNo" minlength="10" oninput="Common.allowOnlyNumberLength(this,10)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <div class="form-group">
+                                    <label>Email  </label>
+                                    <input type="text" class="form-control" placeholder="Email" id="Email" name="Email" oninput="Common.allowEmailAndLength(this,100)" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <div class="form-group">
+                                    <label>Date Of Joining  <span id="Asterisk">*</span></label>
+                                    <input type="date" class="form-control" id="DateOfJoining" name="DateOfJoining" required />
+                                </div>
+
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-12 mt-2">
+                                <div class="form-group">
+                                    <label>Reporting Person</label>
+                                    @*<select class="form-control" id="ReportingPersonId" name="ReportingPersonId" multiple required>*@
+                                    <select class="form-control" id="ReportingPersonId" name="ReportingPersonId" multiple>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-12 mt-2" id="EmployeeStatusCol">
+                                <div class="form-group">
+                                    <label>Employee Status  <span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="EmployeeStatusId" name="EmployeeStatusId" required>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-12 mt-2">
+                                <div class="form-group">
+                                    <label>UserType  <span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="UserTypeId" name="UserTypeId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-12 mt-2">
+                                <div class="form-group">
+                                    <label>UserGroup  <span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="UserGroupId" name="UserGroupId" required>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-6 col-lg-6 col-sm-12 col-12 mt-2">
+                                <div class="form-group">
+                                    <label>Shift  <span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="ShiftId" name="ShiftId" required>
+                                    </select>
+                                </div>
+                            </div>
+
+                            @*  <div class="col-md-6 col-lg-6 col-sm-12 col-12 mt-2" id="MachinesHide">
+                                <div class="form-group">
+                                    <label>Attendance Machine  <span id="Asterisk">*</span></label>
+                                    <select multiple class="multi-select" data-allow-clear="1" id="AttendanceMachineId" name="AttendanceMachineId" required>
+                                    </select>
+                                </div>
+                            </div>*@
+
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="IsLoginUserdiv">
+                                <div class="form-group" style=" margin-top: 35px; ">
+                                    <input type="checkbox" id="IsLoginUser" name="IsLoginUser">
+                                    <label for="IsLoginUser">Is LoginUser?</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="accordion-header">
+                    <h2 id="Styleentery" class="mb-0 Styleentery">
+                        <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                <strong class="text-white">
+                                    Personal Info
+                                </strong>
+                                <i class="fas fa-angle-down text-white"></i>
+                            </p>
+                        </a>
+                    </h2>
+                </div>
+                <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="Styleenterydetalis" class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group ">
+                                    <label>Gender</label>
+                                    <select class="form-control" id="GenderId" name="GenderId">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Date Of Birth <span id="Asterisk">*</span></label>
+                                    <input type="date" id="DateOfBirth" name="DateOfBirth" class="form-control" autocomplete="off" required="" placeholder="Select the Date">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <div class="form-group ">
+                                    <label>Religion</label>
+                                    <select class="form-control" id="ReligionId" name="ReligionId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <div class="form-group ">
+                                    <label>Marital Status</label>
+                                    <select class="form-control" id="MaritalStatusId" name="MaritalStatusId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                <div class="form-group">
+                                    <label>Aadhaar No<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Aadhaar No" id="AadharNo" name="AadharNo" oninput="Common.allowOnlyNumberLength(this,12)" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input type="text" class="form-control" placeholder="Address" id="Address" name="Address" oninput="Common.allowOnlyAddress(this, 250)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <input type="text" class="form-control" placeholder="City" id="City" name="City" oninput="Common.allowOnlyTextLength(this, 50)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                <div class="form-group">
+                                    <label>State</label>
+                                    <input type="text" class="form-control" placeholder="State" id="State" name="State" oninput="Common.allowOnlyTextLength(this, 50)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <input type="text" class="form-control" placeholder="Country" id="Country" name="Country" oninput="Common.allowOnlyTextLength(this, 50)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                <div class="form-group">
+                                    <label>Zipcode</label>
+                                    <input type="text" class="form-control" placeholder="Zipcode" id="Zipcode" name="Zipcode" oninput="Common.allowOnlyNumberLength(this,6)" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-4" id="IsInsuranceApplicableDiv">
+                                <div class="form-group">
+                                    <input type="checkbox" id="IsInsuranceApplicable" name="IsInsuranceApplicable">
+                                    <label for="IsInsuranceApplicable">Has Insurance?</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="InsuranceNumberDiv">
+                                <div class="form-group">
+                                    <label class="InsuNoLable">Insurance Number</label>
+                                    <input type="text" class="form-control" placeholder="Insurance Number" id="InsuranceNumber" name="InsuranceNumber" oninput="Common.allowOnlyNumberLength(this,12)" required disabled>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" id="InsuranceDateDiv">
+                                <div class="form-group">
+                                    <label class="ValidFromLable">Valid From </label>
+                                    <input type="date" id="InsuranceDate" name="InsuranceDate" class="form-control" autocomplete="off" required disabled>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" id="ExpiryDateDiv">
+                                <div class="form-group">
+                                    <label class="ExpiredOnLable">Expired On</label>
+                                    <input type="date" id="ExpiryDate" name="ExpiryDate" class="form-control" autocomplete="off" required disabled>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="accordion-header">
+                    <h2 id="Styleentery" class="mb-0 Styleentery">
+                        <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                <strong class="text-white">
+                                    Other Info
+                                </strong>
+                                <i class="fas fa-angle-down text-white"></i>
+                            </p>
+                        </a>
+                    </h2>
+                </div>
+                <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="Styleenterydetalis" class="card-body">
+                        <fieldset class="expensefild_1">
+                            <legend class="w-auto">Salary Details</legend>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                    <div class="form-group ">
+                                        <label>Pay Type  <span id="Asterisk">*</span></label>
+                                        <select class="form-control" id="PayTypeId" name="PayTypeId" required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                    <div class="form-group ">
+                                        <label>Pay Group  <span id="Asterisk">*</span></label>
+                                        <select class="form-control" id="PayGroupId" name="PayGroupId" required>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label id="CTClabel">Salary <span id="Asterisk">*</span></label>
+                                        <input type="text" class="form-control" placeholder="Salary" id="CTC" name="CTC" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>Cash Amount  <span id="Asterisk">*</span></label>
+                                        <input type="text" class="form-control" placeholder="Cash Amount" id="CashPayment" name="CashPayment" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>Acc Amount  <span id="Asterisk">*</span></label>
+                                        <input type="text" class="form-control" placeholder="Account Amount" id="AccPayment" name="AccPayment" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                        <fieldset class="expensefild_1" id="PFDetailsDiv">
+                            <legend class="w-auto">PF Details</legend>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-4">
+                                    <div class="form-group">
+                                        <input type="checkbox" id="IsPFApplicable" name="IsPFApplicable">
+                                        <label for="IsPFApplicable">IsPF Applicable?</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>UAN Number</label>
+                                        <input type="text" class="form-control" placeholder="UAN Number" id="UANNumber" name="UANNumber" oninput="Common.allowTextNumberAndNoSpCharater(this, 12)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>PF Number</label>
+                                        <input type="text" class="form-control" placeholder="PF Number" id="PFNumber" name="PFNumber" oninput="Common.allowPFNumber(this)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>Emp Cont</label>
+                                        <input type="text" class="form-control" placeholder="Emp Cont" id="EmployeeContribution" name="EmployeeContribution" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>Emplr Cont</label>
+                                        <input type="text" class="form-control" placeholder="Emplr Cont" id="EmployerContribution" name="EmployerContribution" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="expensefild_1" id="ESIDetailsDiv">
+                            <legend class="w-auto">ESI Details</legend>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-4">
+                                    <div class="form-group">
+                                        <input type="checkbox" id="IsESIApplicable" name="IsESIApplicable">
+                                        <label for="IsESIApplicable">IsESI Applicable?</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>ESI Number</label>
+                                        <input type="text" class="form-control" placeholder="ESI Number" id="ESINumber" name="ESINumber" oninput="Common.allowOnlyESI(this)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>Employee Contribution</label>
+                                        <input type="text" class="form-control" placeholder="Employee Contribution" id="ESIEmployeeContribution" name="ESIEmployeeContribution" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                                    <div class="form-group">
+                                        <label>Employer Contribution</label>
+                                        <input type="text" class="form-control" placeholder="Employer Contribution" id="ESIEmployerContribution" name="ESIEmployerContribution" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="accordion-header">
+                    <h2 id="Styleentery" class="mb-0 Styleentery">
+                        <a data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                <strong class="text-white">
+                                    Document Info
+                                </strong>
+                                <i class="fas fa-angle-down text-white"></i>
+                            </p>
+                        </a>
+                    </h2>
+                </div>
+                <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="appendDocument" class="card-body row">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <label class="MainErrorLable">Filled the Required Field</label>
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveEmployee">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+
+    $(function () {
+        $('.multi-select').each(function () {
+            $(this).select2({
+                theme: 'bootstrap4',
+                width: 'style',
+                placeholder: $(this).attr('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear')),
+            });
+        });
+    });
+
+    $("#FormEmployee").validate({
+        errorPlacement: function (error, element) {
+            if (element.hasClass("select2-hidden-accessible")) {
+                error.insertAfter(element.next(".select2-container"));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        rules: {
+            AttendanceMachineId: {
+                required: true
+            },
+        },
+        messages: {
+            AttendanceMachineId: {
+                required: "This field is required."
+            },
+        }
+    });
+
+</script>
+<script src="~/js/employee.js"></script>

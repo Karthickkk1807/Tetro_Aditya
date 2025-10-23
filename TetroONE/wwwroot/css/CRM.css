@@ -1,0 +1,141 @@
+﻿/*.table-responsive {
+    margin-top: -32px !important;
+}
+*/
+
+body > div.wrapper.show > div.main-panel > div > div.page-inner > div.card.card-table.mt-3 > div.table-responsive {
+    margin-top: -17px !important;
+}
+
+#BuyerTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div {
+    margin-top: -8px !important;
+}
+
+.dataTables_scrollHead > div > table > thead > tr > th:first-child {
+    border-top-left-radius: 0px !important;
+}
+
+.dataTables_scrollHead > div > table > thead > tr > th:last-child {
+    border-top-right-radius: 0px !important;
+}
+
+table.dataTable {
+    clear: both;
+    margin-top: 17px !important;
+    margin-bottom: 15px !important;
+    max-width: none !important;
+    /* border-collapse: separate !important; */
+}
+
+#Asterisk {
+    color: red;
+    margin-left: 4px;
+}
+
+.IsScheduleDiv > .form-group {
+    margin-left: 1.3rem !important;
+    margin-top: 16px;
+}
+
+#commentsTextarea {
+    border: 1px solid #ced4da;
+    padding: .4rem 0.5rem;
+}
+
+textarea.form-controltext {
+    display: block;
+    width: 100%;
+    /* height: calc(7.25rem + 2px); */
+    font-size: 13px;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15sease -in-out, box-shadow .15sease -in-out;
+    /* height: auto !important; */
+}
+
+.StartDateDiv {
+    padding-right: 6px;
+}
+
+.EndDateDiv {
+    padding-left: 6px;
+}
+
+#IsSchedule {
+    position: relative;
+    top: 2px;
+}
+
+
+.note-toolbar {
+    background: white !important;
+}
+
+/*#CRMInfoForm > div > div:nth-child(9) > div > div.note-editor.note-frame.card > div.note-editing-area > div.note-editable.card-block {
+    height: 145px;
+}*/
+
+.modal-content {
+    background-color: #fefefe;
+    border-bottom: 0px solid #6C18A4 !important;
+    width: 100%;
+    padding: 0px;
+    border-radius: 7px 7px 7px 7px !important;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.close {
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+}
+
+    .close:not(:disabled):not(.disabled):focus, .close:not(:disabled):not(.disabled):hover {
+        color: #ffffff;
+        text-decoration: none;
+        opacity: .75;
+    }
+
+.modal-header {
+    padding: 7px 10px 7px 10px;
+    background: linear-gradient(to right, rgba(56, 39, 180, 1) 0%, rgba(108, 24, 164, 1) 64%, rgba(108, 24, 164, 1) 100%) !important;
+}
+
+.link-dialog {
+    padding-right: 0px !important;
+}
+
+
+.note-modal .modal-dialog {
+    border-radius: 5px;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, .5) !important;
+    outline: 0;
+}
+
+.note-editor.note-frame .note-editing-area .note-codable, .note-editor.note-frame .note-editing-area .note-editable {
+    border: none;
+    color: #4a5158 !important;
+    background-color: transparent;
+}
+
+.lblforContent {
+    color: #495057 !important;
+    font-size: 12px !important;
+    font-weight: 600;
+}
+
+.LinkButton:disabled {
+    background: #2ace2f !important;
+    border-color: #2ace2f !important;
+}
+
+.btn-primary:disabled:hover {
+    background: #88df8a !important;
+    border-color: #88df8a !important;
+}

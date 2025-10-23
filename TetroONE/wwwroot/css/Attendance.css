@@ -1,0 +1,556 @@
+﻿#AttendanceManualTable, #EmployeeTable, #AdminTable {
+    width: 100% !important;
+}
+
+.card {
+    border: 1px solid #ededed;
+    margin-bottom: 5px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+#cameraContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#video {
+    width: 100vw;
+    height: auto;
+    max-height: 80vh;
+}
+
+#captureBtn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#closeCameraBtn {
+    margin-top: 20px;
+    margin-left: 10px;
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: orangered;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding: 1rem 1rem;
+}
+
+.punch-det {
+    background-color: #f9f9f9;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    margin: 0 0 8px;
+    padding: 10px 15px;
+}
+
+.punch-info {
+    margin: 0 0 5px;
+}
+
+    .punch-info .punch-hours {
+        background-color: #f9f9f9;
+        border: 5px solid #e3e3e3;
+        font-size: 18px;
+        height: 95px;
+        width: 95px;
+        margin: 0 auto;
+        border-radius: 50%;
+    }
+
+
+
+.punch-btn-section {
+    text-align: center;
+    margin: 0 0 20px;
+}
+
+    .punch-btn-section .punch-btn {
+        font-size: 18px;
+        font-weight: 600;
+        max-width: 100%;
+        padding: 8px 40px;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+
+.punch-status {
+    /*height: 92% !important;*/
+}
+
+.stats-box {
+    background-color: #f9f9f9;
+    border: 1px solid #e3e3e3;
+    margin: 0 0 15px;
+    padding: 5px;
+    width: 80%;
+    margin-left: 10%;
+}
+
+#timer {
+    display: flex;
+    justify-content: center;
+    margin-top: 35%;
+}
+
+#DataTables_Table_1_wrapper > div:nth-child(1) > div.col-sm-12.col-md-3 {
+    display: none;
+}
+
+#DataTables_Table_1_wrapper > div:nth-child(3) {
+    display: none;
+}
+
+.pos-abs-datepic1 {
+    position: absolute;
+    right: 61px !important;
+    top: 0px;
+}
+
+/* areyoudelete */
+
+#askConform > div > div > div.modal-footer {
+    border-top: 0px solid #e9ecef !important;
+    display: flex;
+    justify-content: center;
+}
+
+#askConform > div > div > div.modal-header {
+    padding: 0% !important;
+    border-bottom: 0px solid #e9ecef !important;
+}
+
+#askConform > div > div > div.modal-body {
+    padding: 3px !important;
+}
+
+/* areyoudelete */
+
+/* today Activity card design */
+
+.recent-activity .res-activity-list {
+    height: auto;
+    list-style-type: none;
+    overflow-y: auto;
+    position: relative;
+    margin: 0;
+    padding: 0 0 0 30px;
+    overflow-x: hidden;
+}
+
+    .recent-activity .res-activity-list li.list1:before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border: 2px solid #04d92f;
+        z-index: 2;
+        background: #ffffff;
+        border-radius: 100%;
+        margin: 0 0 0 15px;
+        position: absolute;
+        top: 0;
+        left: -45px;
+    }
+
+    .recent-activity .res-activity-list li.list2:before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border: 2px solid #f10101;
+        z-index: 2;
+        background: #ffffff;
+        border-radius: 100%;
+        margin: 0 0 0 15px;
+        position: absolute;
+        top: 0;
+        left: -45px;
+    }
+
+
+
+    .recent-activity .res-activity-list li {
+        margin: 0 0 15px;
+        position: relative;
+    }
+
+.recent-activity .res-activity-time {
+    color: #bbb;
+    font-size: 12px;
+}
+
+.recent-activity .res-activity-list:after {
+    content: "";
+    border: 1px solid #e5e5e5;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 4px;
+}
+
+.timesheet {
+    max-height: 345px;
+    overflow-y: auto;
+}
+
+.lacationicon {
+    width: 15px;
+    margin-right: 6px;
+}
+
+.timesheet {
+    max-height: 345px;
+    overflow-y: auto;
+}
+
+/* today Activity card design */
+
+body > div.wrapper > div.main-panel > div.container-fluid > div > div.col-lg-8.col-md-12 > div > div > div.datapiker > div.add-imp-exp-btn > div.pos-rel > div > div.fromto {
+    z-index: 9;
+}
+
+
+.fromto {
+    margin-left: -155% !important;
+}
+
+.fromto1 {
+    margin-left: 1% !important;
+}
+
+#DataTables_Table_0_filter {
+    margin-left: 280% !important;
+}
+
+@media(min-width:1020px) and (max-width:1250px) {
+    /*  #FromDate {
+        width: 110px;
+    }
+    #ToDate {
+        width: 110px;
+        margin-left: 24px;
+    }
+    .ftdate {
+        margin-left: -15px;
+    }*/
+
+}
+
+@media(min-width:1250px) and (max-width:1300px) {
+    .fromto {
+        margin-left: -205% !important;
+    }
+
+    .fromto1 {
+        margin-left: 1% !important;
+    }
+}
+
+@media (min-width:992px) {
+
+    .fromto {
+        margin-left: -34% !important;
+    }
+
+    #DataTables_Table_0_filter {
+        margin-left: 135% !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .fromto {
+        margin-left: -80% !important;
+    }
+
+    #DataTables_Table_0_filter {
+        margin-left: 205% !important;
+    }
+}
+
+@media (min-width: 1250px) {
+    .fromto {
+        margin-left: -90% !important;
+    }
+
+    #DataTables_Table_0_filter {
+        margin-left: 230% !important;
+    }
+}
+
+@media (min-width: 1280px) {
+    .fromto {
+        margin-left: -98% !important;
+    }
+
+    #DataTables_Table_0_filter {
+        margin-left: 245% !important;
+    }
+}
+
+@media (min-width: 1350px) {
+    .fromto {
+        margin-left: -112% !important;
+    }
+
+    #DataTables_Table_0_filter {
+        margin-left: 265% !important;
+    }
+}
+
+#buttonGroup {
+    margin-right: 12px !important;
+}
+ 
+#AttendanceTable_filter {
+    text-align: center;
+}
+
+.dataTables_scrollBody {
+    height: 386px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+.prevDatacolor {
+    color: #5c20ff !important;
+    font-weight: 900;
+    padding-left: 3px;
+}
+
+
+#employeeform > div > div:nth-child(1) > div > div.avatar-edit > label {
+    margin-top: 60px;
+    margin-left: -65px;
+}
+
+
+#AttendanceEmployeeTable_filter {
+    text-align: center;
+    margin-left: 500px !important;
+}
+
+#ViewMapbtn > img {
+    height: 33px;
+}
+
+.modal-contentTA {
+    background-color: #fefefe;
+    border-top: 7px solid #6C18A4 !important;
+    border-bottom: 5px solid #6C18A4 !important;
+    padding: 0px;
+    border-radius: 7px 7px 7px 7px !important;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    width: 90%;
+    margin-left: 5%;
+    height: 95% !important;
+}
+
+.headercolor1 {
+    margin: 0px 0px 0px 0px !important;
+}
+
+.searchbarEmp {
+    width: 100%;
+    max-width: 250px;
+    display: inline-flex;
+    margin-right: 0px;
+}
+
+#adminTable > div > div > div.datapiker > div.col-5.ftdate > div {
+    margin-left: -16px !important;
+}
+
+/* Mani changes*/
+@media(max-width:560px) {
+    #adminTable > div > div > div.datapiker > div.col-5.ftdate > div {
+        width: max-content;
+    }
+
+    .searchbar {
+        width: 100%;
+        max-width: 322px;
+        display: inline-flex;
+    }
+
+    .col-2 {
+        -ms-flex: 0 0 16.666667%;
+        flex: 0 0 16.666667%;
+        max-width: 98.666667%;
+        margin-top: -31px;
+    }
+
+    .searchbarEmp {
+        width: 100%;
+        max-width: 250px;
+        display: inline-flex;
+        margin-right: -10px;
+        margin-top: 47px;
+    }
+}
+
+
+@media(width:414px) {
+    .searchbar {
+        width: 100%;
+        max-width: 374px;
+        display: inline-flex;
+    }
+}
+
+@media(width:412px) {
+    .searchbar {
+        width: 100%;
+        max-width: 374px;
+        display: inline-flex;
+    }
+}
+
+@media(width:430px) {
+    .searchbar {
+        width: 100%;
+        max-width: 397px;
+        display: inline-flex;
+    }
+}
+
+@media(width:540px) {
+    .searchbar {
+        width: 100%;
+        max-width: 190px;
+        display: inline-flex;
+    }
+}
+
+.btn-xs {
+    padding: 5px 11px;
+}
+
+
+#add_manualattend {
+    z-index: 100001;
+}
+
+.btn-rounded {
+    background: #aba4a4 !important;
+    color: #ffffff !important;
+}
+
+#Todayactivity .text-dark {
+    margin-bottom: 0px;
+}
+
+#FormAttendance {
+    white-space: nowrap;
+}
+
+.dataTables_scroll {
+    margin-bottom: 10px;
+}
+
+#checkInOutCol {
+    display: grid;
+}
+
+.camimg {
+    position: relative;
+    padding: 3px;
+    width: 28px;
+    height: 34px;
+    border-radius: 100%;
+    border: 1px solid #fff;
+    cursor: pointer;
+    background: linear-gradient(to right, rgba(56, 39, 180, 1) 0%, rgba(108, 24, 164, 1) 64%, rgba(108, 24, 164, 1) 100%);
+}
+
+#InOutImageModal {
+    z-index: 999999 !important;
+}
+
+.DynrowRemove {
+    margin-top: 16px !important;
+}
+
+#AvailabilityTable {
+    width: 100% !important;
+}
+ 
+.AddStockBtn i {
+    position: absolute !important;
+    right: 28.5px !important;
+    top: 4.5px !important;
+}
+
+.AddStockBtn {
+    background: none;
+    color: green;
+    transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    border: 1px solid green;
+    width: 23px !important;
+    border-radius: 50%;
+    height: 22px !important;
+    padding: 3px;
+    margin-right: 8px;
+}
+
+.DynrowRemove {
+    background: none;
+    color: red;
+    transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    border: 1px solid red;
+    width: 23px !important;
+    border-radius: 50%;
+    height: 22px !important;
+    padding: 4px;
+    margin-top: 21px;
+}
+
+    .DynrowRemove i {
+        margin-left: 0px;
+        position: absolute !important;
+        right: 27.5px !important;
+        top: 25px !important;
+    }
+
+.expensefild {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+}
+
+.ButtonSaveAlagi {
+    margin-top: 20px !important;
+}
+
+#Activity {
+    height: 25rem;
+}
+
+#TeamTable, #AdminTable, #EmployeeTable {
+    width: 100% !important
+}

@@ -1,0 +1,299 @@
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.AssetManagement, Context.Session);
+}
+
+<link href="~/css/assetmanagement.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img id="CounterImage1" src="~/assets/moduleimages/inventory/rawproducticon_1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img id="CounterImage2" src="~/assets/moduleimages/inventory/rawproducticon_2.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img id="CounterImage3" src="~/assets/moduleimages/inventory/rawproducticon_3.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img id="CounterImage4" src="~/assets/moduleimages/inventory/rawproducticon_4.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul class="nav nav-tabs pl-2 mt-2" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab active this" id="MoveableData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Moveable Asset</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="Non-MoveableData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Non-Moveable Asset</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="Company-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Company Assets</a>
+    </li>
+    <li class="col-7 d-flex justify-content-end">
+        <div class="Date-SearchColumn justify-content-end">
+            <div class="d-flex">
+                <div class="searchbar">
+                    <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                    <button type="submit" class="searchbar__button">
+                        <img src="~/assets/commonimages/search.svg" />
+                    </button>
+                </div>
+                <div class="datapiker hidingAdd ml-2 mt-1" style="position: relative;margin-top:5px;">
+                    <div class="add-imp-exp-btn">
+                        <div class="exportsiconpop">
+                            @{
+                                if (access.Create)
+                                {
+                                    <span class="pop">
+                                        <a id="AddAssetManagement" title="Add AssetManagement">
+                                            <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                        </a>
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+
+<div class="" id="AssetManagementMainTableDynamic" style="margin-top:-12px;">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AssetManagementTable"></table>
+    </div>
+</div>
+
+<div id="MoveableCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="MoveableHeader"></h2>
+        <span id="CloseMoveable" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="MoveableInfoForm">
+            <div class="row">
+                <div class="col-12 scrolable-table-wrappe">
+                    <table class="custom-table" id="MoveableAssetManagementDynamicTable">
+                        <thead class="DynamicBindTheData"></thead>
+                        <tbody class=""></tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="AssetCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="AssetnonHeader"></h2>
+        <span id="CloseNonCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+
+    <div class="offcanvas-body">
+        <form id="AssetNonInfoForm">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Franchise<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="FranchiseId" name="FranchiseId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6 NonMoveableAssetTypeDiv">
+                    <div class="form-group">
+                        <label>Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="NonMoveableAssetTypeId" name="NonMoveableAssetTypeId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6 CompanyAssetTypeDiv">
+                    <div class="form-group">
+                        <label>Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="CompanyAssetTypeId" name="CompanyAssetTypeId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6 MachineNameMoveableDiv">
+                    <div class="form-group">
+                        <label>Machine Name<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" id="MachineName" name="MachineName" placeholder="Ex: Machine Name" autocomplete="off" maxlength="50" required>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6 TypeNameCompanyDiv">
+                    <div class="form-group">
+                        <label>Type Name<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" id="TypeName" name="TypeName" placeholder="Ex: Type Name" autocomplete="off" maxlength="50" required>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Department<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="DepartmentId" name="DepartmentId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-3 col-sm-3 col-6 StartDateDiv">
+                    <div class="form-group">
+                        <label>Purchase Date<span id="Asterisk">*</span></label>
+                        <input type="date" id="PurchaseDate" name="PurchaseDate" class="form-control" autocomplete="off" required="" placeholder="Select the Date">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+                    <div class="form-group">    
+                        <label>No Of Assets<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" id="NoOfAsset" name="NoOfAsset" placeholder="Ex: 12" autocomplete="off" required oninput="Common.allowOnlyNumberLength(this,5)">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+                    <div class="form-group">    
+                        <label>Amount<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" id="Amount" name="Amount" placeholder="Ex: 0.00" autocomplete="off" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" required>
+                    </div>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6 col-md-3 col-sm-3 col-6 NextServiceDiv">
+                    <div class="form-group">
+                        <label>Next Service Date</label>
+                        <input type="date" id="NextServiceDate" name="NextServiceDate" class="form-control" autocomplete="off" placeholder="Select the Date">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Depreciation Value</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="border-top-right-radius: 0px; border-bottom-right-radius: 0px;">%</span>
+                            <input type="text" class="form-control" placeholder="Ex: 9.90" id="DepreciationPercentage" name="DepreciationPercentage" oninput="validateDepreciationValue(this,3)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Value</label>
+                        <input type="text" class="form-control" placeholder="0.00" id="DepreciationValue" name="DepreciationValue" autocomplete="off" maxlength="50" disabled>
+                    </div>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="form-group" id="Query" name="Query">
+                        <label for="queryTextarea" style="margin-bottom: 2px;">Comments</label>
+                        <textarea class="form-control" id="Comments" name="Comments" rows="2" cols="38" autocomplete="off" maxlength="250" oninput="Common.allowAllCharacters(this,150)"></textarea>
+                    </div>
+                </div>
+                <div id="AddAttachment" class="col-12">
+                    <div class="addterms-Attchbg mb-2 mt-2">
+                        <div class="row">
+                            <div class="col-12" style="height: 120px;margin-top:5px;">
+                                <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 120px;">
+                                    <!-- Add a custom button for choosing files -->
+                                    <label class=" d-flex justify-content-center align-content-center mt-3 " style="text-decoration:underline; color:#7D7C7C;">
+                                        <b>Click Here to Attach your files</b>
+                                        <input type="file" id="fileInput" multiple="" class="custom-file-input valid" aria-invalid="false">
+                                    </label>
+                                    <div class="file-preview d-flex justify-content-center" id="preview" style="display: block;">
+                                        <div class="attachrow">
+                                            <div class="attachcolumn">
+                                                <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                            </div>
+                                            <div class="attachcolumn">
+                                                <ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"> </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveNonAsset">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+
+<script src="~/js/assetmanagement.js"></script>

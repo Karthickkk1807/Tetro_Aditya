@@ -1,0 +1,217 @@
+﻿#Asterisk {
+    color: red;
+    margin-left: 4px;
+}
+
+.accordion {
+    margin-bottom: 15px;
+}
+
+#SecondaryUnitValue {
+    width: 10px;
+}
+
+
+#ProductTable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    margin-top: -18px !important;
+}
+
+fieldset {
+    border: 2px solid #111112 !important;
+    padding: 5px 15px 5px 15px;
+    border-radius: .25rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.OpeningStock {
+    cursor: auto !important;
+}
+
+td .buttonsRow .DynrowRemove {
+    margin-top: 0px !important;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+}
+
+#TableMenPower > thead > tr > th:nth-child(2) {
+    width: 100px !important;
+}
+
+#TableMenPower > thead > tr > th:nth-child(1) {
+    width: 115px !important;
+}
+
+#TableRawMaterial > thead > tr > th:nth-child(2) {
+    width: 130px !important;
+}
+
+#TableRawMaterial > thead > tr > th:nth-child(1) {
+    width: 175px !important;
+}
+
+/* table scroll */
+#TableRawMaterialBinding {
+    white-space: nowrap;
+    width: auto;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+    #TableManPowerBinding table, #TableRawMaterialBinding table {
+        width: 115%;
+        border-collapse: collapse;
+    }
+
+.table-wrapper {
+    max-height: 330px;
+    overflow-y: auto;
+    display: block;
+}
+
+.QCDynrowRemove {
+    margin-top: 12px;
+}
+
+.table-wrapper {
+    overflow: auto;
+    max-height: 330px;
+}
+
+#TableRawMaterial {
+    border-collapse: separate !important;
+    border-spacing: 0;
+    width: max-content;
+}
+
+    /* Sticky header */
+    #TableRawMaterial thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: #c0daf5;
+        white-space: nowrap;
+        border-right: 0px solid #dee2e6;
+        border-bottom: 0px solid #dee2e6;
+    }
+
+        /* Sticky first column header */
+        #TableRawMaterial thead th:first-child {
+            left: 0;
+            z-index: 6;
+        }
+
+        /* Sticky second column header */
+        #TableRawMaterial thead th:nth-child(2) {
+            left: 176px;
+            z-index: 6;
+        }
+
+    /* Sticky first column cell */
+    #TableRawMaterial tbody td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 4;
+        background: #ffffff;
+        min-width: 175px;
+        white-space: nowrap;
+        border-right: 0px solid #dee2e6;
+        border-bottom: 0px solid #dee2e6;
+    }
+
+    /* Sticky second column cell */
+    #TableRawMaterial tbody td:nth-child(2) {
+        position: sticky;
+        left: 176px;
+        z-index: 4;
+        background: #ffffff;
+        min-width: 110px;
+        white-space: nowrap;
+        border-right: 0px solid #dee2e6;
+        border-bottom: 0px solid #dee2e6;
+    }
+
+    /* Body cell background and bottom border */
+    #TableRawMaterial tbody td {
+        background: #ffffff;
+        white-space: nowrap;
+        border-right: 0px solid #dee2e6;
+        border-bottom: 0px solid #dee2e6;
+    }
+
+        /* Optional: remove border on last cell */
+        #TableRawMaterial tbody td:last-child,
+        #TableRawMaterial thead th:last-child {
+            border-right: none;
+        }
+
+
+
+.info-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.info-label-Purchase {
+    width: 100px;
+    font-weight: 600;
+}
+.info-colon {
+    margin: 0 5px;
+    text-align: center;
+    font-weight: 600;
+}
+.info-value {
+    flex: 1;
+    text-align: left;
+    color: #888888;
+}
+
+.quick-db-box .card-title {
+    font-size: 15px !important;
+    font-weight: 900;
+    line-height: 15px;
+}
+
+.ColDynamicInput {
+    min-width: 62px !important;
+}
+
+.UnitId {
+    min-width: 62px !important;
+}
+
+#tableFilter_RawMaterial {
+    border: 1px solid rgba(56, 39, 180, 1);
+    border-radius: 5px 0 0 5px;
+    ;
+}
+
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 34px !important;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 32px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 32px !important;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 20px;
+}

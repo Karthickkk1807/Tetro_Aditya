@@ -1,0 +1,619 @@
+﻿@using TetroONE.Models;
+@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Vendor, Context.Session); 
+}
+ 
+<link href="~/css/purchaserequest.css" rel="stylesheet" />
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleusedtetroone/purchasereturn/purchase total.svg" style="width: 30px;" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox1"></div>
+                                    <h4 class="card-title" id="valCounterBox1"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small"> 
+                                    <img src="~/assets/moduleusedtetroone/purchasereturn/sent (2).svg" style="width: 30px;" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox2"></div>
+                                    <h4 class="card-title" id="valCounterBox2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small"> 
+                                    <img src="~/assets/moduleusedtetroone/purchasereturn/accepted (1).svg" style="width: 30px;" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox3"></div>
+                                    <h4 class="card-title" id="valCounterBox3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small"> 
+                                    <img src="~/assets/moduleusedtetroone/purchasereturn/moved to po (1).svg" style="width: 30px;" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox4"></div>
+                                    <h4 class="card-title" id="valCounterBox4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="filter-Column" class="Date-SearchColumn">
+    <div class="month-piker d-flex">
+        
+
+        <div class="dropdown">
+            <button class="btn Bulk-Action dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                </svg>
+                Month
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2" style="min-width: 140px;">
+                <li><a id="downloadExcelBtn" class="dropdown-item active">Month</a></li>
+                <li><a class="dropdown-item" id="bulkEmployee">Custom</a></li>
+            </ul>
+        </div>
+
+        <div class="ftdate">
+            <div class="row" id="fromtodateCol" style="display:none;">
+                <div class="col-6" id="frmDate">
+                    <div class="form-group d-flex align-items-center">
+                        <label class="pr-1">From:</label>
+                        <input type="date" class="form-control" id="FromDate" />
+                    </div>
+                </div>
+                <div class="col-6" id="toDate">
+                    <div class="form-group mx-2 d-flex align-items-center">
+                        <label class="pr-1" id="toLbl">To:</label>
+                        <input type="date" class="form-control" id="ToDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="" id="monthPickerCol">
+                <div class="date-carousel" id="datemonth">
+                    <div class="date-nav">
+                        <button class="nav-button" id="decrement-month-btn2">◄</button>
+                        <span class="month-year" id="dateDisplay2"></span>
+                        <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end"> 
+        <div class="searchbar">
+            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+            <button type="submit" class="searchbar__button">
+                <img src="~/assets/commonimages/search.svg" />
+            </button>
+        </div>
+
+        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+            <div class="add-imp-exp-btn">
+                <div class="exportsiconpop">
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="AddPurchaseRequestBtn" title="Add PurchaseRequest">
+                                    <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        }
+                    }
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table   table-head-bg-primary basic-datatables table-hover tableResponsive" style="max-height:200px" id="PurchaseRequestData">
+    </table>
+</div>
+ 
+<div id="PurchaseRequestModal" class="modal" data-bs-loader-pms="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ModalHeading">Purchase Request</h2>
+                <span id="PurchaseRequestClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div class="Status-Div">
+                    <fieldset class="expensefild_1">
+                        <legend class="w-auto">PurchaseRequest Status</legend>
+                        <div class="horizontal-timeline">
+                            <div class="timeline-progress-line-fill"></div>
+                            <div class="timeline-progress-line"></div>
+
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="px-3">
+                    <div class="row DynPageRow-Div">
+                        <!--AddVendorAddressColumn-->
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="AddVendorlableColumn">
+                            <div class="row BilAddHead">
+                                <div class="d-flex justify-content-start p-2">
+                                    <h2 class="mb-0">Bill To Address</h2>
+                                </div>
+                            </div>
+                            <div class="row" style="height: 23vh; display: flex; align-items: center; justify-content: center;">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center" style="padding-right: 20px;position:relative;padding-left: 20px;align-items: center;">
+                                    <div class="dashed-border">
+                                        <label class="company-sign" id="AddVendorLable"> + Add Vendor </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--BillFromColumn-->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-12" id="BillFromColumn" style="position: relative; display: none;">
+                            <form id="FormBillFrom" novalidate="novalidate">
+
+                                <div class="row BillFrom-info-container mt-2">
+                                    <div class="info-row" style="margin-right:15px; width:unset;">
+                                        <div class="info-label-Purchase" style="margin-top:10px;width: 75px;font-size: 15px; font-weight: 700; white-space: nowrap;">Bill From<span id="Asterisk">*</span></div>
+                                        <div class="info-colon"></div>
+                                        <div class="">
+                                            <div class="form-group mb-0 ml-3">
+                                                <select class="form-control" id="BillFrom" name="BillFrom" required>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @* <div class="info-row" style="margin-right:15px; width:unset;">
+                                        <div class="info-value">
+                                            <a id="BillFromName" name="BillFromName"></a>
+                                        </div>
+                                    </div> *@
+                                    <div class="info-row" style="margin-right:15px; width:unset;">
+                                        <div class="info-value">
+                                            <a id="BillFromAddress" name="BillFromAddress"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!--VendorColumn-->
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="VendorColumn" style="position: relative; display: none;">
+                            <form id="FormVendor" novalidate="novalidate">
+                                <div class="row BilAddHead mt-2">
+                                    <div class="info-row" style="align-items: center;">
+                                        <div class="info-label-Purchase">Bill To<span id="Asterisk">*</span></div>
+                                        <div class="info-colon"></div>
+                                        <div class="">
+                                            <div class="form-group mb-0 mr-2 vendorerror" style="width: 190px;">
+                                                <select class="form-control" id="Vendor" name="Vendor" required>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="info-container" id="">
+                                        
+                                        <div id="VendorAddressDiv" class="info-row">
+                                            <div class="info-label-Purchase">Address</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="VendorAddress" name="VendorAddress"></a>
+                                            </div>
+                                        </div>
+
+                                        <div id="VendorCityDiv" class="info-row">
+                                            <div class="info-label-Purchase">City</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="VendorCity" name="VendorCity"></a>
+                                            </div>
+                                        </div>
+
+                                        <div id="VendorContactNumberDiv" class="info-row">
+                                            <div class="info-label-Purchase">Ph No</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="VendorContactNumber" name="VendorContactNumber"></a>
+                                            </div>
+                                        </div>
+
+                                        <div id="VendorEmailDiv" class="info-row d-none">
+                                            <div class="info-label-Purchase">Email</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="VendorEmail" name="VendorEmail"></a>
+                                            </div>
+                                        </div>
+                                        <div id="VendorStateNameDiv" class="info-row d-none">
+                                            <div class="info-label-Purchase">Place Of Supply</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="VendorStateName" name="VendorStateName"></a>
+                                            </div>
+                                            <label id="StateCodeId" name="StateCodeId" style="display:none"></label>
+                                        </div>
+
+                                        <div id="VendorCountryDiv" class="info-row d-none">
+                                            <div class="info-label-Purchase">Country</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="VendorCountry" name="VendorCountry"></a>
+                                            </div>
+                                        </div>
+                                        <div id="VendorGSTNumberDiv" class="info-row">
+                                            <div class="info-label-Purchase">GST No</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="VendorGSTNumber" name="VendorGSTNumber"></a>
+                                            </div>
+                                        </div>
+
+                                        <div id="VendorNameDiv" class="info-row d-none">
+                                            <div class="info-label-Purchase">StateIdGet</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="StateIdGet" name="StateIdGet"></a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <!--ShippingColumn-->
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="ShippingColumn" style="position: relative; display: none;">
+                            <form id="FormShipping" novalidate="novalidate">
+                                <div class="row BilAddHead mt-2">
+                                    <div class="info-row" style="align-items: center;">
+                                        <div class="info-label-Purchase">Ship To<span id="Asterisk">*</span></div>
+                                        <div class="info-colon"></div>
+                                        <div class="">
+                                            <div class="form-group mb-0 mr-2 AlternativeCompanyError" style="width: 190px;">
+                                                <select class="form-control" id="AlternativeCompanyAddress" name="AlternativeCompanyAddress" required>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="info-container" id="">
+                                        <label id="WareHouseStoreId" name="WareHouseStoreId" style="display:none">tesstt</label>
+
+                                        <div id="StoreAddressDiv" class="info-row">
+                                            <div class="info-label-Purchase">Address</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="StoreAddress" name="StoreAddress"></a>
+                                            </div>
+                                        </div>
+
+                                        <div id="StoreCityDiv" class="info-row">
+                                            <div class="info-label-Purchase">City</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="StoreCity" name="StoreCity"></a>
+                                            </div>
+                                        </div>
+
+                                        <div id="StoreContactNumberDiv" class="info-row">
+                                            <div class="info-label-Purchase">Ph No</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="StoreContactNumber" name="StoreContactNumber"></a>
+                                            </div>
+                                        </div>
+
+                                        <div id="StateNameDiv" class="info-row d-none">
+                                            <div class="info-label-Purchase">Place Of Supply</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="StateName" name="StateName"></a>
+                                            </div>
+                                        </div>
+
+                                        <div class="info-row d-none">
+                                            <div class="info-label-Purchase">StateId</div>
+                                            <div class="info-colon">:</div>
+                                            <div class="info-value">
+                                                <a id="StateId" name="StateId">
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--POColumn-->
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="PRequestColumn">
+                            <form id="FormRightSideHeader">
+                                <div class="row mt-2">
+                                    <div class="col-lg-4 col-md-6 col-6" id="PurchaseRequestNumberDiv">
+                                        <div class="form-group">
+                                            <label>Purchase Req No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" id="PurchaseRequestNumber" name="PurchaseRequestNumber" placeholder="RFQ_007" autocomplete="off" disabled fdprocessedid="eb1wt7" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-6 col-6" id="PurchaseRequestDateDiv">
+                                        <div class="form-group">
+                                            <label>Purchase Req Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="PurchaseRequestDate" name="PurchaseRequestDate" required="">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--Dynmic table-->
+                <div class="px-3">
+                    <div class="row DynmicTableRow">
+                        <div class="container-fluid mt-2">
+                            <div class="Purchasetable-container">
+                                <div class="Purchasetable-scroll">
+                                    <form id="AssetSection">
+                                        <table class="table table-bordered" id="PurchaseRequestProductTable">
+                                            <thead class="Dynthead">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Product Name <span style="visibility: hidden;">1111111111111111111111111111111111111111111</span></th>
+                                                    <th>Quantity</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="PurchaseRequestProductTablebody" class="Dyntbody">
+
+                                                <!--Add Item-->
+                                                <tr id="AddItemButtonRow">
+                                                    <td colspan="12" class="add-item">
+                                                        <div class="add-item">
+                                                            <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table> 
+                                    </form> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="px-3">
+                    <div class="row DynmicTableRow">
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-12 order-2 order-md-2 order-lg-1 AddnotesDiv">
+                            <div class="row mt-3 mb-3">
+                                <!--Add Notes-->
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                    <input class="AdddiscountLable px-0" id="AddNotesLable" type="button" value="+ Add Notes">
+
+                                    <div id="AddNotes" style="display: none;">
+                                        <div class="addterms-Attchbg mb-2 mt-2">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label>Notes</label>
+                                                        <textarea class="form-controltext" id="AddNotesText" name="AddNotesText" rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <input class="AdddiscountLable px-0 mb-2" id="HideNotesLable" type="button" value="✖ Hide Notes">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Add Terms & Conditions-->
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                    <input class="AdddiscountLable px-0" id="AddTermsLable" type="button" value="+ Add Terms &amp; Conditions">
+
+                                    <div id="AddTerms" style="display: none;">
+                                        <div class="addterms-Attchbg mb-2 mt-2">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label>Terms and Conditions</label>
+                                                        <textarea class="form-controltext" id="TermsAndCondition" name="TermsAndCondition" rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <input class="AdddiscountLable px-0 mb-2" id="HideTermsLable" type="button" value="✖ Hide Terms &amp; Conditions">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Add Attachment-->
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                                    <input class="AdddiscountLable px-0" id="AddAttachLable" type="button" value="+ Add Attachment">
+
+                                    <div id="AddAttachment" style="display: none;">
+                                        <div class="addterms-Attchbg mb-2 mt-2">
+                                            <div class="row">
+                                                <div class="col-12" style="height: 120px;margin-top:5px;">
+                                                    <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 120px;">
+                                                        <!-- Add a custom button for choosing files -->
+                                                        <label class=" d-flex justify-content-center align-content-center mt-3 " style="text-decoration:underline; color:#7D7C7C;cursor: pointer;">
+                                                            <b>Click Here to Attach your files</b>
+                                                            <input type="file" id="fileInput" multiple="" class="custom-file-input valid" aria-invalid="false">
+                                                        </label>
+                                                        <div class="file-preview d-flex justify-content-center" id="preview" style="display: block;">
+                                                            <div class="attachrow">
+                                                                <div class="attachcolumn">
+                                                                    <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                                </div>
+                                                                <div class="attachcolumn">
+                                                                    <ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"> </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 attachLableDiv">
+                                                    <input class="AdddiscountLable px-0" id="HideAttachlable" type="button" value="✖ Hide Attachment" style="margin-top: 11px;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Statuscolumn-->
+                        <div class="Statuscolumn col-12 order-3">
+                            <form id="FormStatus">
+                                <div class="row" style="margin-top: 5px;">
+                                    <div class="col-lg-9 col-md-9 col-6" style="visibility: hidden;">
+                                        <div class="form-group">
+                                            <label>Balance Amount</label>
+                                            <input type="text" class="form-control" id="BalanceAmount" name="BalanceAmount" placeholder="0.00" disabled="" autocomplete="off" maxlength="10">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-6 statusError">
+                                        <div class="form-group" id="statusError">
+                                            <label>Status<span id="Asterisk">*</span></label>
+                                            <select id="PurchaseRequestStatusId" class="form-control" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="button-container d-lg-flex d-block justify-content-center">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="PurchaseRequestSaveBtn">
+                                <i class="fas fa-save mr-1"></i>
+                                <span>Save</span><span class="shortcut-key">[ Ctrl+S ]</span>
+                            </button>
+                           
+
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnsharePurchaseRequest" data-bs-toggle="modal" data-bs-target="#emailModal">
+                                <i class="fas fa-share"></i> <span>Share</span><span class="shortcut-key">[ Alt + H ]</span>
+                            </button>
+                            <!-- Dropdown Menu -->
+                            <ul class="dropdown-menu shadow-lg sharedrop" id="ShareDropdownitems" aria-labelledby="btnsharePorder" style="display: none;">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" id="PurchaseRequestWhatsAppBtn">
+                                        <i class="fab fa-whatsapp me-3 whatsapp-icon"></i> WhatsApp
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" id="PurchaseRequestMailBtn">
+                                        <i class="fas fa-envelope me-3 email-icon"></i> Email
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="#" id="downloadLink">
+                                        <i class="fas fa-download me-3 download-icon"></i> Download
+                                    </a>
+                                </li>
+
+                                <div id="SpinnerWhatsApp" style="position: absolute; display: none;">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </ul>
+
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="PurchaseRequestCancelBtn">
+                                <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
+                            </button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popupOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script src="~/js/purchaserequest.js"></script>
+<script src="~/js/productadd.js"></script>
+<script src="~/js/inventory.js"></script>
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access)); 
+    $('#btnsharePurchaseRequest').click(function () {
+        $('#ShareDropdownitems').toggle();
+    });
+</script>

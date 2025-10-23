@@ -1,0 +1,58 @@
+
+#enquiryTable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    height: 330px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+#queryTextarea, #commentsTextarea {
+    border: 1px solid #ced4da;
+    padding: .4rem 0.5rem;
+}
+
+textarea.form-controltext {
+    display: block;
+    width: 100%;
+    /* height: calc(7.25rem + 2px); */
+    font-size: 13px;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    /* height: auto !important; */
+}
+
+.ContactPerson {
+    width: 100% !important;
+}
+
+.DynamicExistselectedFiles, .ExistFiles {
+    padding-left: 0px;
+    list-style: none;
+    margin-bottom: 0px !important;
+}
+
+.attachcolumn {
+    flex: 0 0 100%;
+    max-width: 100%;
+    position: relative;
+    width: 100%;
+     margin-top: 0px !important; 
+}
+
+#EnquiryLookUpDate {
+    width: 140px;
+}
+
+#LookForwardHoleDivHide > div.form-check.d-flex.align-items-center.mt-2.maxdevicecolumns > label {
+    margin-right: 10px;
+}

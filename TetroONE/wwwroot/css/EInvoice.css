@@ -1,0 +1,74 @@
+﻿.main-border {
+    border: 1px solid lightgray;
+    background-color: rgb(237 245 255);
+    /*margin-bottom: 120px;*/
+}
+
+.border-box-1 {
+    padding: 10px;
+    height: 100%;
+}
+
+.Einvoicecard {
+    background-color: white;
+    border-radius: 3px;
+    margin-top: 2px;
+    box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 21%);
+    margin-bottom: 15px;
+}
+
+.Einvoicecard-header {
+    border-bottom: 1px solid rgb(237 237 237);
+    height: 35px;
+    border-radius: 3px 3px 0px 0px;
+    padding: 8px;
+    background-color: #a3c1df;
+    background-image: linear-gradient(to right, #a3c1df, #5a8fcb);
+}
+
+    .Einvoicecard-header label {
+        color: #495057;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+.Einvoicecard-Body {
+    padding: 8px;
+}
+
+.Einvoice-info-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.Einvoice-info-label {
+    width: 110px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.Einvoice-info-colon {
+    margin: 0 5px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.Einvoice-info-value {
+    flex: 1;
+    text-align: left;
+    color: #888888;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.nofound {
+    display: flex;
+    justify-content: center;
+}
+
+    .nofound img {
+        width: 120px;
+        height: auto;
+    }

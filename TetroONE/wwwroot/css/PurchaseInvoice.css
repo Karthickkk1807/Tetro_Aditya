@@ -1,0 +1,482 @@
+﻿.DynPageRow-Div {
+    border: 1px solid #c7c7c7;
+}
+
+#AddVendorlableColumn {
+    border-right: 1px solid #c7c7c7;
+}
+
+#BillFromColumn {
+    border-bottom: 1px solid #c7c7c7;
+}
+
+#VendorColumn {
+    border-right: 1px solid #c7c7c7;
+}
+
+#ShippingColumn {
+    border-right: 1px solid #c7c7c7;
+}
+
+.BilAddHead {
+    border-bottom: 1px solid #c7c7c7;
+    height: 45px;
+}
+
+#PurchasebillData {
+    width: 100% !important;
+}
+
+.BilAddHead h2 {
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.dashed-border {
+    position: relative;
+    display: inline-block;
+    border: 2px dashed #488dff;
+}
+
+.company-sign {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 2;
+    cursor: pointer;
+    width: 200px;
+    height: 100px;
+    text-align: center;
+    color: #488dff !important;
+    font-weight: 200;
+    font-size: 16px !important;
+}
+
+.purchase-edit {
+    position: absolute;
+    right: 2%;
+    bottom: 5px;
+}
+
+.purchaseedit-icon {
+    background-color: #eeeeee;
+    border: 1px solid #e3e3e3;
+    color: #bbb;
+    float: right;
+    font-size: 12px;
+    line-height: 24px;
+    min-height: 26px;
+    text-align: center;
+    width: 26px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background-color 0.2sease, transform 0.2sease, box-shadow 0.2sease;
+}
+
+    .purchaseedit-icon i {
+        margin-top: 6px;
+        margin-left: 2px;
+    }
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /*margin-bottom: 25px;*/
+}
+
+.BillFrom-info-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    padding: 0px 8px 0px 8px;
+}
+
+.info-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.info-label-Purchase {
+    width: 100px;
+    font-weight: 600;
+}
+
+.info-colon {
+    margin: 0 5px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.info-value {
+    flex: 1;
+    text-align: left;
+    color: #888888;
+    /* overflow: hidden;
+    white-space: nowrap;*/
+}
+
+.DynmicTableRow {
+    border-right: 1px solid #c7c7c7;
+    border-left: 1px solid #c7c7c7;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.Purchasetable-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.Dynthead tr th {
+    height: 50px;
+    background-color: #a3c1df !important;
+    color: #001d3a;
+    border-color: #dbdbdb !important;
+    white-space: nowrap;
+}
+
+.Dyntbody tr td {
+    border-color: #dbdbdb !important;
+}
+
+.QtyUnitDropDown {
+    height: 34px;
+    width: 75px;
+    border: 1px solid lightgray;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.Dyntabletr input {
+    height: 28px !important;
+}
+
+.add-item {
+    border: 2px dashed #007bff;
+    color: #007bff;
+    cursor: pointer;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.summary-label {
+    font-weight: bold;
+    margin-top: 9px;
+    font-size: 16px;
+    color: #001224;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.AddnotesDiv {
+    border-right: 1px solid #c7c7c7;
+}
+
+.addterms-Attchbg {
+    background: #e4edf5;
+    padding: 10px 10px 10px 10px;
+    border-radius: 5px;
+}
+
+textarea.form-controltext {
+    display: block;
+    width: 100%;
+    /* height: calc(7.25rem + 2px); */
+    font-size: 13px;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15sease-in-out, box-shadow .15sease-in-out;
+    margin-bottom: 1rem;
+}
+
+.AdddiscountLable {
+    background: no-repeat;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.round-off-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.round-off-label {
+    font-weight: bold;
+}
+
+.round-off-input {
+    width: 80px;
+    text-align: right;
+}
+
+.ExtngLable {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ad5d00;
+    white-space: nowrap;
+}
+
+.PaymenyTextBox {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.Statuscolumn {
+    background-color: #e4edf5;
+    border-top: 1px solid #c7c7c7;
+    /*margin-top: 10px;*/
+}
+
+.btn-added {
+    background-color: #1A2A47;
+    color: white;
+    transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    height: min-content;
+}
+
+    .btn-added:hover {
+        background-color: #1A2A;
+        color: white;
+        box-shadow: 0 3px 11px rgba(0, 169, 6, 0.93);
+    }
+
+.descriptiontdtext {
+    width: 100%;
+    margin-top: 7px;
+    background-color: #f2f2f2;
+    height: 31px !important;
+    border-radius: 4px;
+    border: none;
+    font-size: 12px;
+}
+
+.discount-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: end;
+}
+
+.discount-drop {
+    display: grid !important;
+}
+
+.discount-select {
+    width: 150px;
+}
+
+.discount-radio {
+    display: flex;
+    align-items: center;
+}
+
+.discount-input {
+    width: 70px;
+    text-align: right;
+}
+
+#appendContainer input {
+    width: 1% !important;
+}
+
+.quickbillbtn-outline {
+    color: #1c3c5c;
+    background-color: #a3c1df;
+    /* background-image: linear-gradient(to right, #c4c2ff, #7c78f7); */
+    background-repeat: no-repeat;
+    border-color: #5b7d9e;
+    transition: all 0.6sease;
+    font-size: 12px !important;
+    font-weight: 700;
+}
+
+    .quickbillbtn-outline:hover {
+        color: #fff;
+        background-color: #5a8fcb;
+        background-image: linear-gradient(to right, #822eba, #a851e2);
+        border-color: #6c18a4;
+        font-size: 12px !important;
+        font-weight: 700;
+    }
+
+.sharedrop {
+    min-width: 140px !important;
+    border-radius: 12px;
+    top: 12px !important;
+    top: -105px !important;
+    left: 61%;
+}
+
+.whatsapp-icon {
+    color: #25D366;
+    margin-right: 8px;
+}
+
+.email-icon {
+    color: #007bff;
+    margin-right: 8px;
+}
+
+.download-icon {
+    color: #6c757d;
+    margin-right: 8px;
+}
+
+@media (max-width: 1200px) {
+    .Purchasetable-container table {
+        width: 140%;
+    }
+}
+
+@media (max-width: 992px) {
+    #VendorColumn {
+        border-bottom: 1px solid #c7c7c7;
+    }
+
+    .AddnotesDiv {
+        border-right: 0px solid #c7c7c7;
+    }
+
+    #BillFromColumn {
+        border-bottom: 1px solid #c7c7c7;
+    }
+
+    #ShippingColumn {
+        border-bottom: 1px solid #c7c7c7;
+    }
+}
+
+@media (max-width: 768px) {
+    .BillFrom-info-container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 577px) {
+    #AddVendorlableColumn {
+        border-right: 0px solid #c7c7c7;
+        border-bottom: 1px solid #c7c7c7;
+    }
+
+    #VendorColumn {
+        border-right: 0px solid #c7c7c7;
+    }
+
+    #ShippingColumn {
+        border-bottom: 1px solid #c7c7c7;
+    }
+}
+
+@media (max-width: 450px) {
+    #dynamicBindRow {
+        width: auto !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+    }
+
+    .discount-row {
+        display: flex;
+        width: max-content !important;
+        max-width: max-content;
+        align-items: center;
+        gap: 8px !important;
+        justify-content: end;
+        margin-left: 0px !important;
+    }
+}
+
+.DynrowRemove {
+    margin-top: 3px;
+}
+
+.purchase-Bank-edit {
+    position: relative;
+    right: -90%;
+}
+
+.purchaseBankedit-icon {
+    background-color: #ffffff;
+    border: 1px solid #dbdbdb;
+    color: #bbb;
+    float: right;
+    font-size: 12px;
+    line-height: 24px;
+    min-height: 26px;
+    text-align: center;
+    width: 26px;
+    border-radius: 24px;
+    margin-top: -41px;
+    margin-right: -10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    &:hover
+
+{
+    background-color: #ffeb3b; /* Flash to a bright yellow */
+    color: #333; /* Darker text/icon color */
+    transform: scale(1.2); /* Enlarge the icon to create a "flash" effect */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Add a deeper shadow for emphasis */
+}
+
+& i {
+    margin-top: 6px;
+    margin-left: 2px;
+}
+
+}
+
+
+.dataTables_scrollBody {
+    height: 330px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+.set-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 20px 0px 10px;
+    width: 230px;
+}
+
+    .set-container label {
+        margin-left: 5px;
+        margin-right: 10px;
+        width: 185%;
+        /*white-space: nowrap;*/
+    }
+
+    .set-container input[type="text"] {
+        padding: 5px;
+        width: 58px;
+        
+    }
+
+.productlabel {
+    display: flex;
+    align-items: center;
+    /*gap: 10px;*/
+    margin: 0px 10px 0px 10px;
+    flex-wrap: wrap;
+    border-bottom: 1.5px dashed #c7c7c7;
+    width: 100%;
+    padding-bottom: 10px;
+}

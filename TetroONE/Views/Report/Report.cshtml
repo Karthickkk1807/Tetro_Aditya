@@ -1,0 +1,229 @@
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Reports, Context.Session);
+}
+
+<link href="~/css/report.css" rel="stylesheet" />
+<div class="" style=" display: flex; gap: 0px; ">
+    <div class="scrollable-tabs-container" style="margin-top: 0px;width: 195px;">
+        <div class="d-flex">
+            <div class="" style="padding: 12px 6px;">
+                <select class="form-control" id="mainModuleDropdown" style="height:30px;font-size: 13px;font-weight: 600;">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="scrollable-tabs-container" style="margin-top: 0px;">
+        <div class="left-arrow active" id="leftarrow">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+            </svg>
+        </div>
+        <div class="d-flex">
+
+            <ul class="tab-menu" id="subModuleList">
+
+            </ul>
+        </div>
+
+        <div class="right-arrow" id="rightarrow">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<form>
+    <div class="container container">
+        <div class="row">
+            @* <div class="col-lg-3 col-md-3 col-sm-12 col-12 frmdatediv" id="dateRangeCol" style="padding: 0px 10px 0px 10px;">
+                <div class="form-group">
+                    <label>From Date - To Date</label>
+                    <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%;color: #a9a8a8;">
+                        <i class="fa fa-calendar"></i>&nbsp;
+                        <span>No Date</span>  <i class="fa fa-caret-down"></i>
+
+                    </div>
+                    <label id="reportrange-error" class="error" for="reportrange" style="display: none;">This field is required.</label>
+
+                </div>
+
+            </div> *@
+
+            <div class="col-md-3 col-lg-2 col-sm-6 col-6 frmdatediv" style="padding: 0px 10px 0px 10px;">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" class="form-control" id="fromDateRpt" name="fromDateRpt" placeholder="">
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-2 col-sm-6 col-6 todatediv" style="padding: 0px 10px 0px 10px;">
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" class="form-control" id="toDateRpt" name="toDateRpt" placeholder="">
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6 ReportCategorydiv" style="padding: 0px 10px 0px 10px;">
+                <div class="form-group account989">
+                    <label class="LableReportCategory">Report Category</label>
+                    <select class="form-control" id="ReportCategoryId" name="ReportCategoryId" required="">
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6 ReportValuediv" style="padding: 0px 10px 0px 10px;"">
+                <div class="form-group account989">
+                    <label class="LableReportValue">Report Value</label>
+                    <select class="form-control" id="ReportValueId" name="ReportValueId" required="">
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6" id="ReportValueNewHide" style="padding: 0px 10px 0px 10px;">
+                <div class="form-group account989">
+                    <label>Report Value</label>
+                    <select class="form-control" id="ReportValueNewId" name="ReportValueNewId" required="">
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-1 col-sm-6 col-6" style="margin-top: 22px;">
+                <div class="form-group text-center ">
+                    <div class="card-action">
+                        <input type="button" class="btn btn-success m-r-20" id="reportSubmit" value="Submit">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-3 col-sm-6 col-6 d-flex align-items-center justify-content-end" id="ReportSearchDiv" style="margin-top: 15px;">
+                @* <button class="btn btn-danger text-white mr-1" id="ExcelReportTicketing">Testing Report Excel</button> *@
+                <div class="d-flex">
+                    <div class="searchbar">
+                        <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                        <button type="submit" class="searchbar__button">
+                            <img src="~/assets/commonimages/search.svg" />
+                        </button>
+                    </div>
+
+                    <div class="datapiker">
+                        <div class="add-imp-exp-btn">
+                            <div class="exportsiconpop ml-1">
+                                <span id="showButton" class="export" title="Export File">
+                                    <img src="~/assets/commonimages/export.png" class="exportImage" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end groupExport">
+                            <div id="buttonGroup" class="d-none">
+                                <a id="exportToExcelBtn">
+                                    <img src="~/assets/commonimages/xl.svg" width="30" height="30" />
+                                </a>&nbsp;
+                                <a id="downloadPdfBtn">
+                                    <img src="~/assets/commonimages/pdf.svg" width="30" height="30" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+
+<div class="table-responsive" id="reportGridContainer">
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="reportGrid">  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+
+<script>
+    const tabs = document.querySelectorAll(".scrollable-tabs-container a");
+    const rightArrow = document.querySelector(
+        ".scrollable-tabs-container .right-arrow svg"
+    );
+    const leftArrow = document.querySelector(
+        ".scrollable-tabs-container .left-arrow svg"
+    );
+    const tabsList = document.querySelector(".scrollable-tabs-container ul");
+    const leftArrowContainer = document.querySelector(
+        ".scrollable-tabs-container .left-arrow"
+    );
+    const rightArrowContainer = document.querySelector(
+        ".scrollable-tabs-container .right-arrow"
+    );
+
+    const removeAllActiveClasses = () => {
+        tabs.forEach((tab) => {
+            tab.classList.remove("active");
+        });
+    };
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            removeAllActiveClasses();
+            tab.classList.add("active");
+        });
+    });
+
+    const manageIcons = () => {
+        if (tabsList.scrollLeft >= 20) {
+            leftArrowContainer.classList.add("active");
+        } else {
+            leftArrowContainer.classList.remove("active");
+        }
+
+        let maxScrollValue = tabsList.scrollWidth - tabsList.clientWidth - 20;
+
+
+        if (tabsList.scrollLeft >= maxScrollValue) {
+            rightArrowContainer.classList.remove("active");
+        } else {
+            rightArrowContainer.classList.add("active");
+        }
+    };
+
+    rightArrow.addEventListener("click", () => {
+        tabsList.scrollLeft += 200;
+        manageIcons();
+    });
+
+    leftArrow.addEventListener("click", () => {
+        tabsList.scrollLeft -= 200;
+        manageIcons();
+    });
+
+    tabsList.addEventListener("scroll", manageIcons);
+
+    let dragging = false;
+
+    const drag = (e) => {
+        if (!dragging) return;
+        tabsList.classList.add("dragging");
+        tabsList.scrollLeft -= e.movementX;
+    };
+
+    tabsList.addEventListener("mousedown", () => {
+        dragging = true;
+    });
+
+    tabsList.addEventListener("mousemove", drag);
+
+    document.addEventListener("mouseup", () => {
+        dragging = false;
+        tabsList.classList.remove("dragging");
+    });
+
+</script>
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+<script src="~/js/report.js"></script>
+
+<script src="~/assets/js/daterangepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>

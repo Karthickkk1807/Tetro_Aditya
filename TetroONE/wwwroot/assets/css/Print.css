@@ -1,0 +1,51 @@
+﻿@media print {
+
+    .quatationDetailsLeftSide {
+        border: 0;
+        border-left-width: 1px;
+        border-right-width: 0px;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        border-style: solid;
+        border-color: black;
+    }
+
+    .quatationDetailsRightSide {
+        border: 0;
+        border-left-width: 1px;
+        border-right-width: 1px;
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        border-style: solid;
+        border-color: black;
+    }
+
+    #PreviewPrintArea {
+        font-family: 'Times New Roman', Times, serif !important;
+        line-height: normal;
+        color:black !important;
+        
+    }
+
+    #TaxInvoicePreviewPrintArea {
+        font-family: 'Times New Roman', Times, serif !important;
+        line-height: normal;
+        color: black !important;
+    }
+
+    #EWayBillPrintArea {
+        margin-top: 0rem;
+    }
+
+    .page-break {
+        page-break-inside: avoid;
+    }
+
+    .HeadingFont {
+        font-weight: 400;
+    }
+
+    .ValueFont {
+        font-weight: 600;
+    }
+}

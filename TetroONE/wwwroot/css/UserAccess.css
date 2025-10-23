@@ -1,0 +1,227 @@
+﻿
+.hidden {
+    display: none;
+}
+
+#UserAccessData > tr > td > button {
+    display: inline-block;
+    width: 17px;
+    height: 21px;
+    margin: 0px 5px 0px 0px;
+    padding: 0 0px;
+    font-weight: bold;
+    background-color: var(--main-bg-color);
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.autoSaveMessage {
+    float: right;
+    margin-top: -28px;
+    margin-right: 32px;
+    font-size: 13px;
+    color: #000000;
+}
+
+.btn-xs {
+    padding: 5px 11px;
+}
+
+.page-headera {
+    display: flex;
+    justify-content: space-between;
+}
+
+.page-titlea {
+    white-space: nowrap;
+    margin: 0px 65px 0px 0px;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.info-label-Purchase {
+    width: 40px;
+    font-weight: 600;
+}
+
+.info-colon {
+    margin: 0 5px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.DropdownColumn {
+    display: flex;
+    align-items: center;
+}
+
+.searchcolumn {
+    display: flex;
+}
+
+.form-control {
+    height: 30px;
+}
+
+.head-col tr th {
+    background-color: #3827B4;
+    color: #fff !important;
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    /*border: 1px solid #3827B4 !important;*/
+}
+
+.basic-tree-table tbody tr td {
+    padding: 5px !important;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/*thead th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+    background-color: #f9fbfd;
+    border-top: 1px solid #dee2e6;
+}
+
+table th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+}*/
+
+/*Add styles to the table to ensure it behaves correctly with sticky elements*/ 
+/*table {
+    border-collapse: collapse;
+}*/
+
+
+
+
+/* Make the table responsive with both vertical and horizontal scroll */
+.table-responsive {
+    overflow: auto;
+    max-height: 450px; /* Adjust height as needed */
+}
+
+/* Sticky header cells when scrolling vertically */
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: #f9fbfd; /* Adjust header background color */
+    /*border-bottom: 1px solid #dee2e6;*/
+    white-space: nowrap;
+}
+
+/* Sticky first column cells when scrolling horizontally */
+table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+    background-color: #f9fbfd;
+    /*border-top: 1px solid #dee2e6;*/
+    white-space: nowrap;
+}
+
+/* Sticky first column header cell */
+table th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 25; /* higher than normal th to overlap properly */
+    background-color: #3827b4;
+    /*border-bottom: 1px solid #3827b4;*/
+    white-space: nowrap;
+}
+
+    /* Optional: add table borders if needed */
+    table th, table td {
+        /*border: 1px solid #dee2e6;*/
+        padding: 8px 12px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.user-drop {
+    display: flex;
+}
+
+@media(max-width:850px) {
+    .page-headera {
+        display: block;
+        justify-content: space-between;
+    }
+
+    .searchcolumn {
+        justify-content: end;
+    }
+}
+
+@media(max-width:576px) {
+    .DropdownColumn {
+        display: block;
+    }
+
+    .user-title, .user-drop {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .searchcolumn {
+        justify-content: center;
+    }
+}
+
+@media(max-width:500px) {
+    .table td, .table th {
+        padding: .75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        white-space: nowrap;
+    }
+}
+
+.searchbar__inputtableFilter_User {
+    height: 34px;
+    flex-grow: 1;
+    padding: 5px;
+    outline: none;
+    border: 1px solid rgba(56, 39, 180, 1);
+    border-radius: 5px 0 0 5px;
+    background: #F4FAF9;
+    transition: background 0.25s, box-shadow 0.25s;
+    width: 100%;
+}

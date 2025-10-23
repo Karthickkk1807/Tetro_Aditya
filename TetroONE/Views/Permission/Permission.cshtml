@@ -1,0 +1,252 @@
+﻿@using System.Security.Claims;
+@{
+	UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Permission, Context.Session);
+	var EmployeeId = 0;
+	bool isAdmin = false, isEmployee = false;
+	if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+	{
+		isAdmin = true;
+		EmployeeId = 0;
+	}
+	else
+	{
+		isEmployee = true;
+		EmployeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
+	}
+}
+
+<link href="~/css/leave.css" rel="stylesheet" />
+<link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+	<div class="col-lg-12">
+		<div class="row m-t-25">
+			<div class="col-sm-6 col-md-6 col-lg-3 col-6">
+				<div class="card card-stats card-round quick-db-box">
+					<div class="card-body ">
+						<div class="row align-items-center">
+							<div class="col-icon">
+								<div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/leave&permission/permissionicon_1.svg" />
+								</div>
+							</div>
+							<div class="col col-stats ml-3">
+								<div class="numbers">
+									<div class="card-category" id="CounterTextBox1"></div>
+									<h4 class="card-title" id="CounterValBox1"></h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-6 col-lg-3 col-6">
+				<div class="card card-stats card-round quick-db-box">
+					<div class="card-body ">
+						<div class="row align-items-center">
+							<div class="col-icon">
+								<div class="icon-big text-center icon-db-orange bubble-shadow-small">
+									<img src="~/assets/moduleimages/leave&permission/permissionicon_3.svg" />
+								</div>
+							</div>
+							<div class="col col-stats ml-3">
+								<div class="numbers">
+									<div class="card-category" id="CounterTextBox2"></div>
+									<h4 class="card-title" id="CounterValBox2"></h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-6 col-lg-3 col-6">
+				<div class="card card-stats card-round quick-db-box">
+					<div class="card-body ">
+						<div class="row align-items-center">
+							<div class="col-icon">
+								<div class="icon-big text-center icon-db-red bubble-shadow-small">
+									<img src="~/assets/moduleimages/leave&permission/permissionicon_2.svg" />
+								</div>
+							</div>
+							<div class="col col-stats ml-3">
+								<div class="numbers">
+									<div class="card-category" id="CounterTextBox3"></div>
+									<h4 class="card-title" id="CounterValBox3"></h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-6 col-lg-3 col-6">
+				<div class="card card-stats card-round quick-db-box">
+					<div class="card-body ">
+						<div class="row align-items-center">
+							<div class="col-icon">
+								<div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+									<img src="~/assets/moduleimages/leave&permission/permissionicon_4.svg" />
+								</div>
+							</div>
+							<div class="col col-stats ml-3">
+								<div class="numbers">
+									<div class="card-category" id="CounterTextBox4"></div>
+									<h4 class="card-title" id="CounterValBox4"></h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="row justify-content-end mr-2 mt-2">
+	<div class="searchbar">
+		<input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+		<button type="submit" class="searchbar__button">
+			<img src="~/assets/commonimages/search.svg" />
+		</button>
+	</div>
+
+	<div class="datapiker ml-2 mt-1" style="position: relative;">
+		<div class="add-imp-exp-btn">
+			<div class="exportsiconpop">
+				@{
+					if (access.Create)
+					{
+						<span class="pop">
+							<a id="AddPermission" title="Add Permission">
+								<img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+							</a>
+						</span>
+					}
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PermissionTable"></table>
+</div>
+
+
+
+<div id="PermissionCanvas" class="offcanvas-container">
+	<div class="offcanvas-header d-flex align-items-center justify-content-between">
+		<h2 id="PermissionHeader">Add Permission</h2>
+		<span id="CloseCanvas" class="close"
+			  style="font-size:30px;cursor:pointer;color:white;"
+			  title="Close">&times;</span>
+	</div>
+	<div class="offcanvas-body">
+		<form id="FormPermission">
+			<div id="Styleenterydetalis" class="card-body">
+				<div class="row">
+					<div class="col-md-6 col-lg-6 col-sm-12 col-12">
+						<div class="form-group">
+							<label>Type	 <span id="Asterisk">*</span></label>
+							<select class="form-control" id="Type" name="Type" required>
+							<option value="">--Select--</option>
+							<option value="1">Permission</option>
+							<option value="2">Comp Off</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="col-md-6 col-lg-6 col-sm-12 col-12">
+						<div class="form-group">
+							<label>Employee Name <span id="Asterisk">*</span></label>
+							<select class="form-control" id="EmployeeId" name="EmployeeId" required>
+							</select>
+						</div>
+					</div>
+
+					<div class="col-md-6 col-lg-3 col-sm-6 col-6">
+						<div class="form-group">
+							<label>Date  <span id="Asterisk">*</span></label>
+							<input type="date" class="form-control" id="PermissionDate" name="PermissionDate" required />
+						</div>
+					</div>
+
+					<div class="col-md-6 col-lg-3 col-sm-12 col-12">
+						<div class="form-group">
+							<label>Number of Hours <span id="Asterisk">*</span></label>
+							<select class="form-control" id="NoOfHoursId" name="NoOfHoursId" required disabled>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3 col-sm-6 col-6">
+						<div class="form-group">
+							<label>Start Time  <span id="Asterisk">*</span></label>
+							<input type="text" class="form-control mydatetimepicker" id="StartTime" name="StartTime" style="background-color: rgb(255, 255, 255);" required>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3 col-sm-6 col-6">
+						<div class="form-group">
+							<label>End Time  </label>
+							<input type="text" class="form-control mydatetimepicker" id="EndTime" name="EndTime" style="background-color: rgb(233, 236, 239);" disabled>
+						</div>
+					</div>
+
+					<div class="col-md-6 col-lg-6 col-sm-12 col-12" id="StatusCol">
+						<div class="form-group">
+							<label>Status <span id="Asterisk">*</span></label>
+							<select class="form-control" id="PermissionStatusId" name="PermissionStatusId" required>
+							</select>
+						</div>
+					</div>
+
+					<div class="col-md-12 col-lg-12 col-sm-12 col-12" id="PermissionDescCol">
+						<div class="form-group">
+							<label>Permission Description</label>
+							<textarea class="form-control" id="PermissionDescription" autocomplete="off" name="PermissionDescription" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Description"></textarea>
+						</div>
+					</div>
+
+					<div class="col-md-12 col-lg-12 col-sm-12 col-12" id="PermissionComments">
+						<div class="form-group">
+							<label>Comments</label>
+							<textarea class="form-control" id="Comments" autocomplete="off" name="Comments" rows="1" oninput="Common.allowAllCharacters(this,250)" required placeholder="Comments"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<div class="offcanvas-footer">
+		<div class="col-md-12 col-lg-12">
+			<div class="form-group text-center">
+				<div class="card-action">
+					<a class="btn btn-success m-r-20 text-white" id="SavePermission">Save</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<script>
+	var access = @Html.Raw(Json.Serialize(access));
+	var isAdminAccess = "@isAdmin";
+	var UserId = "@EmployeeId";
+
+	$(function () {
+		$('#EmployeeId').each(function () {
+			$(this).select2({
+				theme: 'bootstrap4',
+				width: 'style',
+				placeholder: $(this).attr('placeholder'),
+				allowClear: Boolean($(this).data('allow-clear')),
+			});
+		});
+	});
+
+</script>
+<script src="~/js/permission.js"></script>

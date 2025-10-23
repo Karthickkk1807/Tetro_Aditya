@@ -1,0 +1,94 @@
+﻿#jobTable {
+    margin-top: -19px !important;
+}
+
+#jobTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+    max-height: 350px;
+}
+
+.description-container {
+    max-width: 600px;
+    margin: 3px auto;
+    font-family: Arial, sans-serif;
+}
+
+    .description-container label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+.editor-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    padding: 4px;
+    border-radius: 4px 4px 0 0;
+}
+
+.toolbar-btn {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 4px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+    .toolbar-btn:hover {
+        background: #eee;
+    }
+
+.font-size {
+    margin-left: auto;
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 120px;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 8px;
+    font-size: 14px;
+    resize: vertical;
+    outline: none;
+}
+
+.Dynamicbutton {
+    width: 25px;
+    height: 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 12px;
+    box-shadow: -1px 0px 10px 1px rgba(0, 0, 0, 0.2);
+}
+
+.plusDynamic {
+    background-color: #00aaff; /* Blue */
+}
+
+.closeDynamic {
+    background-color: #ff3333; /* Red */
+}
+
+/*.accordion .card .card-body {
+    border-top: 0px solid #ebebeb !important; 
+}*/
+
+
+.imgiconInTable {
+    text-align: center;
+}
