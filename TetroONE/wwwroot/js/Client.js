@@ -165,26 +165,26 @@ $(document).ready(function () {
 
             //objvalue.franchiseMappingDetails = FranchiseList
 
-            var ProductList = [];
-            var ClosestDivProductList = $('#FormProductData #BindProductData input[type="checkbox"]:checked');
+            //var ProductList = [];
+            //var ClosestDivProductList = $('#FormProductData #BindProductData input[type="checkbox"]:checked');
 
-            $.each(ClosestDivProductList, function (index, element) {
-                var container = $(element).closest('.d-flex');
-                var moduleId = clientId;
-                var productId = $(element).data('id');
-                var sellingPrice = container.find('.dynamicinput').val();
-                var unitId = container.find('.dynamicinputselect').val();
-                var ClientProductMappingId = container.find('.ClientProductMappingId').val();
-                ProductList.push({
-                    ClientProductMappingId: parseInt(ClientProductMappingId) || null,
-                    ClientId: parseInt(moduleId) || null,
-                    ProductId: parseInt(productId) || null,
-                    SellingPrice: parseFloat(sellingPrice) || null,
-                    UnitId: parseInt(unitId) || null,
-                });
-            });
+            //$.each(ClosestDivProductList, function (index, element) {
+            //    var container = $(element).closest('.d-flex');
+            //    var moduleId = clientId;
+            //    var productId = $(element).data('id');
+            //    var sellingPrice = container.find('.dynamicinput').val();
+            //    var unitId = container.find('.dynamicinputselect').val();
+            //    var ClientProductMappingId = container.find('.ClientProductMappingId').val();
+            //    ProductList.push({
+            //        ClientProductMappingId: parseInt(ClientProductMappingId) || null,
+            //        ClientId: parseInt(moduleId) || null,
+            //        ProductId: parseInt(productId) || null,
+            //        SellingPrice: parseFloat(sellingPrice) || null,
+            //        UnitId: parseInt(unitId) || null,
+            //    });
+            //});
 
-            objvalue.ClientProductMappingDetails = ProductList;
+            //objvalue.ClientProductMappingDetails = ProductList;
 
 
             var VisicoolerDetailsArray = [];
@@ -435,9 +435,9 @@ $(document).on('click', '#AddClient', function () {
     $('#IsActiveHide').hide();
     $('#CurrentlimitHide').removeClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2').addClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2');
   
-    $('#FormProductData #BindProductData').empty('');
+   // $('#FormProductData #BindProductData').empty('');
 
-    Common.ajaxCall("GET", "/Contact/GetProductListVendor", { ModuleName: "Client" }, ProductListSuccess, null);
+    //Common.ajaxCall("GET", "/Contact/GetProductListVendor", { ModuleName: "Client" }, ProductListSuccess, null);
 
     var franchiseId = parseInt($('#UserFranchiseMappingId').val());
     var EditDataId = { ModuleName: 'Distributor', FranchiseId: franchiseId };
@@ -453,91 +453,91 @@ $(document).on('click', '#AddClient', function () {
 });
 
 
-function ProductListSuccess(response) {
-    if (response.status) {
-        var data = JSON.parse(response.data);
-        var products = data[0]; // Extract the actual array of products
-        var htmlDynamicProduct = '';
-        if (data[0][0].ProductId != null && data[0][0].ProductId != "") {
-            $.each(products, function (index, product) {
-                var ProductId = product.ProductId;
-                var ProductName = product.ProductName;
+//function ProductListSuccess(response) { 
+//    if (response.status) {
+//        var data = JSON.parse(response.data);
+//        var products = data[0]; // Extract the actual array of products
+//        var htmlDynamicProduct = '';
+//        if (data[0][0].ProductId != null && data[0][0].ProductId != "") {
+//            $.each(products, function (index, product) {
+//                var ProductId = product.ProductId;
+//                var ProductName = product.ProductName;
 
-                Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", { MasterInfoId: parseInt(ProductId), ModuleName: 'FinishedProductUnit' }, function (response) {
+//                Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", { MasterInfoId: parseInt(ProductId), ModuleName: 'FinishedProductUnit' }, function (response) {
 
-                    var data = JSON.parse(response.data);
-                    UnitDropDown = data;
+//                    var data = JSON.parse(response.data);
+//                    UnitDropDown = data;
 
-                    var defaultOption = '<option value="">--Select--</option>';
-                    //if (response.status) {
-                    //    var UnitDropDown = JSON.parse(response.data);
-                    //    if (UnitDropDown != null && UnitDropDown.length > 0) {
-                    //        var UnitSelectOptions = UnitDropDown[0].map(function (UnitVal) {
-                    //            var isSelected = UnitVal.PrimaryUnitId == UnitVal.PrimaryUnitId ? 'selected' : '';
-                    //            return `<option value="${UnitVal.PrimaryUnitId}" ${isSelected}>${UnitVal.PrimaryUnitName}</option>`;
-                    //        }).join('');
-                    //    }
-                    //}
+//                    var defaultOption = '<option value="">--Select--</option>';
+//                    //if (response.status) {
+//                    //    var UnitDropDown = JSON.parse(response.data);
+//                    //    if (UnitDropDown != null && UnitDropDown.length > 0) {
+//                    //        var UnitSelectOptions = UnitDropDown[0].map(function (UnitVal) {
+//                    //            var isSelected = UnitVal.PrimaryUnitId == UnitVal.PrimaryUnitId ? 'selected' : '';
+//                    //            return `<option value="${UnitVal.PrimaryUnitId}" ${isSelected}>${UnitVal.PrimaryUnitName}</option>`;
+//                    //        }).join('');
+//                    //    }
+//                    //}
 
-                    if (response.status) {
-                        var UnitDropDown = JSON.parse(response.data);
-                        if (UnitDropDown != null && UnitDropDown.length > 0 && UnitDropDown[0].length > 0) {
-                            var UnitSelectOptions = UnitDropDown[0].map(function (PrimaryUnitId) {
-                                return `<option value="${PrimaryUnitId.PrimaryUnitId}">${PrimaryUnitId.PrimaryUnitName}</option>`;
-                            }).join('');
-                        }
-                    }
+//                    if (response.status) {
+//                        var UnitDropDown = JSON.parse(response.data);
+//                        if (UnitDropDown != null && UnitDropDown.length > 0 && UnitDropDown[0].length > 0) {
+//                            var UnitSelectOptions = UnitDropDown[0].map(function (PrimaryUnitId) {
+//                                return `<option value="${PrimaryUnitId.PrimaryUnitId}">${PrimaryUnitId.PrimaryUnitName}</option>`;
+//                            }).join('');
+//                        }
+//                    }
 
-                    htmlDynamicProduct = `
-                    <div class="col-md-12 col-lg-12 col-sm-12 col-12 mt-2">
-                        <div class="d-flex">
-                            <div style="display: flex; align-items: center; width: 166px;">
-                            <input type="hidden" class="ClientProductMappingId" id="ClientProductMappingId" name="ClientProductMappingId" value="" />
-                                <input type="checkbox" data-id="${ProductId}" name="products" value="${ProductName}" id="product-${ProductId}">
-                                <label for="product-${ProductId}" class="checkbox-label_1 ml-1">${ProductName}</label>
-                            </div>
-                            <div class="d-flex ml-3 blur-target">
-                                <input type="text" class="form-control dynamicinput" placeholder="0.00" id="Amount" name="Amount" oninput="allowOnlyNumbersAndAfterDecimalTwoValForClient(this,8)" value="${product.SecondaryPrice}" />
-                                <select class="form-control dynamicinputselect" id="UnitId" name="UnitId">
-                                    ${UnitSelectOptions}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                    $("#FormProductData #BindProductData").append(htmlDynamicProduct);
-                }, null);
-            });
-        } else {
-            $('#FormProductData #BindProductData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        }
-    }
-}
+//                    htmlDynamicProduct = `
+//                    <div class="col-md-12 col-lg-12 col-sm-12 col-12 mt-2">
+//                        <div class="d-flex">
+//                            <div style="display: flex; align-items: center; width: 166px;">
+//                            <input type="hidden" class="ClientProductMappingId" id="ClientProductMappingId" name="ClientProductMappingId" value="" />
+//                                <input type="checkbox" data-id="${ProductId}" name="products" value="${ProductName}" id="product-${ProductId}">
+//                                <label for="product-${ProductId}" class="checkbox-label_1 ml-1">${ProductName}</label>
+//                            </div>
+//                            <div class="d-flex ml-3 blur-target">
+//                                <input type="text" class="form-control dynamicinput" placeholder="0.00" id="Amount" name="Amount" oninput="allowOnlyNumbersAndAfterDecimalTwoValForClient(this,8)" value="${product.SecondaryPrice}" />
+//                                <select class="form-control dynamicinputselect" id="UnitId" name="UnitId">
+//                                    ${UnitSelectOptions}
+//                                </select>
+//                            </div>
+//                        </div>
+//                    </div>
+//                `;
+//                    $("#FormProductData #BindProductData").append(htmlDynamicProduct);
+//                }, null);
+//            });
+//        } else {
+//            $('#FormProductData #BindProductData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
+//        }
+//    }
+//}
 
-$(document).on('change', '#BindProductData input[type="checkbox"]', function () {
-    var $checkbox = $(this);
-    var productId = $checkbox.data('id');
-    var $unitWrapper = $checkbox.closest('tr').find('.unit-wrapper');
+//$(document).on('change', '#BindProductData input[type="checkbox"]', function () {
+//    var $checkbox = $(this);
+//    var productId = $checkbox.data('id');
+//    var $unitWrapper = $checkbox.closest('tr').find('.unit-wrapper');
 
-    Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", { MasterInfoId: parseInt(productId), ModuleName: 'FinishedProductUnit' }, function (response) {
-        if (response.status) {
-            var unitData = JSON.parse(response.data)[0];
-            var $unitDropdown = $unitWrapper.find('select');
+//    Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", { MasterInfoId: parseInt(productId), ModuleName: 'FinishedProductUnit' }, function (response) {
+//        if (response.status) {
+//            var unitData = JSON.parse(response.data)[0];
+//            var $unitDropdown = $unitWrapper.find('select');
 
-            if (unitData && unitData.length > 0) {
-                var valueProp = Object.keys(unitData[0])[0];
-                var textProp = Object.keys(unitData[0])[1];
+//            if (unitData && unitData.length > 0) {
+//                var valueProp = Object.keys(unitData[0])[0];
+//                var textProp = Object.keys(unitData[0])[1];
 
-                $.each(unitData, function (index, item) {
-                    $unitDropdown.append($('<option>', {
-                        value: item[valueProp],
-                        text: item[textProp]
-                    }));
-                });
-            }
-        }
-    }, null);
-});
+//                $.each(unitData, function (index, item) {
+//                    $unitDropdown.append($('<option>', {
+//                        value: item[valueProp],
+//                        text: item[textProp]
+//                    }));
+//                });
+//            }
+//        }
+//    }, null);
+//});
 
 $(document).on('input', '#FormClient #CreditLimit', function () {
     var thisVal = $(this).val();
@@ -752,60 +752,60 @@ function editSuccess(response) {
             setPrimaryCheckboxEventListeners();
         });
 
-        if (data[2][0].ProductId != null && data[2][0].ProductId != "") {
-            $('#FormProductData #BindProductData').empty();
-            var products = data[2];
+        //if (data[2][0].ProductId != null && data[2][0].ProductId != "") {
+        //    $('#FormProductData #BindProductData').empty();
+        //    var products = data[2];
 
-            // Map of promises
-            var htmlPromises = products.map((product, index) => {
-                return new Promise((resolve, reject) => {
-                    Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", {
-                        MasterInfoId: parseInt(product.ProductId),
-                        ModuleName: 'FinishedProductUnit'
-                    }, function (response) {
-                        var data = JSON.parse(response.data);
-                        let UnitSelectOptions = '';
-                        if (response.status && data && data[0]) {
-                            UnitSelectOptions = data[0].map(UnitVal => {
-                                var isSelected = UnitVal.PrimaryUnitId == product.UnitId ? 'selected' : '';
-                                return `<option value="${UnitVal.PrimaryUnitId}" ${isSelected}>${UnitVal.PrimaryUnitName}</option>`;
-                            }).join('');
-                        }
+        //    // Map of promises
+        //    var htmlPromises = products.map((product, index) => {
+        //        return new Promise((resolve, reject) => {
+        //            Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", {
+        //                MasterInfoId: parseInt(product.ProductId),
+        //                ModuleName: 'FinishedProductUnit'
+        //            }, function (response) {
+        //                var data = JSON.parse(response.data);
+        //                let UnitSelectOptions = '';
+        //                if (response.status && data && data[0]) {
+        //                    UnitSelectOptions = data[0].map(UnitVal => {
+        //                        var isSelected = UnitVal.PrimaryUnitId == product.UnitId ? 'selected' : '';
+        //                        return `<option value="${UnitVal.PrimaryUnitId}" ${isSelected}>${UnitVal.PrimaryUnitName}</option>`;
+        //                    }).join('');
+        //                }
 
-                        var PrimaryCheck = product.IsActive == true ? 'checked' : '';
-                        var blurStyle = product.IsActive ? 'blur(0px)' : 'blur(1px)';
+        //                var PrimaryCheck = product.IsActive == true ? 'checked' : '';
+        //                var blurStyle = product.IsActive ? 'blur(0px)' : 'blur(1px)';
 
-                        var htmlDynamicProduct = `
-                        <div class="col-md-12 col-lg-12 col-sm-12 col-12 mt-2" data-order="${index}">
-                            <div class="d-flex">
-                                <input type="hidden" class="ClientProductMappingId" name="ClientProductMappingId" value="${product.ClientProductMappingId}" />
-                                <div style="display: flex; align-items: center; width: 166px;">
-                                    <input type="checkbox" data-id="${product.ProductId}" name="products" value="${product.ProductName}" ${PrimaryCheck} id="product-${product.ProductId}">
-                                    <label for="product-${product.ProductId}" class="checkbox-label_1 ml-1">${product.ProductName}</label>
-                                </div>
-                                <div class="d-flex ml-3 blur-target">
-                                    <input type="text" class="form-control dynamicinput" placeholder="0.00" name="Amount" oninput="allowOnlyNumbersAndAfterDecimalTwoValForClient(this,8)" value="${product.SellingPrice || ''}" style="filter: ${blurStyle};" />
-                                    <select class="form-control dynamicinputselect" name="UnitId" style="filter: ${blurStyle};">
-                                        ${UnitSelectOptions}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>`;
+        //                var htmlDynamicProduct = `
+        //                <div class="col-md-12 col-lg-12 col-sm-12 col-12 mt-2" data-order="${index}">
+        //                    <div class="d-flex">
+        //                        <input type="hidden" class="ClientProductMappingId" name="ClientProductMappingId" value="${product.ClientProductMappingId}" />
+        //                        <div style="display: flex; align-items: center; width: 166px;">
+        //                            <input type="checkbox" data-id="${product.ProductId}" name="products" value="${product.ProductName}" ${PrimaryCheck} id="product-${product.ProductId}">
+        //                            <label for="product-${product.ProductId}" class="checkbox-label_1 ml-1">${product.ProductName}</label>
+        //                        </div>
+        //                        <div class="d-flex ml-3 blur-target">
+        //                            <input type="text" class="form-control dynamicinput" placeholder="0.00" name="Amount" oninput="allowOnlyNumbersAndAfterDecimalTwoValForClient(this,8)" value="${product.SellingPrice || ''}" style="filter: ${blurStyle};" />
+        //                            <select class="form-control dynamicinputselect" name="UnitId" style="filter: ${blurStyle};">
+        //                                ${UnitSelectOptions}
+        //                            </select>
+        //                        </div>
+        //                    </div>
+        //                </div>`;
 
-                        resolve({ index, html: htmlDynamicProduct });
-                    });
-                });
-            });
+        //                resolve({ index, html: htmlDynamicProduct });
+        //            });
+        //        });
+        //    });
 
-            Promise.all(htmlPromises).then(results => {
-                results.sort((a, b) => a.index - b.index);
-                results.forEach(res => {
-                    $('#FormProductData #BindProductData').append(res.html);
-                });
-            });
-        } else {
-            $('#FormProductData #BindProductData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        }
+        //    Promise.all(htmlPromises).then(results => {
+        //        results.sort((a, b) => a.index - b.index);
+        //        results.forEach(res => {
+        //            $('#FormProductData #BindProductData').append(res.html);
+        //        });
+        //    });
+        //} else {
+        //    $('#FormProductData #BindProductData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
+        //}
 
         $('#ExistselectedFiles, #selectedFiles').empty("");
         var ulElement = $('#ExistselectedFiles');
