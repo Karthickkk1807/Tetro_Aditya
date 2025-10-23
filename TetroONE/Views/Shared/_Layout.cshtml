@@ -809,6 +809,16 @@
                                                         </a>
                                                     </li>
                                                 }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Sample.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="Sample">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/logistics_sidebar/sample_icon.svg" width="20" />
+                                                            </i> <span class="sub-item">Sample</span>
+                                                        </a>
+                                                    </li>
+                                                }
                                                 @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
                                                 {
                                                     <li>
@@ -919,30 +929,30 @@
                                                         <a asp-controller="Productions" asp-action="InWardOutWard">
                                                             <i>
                                                                 <img src="~/assets/sidebaricons/outward.svg" width="20" />
-                                                            </i> <span class="sub-item">InWard/OutWard</span>
+                                                            </i> <span class="sub-item">InWard</span>
                                                         </a>
                                                     </li>
                                                 }
-                                                @if (access.Any(x => x.ToLower() == UserScreen.Sample.ToLower()))
+                                                @if (access.Any(x => x.ToLower() == UserScreen.InwardOutWard.ToLower()))
                                                 {
                                                     <li>
-                                                        <a asp-controller="Productions" asp-action="Sample">
+                                                        <a asp-controller="Productions" asp-action="OutWard">
                                                             <i>
-                                                                <img src="~/assets/moduleusedtetroone/sidenav/logistics_sidebar/sample_icon.svg" width="20" />
-                                                            </i> <span class="sub-item">Sample</span>
+                                                                <img src="~/assets/sidebaricons/outward.svg" width="20" />
+                                                            </i> <span class="sub-item">OutWard</span>
                                                         </a>
                                                     </li>
                                                 }
-                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                @*@if (access.any(x => x.tolower() == userscreen.productionplan.tolower()))
                                                 {
                                                     <li>
-                                                        <a asp-controller="SupplyChainManagement" asp-action="Distributor">
+                                                        <a asp-controller="supplychainmanagement" asp-action="distributor">
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/logistics_sidebar/distributorms.svg" width="20" />
-                                                            </i> <span class="sub-item">Distributor MS</span>
+                                                            </i> <span class="sub-item">distributor ms</span>
                                                         </a>
                                                     </li>
-                                                }
+                                                }*@
                                             </ul>
                                         </div>
                                     </li>

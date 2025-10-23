@@ -719,20 +719,19 @@
 </div>
 <script>
     $(document).ready(function() {
-    $('#Barcode').empty();
+        // Clear the div (optional)
+        $('#Barcode').empty();
 
-    var saleNumber = "SALE/NO/001";
-     
-    var qr = new QRCode(document.getElementById("Barcode"), {
-        text: saleNumber,
-        width: 50,
-        height: 50,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
-     
-    $('#BarcodeText').text(saleNumber);
+        // Generate the QR code
+        var qr = new QRCode(document.getElementById("Barcode"), {
+          text: "https://example.com",  // <-- put your text or URL here
+                                               width: 50, // size in pixels
+                                               height: 50,
+                                               colorDark: "#000000" ,
+                                               colorLight: "#ffffff" ,
+                                               correctLevel: QRCode.CorrectLevel.H
+                                               });
+                                               });
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
