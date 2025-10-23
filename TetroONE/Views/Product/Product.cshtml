@@ -153,12 +153,7 @@
         <a class="nav-link navbar-tab titleForHeaderProductTab" id="FinishedProductData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Finished Product</a>
     </li>
 
-    <li class="nav-item" role="presentation">
-        <a class="nav-link navbar-tab titleForHeaderProductTab" id="TransitData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Transit</a>
-    </li>
-    <li class="nav-item" role="presentation">
-        <a class="nav-link navbar-tab titleForHeaderProductTab" id="OthersData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Others</a>
-    </li>
+  
 </ul>
 
 <div class="" id="ProductDynamic" style="margin-top:-12px;">
@@ -212,7 +207,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-6 ProductName">
                                         <div class="form-group">
                                             <label>Product Name<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" id="ProductName" name="ProductName" placeholder="Ex: Glass Bottles / Plastic Bottles" autocomplete="off" maxlength="50" required>
+                                            <input type="text" class="form-control" id="ProductName" name="ProductName" placeholder="Product Name" autocomplete="off" maxlength="50" required>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-6 ProductCategory">
@@ -270,6 +265,31 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
+	            	                    <div class="form-group">
+	            		                    <label>Primary Price<span id="Asterisk">*</span></label>
+	            		                    <input type="text" class="form-control PrimaryPrice" id="PrimaryPrice" name="PrimaryPrice" placeholder="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" required>
+	            	                    </div>
+	                                </div>
+	                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
+	            	                    <div class="form-group">
+	            		                    <label>Secondary Price<span id="Asterisk">*</span></label>
+	            		                    <input type="text" class="form-control SecondaryPrice" id="SecondaryPrice" name="SecondaryPrice" placeholder="0" value="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" disabled required>
+	            	                    </div>
+	                                </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4">
+	            	                    <div class="form-group">
+	            		                    <label>Reorder Level<span id="Asterisk">*</span></label>
+	            		                    <input type="text" class="form-control ReOrderlevel" id="ReOrderlevel" name="ReOrderlevel" placeholder="Reorder Level" autocomplete="off" required>
+	            	                    </div>
+	                                </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4" style="visibility: hidden";>
+	            	                    <div class="form-group">
+	            		                    <label>Reorder Level<span id="Asterisk">*</span></label>
+	            		                    <input type="text" class="form-control" id="" name="" placeholder="Reorder Level" autocomplete="off" required>
+	            	                    </div>
+	                                </div>
                                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-6">
                                         <div class="form-group">
                                             <label>CGST</label>
@@ -308,7 +328,7 @@
                     <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2" class="">
                         <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                             <strong class="text-white">
-                                Franchise Info
+                                Plant Info
                             </strong>
                             <i class="fas fa-angle-down text-white"></i>
                         </p>

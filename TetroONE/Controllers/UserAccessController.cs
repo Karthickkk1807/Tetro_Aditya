@@ -27,13 +27,13 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetUserAcces")]
-        public IActionResult GetUserAcces(int FranchiseId, int Value, string Category, string? Search)
+        public IActionResult GetUserAcces(int PlantId, int Value, string Category, string? Search)
         {
 
             GetUserAcces getUserAcces = new GetUserAcces()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                FranchiseId = FranchiseId,
+                PlantId = PlantId,
                 Category = Category,
                 Value = Value,
                 Search = Search,

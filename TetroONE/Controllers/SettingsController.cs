@@ -138,13 +138,6 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@Email", request.Email);
                     command.Parameters.AddWithValue("@Website", request.Website);
                     command.Parameters.AddWithValue("@GSTNumber", request.GSTNumber);
-                    command.Parameters.AddWithValue("@BankName", request.BankName);
-                    command.Parameters.AddWithValue("@BranchName", request.BranchName);
-                    command.Parameters.AddWithValue("@AccountType", request.AccountType);
-                    command.Parameters.AddWithValue("@AccountName", request.AccountName);
-                    command.Parameters.AddWithValue("@AccountNumber", request.AccountNumber);
-                    command.Parameters.AddWithValue("@IFSCCode", request.IFSCCode);
-                    command.Parameters.AddWithValue("@UPIId", request.UPIId);
                     command.Parameters.AddWithValue("@Signature", SignatureRelativeFilePath);
 
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -285,6 +278,65 @@ namespace TetroONE.Controllers
 
         //=============================================================================BankSettings============================================================================
 
+
+
+
+
+        //=============================================================================BankSettings============================================================================
+
+        [HttpGet]
+        [Route("GetPlantDetails")]
+        public IActionResult GetPlantDetails(int? PlantId)
+        {
+            GetPlantDetails Get = new GetPlantDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                PlantId = PlantId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetPlantDetails]", Get);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertPlantDetails")]
+        public IActionResult InsertPlantDetails([FromBody] InsertPlantDetails request)
+        {
+            DataTable ContactPersonDetails = new DataTable();
+            ContactPersonDetails = GenericTetroONE.ToDataTable(request.ContactPersonDetailsPlant);
+
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            request.TVP_ContactPersonDetails = ContactPersonDetails;
+
+            string storedProcedure = (request.PlantId != null)
+                 ? "[dbo].[USP_UpdatePlantDetails]"
+                 : "[dbo].[USP_InsertPlantDetails]";
+
+            string[] ExculutedForInsert = { "PlantId", "IsActive", "ContactPersonDetailsPlant" };
+            string[] ExculutedForUpdate = { "ContactPersonDetailsPlant" };
+            if (storedProcedure == "[dbo].[USP_InsertPlantDetails]")
+                response = GenericTetroONE.Execute(_connectionString, storedProcedure, request, ExculutedForInsert);
+            else
+                response = GenericTetroONE.Execute(_connectionString, storedProcedure, request, ExculutedForUpdate);
+
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeletePlantDetails")]
+        public IActionResult DeletePlantDetails(int? PlantId)
+        {
+            GetPlantDetails Get = new GetPlantDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                PlantId = PlantId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeletePlantDetails]", Get);
+            return Json(response);
+        }
+
+        //=============================================================================BankSettings============================================================================
 
 
 

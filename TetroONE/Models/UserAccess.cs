@@ -5,7 +5,7 @@ namespace TetroONE.Models
     public class GetUserAcces
     {
         public int LoginUserId { get; set; }
-        public int FranchiseId { get; set; }
+        public int PlantId { get; set; }
         public string Category { get; set; }
         public int Value { get; set; }
         public string? Search { get; set; }
