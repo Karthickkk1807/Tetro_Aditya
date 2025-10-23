@@ -1,1 +1,739 @@
-﻿ 
+﻿
+<link href="~/css/saleorder.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/sales/estimateicon_1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox1"></div>
+                                    <h4 class="card-title" id="valCounterBox1"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/sales/estimateicon_2.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox2"></div>
+                                    <h4 class="card-title" id="valCounterBox2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/sales/estimateicon_3.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox3"></div>
+                                    <h4 class="card-title" id="valCounterBox3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/sales/estimateicon_4.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox4"></div>
+                                    <h4 class="card-title" id="valCounterBox4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="filter-Column" class="Date-SearchColumn">
+    <div class="month-piker d-flex">
+        <div class="dropdown">
+            <button class="btn Bulk-Action dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                </svg>
+                Month
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2" style="min-width: 140px;">
+                <li><a id="downloadExcelBtn" class="dropdown-item active">Month</a></li>
+                <li><a class="dropdown-item" id="bulkEmployee">Custom</a></li>
+            </ul>
+        </div>
+
+        <div class="ftdate">
+            <div class="row" id="fromtodateCol" style="display:none;">
+                <div class="col-6" id="frmDate">
+                    <div class="form-group d-flex align-items-center">
+                        <label class="pr-1">From:</label>
+                        <input type="date" class="form-control" id="FromDate" />
+                    </div>
+                </div>
+                <div class="col-6" id="toDate">
+                    <div class="form-group mx-2 d-flex align-items-center">
+                        <label class="pr-1" id="toLbl">To:</label>
+                        <input type="date" class="form-control" id="ToDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="" id="monthPickerCol">
+                <div class="date-carousel" id="datemonth">
+                    <div class="date-nav">
+                        <button class="nav-button" id="decrement-month-btn2">◄</button>
+                        <span class="month-year" id="dateDisplay2">October 2025</span>
+                        <button class="nav-button" id="increment-month-btn2">►</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <div class="searchbar">
+            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+            <button type="submit" class="searchbar__button">
+                <img src="~/assets/commonimages/search.svg" />
+            </button>
+        </div>
+
+        <div class="datapiker ml-2 mt-1" style="position: relative;">
+            <div class="add-imp-exp-btn">
+                <div class="exportsiconpop">
+                    <span class="pop">
+                        <a id="customBtn_JobOrderData" title="Add JobOrder">
+                            <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive" id="MainGrid">
+    <table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="JobOrderData">
+    </table>
+</div>
+
+<div id="JobOrderCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="JobOrderHeader">Add New JobOrder</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion1">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        JobOrder Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormJobOrder">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>JobOrder No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: JOB/ODR/001" id="JobOrderNo" name="JobOrderNo" maxlength="50" required disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Job Order Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="JobOrderDate" name="JobOrderDate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Sale Order No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">SALE/NO/001</option>
+                                                <option value="2">SALE/NO/002</option>
+                                                <option value="3">SALE/NO/003</option>
+                                                <option value="4">SALE/NO/004</option>
+                                                <option value="5">SALE/NO/005</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 d-flex justify-content-center" id="Barcode">
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Customer Name<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="CustomerName" name="CustomerName" required disabled>
+                                                <option value="">--Select--</option>
+                                                <option value="1">VIP AGENCY</option>
+                                                <option value="2" selected>RPKS Industry</option>
+                                                <option value="3">IMMANUEL MADURAI</option>
+                                                <option value="4">OM LAKSHMI</option>
+                                                <option value="5">AKR AGECNY</option>
+                                                <option value="6">KANDHA</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Order Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="OrderTypeId" name="OrderTypeId" required disabled>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Domestic</option>
+                                                <option value="2" selected>Export</option>
+                                                <option value="3">Job Work</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Job Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="JobTypeId" name="JobTypeId" required disabled>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Dyeing</option>
+                                                <option value="2">Printing</option>
+                                                <option value="3" selected>Finishing</option>
+                                                <option value="4">Washing</option>
+                                                <option value="5">Embossing</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Priority<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PriorityId" name="PriorityId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Urgent</option>
+                                                <option value="3">Critical</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Job Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="JobStatusId" name="JobStatusId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Planned</option>
+                                                <option value="2">In Process</option>
+                                                <option value="3">Hold</option>
+                                                <option value="4">Completed</option>
+                                                <option value="5">Closed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Machine Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="MachineTypeId" name="MachineTypeId" required>
+                                                <option value="">--Select--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Machine No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: MACH/001" id="MachineNo" name="MachineNo" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Input Quantity<span id="Asterisk">*</span></label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="InputQuantity" name="InputQuantity" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                                <select class="form-control" id="WeightUnitId" name="WeightUnitId" required style="width: 38%;">
+                                                    <option value="">--Select--</option>
+                                                    <option value="1">Meter</option>
+                                                    <option value="2">Kg</option>
+                                                    <option value="3">Roll</option>
+                                                    <option value="4">MMeter</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Exp Output Qty<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 120" id="ExpOutputQty" name="ExpOutputQty" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Exp Wastage<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 23.9" id="ExpWastage" name="ExpWastage" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>No Of Batches<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 23.9" id="NoofBatches" name="NoofBatches" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 d-none">
+                                        <div class="form-group">
+                                            <label>Created By<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 23.9" id="CreatedBy" name="CreatedBy" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 d-none">
+                                        <div class="form-group">
+                                            <label>Approved By<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 23.9" id="ApprovedBy" name="ApprovedBy" required />
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion2">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Processing Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormProcessing">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Process Name<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: Dyeing" id="ProcessName" name="ProcessName" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Recipe No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: REC/NO/001" id="RecipeNo" name="RecipeNo" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Temperature<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 12.76" id="Temperature" name="Temperature" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Time Duration<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" placeholder="Ex: 10:11" id="TimeDuration" name="TimeDuration" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Liquor Ratio<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 1.78" id="LiquorRatio" name="LiquorRatio" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>pH Level<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="pHLevel" name="pHLevel" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Remarks<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                                        <fieldset class="expensefild1">
+                                            <legend class="w-auto">
+                                                Chemical List
+                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical(this)" style="position: absolute; top: 0px; right: 26px;">
+                                                    <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                                                </button>
+                                            </legend>
+                                            <div class="row" id="ChemicalListRow">
+                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                                    <div class="form-group">
+                                                        <label>Chemical Used<span id="Asterisk">*</span></label>
+                                                        <select class="form-control" id="ChemicalUsed" name="ChemicalUsed" required style="width: 38%;">
+                                                            <option value="">--Select--</option>
+                                                            <option value="1">Sodium Sulphate</option>
+                                                            <option value="2">CO2</option>
+                                                            <option value="3">Sulphate</option>
+                                                            <option value="4">H2O</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                                    <div class="form-group">
+                                                        <label>GPL%<span id="Asterisk">*</span></label>
+                                                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL" name="GPL" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                                    <div class="form-group">
+                                                        <label>Qty<span id="Asterisk">*</span></label>
+                                                        <input type="text" class="form-control" placeholder="Ex: 29" id="Qty" name="Qty" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                                        <fieldset class="expensefild1">
+                                            <legend class="w-auto">
+                                                Dye List
+                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowDye(this)" style="position: absolute; top: 0px; right: 26px;">
+                                                    <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                                                </button>
+                                            </legend>
+                                            <div class="row" id="DyeListRow">
+                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                                    <div class="form-group">
+                                                        <label>Dyes Used<span id="Asterisk">*</span></label>
+                                                        <input type="text" class="form-control" placeholder="Ex: Blue H2R" id="DyesUsed" name="DyesUsed" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                                    <div class="form-group">
+                                                        <label>Volume%<span id="Asterisk">*</span></label>
+                                                        <input type="text" class="form-control" placeholder="Ex: 15.6" id="Volume" name="Volume" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                                    <div class="form-group">
+                                                        <label>Qty<span id="Asterisk">*</span></label>
+                                                        <input type="text" class="form-control" placeholder="Ex: 17" id="DyeQty" name="DyeQty" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion3">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseThree3">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Production & Tracking Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion3">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormProcesingData">
+                                <fieldset class="expensefild1">
+                                    <legend class="w-auto">
+                                        Batch No
+                                        <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowBatch(this)" style="position: absolute; top: 51px; right: 40px;">
+                                            <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                                        </button>
+                                    </legend>
+                                    <div class="row" id="BatchListRow">
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Production Start Date</label>
+                                                <input type="date" class="form-control" id="ProductionStartDate" name="ProductionStartDate" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Production End Date</label>
+                                                <input type="date" class="form-control" id="ProductionEndDate" name="ProductionEndDate" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Loading Start Date</label>
+                                                <input type="date" class="form-control" id="LoadingStartDate" name="LoadingStartDate" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Loading Start Date</label>
+                                                <input type="date" class="form-control" id="LoadingEndDate" name="LoadingEndDate" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Operator Name</label>
+                                                <select class="form-control" id="OperatorName" name="OperatorName" required>
+                                                    <option value="">--Select--</option>
+                                                    <option value="1">RAGHURAMAN GOBINATHAN</option>
+                                                    <option value="2">KARTHIKEYANI</option>
+                                                    <option value="3">MITHRAN</option>
+                                                    <option value="6">DEXY</option>
+                                                    <option value="34">INDRASENAN</option>
+                                                    <option value="109">KAVINESH RAJASEKAR</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Supervisor Name</label>
+                                                <select class="form-control" id="SupervisorName" name="SupervisorName" required>
+                                                    <option value="">--Select--</option>
+                                                    <option value="1">RAGHURAMAN GOBINATHAN</option>
+                                                    <option value="2">KARTHIKEYANI</option>
+                                                    <option value="3">MITHRAN</option>
+                                                    <option value="6">DEXY</option>
+                                                    <option value="34">INDRASENAN</option>
+                                                    <option value="109">KAVINESH RAJASEKAR</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Shift</label>
+                                                <select class="form-control" id="Shift" name="Shift" required>
+                                                    <option value="">--Select--</option>
+                                                    <option value="1">Morning Shift</option>
+                                                    <option value="2">Afternoon Shift</option>
+                                                    <option value="3">Evening Shift</option>
+                                                    <option value="4">Night Shift</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Output Lot No</label>
+                                                <input type="text" class="form-control" id="OutputLotNo" name="OutputLotNo" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Output Quantity</label>
+                                                <input type="text" class="form-control" id="OutputQuantity" name="OutputQuantity" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Rework Quantity</label>
+                                                <input type="text" class="form-control" id="ReworkQuantity" name="ReworkQuantity" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Wastage Quantity</label>
+                                                <input type="text" class="form-control" id="WastageQuantity" name="WastageQuantity" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Energy Consumption</label>
+                                                <input type="text" class="form-control" id="EnergyConsumption" name="EnergyConsumption" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Water Consumption</label>
+                                                <input type="text" class="form-control" id="WaterConsumption" name="WaterConsumption" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Chemical Cost</label>
+                                                <input type="text" class="form-control" id="ChemicalCost" name="ChemicalCost" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Labor Hours</label>
+                                                <input type="datetime" class="form-control" id="LaborHours" name="LaborHours" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion4">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapseFour4">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Quality Control Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion4">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormProcesingData">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>QC Check Date</label>
+                                            <input type="date" class="form-control" id="QCCheckDate" name="QCCheckDate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>QC By</label>
+                                            <select class="form-control" id="QCBy" name="QCBy" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
+                                                <option value="2">KARTHIKEYANI</option>
+                                                <option value="3">MITHRAN</option>
+                                                <option value="6">DEXY</option>
+                                                <option value="34">INDRASENAN</option>
+                                                <option value="109">KAVINESH RAJASEKAR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Shade Deviation</label>
+                                            <input type="text" class="form-control" id="ShadeDeviation" name="ShadeDeviation" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Shrinkage Percent</label>
+                                            <input type="datetime" class="form-control" id="ShrinkagePercent" name="ShrinkagePercent" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Fastness Rub</label>
+                                            <input type="text" class="form-control" id="FastnessRub" name="FastnessRub" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Fastness Wash</label>
+                                            <input type="text" class="form-control" id="Fastness Wash" name="Fastness Wash" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>QC Status</label>
+                                            <select class="form-control" id="QCStatus" name="QCStatus" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Passed</option>
+                                                <option value="2">Hold</option>
+                                                <option value="3">Rework</option>
+                                                <option value="4">Rejected</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>QC Remarks</label>
+                                            <textarea class="form-control" id="QCRemarks" name="QCRemarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Quality Control Querys"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveSaleOrder">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        // Clear the div (optional)
+        $('#Barcode').empty();
+
+        // Generate the QR code
+        var qr = new QRCode(document.getElementById("Barcode"), {
+          text: "https://example.com",  // <-- put your text or URL here
+                                               width: 50, // size in pixels
+                                               height: 50,
+                                               colorDark: "#000000" ,
+                                               colorLight: "#ffffff" ,
+                                               correctLevel: QRCode.CorrectLevel.H
+                                               });
+                                               });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="~/js/joborder.js"></script>
