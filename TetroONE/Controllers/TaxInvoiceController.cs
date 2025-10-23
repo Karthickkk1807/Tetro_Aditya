@@ -28,6 +28,12 @@ namespace TetroONE.Controllers
 			return View();
 		}
 
+        [Route("SaleOrder")]
+        public IActionResult SaleOrder()
+		{
+			return View();
+		}
+		 
 		[HttpGet]
 		[Route("GetSale")]
 		public IActionResult GetSale(DateTime FromDate, DateTime ToDate, int FranchiseId)

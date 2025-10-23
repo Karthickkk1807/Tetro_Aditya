@@ -636,6 +636,16 @@
                                                         </a>
                                                     </li>
                                                 }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Sale.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="TaxInvoice" asp-action="SaleOrder">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/sale_sidebar/estimate.svg" width="20" />
+                                                            </i> <span class="sub-item">Sale Order</span>
+                                                        </a>
+                                                    </li>
+                                                }
                                                 @*@if (access.Any(x => x.ToLower() == UserScreen.DeliveryChallan.ToLower()))
                                                 {
                                                     <li>
@@ -653,7 +663,7 @@
                                                         <a asp-controller="TaxInvoice" asp-action="TaxInvoice">
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/sale_sidebar/salesorder.svg" width="20" />
-                                                            </i> <span class="sub-item">Sale Order</span>
+                                                            </i> <span class="sub-item">Tax Invoice</span>
                                                         </a>
                                                     </li>
                                                 }
@@ -789,6 +799,16 @@
                                         <div class="collapse" id="Productions-list">
                                             <ul class="nav nav-collapse">
 
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Production.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="JobOrder">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/joborder.svg" width="20" />
+                                                            </i> <span class="sub-item">Job Order</span>
+                                                        </a>
+                                                    </li>
+                                                }
                                                 @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
                                                 {
                                                     <li>
@@ -810,27 +830,6 @@
                                                         </a>
                                                     </li>
                                                 }
-                                                <li>
-                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
-                                                    {
-                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
-                                                            <i>
-                                                                <img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/joborder.svg" width="20" />
-                                                            </i><span class="sub-item">Job Order</span>
-                                                        </a>
-                                                    }
-                                                </li>
-                                                @*@if (access.Any(x => x.ToLower() == UserScreen.Production.ToLower()))
-                                                {
-                                                    <li>
-                                                        <a asp-controller="Productions" asp-action="JobOrder">
-                                                            <i>
-                                                                <img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/joborder.svg" width="20" />
-                                                            </i> <span class="sub-item">Job Order</span>
-                                                        </a>
-                                                    </li>
-                                                }*@
-                                                 
                                             </ul>
                                         </div>
                                     </li>
@@ -839,8 +838,7 @@
                                 @if (access.Any(x => x.ToLower() == UserScreen.Productions.ToLower()))
                                 {
                                     <li class="nav-item">
-                                        @*<a data-toggle="collapse" href="#QualityManagement-list">*@
-                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                        <a data-toggle="collapse" href="#QualityManagement-list">
                                             <i><img src="~/assets/moduleusedtetroone/sidenav/quality_sidebar/qms.svg" width="20" /></i>
                                             <p>QMS</p>
                                             <span class="caret"></span>
@@ -854,7 +852,7 @@
                                                         <a asp-controller="QualityManagement" asp-action="IncomingQC">
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/quality_sidebar/incomingqc.svg" width="20" />
-                                                            </i> <span class="sub-item">Incoming QC</span>
+                                                            </i> <span class="sub-item">Inward QC</span>
                                                         </a>
                                                     </li>
                                                 }
@@ -1108,7 +1106,7 @@
                                                         <a asp-controller="Enquiry" asp-action="Enquiry">
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/enquiry.svg" width="20" />
-                                                            </i> 
+                                                            </i>
                                                             <span class="sub-item">Enquiry</span>
                                                         </a>
                                                     }
@@ -1120,7 +1118,7 @@
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/vistor.svg" width="20" />
                                                             </i>
-                                                            <span class="sub-item">Visitor</span> 
+                                                            <span class="sub-item">Visitor</span>
                                                         </a>
                                                     }
                                                 </li>
@@ -1130,7 +1128,7 @@
                                                         <a asp-controller="Ticketing" asp-action="Ticketing">
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/tickting.svg" width="20" />
-                                                            </i> 
+                                                            </i>
                                                             <span class="sub-item">Ticketing</span>
                                                         </a>
                                                     }
@@ -1142,10 +1140,10 @@
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/campaign.svg" width="20" />
                                                             </i>
-                                                            <span class="sub-item">Campaigns</span> 
+                                                            <span class="sub-item">Campaigns</span>
                                                         </a>
                                                     }
-                                                </li> 
+                                                </li>
                                                 <li>
                                                     @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
                                                     {
@@ -1600,11 +1598,11 @@
                                                     <div class="table-scroll" style="overflow-x:auto;">
                                                         <table class="table table-borderless table-custom" id="ProductListTable">
                                                             <thead class="Additemthead">
-                                                                <tr> 
+                                                                <tr>
                                                                     <th scope="col">Product Name</th>
                                                                     <th id="SubCategory" scope="col">Sub Category</th>
                                                                     <th id="Category11" scope="col">Category</th>
-                                                                    <th id ="Price" scope="col">Price</th>
+                                                                    <th id="Price" scope="col">Price</th>
                                                                     <th id="SIH" scope="col">Stock In Hand</th>
                                                                     <th scope="col">Quantity</th>
                                                                 </tr>

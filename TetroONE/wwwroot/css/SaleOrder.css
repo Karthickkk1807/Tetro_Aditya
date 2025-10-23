@@ -1,0 +1,7 @@
+﻿.checkbox-label {
+    filter: blur(1px);
+    transition: filter 0.3s ease-in-out;
+    position: absolute;
+    left: 33px;
+    white-space: pre-line !important;
+}

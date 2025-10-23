@@ -597,12 +597,8 @@ $("input[type='checkbox'][name='products']").on("change", function () {
         selectedItems = selectedItems.filter(item => item !== value);
     }
 });
-
-
-
-function isPrimaryChecked(SelectId, SelectClass) {
-
-
+ 
+function isPrimaryChecked(SelectId, SelectClass) { 
     var inputVal = $('#' + SelectId).val();
     if (inputVal == "2") {
         return true;
@@ -638,9 +634,7 @@ function setPrimaryCheckboxEventListeners() {
         } else {
 
             $('#IsPrimaryError').removeClass('d-none');
-        }
-
-
+        } 
     });
 }
 
@@ -772,11 +766,7 @@ function CanvasOpenFirstShowingVendor() {
         scrollTop: $('#VendorCanvas').offset().top
     }, 'fast');
 }
-
-
-
-
-
+ 
 function bindTableTransactionsInfo(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction) {
     if ($.fn.DataTable.isDataTable('#' + tableid)) {
         if ($('#' + tableid).DataTable().rows().data().toArray().length > 0) {
