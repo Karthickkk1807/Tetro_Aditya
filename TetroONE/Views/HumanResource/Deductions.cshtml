@@ -1,0 +1,573 @@
+﻿@using System.Security.Claims;
+@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Deductions, Context.Session);
+    var EmployeeId = 0;
+    bool isAdmin = false, isEmployee = false;
+    if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+    {
+        isAdmin = true;
+        EmployeeId = 0;
+    }
+    else
+    {
+        isEmployee = true;
+        EmployeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
+    }
+}
+
+<style>
+    #deductionsTable {
+        width: 100% !important;
+    }
+
+    .dataTables_scrollBody {
+        height: 390px !important;
+        margin-top: -18px !important;
+        border-bottom: 1px solid #111;
+        margin-bottom: 10px;
+    }
+
+    #deductionsTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+        position: relative;
+        overflow: auto;
+        width: 100%;
+        max-height: 355px !important;
+    }
+     
+    table.dataTable {
+        clear: both;
+        margin-top: 6px !important;
+        margin-bottom: 15px !important;
+        max-width: none !important;
+        /* border-collapse: separate !important; */
+    }
+</style>
+
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img id="CounterImage1" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"> </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img id="CounterImage2" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img id="CounterImage3" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img id="CounterImage4" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul b-kt7ppxredz="" class="nav nav-tabs" id="myTab" role="tablist">
+    <li b-kt7ppxredz="" class="nav-item submenu" role="presentation">
+        <a b-kt7ppxredz="" class="nav-link navbar-tab active" id="Advance-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Advance</a>
+    </li>
+    <li b-kt7ppxredz="" class="nav-item submenu" role="presentation">
+        <a b-kt7ppxredz="" class="nav-link navbar-tab" id="Loan-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Loan</a>
+    </li>
+    <li b-kt7ppxredz="" class="nav-item submenu" role="presentation">
+        <a b-kt7ppxredz="" class="nav-link navbar-tab" id="Claim-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Claim</a>
+    </li>
+    <li style="margin-left: auto;">
+        <div class="tab-pane" id="Claim-Tab" role="tabpanel" aria-labelledby="InWard-TabBtn">
+            <div id="filter-Column" class="Date-SearchColumn justify-content-end">
+                <div class="d-flex justify-content-end">
+                    <div class="searchbar">
+                        <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                        <button type="submit" class="searchbar__button">
+                            <img src="~/assets/commonimages/search.svg" />
+                        </button>
+                    </div>
+
+                    <div class="datapiker ml-2 mt-1" style="position: relative;">
+                        <div class="add-imp-exp-btn">
+                            <div class="exportsiconpop">
+                                @{
+                                    if (access.Create)
+                                    {
+                                        <span class="pop">
+                                            <a id="AddDeductions" title="Add Claim">
+                                                <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                            </a>
+                                        </span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+
+<div class="table-responsive" id="deductionsTableCol">
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="deductionsTable"></table>
+</div>
+
+<div id="claimCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="canvasHeader"></h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormClaim">
+            <div class="row">
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Employee Name <span id="Asterisk">*</span></label>
+                        <select class="form-control" id="RequestedBy" name="RequestedBy" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Claim No</label>
+                        <input type="text" class="form-control" placeholder="Claim No" id="ClaimNo" name="ClaimNo" required disabled />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Date <span id="Asterisk">*</span> </label>
+                        <input type="date" class="form-control" placeholder="Claim Date" id="ClaimDate" name="ClaimDate" required />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Expense No</label>
+                        <select class="form-control" id="ExpenseId" name="ExpenseId">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Expense Amount</label>
+                        <input type="text" class="form-control" placeholder="Expense Amount" id="ExpenseAmount" name="ExpenseAmount" required disabled />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Claim Type <span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ClaimTypeId" name="ClaimTypeId" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Claim Amount <span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Claim Amount" id="ClaimAmount" name="ClaimAmount" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this,8)" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Diff Amount </label>
+                        <input type="text" class="form-control" placeholder="Diff Amount" id="DiffAmount" name="DiffAmount" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="ClaimDescription" autocomplete="off" name="ClaimDescription" rows="1" maxlength="250" placeholder="Description"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="ClaimStatusCol">
+                    <div class="form-group">
+                        <label>Status <span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ClaimStatusId" name="ClaimStatusId" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 approverCol">
+                    <div class="form-group">
+                        <label>Approved Amount <span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Approved Amount" id="ApprovedAmount" name="ApprovedAmount" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this,8)" />
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12 approverCol">
+                    <div class="form-group">
+                        <label>Approver Comments</label>
+                        <textarea class="form-control" id="ApproverComments" autocomplete="off" name="ApproverComments" rows="1" maxlength="250" placeholder="Description"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                    <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 118px;">
+                        <!-- Add a custom button for choosing files -->
+                        <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                            <b>Click Here to Attach your files</b>
+                            <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                        </label>
+                        <div class="file-preview d-flex justify-content-center" id="preview">
+                            <div class="attachrow">
+                                <div class="attachcolumn">
+                                    <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                </div>
+                                <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveClaim">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="advanceCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="canvasHeader"></h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormAdvance">
+            <div class="row">
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Employee Name <span id="Asterisk">*</span></label>
+                        <select class="form-control" id="EmployeeId" name="EmployeeId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Date <span id="Asterisk">*</span></label>
+                        <input type="date" class="form-control" id="AdvanceDate" name="AdvanceDate" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2" id="AdvanceAmountCol">
+                    <div class="form-group">
+                        <label>Advance Amount <span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Advance Amount" id="AdvanceAmount" name="AdvanceAmount" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2" id="AdvanceDueCol">
+                    <div class="form-group">
+                        <label>Due Amount </label>
+                        <input type="text" class="form-control" placeholder="Due Amount" id="DueAmount" name="DueAmount" disabled oninput="Common.allowOnlyNumberLength(this, 5)" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2" id="AdvanceStatusCol">
+                    <div class="form-group">
+                        <label>Status <span id="Asterisk">*</span></label>
+                        <select class="form-control" id="AdvanceStatusId" name="AdvanceStatusId" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12 mt-2" id="AdvanceDescCol">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="Description" autocomplete="off" name="Description" rows="1" maxlength="250" placeholder="Description"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12 mt-2" style="display:none;" id="advanceCmtCol">
+                    <div class="form-group">
+                        <label>Comments	<span id="Asterisk">*</span></label>
+                        <textarea class="form-control" id="Comments" autocomplete="off" name="Comments" rows="1" maxlength="250" placeholder="Comments" required></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveAdvance">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="loanCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="canvasHeader"></h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormLoan">
+            <div class="row">
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Employee Name <span id="Asterisk">*</span></label>
+                        <select class="form-control" id="LoanEmployeeId" name="LoanEmployeeId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Date <span id="Asterisk">*</span></label>
+                        <input type="date" class="form-control" id="LoanDate" name="LoanDate" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Loan Amount <span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Loan Amount" id="LoanAmount" name="LoanAmount" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>No Of Dues <span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="No Of Dues" id="NoOfDues" name="NoOfDues" oninput="Common.allowOnlyNumberLength(this, 2)" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Due Amount</label>
+                        <input type="text" class="form-control" placeholder="Due Amount" id="DueAmount" name="DueAmount" disabled />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Completed Due</label>
+                        <input type="text" class="form-control" placeholder="Completed Amount" id="CompletedDue" name="CompletedDue" disabled />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Pending Amount</label>
+                        <input type="text" class="form-control" placeholder="Pending Amount" id="PendingAmount" name="PendingAmount" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Pending Dues</label>
+                        <input type="text" class="form-control" placeholder="Pending Dues" id="PendingDues" name="PendingDues" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2" id="LoanStatusCol">
+                    <div class="form-group">
+                        <label>Status <span id="Asterisk">*</span></label>
+                        <select class="form-control" id="LoanStatusId" name="LoanStatusId" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12 mt-2" id="LoanDescCol">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="Description" autocomplete="off" name="Description" rows="1" maxlength="250" placeholder="Description"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12 mt-2" style="display:none;" id="loanCmtCol">
+                    <div class="form-group">
+                        <label>Comments	<span id="Asterisk">*</span></label>
+                        <textarea class="form-control" id="Comments" autocomplete="off" name="Comments" rows="1" maxlength="250" placeholder="Comments" required></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveLoan">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+    var isAdminAccess = "@isAdmin";
+    var UserId = "@EmployeeId";
+
+    $(function () {
+        $('#EmployeeId').each(function () {
+            $(this).select2({
+                theme: 'bootstrap4',
+                width: 'style',
+                placeholder: $(this).attr('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear')),
+            });
+        });
+    });
+    $(function () {
+        $('#LoanEmployeeId').each(function () {
+            $(this).select2({
+                theme: 'bootstrap4',
+                width: 'style',
+                placeholder: $(this).attr('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear')),
+            });
+        });
+    });
+    $(function () {
+        $('#RequestedBy').each(function () {
+            $(this).select2({
+                theme: 'bootstrap4',
+                width: 'style',
+                placeholder: $(this).attr('placeholder'),
+                allowClear: Boolean($(this).data('allow-clear')),
+            });
+        });
+    });
+
+    $("#FormClaim").validate({
+        errorPlacement: function (error, element) {
+            if (element.hasClass("select2-hidden-accessible")) {
+                error.insertAfter(element.next(".select2-container"));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        rules: {
+            RequestedBy: {
+                required: true
+            }
+        },
+        messages: {
+            RequestedBy: {
+                required: "This field is required."
+            }
+        }
+    });
+    $("#FormAdvance").validate({
+        errorPlacement: function (error, element) {
+            if (element.hasClass("select2-hidden-accessible")) {
+                error.insertAfter(element.next(".select2-container"));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        rules: {
+            EmployeeId: {
+                required: true
+            }
+        },
+        messages: {
+            EmployeeId: {
+                required: "This field is required."
+            }
+        }
+    });
+    $("#FormLoan").validate({
+        errorPlacement: function (error, element) {
+            if (element.hasClass("select2-hidden-accessible")) {
+                error.insertAfter(element.next(".select2-container"));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        rules: {
+            LoanEmployeeId: {
+                required: true
+            }
+        },
+        messages: {
+            LoanEmployeeId: {
+                required: "This field is required."
+            }
+        }
+    });
+</script>
+<script src="~/js/deductions.js"></script>
+

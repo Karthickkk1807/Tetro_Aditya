@@ -1,0 +1,531 @@
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Production, Context.Session);
+}
+<style>
+    #dynamicProduction .row > .col-2 {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    #dynamicProduction .row > .col-1 {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    #RgbCol .table td {
+        padding: .55rem;
+    }
+
+    #ProductionTable {
+        width: 100% !important;
+    }
+
+    .dataTables_scrollBody {
+        height: 330px !important;
+        margin-top: -18px !important;
+        border-bottom: 1px solid #111;
+        margin-bottom: 10px;
+    }
+
+    .productionTable {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-wrapper {
+        max-height: 310px !important; /* 257px */
+        overflow-y: auto;
+        display: block;
+    }
+
+    .productionTable thead th {
+        position: sticky;
+        top: -1px;
+        z-index: 2;
+        background: #a3c1df;
+    }
+
+    .AddStockBtn1 {
+        background: none;
+        color: green;
+        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 13px;
+        border: 1px solid green;
+        width: 30px;
+        border-radius: 50%;
+        height: 30px;
+        padding: 4px;
+        margin-right: 5px;
+        margin-top: 1px;
+    }
+
+        .AddStockBtn1:hover {
+            background-color: #11aa22;
+            color: white;
+            box-shadow: 0 3px 11px rgb(58 169 0 / 93%);
+        }
+
+    .DynrowRemove {
+        background: none !important;
+        color: red;
+        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 12px;
+        border: 1px solid red;
+        width: 33px;
+        border-radius: 50%;
+        height: 33px;
+        padding: 4px;
+        margin-top: 0px;
+    }
+
+        .DynrowRemove i {
+            margin-left: 1px;
+            color: red;
+        }
+
+        .DynrowRemove:hover i {
+            color: white !important;
+        }
+
+    .DynrowRemoveQC {
+        background: none !important;
+        color: red;
+        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 12px;
+        border: 1px solid red;
+        width: 33px;
+        border-radius: 50%;
+        height: 33px;
+        padding: 4px;
+        margin-top: 0px;
+    }
+
+        .DynrowRemoveQC i {
+            margin-left: 1px;
+            color: red;
+        }
+
+        .DynrowRemoveQC:hover i {
+            color: white !important;
+        }
+
+    #ProductionModal .card-stats .col-stats {
+        justify-content: center !important;
+        display: flex !important;
+        padding-left: 15px !important;
+        padding-top: 27px !important;
+    }
+
+    #ProductionModal .quick-db-box .col-icon {
+        position: relative;
+        top: -27px !important;
+        left: 29px !important;
+        height: 32px;
+    }
+
+    #ProductionModal .card-round {
+        height: 60px;
+    }
+
+    .searchbar__inputManageStock {
+        height: 34px;
+        flex-grow: 1;
+        padding: 5px;
+        outline: none;
+        border: 1px solid rgba(56, 39, 180, 1);
+        border-radius: 5px 0 0 5px;
+        background: #F4FAF9;
+        transition: background 0.25s, box-shadow 0.25s;
+        width: 100%;
+    }
+
+    .ExistFiles, .DynamicExistselectedFiles {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 3px;
+    }
+
+        .ExistFiles li {
+            list-style-type: none;
+        }
+
+    .DynamicExistselectedFiles li {
+            list-style-type: none;
+        }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/clockpicker/dist/bootstrap-clockpicker.min.css">
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/inventory/production icon - 1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"> </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/inventory/production icon - 2.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/inventory/production icon - 3.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/inventory/production icon - 1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="filter-Column" class="Date-SearchColumn">
+    <div class="month-piker d-flex">
+        <div class="dropdown">
+            <button class="btn Bulk-Action dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                </svg>
+                Month
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2" style="min-width: 140px;">
+                <li><a id="downloadExcelBtn" class="dropdown-item active">Month</a></li>
+                <li><a class="dropdown-item" id="bulkEmployee">Custom</a></li>
+            </ul>
+        </div>
+
+        <div class="ftdate">
+            <div class="row" id="fromtodateCol" style="display:none;">
+                <div class="col-6" id="frmDate">
+                    <div class="form-group d-flex align-items-center">
+                        <label class="pr-1">From:</label>
+                        <input type="date" class="form-control" id="FromDate" />
+                    </div>
+                </div>
+                <div class="col-6" id="toDate">
+                    <div class="form-group mx-2 d-flex align-items-center">
+                        <label class="pr-1" id="toLbl">To:</label>
+                        <input type="date" class="form-control" id="ToDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="" id="monthPickerCol">
+                <div class="date-carousel" id="datemonth">
+                    <div class="date-nav">
+                        <button class="nav-button" id="decrement-month-btn2">◄</button>
+                        <span class="month-year" id="dateDisplay2"></span>
+                        <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <div class="searchbar">
+            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+            <button type="submit" class="searchbar__button">
+                <img src="~/assets/commonimages/search.svg" />
+            </button>
+        </div>
+
+        <div class="datapiker ml-2 mt-1" style="position: relative;">
+            <div class="add-imp-exp-btn">
+                <div class="exportsiconpop">
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="AddProduction" title="Add Production">
+                                    <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="table-responsive">
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductionTable">
+    </table>
+</div>
+
+<div id="ProductionModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ProductionModalTitle">Production Info</h2>
+                <span id="ProductionClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+
+            <div class="modal-body" style="max-height: 77vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div class="col-lg-12" id="editCounterbox">
+                    <div class="row m-t-5">
+                        <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                            <div class="card card-stats card-round quick-db-box">
+                                <div class="card-body ">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                                <img src="~/assets/moduleimages/inventory/productionpopup_1.svg" />
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3">
+                                            <div class="numbers">
+                                                <div class="card-category" id="EditCounterTextBox1"></div>
+                                                <h4 class="card-title" id="EditCounterValBox1">120000 </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                            <div class="card card-stats card-round quick-db-box">
+                                <div class="card-body ">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                                <img src="~/assets/moduleimages/inventory/productionpopup_2.svg" />
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3">
+                                            <div class="numbers">
+                                                <div class="card-category" id="EditCounterTextBox2"></div>
+                                                <h4 class="card-title" id="EditCounterValBox2"></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                            <div class="card card-stats card-round quick-db-box">
+                                <div class="card-body ">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                                <img src="~/assets/moduleimages/inventory/productionpopup_3.svg" />
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3">
+                                            <div class="numbers">
+                                                <div class="card-category" id="EditCounterTextBox3"></div>
+                                                <h4 class="card-title" id="EditCounterValBox3"></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                            <div class="card card-stats card-round quick-db-box">
+                                <div class="card-body ">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                                <img src="~/assets/moduleimages/inventory/productionpopup_4.svg" />
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ml-3">
+                                            <div class="numbers">
+                                                <div class="card-category" id="EditCounterTextBox4"></div>
+                                                <h4 class="card-title" id="EditCounterValBox4"></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="FormProduction">
+                    <div class="row px-2 mb-2 align-items-center mt--2">
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-4">
+                            <div class="form-group">
+                                <label>Date<span id="Asterisk">*</span></label>
+                                <input type="date" id="ProductionDate" name="ProductionDate" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-4">
+                            <div class="form-group">
+                                <label>Franchise<span id="Asterisk">*</span></label>
+                                <select class="form-control" id="ToFranchiseId" name="ToFranchiseId" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-4">
+                            <div class="form-group">
+                                <label>No Of Hours<span id="Asterisk">*</span></label>
+                                <input type="time" id="NoOfHours" name="NoOfHours" class="form-control clockpicker" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-sm-12 col-6 d-flex justify-content-end mt-3">
+                            <div class="searchbar">
+                                <input type="text" class="searchbar__inputManageStock" name="tableForPopFilter" id="tableForPopFilter" placeholder="Search">
+                                <button type="button" class="searchbar__button">
+                                    <img src="/assets/commonimages/search.svg">
+                                </button>
+                            </div>
+                            <div class="d-flex justify-content-center align-items-start ml-3">
+                                <button id="addProduction" class="btn AddStockBtn" type="button">
+                                    <i class="fas fa-plus" id="AddButton"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="RgbCol" class="mt-2">
+                        <div class="table-wrapper">
+                            <table class="table table-bordered productionTable mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="background: #a3c1df;">Product <span style="visibility:hidden;">111111111</span></th>
+                                        <th style="background: #a3c1df;">Flavour <span style="visibility:hidden;">1111111</span></th>
+                                        <th style="background: #a3c1df;">Unit <span style="visibility:hidden;">1111111</span></th>
+                                        <th style="background: #a3c1df;">Dust</th>
+                                        <th style="background: #a3c1df;">MarbleDown</th>
+                                        <th style="background: #a3c1df;">LowFill</th>
+                                        <th style="background: #a3c1df;">RedHazard</th>
+                                        <th style="background: #a3c1df;">Others</th>
+                                        <th style="background: #a3c1df;">Quantity</th>
+                                        <th style="background: #a3c1df;">Opening Bls</th>
+                                        <th style="background: #a3c1df;">Distribution</th>
+                                        <th style="background: #a3c1df;">Closing Bls</th>
+                                        <th style="background: #a3c1df;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dynamicProduction">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+                <div class="row d-flex justify-content-end">
+                    <div class="" style="margin-right: -44px !important;">
+                        <div class="form-group">
+                            <label>No Of Product</label>
+                            <input type="text" id="NoOfProducts" name="NoOfProducts" class="form-control" placeholder="No Of Product" style="width: 54%;" disabled>
+                        </div>
+                    </div>
+                    <div class="" style="margin-right: -44px !important;">
+                        <div class="form-group">
+                            <label>Total Qty_RGB</label>
+                            <input type="text" id="TotalBalanceRGB" name="TotalBalanceRGB" class="form-control" placeholder="0" style="width: 54%;" disabled>
+                        </div>
+                    </div>
+                    <div class="" style="margin-right: -44px !important;">
+                        <div class="form-group">
+                            <label>Total Qty_PET</label>
+                            <input type="text" id="TotalBalancePET" name="TotalBalancePET" class="form-control" placeholder="0" style="width: 54%;" disabled>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="SaveProduction" value="Save">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ProductionDynamicAttachmentModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id=""> Production QC Mapping Attachment Info</h2>
+                <span id="ProductionDynamicAttachmentModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body DynamicAttachmentBind" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
+<script src="~/js/production.js"></script>
+
+
+@* <div class="set-container">
+    <input type="checkbox" id="pf897" data-productqcmapid="897">
+    <label for="pf897">TASTE</label>
+    <input class="form-control" type="text" placeholder="0.00" fdprocessedid="t1uwt">
+</div> *@

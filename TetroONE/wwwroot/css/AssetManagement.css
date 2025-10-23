@@ -1,0 +1,66 @@
+﻿
+.dataTables_scrollBody {
+    height: 330px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+#AssetManagementTable {
+    width: 100% !important;
+}
+
+table th:last-child {
+    text-align: center;
+}
+
+.btn-eye {
+    font-size: 18px !important;
+}
+
+#MoveableCanvas .scrolable-table-wrappe {
+    max-height: 491px;
+    overflow-y: auto;
+    display: block;
+}
+
+#MoveableCanvas #MoveableAssetManagementDynamicTable {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+    #MoveableCanvas #MoveableAssetManagementDynamicTable thead th {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: #cedeef;
+        text-align: center;
+        border: 1px solid #ccc;
+        padding: 8px;
+    }
+
+    #MoveableCanvas #MoveableAssetManagementDynamicTable tbody td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+
+#MoveableCanvas .scrolable-table-wrappe::-webkit-scrollbar {
+    width: 10px;
+}
+
+#MoveableCanvas .scrolable-table-wrappe::-webkit-scrollbar-thumb {
+    background-color: #7a6def;
+    border-radius: 4px;
+}
+
+/*.btn-eye {
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+    .btn-eye.animate-blink {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }*/

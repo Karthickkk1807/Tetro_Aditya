@@ -1,0 +1,48 @@
+﻿
+#SecondarySalesTable {
+    width: 100% !important;
+}
+
+#SecondarySalesTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+    max-height: 330px !important;
+}
+
+.dataTables_scrollBody {
+    height: 330px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+#BindContactShop {
+    margin-top: -36px;
+}
+
+.DynrowRemove {
+    background: none;
+    color: red;
+    transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    border: 1px solid red;
+    width: 30px;
+    border-radius: 50%;
+    height: 30px;
+    padding: 4px;
+    margin-top: 21px;
+    margin-left: -8px !important;
+}
+
+.btn-editShop {
+    cursor: pointer
+}
+
+.Salutation {
+    width: 100% !important;
+    height: 34px;
+}
+
+.mrselect {
+    height: 34px;
+    border-color: #e6e6e6;
+}

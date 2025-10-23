@@ -1,0 +1,211 @@
+﻿#ProductionStagesTable, #UnitTable, #ProductCategoryTable, #QualityParameterTable, #CriteriaTable, #ModulePrefixTable, #DocumentTable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    margin-top: -18px !important;
+}
+
+/*.dataTables_scrollBody {
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    max-height: 300px;
+}*/
+
+fieldset {
+    border: 2px solid #111112 !important;
+    padding: 5px 15px 5px 15px;
+    border-radius: .25rem;
+    margin-bottom: 0.5rem;
+    /* box-shadow: 0 0 10px rgb(105 119 255 / 30%); */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+legend {
+    box-sizing: border-box;
+    color: inherit;
+    display: table;
+    width: fit-content;
+    background-color: #fefefe !important;
+    max-width: 100%;
+    padding: 5px !important;
+    white-space: normal;
+    border-radius: 5px;
+    color: #121212 !important;
+    font-size: 13px !important;
+    font-weight: 700;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.checkbox-label {
+    filter: blur(1px); /* Initially blur the text */
+    transition: filter 0.3s ease-in-out;
+    position: absolute;
+    left: 33px;
+}
+
+input[type="checkbox"]:hover + .checkbox-label,
+input[type="checkbox"]:checked + .checkbox-label {
+    filter: blur(0); /* Remove blur on hover or when checked */
+}
+
+.card-header {
+    padding-bottom: 8px !important;
+}
+
+
+#AttendanceMachineTable {
+    width: 100% !important;
+}
+
+#AttendanceMachineMappingTable {
+    width: 100% !important;
+}
+
+
+
+
+input[switch] {
+    display: none;
+}
+
+    input[switch] + label {
+        font-size: 1.5em;
+        line-height: 1;
+        width: 5.7rem;
+        height: 2.2rem;
+        background-color: #ddd;
+        background-image: none;
+        border-radius: 2rem;
+        padding: 0.1666666667rem;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2) inset;
+        font-family: inherit;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+    }
+
+        input[switch] + label:before {
+            text-transform: uppercase;
+            color: #000000;
+            content: attr(data-off-label);
+            display: block;
+            font-family: inherit;
+            font-family: FontAwesome, inherit;
+            font-weight: 500;
+            font-size: 21px;
+            line-height: 2rem;
+            position: absolute;
+            right: 1.416667rem;
+            margin: 0.2166666667rem;
+            top: -2px;
+            text-align: center;
+            min-width: 1.6666666667rem;
+            overflow: hidden;
+            -webkit-transition: all 0.1s ease-in-out;
+            transition: all 0.1s ease-in-out;
+        }
+
+        input[switch] + label:after {
+            /* Slider */
+            content: '';
+            position: absolute;
+            left: 0.102rem;
+            background-color: #f7f7f7;
+            box-shadow: none;
+            border-radius: 2rem;
+            height: 1.9rem;
+            width: 1.9rem;
+            -webkit-transition: all 0.1s ease-in-out;
+            transition: all 0.1s ease-in-out;
+        }
+
+    input[switch]:checked + label {
+        background-color: lightblue;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.15)), to(rgba(0, 0, 0, 0.2)));
+        background-image: linear-gradient(rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.2));
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3) inset;
+    }
+
+        input[switch]:checked + label:before {
+            color: #fff;
+            content: attr(data-on-label);
+            font-size: 21px;
+            right: auto;
+            left: 0.916667rem;
+        }
+
+        input[switch]:checked + label:after {
+            left: 3.7rem;
+            background-color: #f7f7f7;
+            box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.3);
+        }
+
+input[switch="bool"] + label {
+    /*background-color: #fbd100;*/
+    background-color: rgb(255, 33, 33);
+}
+
+input[switch="abcd"] + label {
+    background-color: #fbd100;
+}
+
+input[switch="bool"] + label:before {
+    color: #fff !important;
+}
+
+input[switch="bool"]:checked + label {
+    background-color: #40d340;
+}
+
+input[switch="abcd"]:checked + label {
+    background-color: #4908b1;
+}
+
+input[switch="bool"]:checked + label:before {
+    color: #fff !important;
+}
+
+input[switch="default"]:checked + label {
+    background-color: #a2a2a2;
+}
+
+    input[switch="default"]:checked + label:before {
+        color: #fff !important;
+    }
+
+input[switch="success"] + label {
+    background-color: rgb(225, 33, 33);
+}
+
+    input[switch="success"] + label:before {
+        color: #fff !important;
+    }
+
+input[switch="success"]:checked + label {
+    background-color: #40d340;
+}
+
+    input[switch="success"]:checked + label:before {
+        color: #fff !important;
+    }
+
+input[switch="warning"]:checked + label {
+    background-color: gold;
+}
+
+    input[switch="warning"]:checked + label:before {
+        color: #fff !important;
+    }
+
+#OtherChargesTable, #ClaimTypeTable {
+    width: 100% !important;
+}
+
+#AttendanceMachineMappingTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+    max-height: 159px !important;
+}

@@ -1,0 +1,34 @@
+﻿
+
+@media(max-width:767px) {
+    #paymentExpenseChart {
+        height: 230px !important;
+        width: 331px !important;
+    }
+}
+
+@media(min-width:767px) {
+    #transferStatusChart {
+        height: 230px !important;    
+    }
+    #salesChart {
+        height: 230px !important;
+        width: 280px !important;
+    }
+    #payrollOverviewChart {
+        height: 250px !important;
+        width: 270px !important;
+    }
+    #paymentExpenseChart {
+        height: 250px !important;
+        width: 270px !important;
+    }
+
+}
+
+@media(max-width:767px) {
+    #transferStatusChart {
+        height: 230px !important;
+        width: 340px !important;
+    }
+}

@@ -1,0 +1,249 @@
+﻿.mrselect {
+    height: 32px;
+    border-color: #e6e6e6;
+}
+
+.AddStockBtn:hover {
+    background-color: #1A2A;
+    color: white;
+    box-shadow: 0 3px 11px rgb(58 169 0 / 93%);
+}
+#Managetable {
+    width: 500px;
+}
+
+#ClientTable, #FranchiseTable, #ShopTable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    height: 330px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+.picture {
+    height: 65px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    border: 2px dashed currentcolor;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: color 300ms ease-in-out, background 300ms ease-in-out;
+    outline: none;
+    overflow: hidden;
+    justify-content: center;
+    margin-bottom: 0px;
+}
+
+.company-sign-avatar-upload {
+    position: relative;
+    max-width: 205px;
+    margin: 0px;
+    left: 90%;
+}
+
+    .company-sign-avatar-upload .avatar-edit input {
+        display: none;
+    }
+
+    .company-sign-avatar-upload .avatar-edit {
+        position: absolute;
+        /*right: -100px;*/
+        z-index: 1;
+        bottom: 0px;
+    }
+
+        .company-sign-avatar-upload .avatar-edit input + label img {
+            margin-top: 3px;
+            margin-left: 5.5px;
+            width: 12px;
+        }
+
+        .company-sign-avatar-upload .avatar-edit input + label {
+            position: relative;
+            top: 7px;
+            /*left: -20px;*/
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            margin-bottom: 0;
+            border-radius: 100%;
+            border: 1px solid #fff;
+            box-shadow: 0px 2px 14px 0px #fff;
+            cursor: pointer;
+            font-weight: normal;
+            transition: all 0.2s ease-in-out;
+            text-shadow: 0 1px rgb(106, 182, 240);
+            background: linear-gradient(to right, rgba(56, 39, 180, 1) 0%, rgba(108, 24, 164, 1) 64%, rgba(108, 24, 164, 1) 100%);
+        }
+
+    .company-sign-avatar-upload .avatar-preview {
+        width: 120px;
+        height: 120px;
+        position: relative;
+        border-radius: 100%;
+        border: 6px solid #F8F8F8;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+    }
+
+        .company-sign-avatar-upload .avatar-preview > div {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+.Signaturelabel {
+    color: #495057;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* New Card Styles */
+.new-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    margin-bottom: 10px;
+}
+
+    .new-card:hover {
+        transform: translateY(-10px);
+    }
+
+/*.new-card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}*/
+
+.new-card-content {
+    padding: 10px;
+}
+
+.new-card-title {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+    font-weight: 800;
+}
+
+.new-card-description {
+    color: #777;
+    font-size: 1em;
+    margin: 5px 0;
+}
+
+/*.new-card-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+    .new-card-button:hover {
+        background-color: #0056b3;
+    }*/
+
+.btn-Shop {
+    position: relative !important;
+    font-size: 1px !important;
+    top: 1px !important;
+    right: 8px !important;
+    color: #bf3ad6db;
+    width: 17px !important;
+}
+
+#signatureUpload {
+    width: 100%;
+    height: 100%;
+}
+
+.dynamicinput, .dynamicinputselect {
+    height: 30px !important;
+}
+
+.checkbox-label_1,
+.dynamicinput,
+.dynamicinputselect {
+    filter: blur(1px);
+    transition: filter 0.3s ease-in-out;
+}
+
+/* Styles for hover */
+input[type="checkbox"]:hover + label.checkbox-label_1,
+input[type="checkbox"]:hover ~ .dynamicinput,
+input[type="checkbox"]:hover ~ .dynamicinputselect {
+    filter: blur(0);
+}
+
+/* Styles for checked */
+input[type="checkbox"]:checked + label.checkbox-label_1,
+input[type="checkbox"]:checked ~ .dynamicinput,
+input[type="checkbox"]:checked ~ .dynamicinputselect {
+    filter: blur(0);
+}
+
+#FormContactClient .Salutation {
+    width: 5% !important;
+}
+
+#FormFranchiseContact .Salutation {
+    width: 5% !important;
+}
+
+.Salutation {
+    width: 100% !important;
+    height: 34px;
+}
+
+#BindContactShop {
+    margin-top: -36px;
+}
+
+#BindProductData {
+    height: 185px !important;
+    overflow-y: scroll !important;
+}
+
+.DynrowRemove{
+    background: none;
+    color: red;
+    transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    border: 1px solid red;
+    width: 30px;
+    border-radius: 50%;
+    height: 30px;
+    padding: 4px;
+    margin-top: 21px;
+    margin-left: -8px !important;
+}
+
+.btn-Shop, .btn-editShop, .btn-deleteShop {
+    cursor: pointer
+}
+
+.file-preview {
+    text-align: center;
+    height: 4rem !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

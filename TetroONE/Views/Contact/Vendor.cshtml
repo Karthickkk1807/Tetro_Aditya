@@ -1,0 +1,439 @@
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Vendor, Context.Session);
+}
+
+<link href="~/css/vendor.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/contact/vendoricon_1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/contact/vendoricon_2.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/contact/vendoricon_3.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/contact/vendoricon_4.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row justify-content-end mr-2">
+    <div class="searchbar">
+        <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+        <button type="submit" class="searchbar__button">
+            <img src="~/assets/commonimages/search.svg" />
+        </button>
+    </div>
+
+    <div class="datapiker ml-2 mt-1" style="position: relative;">
+        <div class="add-imp-exp-btn">
+            <div class="exportsiconpop">
+                @{
+                    if (access.Create)
+                    {
+                        <span class="pop">
+                            <a id="AddVendor" title="Add Vendor">
+                                <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                            </a>
+                        </span>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="table-responsive">
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="VendorTable"></table>
+</div>
+
+<div id="VendorCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="VendorHeader">Add New Vendor</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="accordion" id="styleAccordionluf3ws29vt">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Vendor Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormVendor">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Company Name<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: S.K.Jain and Sons." id="VendorName" name="VendorName" required maxlength="50" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Address</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="Address" name="Address" maxlength="500" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>City<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: Chennai" id="City" name="City" required oninput="Common.allowOnlyTextLength(this,50)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>State<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="StateId" name="StateId" required></select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Country</label>
+                                            <input type="text" class="form-control" placeholder="Ex: India" id="Country" name="Country" oninput="Common.allowOnlyTextLength(this,20)" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Zipcode</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 600028" id="ZipCode" name="ZipCode" oninput="Common.allowOnlyNumberLength(this,6)" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Contact No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex:9876543210" id="ContactNumber" name="ContactNumber" minlength="10" maxlength="10" required oninput="Common.allowOnlyNumberLength(this,10)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input type="text" class="form-control" placeholder="Ex: example@gmail.com" id="Email" name="Email" oninput="Common.allowEmailAndLength(this, 50)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>GST Number</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 27AAACB1234C1Z5" id="GSTNumber" name="GSTNumber" oninput="Common.allowGSTNumber(this, 15)" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6" style="margin-top: 26px;" id="IsActiveHide">
+                                        <div class="form-group">
+                                            <input type="checkbox" id="IsActive" name="IsActive" style="position: relative;top: 2px;">
+                                            <label for="IsActive"> Is Active </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Max Credit Limit<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Max Credit Limit" id="MaxCreditLimit" name="MaxCreditLimit" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6 mt-2" id="CurrentlimitHide">
+                                        <div class="form-group">
+                                            <label>Current Credit</label>
+                                            <input type="text" class="form-control" placeholder="0.00" id="CurrentCreditLimit" name="CurrentCreditLimit" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            <label>Remarks</label>
+                                            <textarea class="form-control" id="Remark" autocomplete="off" name="Remark" rows="1" maxlength="250" placeholder="Remarks"></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordionluf3ws29vt">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Bank Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormVendorBank">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>IFSC Code</label>
+                                            <input type="text" class="form-control" placeholder="Ex: SBIN0001234" id="IFSCCode" name="IFSCCode" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Bank Name</label>
+                                            <input type="text" class="form-control" placeholder="Ex: State Bank of India" id="BankName" name="BankName" oninput="Common.allowOnlyTextLength(this, 25)" disabled />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Branch Name</label>
+                                            <input type="text" class="form-control" placeholder="Ex: Main Branch" id="BranchName" name="BranchName" oninput="Common.allowOnlyTextLength(this, 25)" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Account Type</label>
+                                            <select class="form-control" id="AccountType" name="AccountType">
+                                                <option value="">--Select--</option>
+                                                <option value="Current">Current</option>
+                                                <option value="Savings">Savings</option>
+                                                <option value="CashCredit">Cash Credit</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Account Name</label>
+                                            <input type="text" class="form-control" placeholder="Ex: S.K.Jain and Sons." id="AccountName" name="AccountName" oninput="Common.allowOnlyTextLength(this, 25)" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Account Number</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 123456789012" id="AccountNumber" name="AccountNumber" oninput="Common.allowOnlyNumberLength(this,20)" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordionluf3ws29vt">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Contact Person Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+
+                            <div class="d-flex justify-content-end align-items-start">
+                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRow(this)">
+                                    <i class="fas fa-plus" id="AddButton"></i>
+                                </button>
+                            </div>
+                            <form id="FormVendorContact">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordionluf3ws29vt">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Product Mapping Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormVendorProductMapp">
+                                <div class="row" id="VendorProductList">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="TransactionsHide">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Transactions Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse6" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FromTransactionsInfo">
+                                <div class="row">
+                                    <div class="col-12" id="TransactionsInfo">
+                                        <div class="table-responsive">
+                                            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="Managetable"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* <div class="col-12">
+                <div class="accordion" id="styleAccordionluf3ws29vt">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Franchise Mapping Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse5" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormFranchiseData">
+                                <div class="row mt--2" id="BindFranchiseData">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> *@
+        </div>
+    </div>
+
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveClient">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+<script src="~/js/vendor.js"></script>

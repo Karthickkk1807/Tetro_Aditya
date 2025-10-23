@@ -1,0 +1,837 @@
+﻿@using System.Security.Claims;
+@{
+    bool isAdmin = false, isEmployee = false;
+    if (User.IsInRole("Executive") || User.IsInRole("GeneralUser"))
+        isEmployee = true;
+    else
+        isAdmin = true;
+
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Attendance, Context.Session);
+
+    var userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+    var EmployeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
+    var UserGroupId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GroupSid).Value);
+
+}
+<link href="~/css/attendance.css" rel="stylesheet" />
+<link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
+
+
+<style>
+    #AdminTable_wrapper > div.dataTables_scroll.dtfc-has-left > div.dataTables_scrollHead > div > table > thead > tr > th.sorting.dtfc-fixed-left {
+        z-index: 1;
+        background-color: #e3c8f3;
+    }
+
+    .odd .dtfc-fixed-left {
+        z-index: 1;
+        background-color: #f2f2f2;
+    }
+
+    .even .dtfc-fixed-left {
+        z-index: 1;
+        background-color: #ffffff;
+    }
+
+    #uploadAttendImage {
+        display: none;
+    }
+
+    .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+        color: #fff;
+        background-color: #6c18a4;
+        border-color: #6c18a4;
+    }
+
+    #AdminTable_wrapper > div.dataTables_scroll.dtfc-has-left > div.dataTables_scrollBody{
+        height: 406px !important;
+        margin-top: -18px !important;
+        border-bottom: 1px solid #111;
+        margin-bottom: 10px;
+    }
+</style>
+@if (isAdmin)
+{
+    <ul class="nav nav-tabs pl-2" id="myTab" role="tablist">
+        <li class="nav-item submenu" role="presentation">
+            <a class="nav-link navbar-tab active" id="Mine-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="" aria-selected="true">Mine</a>
+        </li>
+
+        <li class="nav-item submenu" role="presentation">
+            <a class="nav-link navbar-tab" id="EmployeeView-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="" aria-selected="true">Team</a>
+        </li>
+
+        <li class="nav-item submenu" role="presentation">
+            <a class="nav-link navbar-tab" id="AdminView-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="" aria-selected="true">Admin View</a>
+        </li>
+    </ul>
+}
+
+<div class="row" id="EmployeeCheckInCheckOutCol">
+    <div class="col-lg-3 col-md-12" id="checkInOutCol">
+        <div class="card punch-status">
+            <div class="card-body">
+                <h5 class="card-title mt--2">
+                    Timesheet <label class="text-muted" id="todaydate" style="font-weight: 800;"></label>
+                </h5>
+                <div class="punch-det mt-1">
+                    <h6 class="d-flex justify-content-center">Punch In at</h6>
+                    <div class="d-flex justify-content-center">
+                        <p class="font-weight-bold mb-0" id="PunchInAt"></p>
+                    </div>
+                </div>
+
+                <div class="punch-info">
+                    <div class="punch-hours">
+                        <p><span id="timer">00:00:00</span></p>
+                    </div>
+                </div>
+                <a class="d-none" id="ViewMapbtn">
+                    <img src="/assets/moduleimages/map-pin.svg">
+                </a>
+                @*<p id="Outarea" class="text-danger d-none">You are outside the area</p>*@
+                <p id="CheckListMessage" class="text-center d-none" style="color:red;">Yesterday's Daily EOD Report not updated to proceed Today's Checkin.</p>
+                 
+                <div class="punch-btn-section">
+                    <button id="toggleButton" class="btn-1 punch-btn text-white" style="background-color: rgb(149, 215, 149);">Check-In</button>
+                    @*<button id="toggleButton" class="btn-1 punch-btn text-white" disabled style="background-color: rgb(149, 215, 149);">Check-In</button>*@
+                    <input type="file" id="uploadAttendImage" class="imageUpload2-manageuser" accept=".png, .jpg, .jpeg">
+                </div>
+
+
+                <div class="statistics">
+                    <div class="col-12 text-center">
+                        <div class="stats-box">
+                            <h6><label id="BreakTimeText">Break</label> <br><label id="BreakTimeVal"></label></h6>
+                        </div>
+                    </div>
+                    <div class="col-12 text-center">
+                        <div class="stats-box">
+                            <h6><label id="OverTimeText">OverTime</label> <br><label id="OverTimeVal">00:00 Hrs</label></h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <div class="">
+                            <a class="btn btn-success m-r-20 text-white" id="EditCheckList">EOD Report</a>
+                        </div>
+                    </div>
+                    <div class="col-6 text-center">
+                        <div class="">
+                            <a class="btn btn-update m-r-20 text-white" id="Availability">Availability</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9 col-md-12">
+        <div class="row">
+            <div class="col-12">
+                <div class="row quick-db m-b-3 m-t-25">
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_1.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="EmployeeCounterTextBox1"></div>
+                                            <h4 class="card-title" id="EmployeeCounterValBox1"> </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_2.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="EmployeeCounterTextBox2"></div>
+                                            <h4 class="card-title" id="EmployeeCounterValBox2"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_3.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="EmployeeCounterTextBox3"></div>
+                                            <h4 class="card-title" id="EmployeeCounterValBox3"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_4.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="EmployeeCounterTextBox4"></div>
+                                            <h4 class="card-title" id="EmployeeCounterValBox4"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12" id="EmployeeTableShow">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="filter-Column" class="Date-SearchColumn">
+                            <div class="datapiker" id="EmployeeDatePicker">
+
+                                <div class="dropdown">
+                                    <button class="btn Bulk-Action dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                                        </svg>
+                                        Month
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2" style="min-width: 140px;">
+                                        <li><a id="downloadExcelBtn" class="dropdown-item active">Month</a></li>
+                                        <li><a class="dropdown-item" id="bulkEmployee">Custom</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="ftdate">
+                                    <div id="fromtodateCol" style="display:none;">
+                                        <div class="d-flex">
+                                            <div id="frmDate">
+                                                <div class="form-group d-flex align-items-center mb-0">
+                                                    <label class="pr-1">From:</label>
+                                                    <input type="date" class="form-control" id="FromDate" />
+                                                </div>
+                                            </div>
+                                            <div id="toDate">
+                                                <div class="form-group mx-2 d-flex align-items-center mb-0">
+                                                    <label class="pr-1" id="toLbl">To:</label>
+                                                    <input type="date" class="form-control" id="ToDate" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="" id="monthPickerCol">
+                                        <div class="date-carousel" id="datemonth">
+                                            <div class="date-nav">
+                                                <button class="nav-button" id="decrement-month-btn2">◄</button>
+                                                <span class="month-year" id="dateDisplay2"></span>
+                                                <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="" id="searchColEmployee">
+                                <div class="searchbar" id="searchBox">
+                                    <input type="text" class="searchbar__input" name="q" id="tableFilterEmployeeEmployeeTable" placeholder="Search">
+                                    <button type="submit" class="searchbar__button">
+                                        <img src="~/assets/commonimages/search.svg" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="EmployeeTable"> </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="TeamCheckInCheckOutCol">
+    <div class="col-lg-12 col-md-12">
+        <div class="row">
+            <div class="col-12">
+                <div class="row quick-db m-b-3 m-t-25">
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_1.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="TeamCounterTextBox1"></div>
+                                            <h4 class="card-title" id="TeamCounterValBox1"> </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_2.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="TeamCounterTextBox2"></div>
+                                            <h4 class="card-title" id="TeamCounterValBox2"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_3.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="TeamCounterTextBox3"></div>
+                                            <h4 class="card-title" id="TeamCounterValBox3"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_4.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="TeamCounterTextBox4"></div>
+                                            <h4 class="card-title" id="TeamCounterValBox4"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12" id="TeamTableShow">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="filter-Column" class="Date-SearchColumn">
+                            <div class="datapiker" id="TeamDatePicker">
+
+                                <div class="dropdown">
+                                    <button class="btn Bulk-Action dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                                        </svg>
+                                        Month
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2" style="min-width: 140px;">
+                                        <li><a id="downloadExcelBtn" class="dropdown-item active">Month</a></li>
+                                        <li><a class="dropdown-item" id="bulkEmployee">Custom</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="ftdate">
+                                    <div id="fromtodateCol" style="display:none;">
+                                        <div class="d-flex">
+                                            <div id="frmDate">
+                                                <div class="form-group d-flex align-items-center mb-0">
+                                                    <label class="pr-1">From:</label>
+                                                    <input type="date" class="form-control" id="FromDate" />
+                                                </div>
+                                            </div>
+                                            <div id="toDate">
+                                                <div class="form-group mx-2 d-flex align-items-center mb-0">
+                                                    <label class="pr-1" id="toLbl">To:</label>
+                                                    <input type="date" class="form-control" id="ToDate" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="" id="monthPickerCol">
+                                        <div class="date-carousel" id="datemonth">
+                                            <div class="date-nav">
+                                                <button class="nav-button" id="decrement-month-btn2">◄</button>
+                                                <span class="month-year" id="dateDisplay2"></span>
+                                                <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="" id="searchColEmployee">
+                                <div class="searchbar" id="searchBox">
+                                    <input type="text" class="searchbar__input" name="q" id="tableFilterEmployeeTeamTable" placeholder="Search">
+                                    <button type="submit" class="searchbar__button">
+                                        <img src="~/assets/commonimages/search.svg" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="TeamTable"> </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row" id="AdminCheckInCheckOutCol">
+    <div class="col-lg-12 col-md-12" id="checkInOutGridCol">
+        <div class="row">
+            <div class="col-12">
+                <div class="row quick-db m-b-3 m-t-25">
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_1.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="AdminCounterTextBox1"></div>
+                                            <h4 class="card-title" id="AdminCounterValBox1"> </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_2.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="AdminCounterTextBox2"></div>
+                                            <h4 class="card-title" id="AdminCounterValBox2"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_3.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="AdminCounterTextBox3"></div>
+                                            <h4 class="card-title" id="AdminCounterValBox3"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                        <div class="card card-stats card-round quick-db-box">
+                            <div class="card-body ">
+                                <div class="row align-items-center">
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                            <img src="~/assets/moduleimages/attendance/attendanceicon_4.svg" />
+                                        </div>
+                                    </div>
+                                    <div class="col col-stats ml-3">
+                                        <div class="numbers">
+                                            <div class="card-category" id="AdminCounterTextBox4"></div>
+                                            <h4 class="card-title" id="AdminCounterValBox4"></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="filter-Column" class="Date-SearchColumn">
+                            <div class="datapiker" id="AdminDatePicker">
+
+                                <div class="pr-2 employeeTypeCol">
+                                    <input type="button" class="btn  btn-primary active" id="Permanent-TabBtn" value="Permanent">
+                                </div>
+                                <div class="pr-2 employeeTypeCol">
+                                    <input type="button" class="btn  btn-primary" id="Labour-TabBtn" value="Labour">
+                                </div>
+
+                                <div class="dropdown">
+                                    <button class="btn Bulk-Action dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                                        </svg>
+                                        Month
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2" style="min-width: 140px;">
+                                        <li><a id="downloadExcelBtn" class="dropdown-item active">Month</a></li>
+                                        <li><a class="dropdown-item" id="bulkEmployee">Custom</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="ftdate">
+                                    <div id="fromtodateCol" style="display:none;">
+                                        <div class="d-flex">
+                                            <div id="frmDate">
+                                                <div class="form-group d-flex align-items-center mb-0">
+                                                    <label class="pr-1">From:</label>
+                                                    <input type="date" class="form-control" id="FromDate" />
+                                                </div>
+                                            </div>
+                                            <div id="toDate">
+                                                <div class="form-group mx-2 d-flex align-items-center mb-0">
+                                                    <label class="pr-1" id="toLbl">To:</label>
+                                                    <input type="date" class="form-control" id="ToDate" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="" id="monthPickerCol">
+                                        <div class="date-carousel" id="datemonth">
+                                            <div class="date-nav">
+                                                <button class="nav-button" id="decrement-month-btn2">◄</button>
+                                                <span class="month-year" id="dateDisplay2"></span>
+                                                <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex" id="searchColAdmin">
+                                <div class="searchbar" id="searchBox">
+                                    <input type="text" class="searchbar__input" name="q" id="tableFilterAdminAdminTable" placeholder="Search">
+                                    <button type="submit" class="searchbar__button">
+                                        <img src="~/assets/commonimages/search.svg" />
+                                    </button>
+                                </div>
+                                <div class="ml-2 exportBtn">
+                                    @{
+                                        if (access.Create)
+                                        {
+                                            <div class="">
+                                                <div class="pr-2">
+                                                    <input type="button" class="btn  btn-primary" id="AddManual" value="Add Manual">
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AdminTable"> </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="attndanceCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2>Attendance Log</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormAttendance">
+            <div class="p-2">
+                <div>
+                    <div class="d-flex justify-content-center text-dark">
+                        Date: <span><label class="prevDatacolor" id="PunchDate" name="PunchDate"></label> </span>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="d-flex justify-content-start text-dark col-6">
+                            Name: <span><label class="prevDatacolor" id="EmployeeName" name="EmployeeName"></label></span>
+                        </div>
+                        <div class="d-flex justify-content-end text-dark col-6">
+                            Employee Id: <span><label class="prevDatacolor" id="EmployeeCompanyId" name="EmployeeCompanyId"></label></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card recent-activity mb-2" id="activityCard">
+                    <div class="card-body" id="Activity">
+                        <h5 class="card-title mb-3 mt-0">Today Activity</h5>
+                        <div class="timesheet">
+                            <ul class="res-activity-list" id="Todayactivity">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <div class="text-dark">
+                        Total Hours: <span><label class="prevDatacolor" id="TotalHours" name="TotalHours"></label></span>
+                    </div>
+                    <div class="text-dark">
+                        Working Hours:
+                        <span><label class="prevDatacolor" id="WorkingHours" name="WorkingHours"></label></span>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+
+<div id="add_manualattend" class="modal custom-modal" role="dialog" data-bs-loader-pms="static" data-bs-keyboard="false" aria-modal="true" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Attendance</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" tooltip="Close" flow="down" aria-label="Close">
+                    <span aria-hidden="true" title="Close">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="d-flex justify-content-between mt-2">
+                    <div class="mr-2">
+                        <div class="cal-icon"><input class="form-control datetimepicker" type="date" name="ManualDate" id="ManualDate"></div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="searchbar" id="searchBox">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterManual" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="~/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                        <div class="ml-2" id="saveadmin">
+                            @*<a class="btn btn-primary text-white" id="btnsaveadmin"> Update</a>*@
+                            <a class="btn btn-success text-white" id="btnsaveadmin"> Save</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive" id="">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AttendanceManualTable"> </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="InOutImageModal" class="modal custom-modal" role="dialog" data-bs-loader-pms="static" data-bs-keyboard="false" aria-modal="true" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog modal-dialog-centered modal-m" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Preview Image</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" tooltip="Close" flow="down" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="DisplayedPreviewImage"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="CheckListModal" class="modal custom-modal" role="dialog" data-bs-loader-pms="static" data-bs-keyboard="false" aria-modal="true" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog modal-dialog-centered modal-m" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">EOD Status</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" tooltip="Close" flow="down" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="FormCheckList">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Date  <span id="Asterisk">*</span></label>
+                                <input type="date" class="form-control" id="CheckListDate" name="CheckListDate" required />
+                            </div>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end">
+                            <div class="">
+                                <a class="btn btn-success m-r-20 mt-4 text-white" id="SaveCheckList">Save</a>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-12" id="">
+                            <div class="form-group">
+                                <label>Task Details <span id="Asterisk">*</span></label>
+                                <textarea class="form-control" id="Comments" autocomplete="off" name="Comments" rows="10" required oninput="Common.allowAllCharacters(this,2500)" placeholder="Comments"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="AvailabilityModal" class="modal custom-modal" role="dialog" data-bs-loader-pms="static" data-bs-keyboard="false" aria-modal="true" style="display: none; padding-left: 0px;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Availability Details</h5>
+                <span id="closeAvailabilityModal" class="close"
+                      style="font-size:30px;cursor:pointer;color:white;"
+                      title="Close">&times;</span>
+            </div>
+            <div class="modal-body" id="HideMainInputAvailability">
+                <fieldset class="expensefild">
+                    <legend class="w-auto">Availability Info</legend>
+                    <div class="row">
+                        <div class="col-md-2 col-lg-2 col-2 pr-1">
+                            <div class="form-group">
+                                <label>Availability Date</label>
+                                <input type="date" class="form-control AvailabilityDate" id="AvailabilityDate" name="AvailabilityDate" />
+                            </div>
+                        </div>
+                        <div class="col-9 d-flex justify-content-end ButtonSaveAlagi">
+                            <div class="">
+                                <a class="btn btn-success mr-1 text-white" id="SaveAvailibity">Save</a>
+                                <a class="btn btn-danger ml-1 text-white d-none" id="CancelAvailibity">Cancel</a>
+                            </div>
+                        </div>
+                        <div class="col-1 d-flex justify-content-end mt-4">
+                            <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRow(this)">
+                                <i class="fas fa-plus" id="AddButton"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="">
+                        <form id="FormAvailability">
+                        </form>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="row justify-content-end mr-3" id="AddAvailabilityHide">
+                <div class="searchbar">
+                    <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                    <button type="submit" class="searchbar__button">
+                        <img src="~/assets/commonimages/search.svg" />
+                    </button>
+                </div>
+                <div class="datapiker ml-2 mt-1" style="position: relative;">
+                    <div class="add-imp-exp-btn">
+                        <div class="exportsiconpop">
+                            <span class="pop">
+                                <a id="AddAvailability" title="Add Availability">
+                                    <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="" id="">
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AvailabilityTable"></table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var isadmin = "@isAdmin";
+    var isEmployee = "@isEmployee";
+    var EmployeeId = "@EmployeeId";
+    var userId = "@userId";
+    var UserGroupId = "@UserGroupId";
+
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+
+<script src="~/js/attendance.js"></script>
+
+
+<script src="~/assets/js/mdtimepicker.js"></script>
+
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgXa4jhPZCR-Da0vVviv95PRnhjiAZ2U4&libraries=drawing"></script>
+<script src="~/assets/js/jquery.geo1.1.0.min.js"></script>
+
+

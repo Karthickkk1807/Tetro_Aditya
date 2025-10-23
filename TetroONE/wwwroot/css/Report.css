@@ -1,0 +1,170 @@
+.scrollable-tabs-container {
+    font-family: "Roboto", sans-serif;
+    background: linear-gradient(to right, rgba(56, 39, 180, 1) 0%, rgba(108, 24, 164, 1) 64%, rgba(108, 24, 164, 1) 100%);
+    width: 100%;
+    margin: 16px 1px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.scrollable-tabs-container svg {
+  width: 24px;
+  height: 24px;
+  /* padding: px; */
+  cursor: pointer;
+  color: #fff;
+  border-radius: 50%;
+  pointer-events: auto;
+}
+
+    .scrollable-tabs-container ul {
+        display: flex;
+        gap: 20px;
+        padding: 12px 55px;
+        margin: 0;
+        list-style: none;
+        overflow-x: scroll;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+        width: 100%;
+        /*justify-content: center;*/
+    }
+
+.scrollable-tabs-container ul.dragging a {
+  pointer-events: none;
+}
+
+.scrollable-tabs-container ul.dragging {
+  scroll-behavior: auto;
+}
+
+.scrollable-tabs-container ul::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollable-tabs-container a {
+  color: #000;
+  text-decoration: none;
+  background: #eeeeee;
+  padding: 4px 24px;
+  display: inline-block;
+  border-radius: 4px;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.scrollable-tabs-container a.active {
+  background: linear-gradient(to right, rgb(121 102 255) 0%, rgb(137 48 197) 64%, rgb(158 67 219) 100%);
+  color: #fff;
+}
+
+.scrollable-tabs-container .right-arrow,
+.scrollable-tabs-container .left-arrow {
+  position: absolute;
+  height: 100%;
+  width: 100px;
+  top: 0;
+  display: none;
+  align-items: center;
+  padding: 0 10px;
+  pointer-events: none;
+}
+
+.scrollable-tabs-container .right-arrow.active,
+.scrollable-tabs-container .left-arrow.active {
+  display: flex;
+}
+
+
+  
+.scrollable-tabs-container .right-arrow {
+  right: 0;
+  background: linear-gradient(to left, #834fffdb 50%, transparent);
+  justify-content: flex-end;
+}
+
+.scrollable-tabs-container .left-arrow {
+    /*background: linear-gradient(to left, #7747f1ed 72%, #3b26b3);*/
+    background: linear-gradient(to right, #834fffdb 50%, transparent);
+}
+
+.hidden {
+  display: none;
+}
+
+
+#buttonGroup1 {
+  margin-top: -70px;
+  margin-left: -25px;
+}
+
+#reportGrid {
+    width: 100% !important;
+}
+.dataTables_scrollBody {
+    max-height: 455px !important;
+    height: 455px !important;
+    border-bottom: 1px solid;
+    margin-top: -16px;
+}
+/*.datapiker {
+    position: relative;
+    margin-top: -10px;
+}*/
+/*.add-imp-exp-btn {
+    position: absolute;
+    right: 0;
+    top: 15px
+}
+.exportsiconpop {
+    margin-left: -25px !important;
+}*/
+
+
+@media (max-width:433px) {
+    body > div.wrapper.show > div.main-panel > div > div > div.row.justify-content-end {
+        margin-top: -33px !important;
+    }
+
+}
+@media(min-width:360px) and (max-width:800px) {
+    body > div.wrapper.show > div.main-panel > div > div > div.row.justify-content-end > div.datapiker > div.d-flex.justify-content-end {
+        position: absolute;
+        right: 9px !important;
+        top: 0.5rem !important;
+    }
+}
+
+/*.searchbar {
+    margin-right: 62px;
+}*/
+/*.export {
+    padding-right: 24px !important;
+}*/
+
+.exportImage {
+    height: 25px;
+    width: 25px !important;
+    cursor: pointer;
+}
+
+.groupExport {
+    position: absolute;
+    right: 8px;
+    top: -1.5rem;
+}
+.btn-xs {
+    padding: 5px 11px;
+}
+
+#reportGrid > tbody > tr{
+    white-space:nowrap;
+}
+
+select#mainModuleDropdown option {
+    background-color: aliceblue; /* default background for all options */
+    font-size: 13px;
+    font-weight: 600;
+}

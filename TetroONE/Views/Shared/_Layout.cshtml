@@ -1,0 +1,1724 @@
+﻿﻿@using System.Security.Claims;
+@{
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+    string companyName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.System).Value;
+    string companyLogo = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Uri).Value;
+    string userImage = User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value;
+    string userEmail = User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+
+    string data = Convert.ToString(TempData["UserAccess"]);
+
+    List<string> access = GenericTetroONE.GetUserViewAccessSession(UserScreen.View, Context.Session);
+    UserAccessOption accessManageUser = GenericTetroONE.GetUserAccessSession(UserScreen.ManageUser, Context.Session);
+    UserAccessOption accessMyProfile = GenericTetroONE.GetUserAccessSession(UserScreen.MyProfile, Context.Session);
+
+    if (isAuthenticated)
+    {
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+            <meta name="description" content="Smarthr - Codeigniter Admin Template">
+            <meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
+            <meta name="author" content="Dreamguys - Codeigniter Admin Template">
+            <meta name="robots" content="noindex, nofollow">
+
+            <title>TetroOne</title>
+            <link rel="icon" href="~/assets/moduleusedtetroone/tetroone_loadedicon.svg" type="image/x-icon" />
+            <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+            <link href="~/assets/css/style.css" rel="stylesheet" />
+            <link href="~/assets/css/util.css" rel="stylesheet" />
+            <link href="~/css/datatables.bootstrap4.min.css" rel="stylesheet" />
+            <link href="~/css/jquery.datatables.css" rel="stylesheet" />
+            <link href="~/assets/css/pms.css" rel="stylesheet" />
+            <link href="~/assets/css/fonts.css" rel="stylesheet" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+            <link href="~/assets/css/sweetalert2.min.css" rel="stylesheet" />
+            <link href="~/css/landing.css" rel="stylesheet" />
+            <link href="~/css/myprofile.css" rel="stylesheet" />
+            <link href="~/css/email.css" rel="stylesheet" />
+            <link href="~/assets/css/select2.min.css" rel="stylesheet" />
+            <link href="~/assets/css/select2-bootstrap4-themecss.css" rel="stylesheet" />
+            <link href="~/css/offcanvas.css" rel="stylesheet" />
+
+            <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+        </head>
+        <body>
+
+            <div class="toast-backdrop" id="toastBackdrop"></div>
+            @*<div id="loader-pms">
+                <svg class="loader-pms" version="1.1" id="L7" xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100"
+                     enable-background="new 0 0 100 100" xml:space="preserve">
+                <path fill="#fff" d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,8.4-45.4-2-53.8-23.3
+                                                                                                                                                                                                                                                                                                                                                                                                                                             c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z">
+                <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="2s" from="0 50 50"
+                                  to="360 50 50" repeatCount="indefinite" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             </path>
+                <path fill="#fff" d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,4.1-27.7
+                                                                                                                                                                                                                                                                                                                                                                                                                                             c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z">
+                <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="1s" from="0 50 50"
+                                  to="-360 50 50" repeatCount="indefinite" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             </path>
+                <path fill="#fff" d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,0,35.3,13.5
+                                                                                                                                                                                                                                                                                                                                                                                                                                             L82,35.7z">
+                <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="2s" from="0 50 50"
+                                  to="360 50 50" repeatCount="indefinite" />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </svg>
+            </div>*@
+
+            @*<div id="loader-pms">
+                 <img src="~/assets/sidebaricons/kaalai.svg" alt="Loading..." class="image-loader" />
+             </div>*@
+
+            <div id="loader-pms">
+                <div class="loader-wrapper">
+                    @*<div class="spinner"></div>*@
+                    <img src="~/assets/moduleusedtetroone/tetroone_loadedicon.svg" alt="Loading..." class="loader-image spinner" />
+                </div>
+            </div>
+
+            <div class="wrapper">
+                <div id="fadeinpage" class=""></div>
+                <div class="main-header">
+                    <div class="logo-header" data-background-color="blue">
+                        <a class="logo mx-4">
+                            <div class="logo-text">
+                                <img src="~/assets/moduleusedtetroone/sidenav/tetroone.svg" />
+                            </div>
+                        </a>
+                        <div class="d-none" id="miniLogo">
+                            <div class="">
+                                <img src="~/assets/commonimages/kaalaiyanfavicon.png" width="36px" />
+                            </div>
+                        </div>
+
+                        <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
+                                data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon">
+                                <i class=""><img src="~/assets/commonimages/menubar.svg" /></i>
+                            </span>
+                        </button>
+
+                        <button class="topbar-toggler more">
+                            <i class="">
+                                <img src="~/assets/commonimages/menubar.svg" />
+                            </i>
+                        </button>
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="">
+                                    <img src="~/assets/commonimages/menubar.svg" />
+                                </i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2">
+                        <div class="container-fluid">
+                            <h4 style="color: white;" class="mt-2 m-b-1" id="NavCompanyName">
+                                @*<b>@companyName</b>*@
+                                <b>Sennkarathaaan Food And Beverages</b>
+                            </h4>
+
+                            <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+
+                                <select class="form-control" id="UserFranchiseMappingId" name="UserFranchiseMappingId" required>
+                                </select>
+
+                                <li class="nav-item dropdown hidden-caret" title="Setting">
+                                    @if (access.Any(x => x.ToLower() == UserScreen.Settings.ToLower()))
+                                    {
+                                        <a class="nav-link dropdown-toggle" id="setting-option" role="button" data-toggle="dropdown"
+                                           aria-haspopup="true" aria-expanded="false">
+                                            <i class="">
+                                                <img src="~/assets/commonimages/settings.svg" width="20px" />
+                                            </i>
+                                        </a>
+                                    }
+                                    <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="setting-option"
+                                        style="width: 100px;">
+                                        <div class="scroll-wrapper dropdown-user-scroll scrollbar-outer p-2" style="position: relative;">
+                                            <div class="dropdown-user-scroll scrollbar-outer p-2 scroll-content"
+                                                 style="height: 90.4062px; margin-bottom: 0px; margin-right: 0px; max-height: none;">
+                                        <li class="p-t-5 setting-option-list">
+                                            <a class="fs-15" asp-controller="Settings" asp-action="CompanySetting">
+                                                <img src="~/assets/sidebaricons/companysetting.png" width="25" />
+                                                Company Settings
+                                            </a>
+                                        </li>
+                                        <li class="p-t-8 setting-option-list">
+                                            <a class="fs-15" asp-controller="Settings" asp-action="OtherSettings">
+                                                <img src="~/assets/sidebaricons/othersetting.png" width="25" />
+                                                Other Settings
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <li class="nav-item dropdown hidden-caret" title="Notification">
+                                    <a class="nav-link dropdown-toggle" id="notificationBell">
+                                        <i class="">
+                                            <img src="~/assets/commonimages/notification.svg" />
+                                        </i>
+                                        <span class="notification" id="notifycount"></span>
+                                    </a>
+                                    <ul class="dropdown-menu notif-box animated fadeIn" id="notificationDropdown">
+                                        <li>
+                                            @*<div class="dropdown-title"></div>*@
+                                            <div class="dropdown-title">
+                                                <div class="row">
+                                                    <div class="col-10" id="totalNotification"></div>
+                                                    <div class="col-2">
+                                                        <button type="button" id="notifyClose" class="close" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li id="Notification">
+
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown hidden-caret">
+                                    <a class="dropdown-toggle profile-pic" data-toggle="dropdown" aria-expanded="false">
+                                        <div class="avatar-sm">
+                                            @if (!string.IsNullOrEmpty(userImage))
+                                            {
+                                                <img src="@userImage" id="LandingUserImage" alt="" class="avatar-img rounded-circle">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/assets/commonimages/user.png" alt="" class="avatar-img rounded-circle">
+                                            }
+                                        </div>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                        <div class="dropdown-user-scroll scrollbar-outer">
+                                        <li>
+                                            <div class="user-box">
+                                                <div class="avatar-lg">
+                                                    @if (!string.IsNullOrEmpty(userImage))
+                                                    {
+                                                        <img src="@userImage" id="UserImage" alt=""
+                                                             class="avatar-img rounded">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/assets/commonimages/user.png" alt="" class="avatar-img rounded-circle">
+                                                    }
+                                                </div>
+                                                <div class="u-text">
+                                                    <h4>@User?.Identity?.Name</h4>
+                                                    <p class="text-muted">@userEmail</p>
+                                                    <div class="d-flex" style="gap:3px;">
+                                                        @if (access.Any(x => x.ToLower() == UserScreen.MyProfile.ToLower()))
+                                                        {
+                                                            <a class="btn btn-xs btn-primary btn-sm text-white w-100" id="myProfileViewbtn">
+                                                                <i class="fas fa-user-alt"></i> Profile
+                                                            </a>
+                                                        }
+                                                        @if (access.Any(x => x.ToLower() == UserScreen.UserAccess.ToLower()))
+                                                        {
+                                                            <a class="btn btn-xs btn-primary1 btn-sm text-white w-100" asp-controller="UserAccess" asp-action="UserAccess">
+                                                                <i class="fas fa-user-check"></i> User Access
+                                                            </a>
+                                                        }
+                                                    </div>
+                                                    <a class="btn btn-xs btn-danger btn-sm w-100 m-t-3" id="Logoutbtn">
+                                                        <i class="fas fa-power-off"></i> Logout
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+
+
+                <div class="sidebar sidebar-style-2">
+                    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                        <div class="sidebar-content">
+                            <ul class="nav nav-primary" id="sidebar-menu">
+                                <li class="nav-item">
+                                    @if (access.Any(x => x.ToLower() == UserScreen.Dashboard.ToLower()))
+                                    {
+                                        <a asp-controller="Dashboard" asp-action="Dashboard">
+                                            <i>
+                                                <img src="~/assets/SidebarIcons/Dashboard.svg"
+                                                     width="22">
+                                            </i>
+                                            <p>Dashboard</p>
+                                        </a>
+                                    }
+                                </li>
+                                @if (access.Any(x => x.ToLower() == UserScreen.HumanResource.ToLower()))
+                                {
+                                    <li class="nav-item">
+
+                                        <a data-toggle="collapse" href="#HumanResource-list">
+                                            <i><img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/humanresource.svg" /></i>
+                                            <p>HumanResource</p>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <div class="collapse" id="HumanResource-list">
+                                            <ul class="nav nav-collapse">
+
+                                                @if (access.Any(x => x.ToLower() == UserScreen.CRM.ToLower()))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a data-toggle="collapse" href="#recruitment-list">
+                                                            <i><img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/requirement_icon.svg" /></i>
+                                                            <p>Recruitment</p>
+                                                            <span class="caret"></span>
+                                                        </a>
+
+                                                        <div class="collapse" id="recruitment-list">
+                                                            <ul class="nav nav-collapse">
+                                                                <li>
+                                                                    @if (access.Any(x => x.ToLower() == UserScreen.Enquiry.ToLower()))
+                                                                    {
+                                                                        <a asp-controller="Recruitment" asp-action="Jobpostings" class="Recruitmentcollapse">
+                                                                            <i style="margin-top: -5px;">
+                                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/jobs.svg" />
+                                                                            </i>
+                                                                            <span class="sub-item">Jobs</span>
+                                                                        </a>
+                                                                    }
+                                                                </li>
+                                                                <li>
+                                                                    @if (access.Any(x => x.ToLower() == UserScreen.Ticketing.ToLower()))
+                                                                    {
+                                                                        <a asp-controller="Recruitment" asp-action="Candidates" class="Recruitmentcollapse">
+                                                                            <i style="margin-top: -5px;">
+                                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/candidates.svg" width="20" />
+                                                                            </i>
+                                                                            <span class="sub-item">Candidates</span>
+                                                                        </a>
+                                                                    }
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                }
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.CRM.ToLower()))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a data-toggle="collapse" href="#empInfo-list">
+                                                            <i><img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/empinfo.svg" width="20" /></i>
+                                                            <p>EmpInfo</p>
+                                                            <span class="caret"></span>
+                                                        </a>
+
+                                                        <div class="collapse" id="empInfo-list">
+                                                            <ul class="nav nav-collapse">
+                                                                <li>
+                                                                    @if (access.Any(x => x.ToLower() == UserScreen.Employee.ToLower()))
+                                                                    {
+                                                                        <a asp-controller="HumanResource" asp-action="Employee">
+                                                                            <i>
+                                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/employeeinfo.svg" width="20" /> 
+                                                                            </i> <span class="sub-item">Employee</span>
+                                                                        </a>
+                                                                    }
+                                                                </li>
+                                                                <li>
+                                                                    @if (access.Any(x => x.ToLower() == UserScreen.TeamInfo.ToLower()))
+                                                                    {
+                                                                        <a asp-controller="HumanResource" asp-action="TeamInfo">
+                                                                            <i>
+                                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/teaminfo.svg" width="20" /> 
+                                                                            </i> <span class="sub-item">Team Info</span>
+                                                                        </a>
+                                                                    }
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                }*@
+
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Employee.ToLower()))
+                                                    {
+                                                        <a asp-controller="HumanResource" asp-action="Employee">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/employeeinfo.svg" width="20" />
+                                                            </i> <span class="sub-item">Employee</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.TeamInfo.ToLower()))
+                                                    {
+                                                        <a asp-controller="HumanResource" asp-action="Shift">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/shiftinfo.svg" width="20" />
+                                                            </i> <span class="sub-item">Shift</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Attendance.ToLower()))
+                                                    {
+                                                        <a asp-controller="HumanResource" asp-action="Attendance">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/attendanceicon.svg" width="20" />
+                                                            </i> <span class="sub-item">Attendance</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Leave.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Leave" asp-action="Leave">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/leave.svg" width="20" />
+                                                            </i> <span class="sub-item">Leave</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Deductions.ToLower()))
+                                                    {
+                                                        <a asp-controller="HumanResource" asp-action="Deductions">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/claim.svg" width="20" />
+                                                            </i> <span class="sub-item">Claim</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a asp-controller="HumanResource" asp-action="Payroll">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/payroll.svg" width="20" />
+                                                            </i> <span class="sub-item">Payroll</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/exit_icon.svg" width="20" />
+                                                            </i><span class="sub-item">Exit Management</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @*<li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a asp-controller="HumanResource" asp-action="ExitManagement">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/exit_icon.svg" width="20" />
+                                                            </i> <span class="sub-item">Exit Management</span>
+                                                        </a>
+                                                    }
+                                                </li>*@
+                                                @if (access.Any(x => x.ToLower() == UserScreen.CompanyDocs.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="HumanResource" asp-action="CompanyDocs">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/humanresource_sidebar/document.svg" width="20" />
+                                                            </i> <span class="sub-item">Docs Info</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (access.Any(x => x.ToLower() == UserScreen.Contact.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#contact-list">
+                                            <i><img src="~/assets/SidebarIcons/Contactsicon.svg" width="20"></i>
+                                            <p>Contact</p>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <div class="collapse" id="contact-list">
+                                            <ul class="nav nav-collapse">
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Vendor.ToLower()))
+                                                    {
+                                                        <a asp-controller="Contact" asp-action="Vendor">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/contact_sidebar/vendor.svg" width="20" />
+                                                            </i> <span class="sub-item">Vendor</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Distributor.ToLower()))
+                                                    {
+                                                        <a asp-controller="Contact" asp-action="Client">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/contact_sidebar/contactsicon 1.svg" width="20" />
+                                                            </i> <span class="sub-item">Client</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @*<li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Franchise.ToLower()))
+                                                    {
+                                                        <a asp-controller="Contact" asp-action="Franchise">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/contact_sidebar/franchise.svg" width="20" />
+                                                            </i> <span class="sub-item">Franchise</span>
+                                                        </a>
+                                                    }
+                                                </li>*@
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (access.Any(x => x.ToLower() == UserScreen.Inventory.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#inventory-list">
+                                            <i><img src="~/assets/SidebarIcons/Inventory.svg" width="20"></i>
+                                            <p>Inventory</p>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <div class="collapse" id="inventory-list">
+                                            <ul class="nav nav-collapse">
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Product.ToLower()))
+                                                    {
+                                                        <a asp-controller="Product" asp-action="Product">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/inventory_sidebar/product.svg" width="20" />
+                                                            </i> <span class="sub-item">Product (BOM)</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.ManageStock.ToLower()))
+                                                    {
+                                                        <a asp-controller="Inventory" asp-action="ManageStock">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/inventory_sidebar/managestock.svg" width="20" />
+                                                            </i> <span class="sub-item">Manage Stock</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Transfer.ToLower()))
+                                                    {
+                                                        <a asp-controller="Inventory" asp-action="Transfer">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/inventory_sidebar/transfer.svg" width="20" />
+                                                            </i> <span class="sub-item">Transfer</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (access.Any(x => x.ToLower() == UserScreen.Purchase.ToLower()))
+                                {
+                                    <li class="nav-item">
+
+                                        <a data-toggle="collapse" href="#PurchaseOrder-list">
+                                            <i>
+                                                <img src="~/assets/sidebaricons/Purchase.svg" width="20" />
+                                            </i>
+                                            <p>Purchase </p>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <div class="collapse" id="PurchaseOrder-list">
+                                            <ul class="nav nav-collapse">
+                                                @if (access.Any(x => x.ToLower() == UserScreen.PurchaseOrder.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="PurchaseRequest" asp-action="PurchaseRequest">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/purchase_sidebar/purchase.svg" width="20" />
+                                                            </i> <span class="sub-item">Purchase Req / RFQ</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.PurchaseOrder.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="ProposalRequest" asp-action="ProposalRequest">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/purchase_sidebar/proposalrequest/rfp.svg" width="20" />
+                                                            </i> <span class="sub-item">Proposal Req / RFP</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.PurchaseOrder.ToLower()) && !User.IsInRole("Distributor"))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="PurchaseOrder" asp-action="PurchaseOrder">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/purchase_sidebar/purchaseorder.svg" width="20" />
+                                                            </i> <span class="sub-item">Purchase Order</span>
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.Distributor_PO.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="DistributorPurchaseOrder" asp-action="DistributorPurchaseOrder">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/purchase_sidebar/distributor.svg" width="20" />
+                                                            </i> <span class="sub-item">Distributor_PO</span>
+                                                        </a>
+                                                    </li>
+                                                }*@
+
+                                                @if (access.Any(x => x.ToLower() == UserScreen.PurchaseBill.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="PurchaseInvoice" asp-action="PurchaseBill">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/purchase_sidebar/purchaseinvoice.svg" width="20" />
+                                                            </i> <span class="sub-item">Purchase Invoice</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.PurchaseReturn.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="PurchaseReturn" asp-action="PurchaseReturn">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/purchase_sidebar/purchasereturn.svg" width="20" />
+                                                            </i> <span class="sub-item">Purchase Return</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (access.Any(x => x.ToLower() == UserScreen.Sales.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#SaleOrder-list">
+                                            <i>
+                                                <img src="~/assets/sidebaricons/sale.svg" width="20" />
+                                            </i>
+                                            <p>Sale </p>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <div class="collapse" id="SaleOrder-list">
+                                            <ul class="nav nav-collapse">
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Sale.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="TaxInvoice" asp-action="Estimate">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/sale_sidebar/estimate.svg" width="20" />
+                                                            </i> <span class="sub-item">Quotation</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.DeliveryChallan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="DeliveryChallan" asp-action="DeliveryChallan">
+                                                            <i>
+                                                                <img src="~/assets/SidebarIcons/deliverychallan.svg"
+                                                                     width="20">
+                                                            </i> <span class="sub-item">Delivery Challan</span>
+                                                        </a>
+                                                    </li>
+                                                }*@
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Sale.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="TaxInvoice" asp-action="TaxInvoice">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/sale_sidebar/salesorder.svg" width="20" />
+                                                            </i> <span class="sub-item">Sale Order</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @*  <li>
+                                                    <a asp-controller="" asp-action="">
+                                                    <i>
+                                                    <img src="~/assets/sidebaricons/einvoice.svg" width="20" />
+                                                    </i> <span class="sub-item"> E-Invoice</span>
+                                                    </a>
+                                                    </li>*@
+                                                @if (access.Any(x => x.ToLower() == UserScreen.SaleReturn.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="SaleReturn" asp-action="SaleReturn">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/sale_sidebar/salereturn 1.svg" width="20" />
+                                                            </i> <span class="sub-item">Sale Return</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.SaleReturn.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="SecondarySales" asp-action="SecondarySales">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/sale_sidebar/secondarysales.svg" width="20" />
+                                                            </i> <span class="sub-item">Secondary Sales</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (access.Any(x => x.ToLower() == UserScreen.Finance.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#finance-list">
+                                            <i><img src="~/assets/SidebarIcons/finance.svg" width="20"></i>
+                                            <p>Finance</p>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <div class="collapse" id="finance-list">
+                                            <ul class="nav nav-collapse">
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.Payment.ToLower()))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a asp-controller="GeneralLedger" asp-action="GeneralLedger">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/finance_sidebar/frame.svg" width="20" />
+                                                            </i> <span class="sub-item">General Ledger</span>
+                                                        </a>
+                                                    </li>
+                                                }*@
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Payment.ToLower()))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a asp-controller="Payment" asp-action="Payment">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/finance_sidebar/paymenticon.svg" width="20" />
+                                                            </i> <span class="sub-item">GL & Payment</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Expense.ToLower()))
+                                                {
+                                                    <li class="nav-item">
+
+                                                        <a asp-controller="Expense" asp-action="Expense">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/finance_sidebar/expense.svg" width="20" />
+                                                            </i> <span class="sub-item">Expense</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/finance_sidebar/financialplanning.svg" width="20" />
+                                                            </i><span class="sub-item">Financial Planning</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.Expense.ToLower()))
+                                                {
+                                                    <li class="nav-item">
+
+                                                        <a asp-controller="FinancialPlanning" asp-action="FinancialPlanning">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/finance_sidebar/financialplanning.svg" width="20" />
+                                                            </i> <span class="sub-item">Financial Planning</span>
+                                                        </a>
+                                                    </li>
+                                                }*@
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/finance_sidebar/profitanalysis.svg" width="20" />
+                                                            </i><span class="sub-item">Profit Analysis</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.Expense.ToLower()))
+                                                {
+                                                    <li class="nav-item">
+
+                                                        <a asp-controller="ProfitAnalysis" asp-action="ProfitAnalysis">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/finance_sidebar/profitanalysis.svg" width="20" />
+                                                            </i> <span class="sub-item">Profit Analysis</span>
+                                                        </a>
+                                                    </li>
+                                                }*@
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (access.Any(x => x.ToLower() == UserScreen.Productions.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#Productions-list">
+                                            <i><img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/productionsicon.svg" width="20" /></i>
+                                            <p>Productions</p>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <div class="collapse" id="Productions-list">
+                                            <ul class="nav nav-collapse">
+
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="ProductionPlan">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/productionplan_icon 1.svg" width="20" />
+                                                            </i> <span class="sub-item">Production Plan</span>
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Production.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="Production">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/production.svg" width="20" />
+                                                            </i> <span class="sub-item">Production</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/joborder.svg" width="20" />
+                                                            </i><span class="sub-item">Job Order</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.Production.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="JobOrder">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/joborder.svg" width="20" />
+                                                            </i> <span class="sub-item">Job Order</span>
+                                                        </a>
+                                                    </li>
+                                                }*@
+                                                 
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (access.Any(x => x.ToLower() == UserScreen.Productions.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        @*<a data-toggle="collapse" href="#QualityManagement-list">*@
+                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                            <i><img src="~/assets/moduleusedtetroone/sidenav/quality_sidebar/qms.svg" width="20" /></i>
+                                            <p>QMS</p>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <div class="collapse" id="QualityManagement-list">
+                                            <ul class="nav nav-collapse">
+
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="QualityManagement" asp-action="IncomingQC">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/quality_sidebar/incomingqc.svg" width="20" />
+                                                            </i> <span class="sub-item">Incoming QC</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="QualityManagement" asp-action="InProcessQC">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/quality_sidebar/in-processqc.svg" width="20" />
+                                                            </i> <span class="sub-item">In-Process QC</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="QualityManagement" asp-action="FinalQC">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/quality_sidebar/finalqc.svg" width="20" />
+                                                            </i> <span class="sub-item">Final QC</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                                @if (access.Any(x => x.ToLower() == UserScreen.Productions.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#SupplyChainManagement-list">
+                                            <i><img src="~/assets/moduleusedtetroone/sidenav/logistics_sidebar/logistics.svg" width="20" /></i>
+                                            <p>Logistics</p>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <div class="collapse" id="SupplyChainManagement-list">
+                                            <ul class="nav nav-collapse">
+
+                                                @if (access.Any(x => x.ToLower() == UserScreen.TargetVSActual.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="TargetvsActual">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/logistics_sidebar/target_icon.svg" width="20" />
+                                                            </i> <span class="sub-item">Target vs Actual</span>
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                @if (access.Any(x => x.ToLower() == UserScreen.DeliveryPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="DeliveryPlan">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/logistics_sidebar/deliveryplan_icon.svg" width="20" />
+                                                            </i> <span class="sub-item">Delivery Plan</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.InwardOutWard.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="InWardOutWard">
+                                                            <i>
+                                                                <img src="~/assets/sidebaricons/outward.svg" width="20" />
+                                                            </i> <span class="sub-item">InWard/OutWard</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.Sample.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Productions" asp-action="Sample">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/logistics_sidebar/sample_icon.svg" width="20" />
+                                                            </i> <span class="sub-item">Sample</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="SupplyChainManagement" asp-action="Distributor">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/logistics_sidebar/distributorms.svg" width="20" />
+                                                            </i> <span class="sub-item">Distributor MS</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                                @if (access.Any(x => x.ToLower() == UserScreen.Logistics.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#MaintenanceManagement-list">
+                                            <i><img src="~/assets/moduleusedtetroone/sidenav/maintenance_sidebar/maintenance.svg" width="20" /></i>
+                                            <p>Maintenance</p>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <div class="collapse" id="MaintenanceManagement-list">
+                                            <ul class="nav nav-collapse">
+
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/maintenance_sidebar/maintenanceplan.svg" width="20" />
+                                                            </i><span class="sub-item">Maintenance Plan</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="MaintenanceManagement" asp-action="MaintenancePlanning">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/maintenance_sidebar/maintenanceplan.svg" width="20" />
+                                                            </i> <span class="sub-item">Maintenance Plan</span>
+                                                        </a>
+                                                    </li>
+                                                }*@
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="MaintenanceManagement" asp-action="Service">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/maintenance_sidebar/maintenanceservices.svg" width="20" />
+                                                            </i> <span class="sub-item">Service</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/maintenance_sidebar/maintenanceplan.svg" width="20" />
+                                                            </i><span class="sub-item">Downtime Tracking</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="MaintenanceManagement" asp-action="DowntimeTracking">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/maintenance_sidebar/maintenanceplan.svg" width="20" />
+                                                            </i> <span class="sub-item">Downtime Tracking</span>
+                                                        </a>
+                                                    </li>
+                                                }*@
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                                @if (access.Any(x => x.ToLower() == UserScreen.Logistics.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#Asset-list">
+                                            <i><img src="~/assets/sidebaricons/productions_icon.svg" width="20"></i>
+                                            <p>Asset</p>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <div class="collapse" id="Asset-list">
+                                            <ul class="nav nav-collapse">
+
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.AssetManagement.ToLower()))
+                                                    {
+                                                        <a asp-controller="Inventory" asp-action="AssetManagement">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/asset_sidebar/assetinfo.svg" width="20" />
+                                                            </i> <span class="sub-item">Asset Info</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Asset" asp-action="QRGeneration">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/asset_sidebar/qrscanning.svg" width="20" />
+                                                            </i> <span class="sub-item">QR Generation</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Asset" asp-action="AssetMapRet">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/asset_sidebar/ret.svg" width="20" />
+                                                            </i> <span class="sub-item">Asset Map/Ret</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Asset" asp-action="AssetTransfer">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/asset_sidebar/assettransfer.svg" width="20" />
+                                                            </i> <span class="sub-item">Asset Transfer</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Asset" asp-action="Auditing">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/asset_sidebar/auditing.svg" width="20" />
+                                                            </i> <span class="sub-item">Auditing</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="Asset" asp-action="Scrap">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/asset_sidebar/scapping.svg" width="20" />
+                                                            </i> <span class="sub-item">Scrap</span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                                @if (access.Any(x => x.ToLower() == UserScreen.CRM.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a data-toggle="collapse" href="#crm-list">
+                                            <i>
+                                                <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/crm_sidenaveicon.svg" width="20" />
+                                            </i>
+                                            <p>CRM</p>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <div class="collapse" id="crm-list">
+                                            <ul class="nav nav-collapse">
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Enquiry.ToLower()))
+                                                    {
+                                                        <a asp-controller="Enquiry" asp-action="Enquiry">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/enquiry.svg" width="20" />
+                                                            </i> 
+                                                            <span class="sub-item">Enquiry</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Enquiry.ToLower()))
+                                                    {
+                                                        <a asp-controller="CRM" asp-action="Visitor">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/vistor.svg" width="20" />
+                                                            </i>
+                                                            <span class="sub-item">Visitor</span> 
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Ticketing.ToLower()))
+                                                    {
+                                                        <a asp-controller="Ticketing" asp-action="Ticketing">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/tickting.svg" width="20" />
+                                                            </i> 
+                                                            <span class="sub-item">Ticketing</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Ticketing.ToLower()))
+                                                    {
+                                                        <a asp-controller="CRM" asp-action="PromotionsCampaigns">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/campaign.svg" width="20" />
+                                                            </i>
+                                                            <span class="sub-item">Campaigns</span> 
+                                                        </a>
+                                                    }
+                                                </li> 
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
+                                                    {
+                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/surveys.svg" width="20" />
+                                                            </i><span class="sub-item">Surveys</span>
+                                                        </a>
+                                                    }
+                                                </li>
+                                                @*<li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Ticketing.ToLower()))
+                                                    {
+                                                        <a asp-controller="CRM" asp-action="Surveys">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/crm sidebar/surveys.svg" width="20" />
+                                                            </i>
+                                                            <p>Surveys</p>
+                                                        </a>
+                                                    }
+                                                </li>*@
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                                @if (access.Any(x => x.ToLower() == UserScreen.Reports.ToLower()))
+                                {
+                                    <li class="nav-item">
+                                        <a asp-controller="Report" asp-action="Report">
+                                            <i>
+                                                <img src="~/assets/SidebarIcons/Reporticon.svg"
+                                                     width="22">
+                                            </i>
+                                            <p>Reports</p>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="~/assets/js/jquery.3.2.1.min.js"></script>
+                <script src="~/assets/js/bootstrap.min.js"></script>
+
+                <script src="~/assets/js/jquery-ui.min.js"></script>
+                <script src="~/assets/js/jquery.scrollbar.min.js"></script>
+                <script src="~/assets/js/main.js"></script>
+                <script src="~/assets/js/webfont.min.js"></script>
+                <script src="~/assets/js/datepicker.js"></script>
+                <script src="~/assets/js/datepicker.en.js"></script>
+                <script src="~/assets/js/jquery.datatables.min.js"></script>
+                <script src="~/assets/js/datatables.fixedcolumns.min.js"></script>
+                <script src="~/assets/js/datatables.bootstrap4.min.js"></script>
+                <script src="~/assets/js/moment.min.js"></script>
+                <script src="~/assets/js/front.js"></script>
+                <script src="~/assets/js/select2.min.js"></script>
+                <script src="~/assets/js/active.js"></script>
+                <script src="~/assets/js/jquery.validate.js"></script>
+                <script src="~/assets/js/sweetalert2.min.js"></script>
+                <script src="~/js/common.js"></script>
+                <script src="~/js/landing.js"></script>
+                <script src="~/js/myprofile.js"></script>
+                <script src="~/js/productadd.js"></script>
+                <script src="~/assets/js/email.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+                <div class="main-panel">
+                    <div class="content">
+                        <div class="page-inner">
+                            @RenderBody()
+                        </div>
+
+
+
+                        <div id="myProfileModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered modal-md">
+                                <div class="modal-content">
+                                    <span id="myProfileClose" style="position:absolute; top:0px; right:5px !important;color: #fff;" class="close m-1" title="Close">×</span>
+                                    <div class="prof-bg-pho"></div>
+                                    <div class="manageuser-link">
+                                        @{
+                                            if (accessManageUser.View)
+                                            {
+                                                <a id="ManageUserOpen">
+                                                    <i class="fa fa-users"></i>
+                                                    Manage User
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <form id="FormMyProfile">
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <div class="myprofileavatar-upload">
+                                                        <div class="avatar-edit">
+                                                            <input type="file" id="EmployeeImage" name="EmployeeImage" onchange="previewFile()" class="imageUpload-manageuser"
+                                                                   accept=".png, .jpg, .jpeg">
+                                                            <label for="EmployeeImage">
+                                                                <img src="~/assets/commonimages/camera.svg" />
+                                                            </label>
+                                                        </div>
+                                                        <div class="avatar-preview">
+                                                            <div class="imagePreview1-manageuser">
+                                                                <img src="@userImage" id="ProfileImage" width="110px" />
+                                                            </div>
+                                                            <label class="d-none" id="UserImageFilePath" name="UserImageFilePath"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="profile-name"><label id="UserName">Mr. Support User</label></div>
+                                                <div class="col-12 d-flex justify-content-center">
+                                                    <div class="profile-details">
+                                                        <div class="row profile-details-row">
+                                                            <div class="col-sm-6 col-md-6 col-6 pos-rel ">
+                                                                <div class="form-group">
+                                                                    <div class="pos-abs prof-icon"><i class="fa fa-mobile"></i></div>
+                                                                    <div class="d-flex justify-content-start">
+                                                                        <div class="" style="width:81px !important;">
+                                                                            <input id="input-lk-text-enb-dis" name="input-lk-text-enb-dis" type="text" class="form-control input-lk-text" placeholder="Enter Phone No" required="" disabled="" minlength="10" oninput="Common.allowOnlyNumberLength(this, 10)" fdprocessedid="vbqodg">
+                                                                        </div>
+                                                                        <div class="m-l-10">
+                                                                            <div class="mobileno-edit"><i id="input-lk-text-enb-dis-btn" class="fa fa-edit"></i></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6 col-md-6 col-6 pos-rel">
+                                                                <div class="pos-abs prof-icon"><i class="fa fa-envelope"></i></div>
+                                                                <div class="form-group mt-1">
+                                                                    <label id="Email">supportuser@gmail.com</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6 col-md-6 col-6 pos-rel ">
+                                                                <div class="pos-abs prof-icon"><i class="fa fa-user"></i></div>
+                                                                <div class="form-group">
+                                                                    <div class="row mt-1">
+                                                                        <div class="col-md-12">
+                                                                            <label id="UserGroupName">SuperAdmin</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6 col-md-6 col-6 d-flex ">
+                                                                <div class="pos-abs prof-icon"><i class="fa fa-key"></i></div>
+                                                                <div class="form-group m-t-4">
+                                                                    <label>
+                                                                        <a id="ChangePassOpen" class="text-primary">Change the Password</a>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-md-12 col-lg-12">
+                                                    <div class="form-group text-center">
+                                                        <div class="card-action m-t-10">
+                                                            @{
+                                                                if (accessMyProfile.Update)
+                                                                {
+                                                                    <button class="btn btn-update" id="UpdateProfile">Update</button>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="ChangePassModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-header d-flex align-items-center justify-content-between">
+                                        <h2 id="">Change Password</h2>
+                                        <span id="PassModalClose" class="close"
+                                              style="font-size:30px;cursor:pointer;color:white;"
+                                              title="Close">&times;</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="ChangePassForm">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    <div class="form-group">
+                                                        <label>Old Password</label>
+                                                        <div class="input-group">
+                                                            <input id="OldPassword" name="OldPassword" type="password" class="form-control" placeholder="Old Password"
+                                                                   required minlength="5" oninput="Common.allowTextNumberAndWithoutSpace(this, 15)">
+                                                            <i id="ToggleEyeOld" class="fa fa-eye change-eye-icon"></i>
+                                                        </div>
+                                                        <label class="d-none" for="OldPassword"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    <div class="form-group">
+                                                        <label>New Password</label>
+                                                        <div class="input-group">
+                                                            <input id="NewPassword" name="NewPassword" type="password" class="form-control" placeholder="New Password"
+                                                                   required minlength="5" oninput="Common.allowTextNumberAndWithoutSpace(this, 15)">
+                                                            <i id="ToggleEyeNew" class="fa fa-eye change-eye-icon"></i>
+                                                        </div>
+                                                        <label class="d-none" for="NewPassword"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                                    <div class="form-group">
+                                                        <label>Confirm Password</label>
+                                                        <div class="input-group">
+                                                            <input id="ConfirmPassword" name="ConfirmPassword" type="password" class="form-control"
+                                                                   required placeholder="Confirm Password" minlength="5" oninput="Common.allowTextNumberAndWithoutSpace(this, 15)">
+                                                            <i id="ToggleEyeConfirm" class="fa fa-eye change-eye-icon"></i>
+                                                        </div>
+                                                        <label class="d-none" for="ConfirmPassword"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-center mt-2">
+                                                    <input type="button" id="SaveChangePass" class="btn btn-success save m-r-20" value="Save" />
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="ManageUserModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered modal-lg ManageUserPop">
+                                <div class="modal-content">
+                                    <div class="modal-header d-flex align-items-center justify-content-between">
+                                        <h2 id="employeeHeader">Manage User</h2>
+                                        <span id="ManageUserModalClose" class="close"
+                                              style="font-size:30px;cursor:pointer;color:white;"
+                                              title="Close">&times;</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-9 col-md-12 col-sm-12 col-6 d-sm-flex mb-2 mb-sm-0" id="lableForUserGroup">
+                                            <div class="d-flex align-items-center">
+                                                <div class="role-box SuperAdminBorder"></div>
+                                                <label class="ps-2">SuperAdmin</label>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="role-box AdminBorder"></div>
+                                                <label class="ps-2">Admin</label>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="role-box ExecutiveBorder"></div>
+                                                <label class="ps-2">Executive</label>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="role-box GeneralUserBorder"></div>
+                                                <label class="ps-2">GeneralUser</label>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="role-box VendorBorder"></div>
+                                                <label class="ps-2">Vendor</label>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="role-box ClientBorder"></div>
+                                                <label class="ps-2">Client</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-12 col-sm-12 col-6" id="AlaginClass">
+                                            <div class="container-fluid" style="padding: .5rem !important;">
+                                                <div class="d-flex justify-content-end">
+                                                    <input type="button" class="btn btn-success" id="AddUser" value="Add User">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <ul class="nav nav-tabs pl-2" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link navbar-tab titleForHeaderTab active" id="CompanyUserData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Company User <span id="CompanyUserCount"></span></a>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link navbar-tab titleForHeaderTab" id="FranchiseUserData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Franchise User <span id="FranchiseUserCount"></span></a>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link navbar-tab titleForHeaderTab" id="ClientData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Vendor <span id="VendorUserCount"></span></a>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link navbar-tab titleForHeaderTab" id="VendorData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Client <span id="ClientUserCount"></span></a>
+                                        </li>
+                                    </ul>
+                                    <div class="modal-body" style="max-height: 295px; overflow: auto; overflow-x: hidden;height: 295px;">
+                                        <div class="row" id="ManageUserDynamic">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="AddUserModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered modal-md">
+                                <div class="modal-content">
+                                    <span id="AddUserModalClose"
+                                          style="position:absolute; top:0px; right:5px !important;color: #fff;" class="close"
+                                          title="Close">&times;</span>
+                                    <div class="prof-bg-pho"></div>
+                                    <div class="modal-body">
+                                        <form id="ManageUserForm">
+                                            <div class="row">
+                                                <div class="col-12 d-flex justify-content-center">
+
+                                                    <div class="myprofileavatar-upload">
+                                                        <div class="avatar-edit">
+                                                            <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg" onchange="userPreviewFile()" name="imageUpload">
+                                                            <label for="imageUpload">
+                                                                <img src="~/assets/commonimages/camera.svg">
+                                                            </label>
+                                                        </div>
+                                                        <div class="avatar-preview">
+                                                            <img id="imagePreview" src="~/assets/commonimages/user.png" width="120px" />
+                                                        </div>
+                                                        <label class="d-none" id="UserPathExist"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top: -40px;">
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                                                    <div class="form-group name-set">
+                                                        <label for="Salutation">Name <span class="Asterisk"> *</span></label>
+                                                        <div class="input-group">
+                                                            <select class="form-control" name="Salutation" id="Salutation" tabindex="1" style="width: 20%;">
+                                                                <option value="Mr" selected="">Mr</option>
+                                                                <option value="Ms">Ms</option>
+                                                                <option value="Mrs">Mrs</option>
+                                                            </select>
+                                                            <input type="text" class="form-control" id="FirstName" name="FirstName" tabindex="2" placeholder="First Name" required="" oninput="Common.allowOnlyTextLength(this, 30)" style="flex-grow: 2;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <label>Phone Number<span class="Asterisk"> *</span></label>
+                                                        <input type="text" class="form-control" id="ContactNumber" name="ContactNumber" tabindex="4" placeholder="Phone Number" minlength="10" required oninput="Common.allowOnlyNumberLength(this, 10)">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <label>Email<span class="Asterisk"> *</span></label>
+                                                        <input type="text" id="Email" name="Email" class="form-control" tabindex="5" placeholder="Email Address" required oninput="Common.allowEmailAndLength(this, 50)">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                                                    <div class="form-group">
+                                                        <label>Password<span class="Asterisk"> *</span></label>
+                                                        <div class="input-group">
+                                                            <i id="ManageUserEye" class="fa fa-eye" aria-hidden="true"></i>
+                                                            <input id="Password" name="Password" type="password" class="form-control" tabindex="6"
+                                                                   placeholder="Password" minlength="5" required oninput="Common.allowTextNumberAndWithoutSpace(this, 15)">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3 col-12 mypro-UserType">
+                                                    <div class="form-group">
+                                                        <label>User Type<span class="Asterisk"> *</span></label>
+                                                        <select class="form-control" id="UserTypeId" name="UserTypeId" required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3 col-12 mypro-UserGroup">
+                                                    <div class="form-group">
+                                                        <label>User Group<span class="Asterisk"> *</span></label>
+                                                        <select class="form-control" id="UserGroupId" name="UserGroupId" required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="ClientVendorhide">
+                                                    <div class="form-group">
+                                                        <label class="LableName">Name</label><span class="Asterisk"> *</span>
+                                                        <select class="form-control" id="ContactId" name="ContactId" required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 col-sm-12 col-12" id="DepartmentManageUserhide">
+                                                    <div class="form-group">
+                                                        <label>Department Mapping</label>
+                                                        <select multiple class="multi-select" data-allow-clear="1" id="DepartmentDetailsId" name="DepartmentDetailsId">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <fieldset class="expensefild">
+                                                        <legend class="w-auto">Franchise Info</legend>
+                                                        <div class="row mt--3" id="BindFranchiseDataProfile">
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="card-action d-flex justify-content-center mt-2">
+                                                        @{
+                                                            if (accessManageUser.Update)
+                                                            {
+                                                                <input type="button" class="btn btn-success save m-r-10" id="SaveManageUser" value="Save" />
+                                                            }
+                                                        }
+                                                        @{
+                                                            if (accessManageUser.Delete)
+                                                            {
+                                                                <input type="button" class="btn btn-red" id="DeleteManageUser" value="Delete" tabindex="8" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--AddProduct Modal popup-->
+                        <div id="AddProductModal" class="modal" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered modal-xl" id="RechangeClassName">
+                                <div class="modal-content">
+                                    <div class="modal-header d-flex align-items-center justify-content-between">
+                                        <h2 id="">Add Item</h2>
+                                        <span id="AddProductClose" class="close d-none" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+                                    </div>
+                                    <div class="d-flex justify-content-end" style="padding: .5rem !important;">
+
+                                        <!-- Search Input -->
+                                        <div class="searchbar" style="margin: 20px 4px 0px 10px;">
+                                            <input type="text" class="searchbar__input" name="q" id="AdditemSearch" placeholder="Search" style="height: 34px;" autocomplete="off">
+                                            <button type="submit" class="searchbar__button" style="height: 34px;">
+                                                <img src="~/assets/commonimages/search.svg" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="modal-body" style="max-height: 60vh; overflow-y: auto;overflow-x: hidden;">
+                                        <!-- Content goes here -->
+                                        <div class="row">
+                                            <!--Add Item Table-->
+                                            <div class="col-12">
+                                                <div class="table-container">
+                                                    <div class="table-scroll" style="overflow-x:auto;">
+                                                        <table class="table table-borderless table-custom" id="ProductListTable">
+                                                            <thead class="Additemthead">
+                                                                <tr> 
+                                                                    <th scope="col">Product Name</th>
+                                                                    <th id="SubCategory" scope="col">Sub Category</th>
+                                                                    <th id="Category11" scope="col">Category</th>
+                                                                    <th id ="Price" scope="col">Price</th>
+                                                                    <th id="SIH" scope="col">Stock In Hand</th>
+                                                                    <th scope="col">Quantity</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="Additemtbody" id="product-table-body">
+                                                                <tr class="AllProductEmptyRow" style="display:none;">
+                                                                    <td colspan="7" class="text-center">
+                                                                        <div id="NoRecordProduct">
+                                                                            <img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">
+                                                                            No records found
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-between align-items-center w-100">
+                                        <div class="">
+                                            <p class="pt-1 TotalSelectedItmsCount cursor-pointer text-primary  mb-0" style="font-weight:700;"> <span id="ItemSelectedCount"></span> Items Selected</p>
+                                            <p class="pt-1 TotalSelctAmount cursor-pointer  m-0"> Total Amount:<span id="TotalItemsAmount" style="font-weight:700;"></span> </p>
+                                        </div>
+                                        <div>
+                                            <button type="button" id="UpdateProductsInAddItem" class="btn btn-added mr-2" fdprocessedid="56heq">Update</button>
+                                            <button type="button" id="CloseInAddItem" class="btn modal-close-btn" data-dismiss="modal" fdprocessedid="fmiob">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--AddProduct Modal popup-->
+                        <!--Mail Popup End -->
+                        <div id="SendMail" style="display:none;" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content" style="padding: 2px 0px 0px 0px;">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header" style="background-color: #f4f8ff;margin-left: 0px !important;margin-right: 0px !important;">
+                                        <h4 class="modal-title">Compose Email</h4>
+                                        <span id="closeMail" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+
+                                    </div>
+
+                                    <!-- Modal Body -->
+                                    <div class="modal-body" style="max-height: 75vh; overflow-y: auto;overflow-x: hidden;padding: 0px 0px 10px 0px;">
+                                        <div class="container-fluid mt-4">
+                                            <div class="col-lg-12">
+
+                                                <div class="mt-4" id="EmailDetails">
+                                                    <form>
+                                                        <!-- 'To' input with CC and BCC labels -->
+                                                        <div class="form-group" style="position: relative;">
+                                                            <input type="email" id="VendorEmail" name="ClientEmail" class="form-control" placeholder="To">
+                                                            <label id="ccLabel" style="cursor: pointer; color: blue; position: absolute; right: 60px; top: 8px;">CC</label>
+                                                            <label id="bccLabel" style="cursor: pointer; color: blue; position: absolute; right: 20px; top: 8px;">BCC</label>
+                                                        </div>
+
+                                                        <!-- CC input field and label -->
+                                                        <div id="ccField" class="form-group" style="display: none;">
+                                                            <input type="text" class="form-control" id="CC" placeholder="CC">
+                                                            <label id="bccFieldLabelnew" style="cursor: pointer; color: blue; position: absolute; right: 20px; top: 60px;">BCC</label>
+                                                        </div>
+
+                                                        <!-- BCC input field and label -->
+                                                        <div id="bccField" class="form-group" style="display: none;">
+                                                            <input type="text" class="form-control" id="BCC" placeholder="BCC">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" id="Subject" name="Subject" placeholder="Subject">
+                                                        </div>
+                                                        <div class="form-group" style="display: none;">
+                                                            <input type="text" id="ReportId" name="ReportId" class="form-control" placeholder="ReportId">
+                                                        </div>
+                                                        <div class="form-group" style="display: none;">
+                                                            <input type="text" id="EmailUserName" name="EmailUserName" class="form-control" placeholder="EmailUserName">
+                                                        </div>
+                                                        <div class="form-group" style="display: none;">
+                                                            <input type="text" id="EmailPassword" name="EmailPassword" class="form-control" placeholder="EmailPassword">
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <div id="EMailBody" class="summernote">
+                                                            </div>
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-2 px-2">
+                                                                <label id="AttachmentLabel" style="color: black !important;">Attachment</label>
+                                                                <div id="AttachmentArea"></div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Modal Footer -->
+                                    <div class="modal-footer">
+                                        <div class="d-flex justify-content-center w-100">
+                                            <button type="button" id="SendButton" class="btn btn-added btn-success mr-2">
+                                                <i class="fa fa-envelope"></i>   Send
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Mail Popup End -->
+                    </div>
+                </div>
+            </div>
+
+        </body>
+        </html>
+    }
+}

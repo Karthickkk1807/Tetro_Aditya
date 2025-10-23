@@ -1,0 +1,258 @@
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.SaleReturn, Context.Session);
+}
+
+<link href="~/css/secondarysales.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img id="CounterImage1" src="~/assets/moduleimages/client/total new clients.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="SecondarySalesCounterBoxName1"></div>
+                                    <h4 class="card-title" id="SecondarySalesCounterBoxValue1"> </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img id="CounterImage2" src="~/assets/moduleimages/client/top buyer award icon.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="SecondarySalesCounterBoxName2"></div>
+                                    <h4 class="card-title" id="SecondarySalesCounterBoxValue2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img id="CounterImage3" src="~/assets/moduleimages/client/total purchase amtnew.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="SecondarySalesCounterBoxName3"></div>
+                                    <h4 class="card-title" id="SecondarySalesCounterBoxValue3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img id="CounterImage4" src="~/assets/moduleimages/client/highest credit imagenew.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="SecondarySalesCounterBoxName4"></div>
+                                    <h4 class="card-title" id="SecondarySalesCounterBoxValue4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="row justify-content-end mr-2">
+    <div class="searchbar">
+        <input type="text" class="searchbar__input" name="q" id="tableFilterSecondarySales" placeholder="Search">
+        <button type="submit" class="searchbar__button">
+            <img src="~/assets/commonimages/search.svg" />
+        </button>
+    </div>
+    <div class="datapiker ml-2 mt-1" style="position: relative;">
+        <div class="add-imp-exp-btn">
+            <div class="exportsiconpop">
+                <span class="pop">
+                    <a id="AddSecondarySales" title="Add Secondary Sales">
+                        <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="SecondarySalesTable"></table>
+</div>
+ 
+<div id="SecondarySalesCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="SecondarySalesHeader"></h2>
+        <span id="CloseSecondarySalesCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+
+    <div class="offcanvas-body">
+        <form id="FormShop">
+            <div class="row">
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Shop Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ShopTypeId" name="ShopTypeId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label id="ClientTypeName">Shop Name<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: Green Café" id="ShopName" name="ShopName" maxlength="30" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="ShopAddress" name="ShopAddress" maxlength="50" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                    <div class="form-group">
+                        <label>City<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: Chennai" id="ShopCity" name="ShopCity" oninput="Common.allowOnlyTextLength(this,20)" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>State<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ShopStateId" name="ShopStateId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Country<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: India" id="ShopCountry" name="ShopCountry" oninput="Common.allowOnlyTextLength(this,20)" required />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Zipcode</label>
+                        <input type="text" class="form-control" placeholder="Ex: 600028" id="ShopZipcode" name="ShopZipcode" oninput="Common.allowOnlyNumberLength(this,6)" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Contact No<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex:9876543210" id="ShopContactNo" name="ShopContactNo" oninput="Common.allowOnlyNumberLength(this,10)" minlength="10" maxlength="10" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" placeholder="Ex: example@gmail.com" id="ShopEmail" name="ShopEmail" oninput="Common.allowEmailAndLength(this, 50)" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2" id="GSTNone">
+                    <div class="form-group">
+                        <label>GST Number</label>
+                        <input type="text" class="form-control" placeholder="Ex: 27AAACB1234C1Z5" id="ShopGSTNumber" name="ShopGSTNumber" oninput="Common.allowGSTNumber(this, 15)" />
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-lg-3 col-sm-3 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Max Credit Limit<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Max Credit Limit" id="MaxCreditLimit" name="MaxCreditLimit" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-3 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Current Credit</label>
+                        <input type="text" class="form-control" placeholder="0.00" id="CurrentCreditLimit" name="CurrentCreditLimit" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2" id="VisicoolerHideShop">
+                    <div class="form-group">
+                        <label>No Of VisiCoolers</label>
+                        <input type="text" class="form-control" placeholder="0" id="Visicooler" name="Visicooler" oninput="Common.allowOnlyNumberLength(this,4)" />
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-lg-3 col-sm-3 col-6" style="margin-top: 35px;" id="hideActive">
+                    <div class="form-group">
+                        <input type="checkbox" id="IsActive" name="IsActive">
+                        <label for="IsActive"> Is Active </label>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-12 col-sm-12 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        <textarea class="form-control" id="Remarks" autocomplete="off" name="Remarks" rows="1" maxlength="500" placeholder="Remarks"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        <form id="FormContactShop">
+            <fieldset class="expensefild_1">
+                <legend class="w-auto">Contact Info</legend>
+                <div class="d-flex justify-content-end align-items-start mt--1" id="dynamicButtonDiv">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateShopRow(this)">
+                        <i class="fas fa-plus" id="AddButton"></i>
+                    </button>
+                </div>
+                <div class="mt--3" id="BindContactShop">
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveShop">Save</a>
+                    @* <a class="btn btn-danger m-r-20 text-white" id="DeleteShop">Delete</a> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/secondarysales.js"></script>
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>

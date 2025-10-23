@@ -1,0 +1,433 @@
+﻿<link href="~/css/newdashboard.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+<div class="dashboard">
+    <div class="card">
+        <div class="top">
+            <div class="left">
+                <h3>Headcount</h3>
+                <div class="value">1248</div>
+                <div class="trend up">1.2% m/m</div>
+            </div>
+            <svg viewBox="0 0 100 40"><path d="M0,30 L20,25 L40,20 L60,15 L80,10 L100,8" /></svg>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="top">
+            <div class="left">
+                <h3>Open Positions</h3>
+                <div class="value">18</div>
+                <div class="trend up">+2</div>
+            </div>
+            <svg viewBox="0 0 100 40"><path d="M0,28 L20,22 L40,25 L60,18 L80,15 L100,10" /></svg>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="top">
+            <div class="left">
+                <h3>Revenue (MTD)</h3>
+                <div class="value">₹128.4M</div>
+                <div class="trend up">+4.1%</div>
+            </div>
+            <svg viewBox="0 0 100 40"><path d="M0,32 L20,28 L40,24 L60,20 L80,16 L100,12" /></svg>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="top">
+            <div class="left">
+                <h3>Cash</h3>
+                <div class="value">₹32.1M</div>
+                <div class="trend down">-1.2%</div>
+            </div>
+            <svg viewBox="0 0 100 40"><path d="M0,15 L20,12 L40,18 L60,20 L80,25 L100,28" /></svg>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="top">
+            <div class="left">
+                <h3>OEE (Plant A)</h3>
+                <div class="value">82%</div>
+                <div class="trend down">-0.6%</div>
+            </div>
+            <svg viewBox="0 0 100 40"><path d="M0,25 L20,20 L40,15 L60,18 L80,16 L100,17" /></svg>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-row">
+
+    <!-- HR — Recruitment & People -->
+    <div class="card-dashboard">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 id="HRModuleClick">HR — Recruitment & People</h6>
+            <div class="small-label-top">Attrition: 15<span style="margin-top: -33px;color: green;font-size: 16px;">↑</span></div>
+        </div>
+
+        <h5>Pipeline & People Health</h5>
+
+        <div class="row">
+            <div class="col">
+                <div class="info-box">
+                    <div>
+                        <div class="small-label" style="color: #20d220;">Open Roles</div>
+                        <div class="big-number">18</div>
+                        <small>Sales, R&D, QC lead</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box">
+                    <div>
+                        <div class="small-label" style="color: #ea3535;">Interview pipeline</div>
+                        <div class="big-number">42</div>
+                        <small>Screening / Technical / HR</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Attendance today</div>
+        <div class="row">
+            <div class="col">
+                <div class="info-box text-center" style="border: 1px solid #dbdbdb;background: #ffffff;">
+                    <div>
+                        <div class="small-label" style="color: #20d220;">Present</div>
+                        <div class="big-number">1084</div>
+                    </div><span style="margin-top: 26px;">98%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center" style="border: 1px solid #dbdbdb;background: #ffffff;">
+                    <div>
+                        <div class="small-label" style="color: #ea3535;">Absentees</div>
+                        <div class="big-number">12</div>
+                    </div><span style="margin-top: 26px;">2%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Recent hires</div>
+        <div class="recent-hires">
+            <span style="background: antiquewhite !important;">Riya — QA</span>
+            <span style="background: aqua !important;">Arun — Field Sales</span>
+            <span style="background: #edfdc0 !important;">Sana — Production</span>
+        </div>
+    </div>
+
+    <!-- Finance -->
+    <div class="card-dashboard">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6>Finance</h6>
+            <div class="small-label-top">FY: 2025–26</div>
+        </div>
+
+        <h5>Cashflow & Receivables</h5>
+
+        <div class="row">
+            <div class="col">
+                <div class="info-box">
+                    <div>
+                        <div class="small-label" style="color: #20d220;">AR (30+ days)</div>
+                        <div class="big-number">₹12.7M</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box">
+                    <div>
+                        <div class="small-label" style="color: orange;">AP (30+ days)</div>
+                        <div class="big-number">₹5.2M</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Expense breakdown</div>
+        <div class="row">
+            <div class="col">
+                <div class="info-box" style="border: 1px solid #dbdbdb;background: #ffffff;color: #20d220;">
+                    Marketing ₹4.2M
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box" style="border: 1px solid #dbdbdb;background: #ffffff; color: orange">Ops ₹2.4M</div>
+            </div>
+        </div>
+
+        <div class="section-title">Profitability heatmap</div>
+        <div class="info-box text-muted text-center"><span>Branch 1 : 17%</span><span>Branch 2 : 22%</span><span>Branch 3 : 28%</span></div>
+        <div class="info-box text-muted text-center"><span style="margin-right: 13px;">Branch 4 : 19%</span><span>Branch 5 : 21%</span></div>
+    </div>
+
+    <!-- Inventory & Production -->
+    <div class="card-dashboard">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6>Inventory & Production</h6>
+            <div class="small-label-top">Refresh: 5m</div>
+        </div>
+
+        <h5>Stock health & Shop-floor</h5>
+
+        <div class="row">
+            <div class="col">
+                <div class="info-box">
+                    <div>
+                        <div class="small-label" style="color: #20d220">SKUs in stock</div>
+                        <div class="big-number">3412</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box">
+                    <div>
+                        <div class="small-label" style="color: orange">Stock value</div>
+                        <div class="big-number">₹44.2M</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Production status</div>
+        <div class="row">
+            <div class="col">
+                <div class="info-box" style="border: 1px solid #dbdbdb;background: #ffffff;">Line A — Running</div>
+            </div>
+            <div class="col">
+                <div class="info-box" style="border: 1px solid #dbdbdb;background: #ffffff;color:red">Line B — Idle</div>
+            </div>
+            <div class="col">
+                <div class="info-box" style="border: 1px solid #dbdbdb;background: #ffffff;">Planned orders: 8</div>
+            </div>
+        </div>
+
+        <div class="info-box text-muted text-center d-flex justify-content-center"><span>Production Count : 80,000</span></div>
+
+        <div class="row mb-2">
+            <div class="col">
+                <div class="info-box text-center" style="background: #d8f3d3;">
+                    <span class="highlight-text">Major : Coimbatore</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center" style="background: #ebc7c7;">
+                    <span class="highlight-text">Least : Namakkal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-Center"> 
+    <!-- Finance -->
+    <div class="card-dashboard-Center">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6>Sales & Orders</h6> 
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text">MTD Sales : 42.3M</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text" style="color: red;">Return : 14%</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text" style="color: #20d220;">Top Region : Coimbatore</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text">Dynamic Discounts : Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory & Production -->
+    <div class="card-dashboard-Center">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6>Asset Management</h6> 
+        </div>
+
+        <div class="row mb-2">
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text">Total Assets : 864</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text">Under Service : 12</span>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text">Scrap Items : 6</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text">QR Scans Today : 138</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-row">
+
+    <!-- Supply Chain -->
+    <div class="card-dashboard-end">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6>Supply Chain</h6>
+            <div class="small-label-top">OTIF 92%</div>
+        </div>
+
+        <h5>Delivery & Forecast</h5>
+
+        <div class="section-title">Top routes</div>
+        <div class="info-box d-flex justify-content-between">
+            <span style="color: #20d220;">Mumbai — Pune</span>
+            <span class="highlight-text">98% on-time</span>
+        </div>
+        <div class="info-box d-flex justify-content-between">
+            <span style="color: #20d220;">Delhi — Jaipur</span>
+            <span class="highlight-text">92% on-time</span>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text">Active Vechicles : 38</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text">Accurancy : 87%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CRM -->
+    <div class="card-dashboard-end">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 id="CRMModuleClick" title="Click To Go">CRM</h6>
+            <div class="small-label-top">NPS 48</div>
+        </div>
+
+        <h5>Leads & After-sales</h5>
+
+        <div class="row mb-2">
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text" style="color: #20d220;">Open enquiries : 38</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text" style="color:orange;">Open tickets : 9</span>
+                </div>
+            </div> 
+        </div>
+
+        <div class="row mb-2"> 
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text" style="color: #20d220;">Conversions : 49%</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box text-center">
+                    <span class="highlight-text" style="color:#20d220;">Leads : 142</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="info-box" style="border: 1px solid #dbdbdb;background: #ffffff;">
+            Campaigns: WA broadcast sent to 8.5K contacts
+        </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="card-dashboard-end">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6>Projects (NPD)</h6>
+            <div class="small-label-top">Active: 4</div>
+        </div>
+
+        <h5>R&D & Launch</h5>
+
+        <div class="info-box">
+            Prototype — Battery Module — Phase 2 <span class="highlight-text"> (on track)</span>
+        </div>
+        <div class="info-box">
+            Compliance testing — Euro6 <span class="highlight-text">— Pending</span>
+        </div>
+        <div class="info-box">
+            Cost variance — Project X: <span class="highlight-text">-3%</span>
+        </div>
+    </div> 
+</div>
+
+<!-- Footer bar -->
+<!-- Footer bar with notifications -->
+<div class="footer-bar">
+    <!-- Notification message -->
+    <div> 
+        <strong>Budget Alert:&nbsp;</strong> Expenses for&nbsp;<strong>Q3 Marketing&nbsp;</strong> have exceeded the allocated limit by&nbsp;<strong>&nbsp;$12,450</strong>. Immediate review required!
+
+        <button class="btn-export">Export</button>
+        <button class="btn-report">Open Reports</button>
+    </div>
+@* 
+    <!-- Main footer content -->
+    <div class="footer-content"> 
+        <div>
+            <button class="btn-export">Export</button>
+            <button class="btn-report">Open Reports</button>
+        </div>
+    </div> *@
+</div>
+@* <div class="footer-bar">
+    <!-- Notification message -->
+    <div class="footer-message success">
+        <i class="fas fa-check-circle"></i>
+        <strong>Customer follow-up completed successfully!&nbsp;</strong> All interactions are logged in CRM, and next steps are scheduled. Keep up the great work!
+    </div>
+
+    <div class="footer-message warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <strong>PC_500ml_Strawberry&nbsp;</strong> stock has reached the&nbsp;<strong>reorder level</strong>. Current stock: <strong>-2213 units</strong>. Please review and adjust as needed.
+    </div>
+
+    <div class="footer-message error">
+        <i class="fas fa-exclamation-circle"></i>
+        <strong>Budget Alert:&nbsp;</strong> Expenses for&nbsp;<strong>Q3 Marketing&nbsp;</strong> have exceeded the allocated limit by&nbsp;<strong>&nbsp;$12,450</strong>. Immediate review required!
+    </div>
+
+    <!-- Main footer content -->
+    <div class="footer-content">
+        <small>Last sync: 2025-10-06 09:32 IST • Data latency: ~5 m</small>
+        <div>
+            <button class="btn-export">Export</button>
+            <button class="btn-report">Open Reports</button>
+        </div>
+    </div>
+</div> *@
+
+<script src="~/js/newdashborad.js"></script>

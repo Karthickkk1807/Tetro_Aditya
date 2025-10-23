@@ -1,0 +1,956 @@
+﻿
+<link href="~/css/othersettings.css" rel="stylesheet" />
+
+<div class="row masterpage-box">
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">Production Stages Info</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterProductionStagesTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddProduction" title="Add Production Stages Info">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="ProductionModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id=""> Production Stages Info</h2>
+								<span id="ProductionModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormProductionStages">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Production Stages Name</label>
+												<input type="text" class="form-control" placeholder="Ex: Production Stages" id="ProductionStageName" name="ProductionStageName" required="" fdprocessedid="vb36qm">
+											</div>
+										</div>
+										<div class="col-md-3 col-lg-3 col-sm-3 col-3 mt-3">
+											<div class="form-group" style=" display: grid; justify-content: center; ">
+												<label for="IsRGB"> Is RGB </label>
+												<input type="checkbox" id="IsRGB" name="IsRGB">
+											</div>
+										</div>
+										<div class="col-md-3 col-lg-3 col-sm-3 col-3 mt-3">
+											<div class="form-group" style=" display: grid; justify-content: center; ">
+												<label for="IsPet"> Is Pet </label>
+												<input type="checkbox" id="IsPet" name="IsPet">
+											</div>
+										</div>
+									</div>
+									<fieldset class="expensefild">
+										<legend class="w-auto">Franchise Info</legend>
+										<div class="row mt--3" id="BindFranchiseData">
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveProductionStages" nmae="SaveProductionStages">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductionStagesTable"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">Unit Info</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterUnitTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddUnit" title="Add Unit">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="UnitModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">Unit Info</h2>
+								<span id="UnitModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormUnitName">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Unit Name</label>
+												<input type="text" id="UnitName" name="UnitName" class="form-control" placeholder="Unit Name" required>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Unit Description</label>
+												<textarea type="text" id="UnitDescription" name="UnitDescription" rows="1" class="form-control" placeholder="Unit Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+											</div>
+										</div>
+									</div>
+									<fieldset class="expensefild">
+										<legend class="w-auto">Franchise Info</legend>
+										<div class="row mt--3" id="BindFranchiseData">
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveUnit" nmae="SaveUnit">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="UnitTable"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">Product Category Info</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterProductCategoryTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddProductCategory" title="Add Product Category">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="ProductCategoryModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">Product Category Info</h2>
+								<span id="ProductCategoryModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormProductCategory">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Product Category Name</label>
+												<input type="text" id="ProductCategory" name="ProductCategory" class="form-control" placeholder="Product Category" required>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Product Category Description</label>
+												<textarea type="text" id="ProductCategoryDescription" name="ProductCategoryDescription" rows="1" class="form-control" placeholder="ProductCategory Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+											</div>
+										</div>
+									</div>
+									<fieldset class="expensefild">
+										<legend class="w-auto">Franchise Info</legend>
+										<div class="row mt--3" id="BindFranchiseData">
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveProductCategory" nmae="SaveProductCategory">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductCategoryTable"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6 d-none">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">
+					QualityParameter (KPI)
+					Info
+				</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterQualityParameterTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddQualityParameter" title="Add Quality Parameter">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="QualityModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">Quality Parameter Info</h2>
+								<span id="QualityModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormQualityParameter">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Quality Parameter Name</label>
+												<input type="text" id="QualityParameterName" name="QualityParameterName" class="form-control" placeholder="Quality Parameter Name" required>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Quality Parameter Description</label>
+												<textarea type="text" id="QualityParameterDescription" name="QualityParameterDescription" rows="1" class="form-control" placeholder="Quality Parameter Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+											</div>
+										</div>
+									</div>
+									<fieldset class="expensefild">
+										<legend class="w-auto">Franchise Info</legend>
+										<div class="row mt--3" id="BindFranchiseData">
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveQualityParameter" nmae="SaveQualityParameter">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="QualityParameterTable"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	@* <div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">
+					Criteria Info
+				</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterCriteriaTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddCriteria" title="Add Criteria">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="CriteriaModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">Criteria Info</h2>
+								<span id="CriteriaModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormCretaria">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<label>Criteria Type</label>
+											<select class="form-control" id="CriteriaTypeId" name="CriteriaTypeId" required>
+											</select>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Criteria Name</label>
+												<input type="text" id="CriteriaName" name="CriteriaName" class="form-control" placeholder="Name" required>
+											</div>
+										</div>
+										<div class="col-md-12 col-lg-12 col-sm-12 col-12">
+											<div class="form-group">
+												<label>Criteria Description</label>
+												<textarea class="form-control" id="CriteriaDescription" autocomplete="off" name="CriteriaDescription" rows="1" maxlength="500" placeholder="Description" style="max-height: 36px;" oninput="Common.allowAllCharacters(this,250)"></textarea>
+											</div>
+										</div>
+									</div>
+									<fieldset class="expensefild">
+										<legend class="w-auto">Franchise Info</legend>
+										<div class="row mt--3" id="BindFranchiseData">
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveCriteria" nmae="SaveCriteria" value="Save">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="CriteriaTable"></table>
+				</div>
+
+			</div>
+		</div>
+	</div> *@
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">
+					Product SubCategory Info
+
+				</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterCriteriaTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddSubCategory" title="Add Criteria">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="SubCategoryModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">
+									Product SubCategory Info
+								</h2>
+								<span id="SubCategoryModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormsubCategory">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<label>Product Category</label>
+											<select class="form-control" id="ProductCategoryId" name="ProductCategoryId" required>
+											</select>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Product SubCategory Name</label>
+												<input type="text" id="ProductSubCategoryName" name="ProductSubCategoryName" class="form-control" placeholder="Name" required>
+											</div>
+										</div>
+
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Prod.Cost</label>
+												<input type="text" id="Prodcost" name="Prodcost" class="form-control" placeholder="0.00" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,7)" required>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Description</label>
+												<textarea class="form-control" id="ProductSubCategoryDescription" autocomplete="off" name="ProductSubCategoryDescription" rows="1" maxlength="500" placeholder="Description" style="max-height: 36px;" oninput="Common.allowAllCharacters(this,250)"></textarea>
+											</div>
+										</div>
+									</div>
+									
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveSubCategory" nmae="SaveSubCategory" value="Save">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="SubCategoryTable" style="width:100%"></table>
+				</div>
+
+			</div>
+		</div>
+	</div> 
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">
+					Module Prefix Info
+				</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterModulePrefixTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddModulePrefix" title="AddModulePrefix">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="ModulePrefixModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">Module Prefix Info</h2>
+								<span id="ModulePrefixModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormModulePrefix">
+									<div class="row mt-2">
+										<div class="col-md-4 col-sm-4 col-12">
+											<div class="form-group">
+												<label>
+													Franchise Name<span id="Asterisk">*</span><span class="text-danger"></span>
+												</label>
+												<select class="form-select form-control" required id="FranchiseId" name="FranchiseId"></select>
+											</div>
+										</div>
+										<div class="col-md-4 col-sm-4 col-12">
+											<div class="form-group">
+												<label>
+													Module Type<span id="Asterisk">*</span><span class="text-danger"></span>
+												</label>
+												<select class="form-select form-control" required id="ModuleTypeId" name="ModuleTypeId"></select>
+											</div>
+										</div>
+										<div class="col-md-4 col-sm-4 col-12">
+											<div class="form-group">
+												<div class="cal-icon">
+													<label>Prefix<span id="Asterisk">*</span></label>
+													<input type="type" class="form-control valid" id="Prefix" name="Prefix" placeholder="Ex: PSB_" maxlength="15" required="" fdprocessedid="lhkjwa">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4 col-sm-4 col-12">
+											<div class="form-group">
+												<div class="cal-icon">
+													<label>Starting From<span id="Asterisk">*</span></label>
+													<input type="type" class="form-control valid" id="StartingFrom" name="StartingFrom" placeholder="Ex: 101" maxlength="5" required="" fdprocessedid="e03pxt">
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveModulePrefix" nmae="SaveModulePrefix">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ModulePrefixTable"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">
+					OtherCharges Info
+				</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterOtherChargesTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddOtherCharges" title="Add OtherCharges">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="OtherChargesModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">OtherCharges Info</h2>
+								<span id="OtherChargesModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormOtherCharges">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<label>OtherCharges Type<span id="Asterisk">*</span></label>
+											<select class="form-control" id="OtherChargesType" name="OtherChargesType" required>
+												<option value="">--Select--</option>
+												<option value="Discount">Discount</option>
+												<option value="OtherCharges">Other Charges</option>
+											</select>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>OtherCharges Name<span id="Asterisk">*</span></label>
+												<input type="text" id="OtherChargesName" name="OtherChargesName" class="form-control" placeholder="Name" oninput="Common.allowOnlyTextLength(this,25)" required>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6 d-flex justify-content-center">
+											<div class="form-group">
+												<label for="IsPercentage" class="font-weight-bold">
+													<b>
+														IsPercentage
+													</b>
+												</label>
+												<p>
+													<input type="checkbox" id="IsPercentage" name="IsPercentage" switch="bool">
+													<label for="IsPercentage" id="TextForLable" data-on-label="%" data-off-label="₹"></label>
+												</p>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Value<span id="Asterisk">*</span></label>
+												<input type="text" id="Value" name="Value" class="form-control" placeholder="Value" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,5)" required>
+											</div>
+										</div>
+									</div>
+									<fieldset class="expensefild">
+										<legend class="w-auto">Franchise Info</legend>
+										<div class="row mt--3" id="BindFranchiseData">
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveOtherCharges" value="Save">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="OtherChargesTable"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">
+					Attendance Machine Info
+				</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterAttendanceMachineTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddAttendanceMachine" title="Add Attendance Machine">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="AttendanceMachineModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+				<div class="modal-dialog modal-dialog-centered modal-lg" data-bs-loader-pms="static" data-bs-keyboard="false">
+					<div class="modal-content">
+						<div class="modal-header d-flex align-items-center justify-content-between">
+							<h2 id="">Attendance Machine Info</h2>
+							<span id="AttendanceMachineClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+						</div>
+						<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+							<form id="FormAttendanceMachine">
+								<div class="row">
+									<div class="col-lg-4 col-md-6 col-sm-6 col-12">
+										<div class="form-group">
+											<label>Franchise<span id="Asterisk">*</span></label>
+											<select class="form-control" id="FranchiseId" name="FranchiseId" required>
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-4 col-6">
+										<div class="form-group">
+											<label>
+												Machine Name<span id="Asterisk">*</span><span class="text-danger"></span>
+											</label>
+											<input type="text" class="form-control " id="AttendanceMachineName" name="AttendanceMachineName" placeholder="Machine Name" required>
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-4 col-6">
+										<div class="form-group">
+											<label>
+												Serial No<span id="Asterisk">*</span><span class="text-danger"></span>
+											</label>
+											<input type="text" class="form-control" id="SerialNo" name="SerialNo" placeholder="Serial No" required>
+										</div>
+									</div>
+									<div class="col-lg-8 col-md-12 col-sm-12 col-8" id="AttendanceDescription">
+										<div class="form-group">
+											<label>
+												Description</span>
+											</label>
+											<textarea type="text" class="form-control" id="MachineDescription" name="MachineDescription" rows="1" placeholder="Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+										</div>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-4 col-4 mt-4" id="AttendanceIsActive">
+										<input type="checkbox" data-id="2" name="IsActive" id="IsActive">
+										<label for="IsActive" class="checkbox">Is Active</label>
+									</div>
+									<div class="col-12" id="DivAttendanceMachineMappingTable">
+										<div class="table-responsive">
+											<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AttendanceMachineMappingTable"></table>
+										</div>
+									</div>
+
+									<div class="modal-footer d-flex justify-content-center align-items-center w-100 pt-3">
+										<div class="row">
+											<div class="col-12">
+												<input type="button" class="btn btn-primary" id="SaveAttendanceMachine" value="Save">
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+
+
+
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AttendanceMachineTable"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">
+					Claim Info
+				</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterClaimTypeTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddClaim" title="Add Claim">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="ClaimModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">Claim Info</h2>
+								<span id="ClaimModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormClaim">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Claim Name<span id="Asterisk">*</span></label>
+												<input type="text" id="ClaimName" name="ClaimName" class="form-control" placeholder="Claim Name" required>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Claim Description</label>
+												<textarea type="text" id="ClaimDescription" name="ClaimDescription" class="form-control" rows="1" placeholder="Claim Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+											</div>
+										</div>
+									</div>
+									<fieldset class="expensefild">
+										<legend class="w-auto">Franchise Info</legend>
+										<div class="row mt--3" id="BindFranchiseData">
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveClaim" nmae="SaveClaim">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ClaimTypeTable"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="card m-b-30">
+			<div class="card-header">
+				<h4 class="card-title float-left">
+					Document Info
+				</h4>
+				<div class="Date-SearchColumn justify-content-end">
+					<div class="d-flex">
+						<div class="searchbar mt-1">
+							<input type="text" class="searchbar__input" name="q" id="tableFilterDocumentTable" placeholder="Search">
+							<button type="submit" class="searchbar__button">
+								<img src="~/assets/commonimages/search.svg" />
+							</button>
+						</div>
+						<div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+							<div class="add-imp-exp-btn">
+								<div class="exportsiconpop">
+									<span class="pop">
+										<a id="AddDocument" title="Add Document">
+											<img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+										</a>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body">
+				<div id="DocumentModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+					<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+						<div class="modal-content">
+							<div class="modal-header d-flex align-items-center justify-content-between">
+								<h2 id="">Document Info</h2>
+								<span id="DocumentClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+							</div>
+							<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+								<form id="FormDocument">
+									<div class="row">
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Document Name<span id="Asterisk">*</span></label>
+												<input type="text" id="DocTypeName" name="DocTypeName" class="form-control" placeholder="Document Name" required>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-6 col-sm-6 col-6">
+											<div class="form-group">
+												<label>Document Description</label>
+												<textarea type="text" id="DocTypeDescription" name="DocTypeDescription" class="form-control" rows="1" placeholder="Document Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+											</div>
+										</div>
+									</div>
+									<fieldset class="expensefild">
+										<legend class="w-auto">Franchise Info</legend>
+										<div class="row mt--3" id="BindFranchiseData">
+										</div>
+									</fieldset>
+								</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center align-items-center w-100">
+								<div class="row">
+									<div class="col-12">
+										<input type="button" class="btn btn-primary" id="SaveDocument" value="Save">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="table-responsive">
+					<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="DocumentTable"></table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="~/js/othersettings.js"></script>
+

@@ -1,0 +1,1039 @@
+﻿@{
+    string data = Convert.ToString(TempData["UserAccess"]);
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.CRM, Context.Session);
+}
+
+<link href="~/css/promotionscampaigns.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleusedtetroone/campaigns/employee_totalemployee.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox1">Total Campaigns</div>
+                                    <h4 class="card-title" id="CounterValBox1">53</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img src="~/assets/moduleusedtetroone/campaigns/vendor_overallcredit (1).png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox2">Email Sent</div>
+                                    <h4 class="card-title" id="CounterValBox2">14</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img src="~/assets/moduleusedtetroone/campaigns/vendor_majorcreditcustomer (1).png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox3">What's App Sent</div>
+                                    <h4 class="card-title" id="CounterValBox3">18</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img src="~/assets/moduleusedtetroone/campaigns/vendor_lastmonthmajorcustomer.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox4">Social Media Sent</div>
+                                    <h4 class="card-title" id="CounterValBox4">21</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul class="nav nav-tabs pl-2 mt-2" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab active this" id="DistributorData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">All</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="DirectClientData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Upcoming Product</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="DirectClientData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Discount</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="DirectClientData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Festival Offer</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="DirectClientData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Buy 1 Get 1</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="DirectClientData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Wishes</a>
+    </li>
+
+    <li class="col-5 d-flex justify-content-end">
+        <div class="justify-content-end mr-2 SearchBarAdd">
+            <div class="row">
+                <div class="searchbar">
+                    <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search" fdprocessedid="qterru">
+                    <button type="submit" class="searchbar__button" fdprocessedid="sy46ec">
+                        <img src="/assets/commonimages/search.svg">
+                    </button>
+                </div>
+                <div class="datapiker ml-2 mt-1" style="position: relative;">
+                    <div class="add-imp-exp-btn">
+                        <div class="exportsiconpop">
+                            <span class="pop">
+                                <a id="AddCampaigns" title="Add Campaigns">
+                                    <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+
+<div class="" id="CampaignsGridDynamic" style="margin-top: 4px;">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="CampaignsTable"></table>
+    </div>
+</div>
+
+<!-- Tab Showing the Table row -->
+<!-- accordion design row -->
+<div class="row accordiondesignGridShow">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-2 mb-1">
+        <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+                <span class="Title">Upcoming Product</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="info-card-body pt-1" id="dynamicUpcomingProduct">
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-2 mb-1">
+        <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+                <span class="Title">Discount</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="info-card-body pt-1" id="dynamicDiscount">
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-2 mb-1">
+        <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+                <span class="Title">Festival Offer</span>
+                <span class="arrow" id="arrow">▼</span>
+            </div>
+            <div class="info-card-body pt-1" id="dynamicFestivalOffers">
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-2 mb-1">
+        <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+                <span class="Title">Buy 1 Get 1</span>
+                <span class="arrow" id="arrow">▼</span>
+            </div>
+            <div class="info-card-body pt-1" id="dynamicBuy1Get1">
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-2 mb-1">
+        <div class="info-card">
+            <div class="info-card-header" onclick="toggleCard(this)">
+                <span class="Title">Wishes</span>
+                <span class="arrow" id="arrow">▼</span>
+            </div>
+            <div class="info-card-body pt-1" id="dynamicWishes">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- accordion design row -->
+<!--CRM Off Canvas Insert Update-->
+<div class="offcanvas-container" id="openCanvasCRMInsertUpdate">
+    <!-- Off-Canvas Header -->
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 class="HeaderText">Add CRM</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <!-- Off-Canvas Body -->
+    <div class="offcanvas-body">
+        <form id="FormCRM">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>CRM Types</label>
+                        <select class="form-control" id="CRMTypeId" name="CRMTypeId" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="UpcomingProductsShow">
+                    <div class="form-group">
+                        <label class="titleforProduct"></label>
+                        <input type="text" class="form-control" id="Name" name="Name" oninput="Common.allowOnlyTextAndSpecialCharsforInventory(this,30)">
+                    </div>
+                </div>
+                @* <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="ProductTypesShow">
+                <div class="form-group">
+                <label>Product Types</label>
+                <select class="form-control" id="ProductTypes" name="ProductTypes" required>
+                <option value="0">Pasta</option>
+                <option value="1">Laddu</option>
+                <option value="2">Appam</option>
+                <option value="3">Rava</option>
+                <option value="4">Samiya</option>
+                <option value="5">Amul cheese</option>
+                <option value="6">Fruits</option>
+                <option value="7">Banana Powder</option>
+                </select>
+                </div>
+                </div> *@
+                @* <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="ProductTypesMultiShow">
+                <div class="form-group">
+                <label for="ProductName" class="form-label"><b>Product Multi Types</b></label>
+                <select multiple class="select2" data-coreui-search="true" id="ProductTypesMulti" name="ProductTypesMulti">
+                <option value="0">Pasta</option>
+                <option value="1">Laddu</option>
+                <option value="2">Appam</option>
+                <option value="3">Rava</option>
+                <option value="4">Samiya</option>
+                <option value="5">Amul cheese</option>
+                <option value="6">Fruits</option>
+                <option value="7">Banana Powder</option>
+                </select>
+                </div>
+                </div> *@
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6" id="ProductPriceShow">
+                    <div class="form-group">
+                        <label class="titleforprice"></label>
+                        <input type="text" class="form-control" id="Discount" name="Discount" required oninput="Common.allowOnlyNumberLength(this,6)" />
+                    </div>
+                </div>
+
+                @* <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                <div class="form-group ">
+                <label>Discount</label>
+                <div id="ember325" class="input-group ember-view">
+                <input id="ember326" class="ember-text-field text-end ember-view form-control text-end" type="text" placeholder="0" autocomplete="off" oninput="Common.allowOnlyNumbersAndDecimalInventory(this)">
+                <div id="ember327" class="dropdown ember-view input-group-append">
+                <button id="ember328" class="dropdown-toggle btn btn-secondary discount-btn" type="button">₹</button>
+                <div class="dropdown-menu dropdown-menu-right">
+                <button class="dropdown-item" type="button" data-ember-action="329"> % </button>
+                <button class="dropdown-item item-focus" type="button" data-ember-action="330"> ₹ </button>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div> *@
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6" id="ActualPriceShow">
+                    <div class="form-group">
+                        <label>Actual Price</label>
+                        <input type="text" class="form-control" placeholder="Ex: 100/-" id="ActualPrice" name="ActualPrice" required />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6" id="OfferPriceShow">
+                    <div class="form-group">
+                        <label>Offer Price</label>
+                        <input type="text" class="form-control" placeholder="Ex: 100/-" id="OfferPrice" name="OfferPrice" oninput="Common.allowOnlyNumberLength(this,6)" required />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6" id="StartDateShow">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" class="form-control" placeholder="Ex: 01-01-2024" id="StartDate" name="StartDate" required />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6" id="EndDateShow">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" class="form-control datetimepicker" placeholder="02-02-2024" id="EndDate" name="EndDate" required />
+                    </div>
+                </div>
+                @* <div class="col-lg-6 col-md-6 col-sm-6 col-6" id="EndDateShow">
+                @* <input type="button" id="UncheckProduct" name="UncheckProduct" value="Uncheck Product Show" />
+                <input type="checkbox" name="name" value="" />
+                </div> *@
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 table-responsive DiscounttableClass" id="TableShowDiscount">
+                    <div class="row mt-4">
+                        <div class="col-6" id="UncheckProductShow">
+                            <input type="checkbox" id="UncheckProduct" name="UncheckProduct" switch="bool">
+                            <label for="UncheckProduct" data-on-label="Selected" data-off-label="All"></label>
+                        </div>
+                        <div class="col-6 SearchBoxFilter">
+                            <i class="fa fa-search d-flex justify-content-end"></i>
+                            <input type="text" class="form-control form-input" id="tableFilter2" autocomplete="off" placeholder="Search..." fdprocessedid="z1fiz8">
+                        </div>
+                    </div>
+                    @*<table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive" style="max-height:200px" id="DiscountTable">
+                    </table>*@
+                    <div id="DiscountTable_wrapper" class="dataTables_wrapper container-fluida m-t-10 dt-bootstrap4 no-footer" style="margin-bottom: 0.5rem;margin-top: -10px;margin-left: 11px;"><div class="top"><div id="DiscountTable_filter" class="dataTables_filter"><label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="DiscountTable" style="width: 150px; height: 30px; margin: 10px 30px 10px 0px; background-color: rgb(240, 240, 240); padding-left: 0.5rem;"></label></div></div><div class="dataTables_scroll"><div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;"><div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 530.052px; padding-right: 5px;"><table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive dataTable no-footer" style="max-height: 200px; margin-left: 0px; width: 530.052px; text-align: left; padding-left: 10px;" role="grid"><thead><tr role="row"><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 68px;"> Product Id</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 102.938px;"> Product Name <div class="" style="position: absolute;top: 25px;left: 0px;"><input class="" id="SelectAllProduct" type="checkbox"> </div></th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 75.2396px;"> Brand</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 80.8646px;"> Category</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 85.8333px;"> Actual Price</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 75.1771px;"> Offer Price</th></tr></thead></table></div></div><div class="dataTables_scrollBody" style="position: relative; overflow-y: auto; overflow-x: hidden; width: 100%; max-height: 50vh; border-bottom: none;"><table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive dataTable no-footer" style="max-height: 200px; width: 555px; text-align: left; padding-left: 10px;" id="DiscountTable" role="grid"><thead><tr role="row" style="height: 0px;"><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 68px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;"> Product Id</div></th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 102.938px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;"> Product Name <div class=""><input class="" id="SelectAllProduct" type="checkbox"> </div></div></th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 75.2396px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;"> Brand</div></th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 80.8646px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;"> Category</div></th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 85.8333px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;"> Actual Price</div></th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 75.1771px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"><div class="dataTables_sizing" style="height:0;overflow:hidden;"> Offer Price</div></th></tr></thead><tbody><tr role="row" class="odd"><td>1</td><td><div class="d-flex"><label class="d-none productId">1</label><input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Sugar 1/2 Kg</div></td><td>Sugar</td><td>Groceries</td><td>₹ 300.00</td><td></td></tr><tr role="row" class="even"><td>2</td><td><div class="d-flex"><label class="d-none productId">2</label><input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Sugar 1 Kg</div></td><td>Sugar</td><td>Groceries</td><td>₹ 500.00</td><td></td></tr><tr role="row" class="odd"><td>3</td><td><div class="d-flex"><label class="d-none productId">3</label><input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Sunsilk</div></td><td>SunSilk</td><td>Shampoo</td><td>₹ 50.00</td><td></td></tr><tr role="row" class="even"><td>4</td><td><div class="d-flex"><label class="d-none productId">4</label><input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Milkybar</div></td><td>Nestle</td><td>Snacks</td><td>₹ 250.00</td><td></td></tr><tr role="row" class="odd"><td>5</td></tr></tbody></table></div></div><div class="bottom"></div><div class="clear"></div></div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 table-responsive DiscounttableClass" id="TableShowFestival">
+                    <div class="row mt-4">
+                        <div class="col-6" id="UncheckFestivalShow">
+                            <input type="checkbox" id="UncheckProductForFestival" name="UncheckProductForFestival" switch="bool">
+                            <label for="UncheckProductForFestival" data-on-label="Selected" data-off-label="All"></label>
+                        </div>
+                        <div class="col-6 SearchBoxFilter">
+                            <i class="fa fa-search d-flex justify-content-end"></i>
+                            <input type="text" class="form-control form-input" id="tablFilter" autocomplete="off" placeholder="Search..." fdprocessedid="z1fiz8">
+                        </div>
+                    </div>
+                    @* <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive" style="max-height:200px" id="FestivalTable">
+                    </table> *@
+                    <div id="FestivalTable_wrapper" class="dataTables_wrapper container-fluida m-t-10 dt-bootstrap4 no-footer" style="margin-bottom: 0.5rem;margin-top: -10px;margin-left: 11px;">
+
+                        <!-- Search Filter -->
+                        <div class="top">
+                            <div id="FestivalTable_filter" class="dataTables_filter">
+                                <label>
+                                    Search:
+                                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="FestivalTable"
+                                           style="width: 150px; height: 30px; margin: 10px 30px 10px 0px; background-color: rgb(240, 240, 240); padding-left: 0.5rem;">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Scrollable Table Head -->
+                        <div class="dataTables_scroll">
+                            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 100%; padding-right: 5px;">
+                                    <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive no-footer dataTable" style="width: 100%;" role="grid">
+                                        <thead>
+                                            <tr role="row">
+                                                <th>Product Id</th>
+                                                <th>Product Name</th>
+                                                <th>Brand</th>
+                                                <th>Category</th>
+                                                <th>Actual Price</th>
+                                                <th>Qty</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Scrollable Table Body -->
+                            <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%; max-height: 50vh; border-bottom: none;">
+                                <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive no-footer dataTable" id="FestivalTable" role="grid" style="width: 100%;">
+                                    <thead style="height: 0px;">
+                                        <tr role="row" style="height: 0px;">
+                                            <th style="padding: 0; border: 0; height: 0;">
+                                                <div class="dataTables_sizing" style="height: 0; overflow: hidden;">Product Id</div>
+                                            </th>
+                                            <th style="padding: 0; border: 0; height: 0;">
+                                                <div class="dataTables_sizing" style="height: 0; overflow: hidden;">Product Name</div>
+                                            </th>
+                                            <th style="padding: 0; border: 0; height: 0;">
+                                                <div class="dataTables_sizing" style="height: 0; overflow: hidden;">Brand</div>
+                                            </th>
+                                            <th style="padding: 0; border: 0; height: 0;">
+                                                <div class="dataTables_sizing" style="height: 0; overflow: hidden;">Category</div>
+                                            </th>
+                                            <th style="padding: 0; border: 0; height: 0;">
+                                                <div class="dataTables_sizing" style="height: 0; overflow: hidden;">Actual Price</div>
+                                            </th>
+                                            <th style="padding: 0; border: 0; height: 0;">
+                                                <div class="dataTables_sizing" style="height: 0; overflow: hidden;">Qty</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Sample Row -->
+                                        <tr>
+                                            <td>1</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <label class="d-none productId">1</label>
+                                                    <input class="tableCheckProductFestival" type="checkbox" id="ForCheckProducts"> &nbsp;Sugar 1/2 Kg
+                                                </div>
+                                            </td>
+                                            <td>Sugar</td>
+                                            <td>Groceries</td>
+                                            <td>₹ 300.00</td>
+                                            <td style="width: 45px;"><input type="text" class="qty-FestivalOffer" value="" oninput="Common.allowOnlyNumberLength(this,6)"></td>
+                                        </tr>
+                                        <!-- Add other rows here as needed -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bottom"></div>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12 table-responsive DiscounttableClass" id="TableShowBuyOneDiscount">
+                    <div class="row mt-4 d-flex justify-content-end">
+                        @* <div class="col-6" id="UncheckProductShow">
+                        <input type="checkbox" id="UncheckProduct" name="UncheckProduct" switch="bool">
+                        <label for="UncheckProduct" data-on-label="Checked" data-off-label="Unchecked"></label>
+                        </div> *@
+                        <div class="col-3 NameShowingForTable">
+                            <p class="NameShowingForTablePstyle">Buy Table</p>
+                        </div>
+                        <div class="col-8 SearchBoxFilter">
+                            <i class="fa fa-search d-flex justify-content-end"></i>
+                            <input type="text" class="form-control form-input" id="tableFilter4" autocomplete="off" placeholder="Search..." fdprocessedid="z1fiz8">
+                        </div>
+                    </div>
+                    @* <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive" style="max-height:200px" id="BuyOneTable">
+                    </table> *@
+
+                    <div id="BuyOneTable_wrapper" class="dataTables_wrapper container-fluida m-t-10 dt-bootstrap4 no-footer" style="margin-bottom: 0.5rem;margin-top: -10px;margin-left: 11px;">
+                        <div class="top">
+                            <div id="BuyOneTable_filter" class="dataTables_filter">
+                                <label>
+                                    Search:
+                                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="BuyOneTable"
+                                           style="width: 150px; height: 30px; margin: 10px 30px 10px 0px; background-color: rgb(240, 240, 240); padding-left: 0.5rem;">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="dataTables_scroll">
+                            <!-- Scroll Head -->
+                            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 253.188px; padding-right: 5px;">
+                                    <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive dataTable no-footer"
+                                           style="max-height: 200px; margin-left: 0px; width: 253.188px; text-align: left; padding-left: 10px;" role="grid">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 68px;">Product Id</th>
+                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 155.885px;">Product Name</th>
+                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 47.3021px;">Qty</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Scroll Body -->
+                            <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%; max-height: 50vh; border-bottom: none;">
+                                <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive dataTable no-footer"
+                                       style="max-height: 200px; width: 247px; text-align: left; padding-left: 10px;" id="BuyOneTable" role="grid">
+                                    <thead>
+                                        <tr role="row" style="height: 0px;">
+                                            <th class="sorting_disabled" style="width: 68px; padding: 0; height: 0px; border: 0;">
+                                                <div class="dataTables_sizing" style="height:0;overflow:hidden;">Product Id</div>
+                                            </th>
+                                            <th class="sorting_disabled" style="width: 155.885px; padding: 0; height: 0px; border: 0;">
+                                                <div class="dataTables_sizing" style="height:0;overflow:hidden;">Product Name</div>
+                                            </th>
+                                            <th class="sorting_disabled" style="width: 47.3021px; padding: 0; height: 0px; border: 0;">
+                                                <div class="dataTables_sizing" style="height:0;overflow:hidden;">Qty</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Example rows (you can loop through dynamically if using JavaScript/Template Engine) -->
+                                        <tr role="row" class="odd">
+                                            <td>1</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <label class="d-none productId">1</label>
+                                                    <input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Sugar 1/2 Kg
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="qty-Buy1Get1" value="" oninput="Common.allowOnlyNumberLength(this,6)">
+                                            </td>
+                                        </tr>
+                                        <tr role="row" class="even">
+                                            <td>2</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <label class="d-none productId">2</label>
+                                                    <input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Sugar 1 Kg
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="qty-Buy1Get1" value="" oninput="Common.allowOnlyNumberLength(this,6)">
+                                            </td>
+                                        </tr>
+                                        <!-- Add more rows as needed... -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bottom"></div>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12 table-responsive GetOneTable" id="TableShowGetOneDiscount">
+                    <div class="row mt-4 d-flex justify-content-end">
+                        @* <div class="col-6" id="UncheckProductShow">
+                        <input type="checkbox" id="UncheckProduct" name="UncheckProduct" switch="bool">
+                        <label for="UncheckProduct" data-on-label="Checked" data-off-label="Unchecked"></label>
+                        </div> *@
+                        <div class="col-3 NameShowingForTable">
+                            <p class="NameShowingForTablePstyle">Get Table</p>
+                        </div>
+                        <div class="col-8 SearchBoxFilter">
+                            <i class="fa fa-search d-flex justify-content-end"></i>
+                            <input type="text" class="form-control form-input" id="tableFilter5" autocomplete="off" placeholder="Search..." fdprocessedid="z1fiz8">
+                        </div>
+                    </div>
+                    @* <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive" style="max-height:200px" id="GetOneTable">
+                    </table> *@
+
+                    <div id="GetOneTable_wrapper" class="dataTables_wrapper container-fluida m-t-10 dt-bootstrap4 no-footer"
+                         style="margin-bottom: 0.5rem; margin-top: -10px; margin-left: 11px;">
+
+                        <div class="top">
+                            <div id="GetOneTable_filter" class="dataTables_filter">
+                                <label>
+                                    Search:
+                                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="GetOneTable"
+                                           style="width: 150px; height: 30px; margin: 10px 30px 10px 0px; background-color: rgb(240, 240, 240); padding-left: 0.5rem;">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="dataTables_scroll">
+                            <!-- Scroll Head -->
+                            <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                                <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 253.188px; padding-right: 5px;">
+                                    <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive dataTable no-footer"
+                                           style="max-height: 200px; margin-left: 0px; width: 253.188px; text-align: left; padding-left: 10px;" role="grid">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_disabled" style="width: 68px;">Product Id</th>
+                                                <th class="sorting_disabled" style="width: 155.885px;">Product Name</th>
+                                                <th class="sorting_disabled" style="width: 47.3021px;">Qty</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Scroll Body -->
+                            <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%; max-height: 50vh; border-bottom: none;">
+                                <table class="table table-hover table-head-bg-primary basic-datatables tableHeaderResponsive dataTable no-footer"
+                                       style="max-height: 200px; width: 247px; text-align: left; padding-left: 10px;" id="GetOneTable" role="grid">
+                                    <thead>
+                                        <tr role="row" style="height: 0px;">
+                                            <th class="sorting_disabled" style="width: 68px; padding: 0; height: 0px; border: 0;">
+                                                <div class="dataTables_sizing" style="height:0;overflow:hidden;">Product Id</div>
+                                            </th>
+                                            <th class="sorting_disabled" style="width: 155.885px; padding: 0; height: 0px; border: 0;">
+                                                <div class="dataTables_sizing" style="height:0;overflow:hidden;">Product Name</div>
+                                            </th>
+                                            <th class="sorting_disabled" style="width: 47.3021px; padding: 0; height: 0px; border: 0;">
+                                                <div class="dataTables_sizing" style="height:0;overflow:hidden;">Qty</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Sample Rows -->
+                                        <tr role="row" class="odd">
+                                            <td>1</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <label class="d-none productId">1</label>
+                                                    <input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Sugar 1/2 Kg
+                                                </div>
+                                            </td>
+                                            <td><input type="text" class="qty-Buy1Get1" value="" oninput="Common.allowOnlyNumberLength(this,6)"></td>
+                                        </tr>
+                                        <tr role="row" class="even">
+                                            <td>2</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <label class="d-none productId">2</label>
+                                                    <input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Sugar 1 Kg
+                                                </div>
+                                            </td>
+                                            <td><input type="text" class="qty-Buy1Get1" value="" oninput="Common.allowOnlyNumberLength(this,6)"></td>
+                                        </tr>
+                                        <tr role="row" class="odd">
+                                            <td>3</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <label class="d-none productId">3</label>
+                                                    <input class="tableCheckProduct" type="checkbox" id="ForCheckProducts">&nbsp;Sunsilk
+                                                </div>
+                                            </td>
+                                            <td><input type="text" class="qty-Buy1Get1" value="" oninput="Common.allowOnlyNumberLength(this,6)"></td>
+                                        </tr>
+                                        <!-- Add more <tr> as needed -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bottom"></div>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12" id="InviteCommentsShow">
+                    <div class="form-group">
+                        <label class="CommentLable"></label>
+                        <textarea rows="2" cols="30" id="Comments" name="Comments" style="width:100% !important;"></textarea>
+                        <div class="d-flex justify-content-end pr-0" style="margin-top: -62px;">
+                            <button type="button" id="emojiBtn">😊</button>
+                            <div id="emojiPicker" style="display:none; border: 1px solid #ccc; padding: 10px; position: absolute; background: white;">
+                                <span class="emoji" onclick="insertEmoji('😊')">😊</span>
+                                <span class="emoji" onclick="insertEmoji('🎉')">🎉</span>
+                                <span class="emoji" onclick="insertEmoji('❤️')">❤️</span>
+                                <span class="emoji" onclick="insertEmoji('✨')">✨</span>
+                                <span class="emoji" onclick="insertEmoji('😄')">😄</span>
+                                <span class="emoji" onclick="insertEmoji('🌟')">🌟</span>
+                                <span class="emoji" onclick="insertEmoji('🥳')">🥳</span>
+                                <span class="emoji" onclick="insertEmoji('😀')">😀</span>
+                                <span class="emoji" onclick="insertEmoji('😁')">😁</span>
+                                <span class="emoji" onclick="insertEmoji('⏳')">⏳</span>
+                                <span class="emoji" onclick="insertEmoji('😍')">😍</span>
+                                <span class="emoji" onclick="insertEmoji('🥳')">🥳</span>
+                                <span class="emoji" onclick="insertEmoji('🤗')">🤗</span>
+                                <span class="emoji" onclick="insertEmoji('😋')">😋</span>
+                                <span class="emoji" onclick="insertEmoji('🎊')">🎊</span>
+                                <span class="emoji" onclick="insertEmoji('🥂')">🥂</span>
+                                <span class="emoji" onclick="insertEmoji('🎈')">🎈</span>
+                                <span class="emoji" onclick="insertEmoji('👖')">👖</span>
+                                <span class="emoji" onclick="insertEmoji('👕')">👕</span>
+                                <span class="emoji" onclick="insertEmoji('🙏')">🙏</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        @*End CRM Model*@
+    </div>
+    <!--footer-->
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-primary m-r-20 text-white" id="SaveClient">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--CRM Off Canvas End Insert Update-->
+<!-- Off-Canvas container start Email-->
+<div class="offcanvas-container" id="openCanvasCRMEmail">
+    <!-- Off-Canvas Header -->
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 class="ms-auto">CRM Mail Sending</h2>
+        <span id="CloseCanvas" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+    </div>
+    <!-- Off-Canvas Body -->
+    <div class="offcanvas-body" id="EmailDetails">
+        <form id="EmailDetailsForm">
+            <div class="row" id="FilterShow">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <label id="mailLabel">Contact Filter</label>
+                    <select class="form-control" id="ContactFilterId" name="ContactFilterId" required>
+                        <option value="">--Select--</option>
+                        <option value="1">Client</option>
+                        <option value="2">Vendor</option>
+                    </select>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="PurshaseAmountShow">
+                    <label id="mailLabel">Purchase Amount</label>
+                    <select class="form-control" id="CRMAmountId" name="CRMAmountId" required>
+                    </select>
+                </div>
+                @* <div class="col-12 d-flex justify-content-center">
+                <input class="NewButton" type="button" id="SubmitFilter" name="SubmitFilter" value="Submit Filter" />
+                </div> *@
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-2 px-0 mb-0">
+                <label id="mailLabel" for="VendorEmail">To</label>
+                <input type="text" class="form-control my-1" id="ClientEmail" name="ClientEmail" placeholder="KavineshRajasekar@gmail.com; Tharani@gmail.com; Dhanush@gmail.com; Karthick@gmail.com" required>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-2 px-0 mb-0 d-flex justify-content-center" style="display:none !important;">
+                <input type="button" id="LabelCC" class="ml-1" value="Cc" style="width:100px;color:white ;" />
+                <input type="button" id="LabebCC" class="ml-1" value="Bcc" style="width:100px;color:white ;" />
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-2" style="display:none">
+                <label for="EmailUserName"><b>Email User Name</b></label>
+                <input type="text" class="form-control" id="EmailUserName" name="EmailUserName" placeholder="Email User Name">
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-2" style="display:none">
+                <label for="EmailPassword"><b>Email AppPassword</b></label>
+                <input type="text" class="form-control" id="EmailPassword" name="EmailPassword" placeholder="Email AppPassword">
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-2 px-0 mt-0" id="CCDiv" style="display:none">
+                <label id="mailLabel" for="CC">Cc</label>
+                <input type="text" class="form-control" id="CC" name="CC" placeholder="" required>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 px-0 my-2" id="BCCDiv" style="display:none">
+                <label id="mailLabel" for="BCC">Bcc</label>
+                <input type="text" class="form-control" id="BCC" name="BCC" placeholder="" required>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 px-0 my-2">
+                <label id="mailLabel" for="Subject">Subject</label>
+                <div class="form-control my-1" id="Subject" name="Subject" contenteditable></div>
+            </div>
+            <label id="mailLabel" for="EMailBody" class="form-label px-0">E-Mail Body</label>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-1 px-0" style="border-radius:0.25rem;">
+                <div class="form-control" id="EMailBody" name="EMailBody" style="height:inherit !important;border:none;padding-right: 0px;" contenteditable>
+                    <div style="width: 97%; margin: auto; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; font-family: Arial, sans-serif; color: #333;">
+                        <div style="color: #007BFF; font-size: 16px;font-family: cursive; font-size: large;">
+                            Dear Customer,
+                        </div>
+                        <p class="" style="font-family:monospace;font-size:16px;font-weight:800;margin-top: 0px;margin-bottom: 0px;">
+                            Stay tuned for our latest arrivals that will elevate your experience! New launches are just around the corner.
+                        </p>
+                        <div style="background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 20px 0;">
+                            <h3 style="font-size: large; font-family: cursive; color: #d36915; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);margin-bottom: 0px;margin-top: 0px;">Upcoming Details</h3>
+                            <p style="font-family: cursive;margin-top: 5px;"><b style="font-family: cursive;">Name :</b> Testing CRM For Upcoming</p>
+                            <p style="font-family: cursive;"><b style="font-family: cursive;">Product Price :</b> 1000</p>
+                            <p style="font-family: cursive;"><b style="font-family: cursive;">Launch Date:</b> 06-10-2025</p>
+                            <p style="font-family: cursive;">
+                                <b style="font-family: cursive;">Comments:</b> TetroPOS is a leading retail POS software in the cloud with
+                                everything you need to run &amp; grow and helpfull for your business.🥳
+                            </p>
+                        </div>
+                        <div style="margin-top: 20px; font-size: 14px;">
+                            <p style="color: #000000; font-size: 16px;font-family: cursive; font-size: larger;">
+                                Thank you for being part of our community! We’re excited to let you know that our latest arrivals are just around the corner, and we can’t wait to share them with you. Get ready to elevate your experience with brand new products designed just for you!
+                            </p>
+                            <h5 style="color: #007BFF; font-size: 16px;font-family: cursive; font-size: medium;text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+                                Best regards,
+                            </h5>
+                            <h5 style="color: #007BFF; font-size: 16px;font-family: cursive; font-size: medium;text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+                                Jai Surya Department Store
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--footer-->
+    <div class="offcanvas-footer" id="buttonText">
+        <input type="button" class="btn NewButton mr-2" id="SendButton" value="Send Mail" style="background-color:rgb(49, 206, 54); width:auto;color:white ;height:auto;" />
+    </div>
+</div>
+<!-- Off-Canvas container end Email-->
+<!-- Overlay -->
+<div class="content-overlay"></div>
+
+
+
+<!-- Off-Canvas container -->
+<!-- Off-Canvas container start What'sApp-->
+<div class="offcanvas-container" id="openCanvasCRMWhatsapp">
+    <!-- Off-Canvas Header -->
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 class="ms-auto">CRM What'sApp Sending</h2>
+        <span id="CloseCanvas" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+    </div>
+    <!-- Off-Canvas Body -->
+    <div class="offcanvas-body" id="WhatsAppDetails">
+        <form id="FormWhatsAppDetails">
+            <div class="row" id="FilterWhatsAppShow">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <label id="mailLabel">Contact Filter</label>
+                    <select class="form-control" id="ContactFilterIdWhatsApp" name="ContactFilterIdWhatsApp" required>
+                        <option value="">--Select--</option>
+                        <option value="1" Selected>Client</option>
+                        <option value="2">Vendor</option>
+                    </select>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="PurshaseAmountWhatsappShow">
+                    <label id="mailLabel">Purchase Amount</label>
+                    <select class="form-control" id="CRMAmountIdWhatsApp" name="CRMAmountIdWhatsApp" required>
+                        <option>₹ 5,00,000.00/- TO ₹ 10,00,000.00/-</option>
+                        <option>₹ 1,00,000.00/- TO ₹ 5,00,000.00/-</option>
+                        <option selected>₹ 50,000.00/- TO ₹ 1,00,000.00/-</option>
+                        <option>₹ 50,000.00/- TO ₹ 10,000.00/-</option>
+                        <option>₹ 5,000.00/- TO ₹ 10,000.00/-</option>
+                    </select>
+                </div>
+                @* <div class="col-12 d-flex justify-content-center">
+                <input class="NewButton" type="button" id="SubmitFilter" name="SubmitFilter" value="Submit Filter" />
+                </div> *@
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-2 px-0 mb-0">
+                <label id="mailLabel" for="VendorEmail">To</label>
+                <input type="text" class="form-control my-1" id="ClientWhatsAppNo" name="ClientWhatsAppNo" placeholder="8996538802; 09965377029; 9876543234567; 9876678788; 9876543265; 9876543456; 9865876567; 9865214522" required disabled>
+            </div>
+            <label id="mailLabelWhatsAppBody" for="WhatsAppBody" class="form-label px-0">What'sApp Body</label>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-1 px-0" style="border-radius:0.25rem;">
+                <div class="form-control pl-0" id="WhatsAppBody" name="WhatsAppBody" style="height:inherit !important;border:none;padding-right: 0px;" contenteditable>
+                    <div class="SummaTextWhatsApp" style="background-image: url('../moduleimages/crm/whatsapp_image_backgroundimage.png');background-color: beige;">
+                        <div class="container Summacontainer">
+                            <div class="message-blue">
+                                <div class="message-content">
+                                    <p style="font-family: cursive !important;">Dear Customer,</p>
+                                    <p style="font-family: cursive !important;">Stay tuned for our latest arrivals that will elevate your experience! New launches are just around the corner.</p>
+                                    <p style="font-family: cursive !important;"><b>Upcoming Details</b></p>
+                                    <p style="font-family: cursive !important;"><b>Name :</b> Testing CRM For Upcoming</p>
+                                    <p style="font-family: cursive !important;"><b>Product Price :</b> 1000</p>
+                                    <p style="font-family: cursive !important;"><b>Launch Date :</b> 06-10-2025</p>
+                                    <p style="font-family: cursive !important;">
+                                        <b>Comments :</b> TetroPOS is a leading retail POS software in the cloud with
+                                        everything you need to run &amp; grow and helpfull for your business.🥳
+                                    </p>
+                                    <p style="font-family: cursive !important;">
+                                        Thank you for being part of our community! We’re excited to let you know that our latest arrivals are just around the corner, and we can’t wait to share them with you. Get ready to elevate your experience with brand new products designed just for you!
+                                    </p>
+                                </div>
+                                <div class="message-timestamp-left" style="font-family: monospace; color: #888;font-size: 1em;">SMS 4:04 PM</div> <!-- Timestamp inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+    <!--footer-->
+    <div class="offcanvas-footer">
+        <input type="button" class="btn NewButton mr-2" id="SendButtonWhatsApp" value="Send What'sApp" style="background-color:rgb(49, 206, 54); width:auto;color:white ;height:auto;" />
+    </div>
+</div>
+<!-- Off-Canvas container end WhatsApp-->
+@* ==============================================================================For UI Only============================================================================ *@
+
+
+<!-- Off-Canvas container DemoWhatsApp-->
+<div class="offcanvas-container" id="openCanvasDemo">
+    <!-- Off-Canvas Header -->
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 class="ms-auto">CRM What'sApp Sending</h2>
+        <span id="CloseCanvas" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+    </div>
+    <!-- Off-Canvas Body -->
+    <div class="offcanvas-body" id="SummaDetails">
+        <form class="m-0" id="FormWhatsAppDetails">
+            <div class="row" id="FilterShow">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                    <label id="mailLabel">Contact Filter</label>
+                    <select class="form-control" id="ContactFilterIdWhatsApp" name="ContactFilterIdWhatsApp" required>
+                        <option value="">--Select--</option>
+                        <option value="1" selected>Client</option>
+                        <option value="2">Vendor</option>
+                    </select>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="PurshaseAmountShow">
+                    <label id="mailLabel">Purchase Amount</label>
+                    <select class="form-control" id="CRMAmountIdDemo" name="CRMAmountIdDemo" required>
+                    </select>
+                </div>
+                @* <div class="col-12 d-flex justify-content-center">
+                <input class="NewButton" type="button" id="SubmitFilter" name="SubmitFilter" value="Submit Filter" />
+                </div> *@
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-2 px-0 mb-0">
+                <label id="mailLabel" for="VendorEmail">To</label>
+                <input type="text" class="form-control my-1" id="ClientEmailWhatsApp" name="ClientEmailWhatsApp" placeholder="" required>
+            </div>
+            <label id="SummaDetailsBody" for="SummaDetailsBody" class="form-label px-0">What'sApp Body</label>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 my-1 px-0" style="border-radius:0.25rem;">
+                <div class="form-control pl-0 d-none" id="SummaDetailsBody" name="SummaDetailsBody" style="height:inherit !important;border:none;padding-right: 0px;" contenteditable></div>
+            </div>
+        </form>
+
+        <div style="background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 0px 0;">
+            <h3 style="font-size: large; font-family: cursive; color: #d36915; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);margin-bottom: 0px;margin-top: 0px;">Buy 2 Get 1 Details</h3>
+            <p style="font-family: cursive;margin-top: 5px;"><b style="font-family: cursive;">Name:</b> Sunday's Offer Buy 2 Get 1</p>
+            <p style="font-family: cursive;"><b style="font-family: cursive;">Product Price:</b>&nbsp;<del> RS : 160/- </del> &nbsp;&nbsp;RS : 1000/-</p>
+            <p style="font-family: cursive;"><b style="font-family: cursive;">Start Date:</b> 09-11-2024</p>
+            <p style="font-family: cursive;"><b style="font-family: cursive;">End Date:</b> 10-11-2024</p>
+            <p style="font-family: cursive;">
+                <b style="font-family: cursive;">Comments:</b> Sunday's Offer Buy 2 Get 1 👕👖.... For Get this Shirt and Jockey Buy this Pant Total Price = RS 1400 /- OfferPrice = 1000/- 🤗🌟🥳🎉
+
+                #Sunday's Offer&nbsp;&nbsp;#Buy&nbsp;2&nbsp;Get&nbsp;1
+            </p>
+            <h5 style="color: #007BFF; font-size: 16px;font-family: cursive; font-size: medium;text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+                Buy Product :
+            </h5>
+            <div style="display: flex;width: 100%; margin-bottom: 5px;">
+                <!-- Product Table -->
+                <table style="font-family: monospace;border-collapse: collapse; width: 83%;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace; white-space: nowrap; font-size: 13px; font-weight: 900; color: #66c011;">Product Name - Qty</th>
+                            <th style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace; white-space: nowrap; font-size: 13px; font-weight: 900; color: #66c011;">Actual Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace;font-size: 12px;">Shirt - 2</td>
+                            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace;font-size: 12px;">60/-</td>
+                        </tr>
+
+                        <tr>
+                            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace;font-size: 12px;">Jockey - 2</td>
+                            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace;font-size: 12px;">100/-</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <h5 style="color: #007BFF; font-size: 16px;font-family: cursive; font-size: medium;text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+                Get Product :
+            </h5>
+            <div style="display: flex;width: 100%; margin-bottom: 5px;">
+                <!-- Product Table -->
+                <table style="font-family: monospace;border-collapse: collapse; width: 83%;">
+                    <thead>
+                        <tr>
+                            <th style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace; white-space: nowrap; font-size: 13px; font-weight: 900; color: #66c011;font-size: 12px;">Product Name - Qty</th>
+                            <th style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace; white-space: nowrap; font-size: 13px; font-weight: 900; color: #66c011;font-size: 12px;">Actual Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace;font-size: 12px;">Pant - 1</td>
+                            <td style="border: 1px solid #dddddd;text-align: left;padding: 8px;font-family: monospace;font-size: 12px;">444/-</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @* <div class="SummaTextWhatsApp" style="background-image: url('website/assets/img/bg/8h2.png');"> *@
+        <div class="SummaTextWhatsApp" style="background-image: url('../moduleimages/crm/whatsapp_image_backgroundimage.png');background-color: beige;">
+            @* <div class="card-body">
+            Dear Customer,<br />
+            Double the joy with our special Buy One Get One offer!
+            </div> *@
+            @* <p style="font-family: cursive !important;">
+            Dear Customer,<br />
+            Double the joy with our special Buy One Get One offer! Treat yourself and a loved one to your favorites — for half the price. Limited time only!<br />
+            Sunday's Offer Buy 2 Get 1 👕👖.... For Get this Shirt and Jockey Buy this Pant Total Price = RS 1400 /- OfferPrice = 1000/- 🤗🌟🥳🎉 #Sunday's Offer  #Buy 2 Get 1<br />
+            #Sunday's Offer&nbsp;&nbsp;#Buy&nbsp;2&nbsp;Get&nbsp;1
+            </p> *@
+
+            <div class="container Summacontainer">
+                <div class="message-blue">
+                    <div class="message-content">
+                        <p style="font-family: cursive !important;">Dear Customer,</p>
+                        <p style="font-family: cursive !important;">Double the joy with our special Buy One Get One offer! Treat yourself and a loved one to your favorites — for half the price. Limited time only!</p>
+                        <p style="font-family: cursive !important;">
+                            Sunday's Offer Buy 2 Get 1 👕👖.... For Get this Shirt and Jockey Buy this Pant Total Price = RS 1400 /- OfferPrice = 1000/- 🤗🌟🥳🎉 #Sunday's Offer  #Buy 2 Get 1
+                            #Sunday's Offer&nbsp;&nbsp;#Buy&nbsp;2&nbsp;Get&nbsp;1
+                        </p>
+                    </div>
+                    <div class="message-timestamp-left"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--footer-->
+    <div class="offcanvas-footer">
+        <input type="button" class="btn NewButton mr-2" id="SendButtonSumma" value="Send What'sApp" style="background-color:rgb(49, 206, 54); width:auto;color:white ;height:auto;" />
+    </div>
+</div>
+<!-- Off-Canvas container End DemoWhatsApp-->
+
+<script src="~/js/promotionscampaigns.js"></script>
+
+@* <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> *@
+
+@* <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> *@
+
+<script>
+    // document.getElementById("SendButtonWhatsApp").addEventListener("click", function () {
+    //     const { jsPDF } = window.jspdf;
+    //     const pdf = new jsPDF("p", "pt", "a4");
+
+    //     const editorContent = document.getElementById("DownloadWhatsApp");
+
+    //     html2canvas(editorContent, { scale: 2 }).then(canvas => {
+    //         const imgData = canvas.toDataURL("image/png");
+    //         const imgWidth = pdf.internal.pageSize.getWidth();
+    //         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    //         pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+    //         pdf.save("template.pdf");
+    //     });
+    // });
+
+    // $(function () {
+    //     $('#ProductTypesMulti').select2({
+    //         theme: 'bootstrap4',
+    //         placeholder: '   --Select Products--',
+    //         allowClear: true,
+    //         closeOnSelect: false,
+    //         width: 'style',
+    //     });
+    // });
+</script>
+
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+
+
+
+
+
+
+
+
+

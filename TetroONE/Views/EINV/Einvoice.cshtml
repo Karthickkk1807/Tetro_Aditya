@@ -1,0 +1,756 @@
+﻿<link href="~/css/purchaseorder.css" rel="stylesheet" />
+<link href="~/css/einvoice.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/einvoice/total e invoice icon.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="TotalEmployeesText">Total EInvoice Generat</div>
+                                    <h4 class="card-title" id="TotalEmployeesVal">4</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/einvoice/debit note cancelled.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="TotalEmployeesText">Total EInvoice Cancelled</div>
+                                    <h4 class="card-title" id="DayOffVal">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/einvoice/generate eway bill.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="AtWorkText">Total EwayBill Generat</div>
+                                    <h4 class="card-title" id="AtWorkVal">2</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/einvoice/eway card cancelled.png" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="ActiveAtCurrentShiftText">Total EwayBill Cancelled</div>
+                                    <h4 class="card-title" id="ActiveAtCurrentShiftVal">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-end mt-3 mr-2">
+    <div class="searchbar">
+        <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+        <button type="submit" class="searchbar__button">
+            <img src="~/assets/commonimages/search.svg" />
+        </button>
+    </div>
+
+    <div class="datapiker ml-2 mt-1" style="position: relative;">
+        <div class="add-imp-exp-btn">
+            <div class="exportsiconpop">
+                @*   @{
+                if (access.Insert)
+                { *@
+                <span class="pop">
+                    <a id="AddEInvoice" title="Add PurchaseOrder">
+                        <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                    </a>
+                </span>
+                @* }
+                } *@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    @* <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="EmployeeTable"></table> *@
+
+    <div class="table-responsive datatable">
+        <div id="BuyerTable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+            <div id="BuyerTable_filter" class="dataTables_filter"><label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="BuyerTable"></label></div><div class="dataTables_scroll">
+                <div class="dataTables_scrollHead" style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                    <div class="dataTables_scrollHeadInner" style="box-sizing: content-box; width: 100%; padding-right: 0px;">
+                        <table class="table table-rounded dataTable data-table table-striped tableResponsive no-footer" id="BuyerTable" role="grid" aria-describedby="BuyerTable_info" style="width: 100%;">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting" tabindex="0" aria-controls="BuyerTable" rowspan="1" colspan="1" style="width: 213.363px;" aria-label=" Buyer: activate to sort column ascending">Sale Number</th>
+                                    <th class="sorting" tabindex="0" aria-controls="BuyerTable" rowspan="1" colspan="1" style="width: 108.7px;" aria-label=" Location: activate to sort column ascending">Sale Date</th>
+                                    <th class="sorting" tabindex="0" aria-controls="BuyerTable" rowspan="1" colspan="1" style="width: 104.675px;" aria-label=" Contact No: activate to sort column ascending">Client Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="BuyerTable" rowspan="1" colspan="1" style="width: 169.087px;" aria-label=" Email: activate to sort column ascending">Ack No</th>
+                                    <th class="sorting" tabindex="0" aria-controls="BuyerTable" rowspan="1" colspan="1" style="width: 187.875px;" aria-label=" Website: activate to sort column ascending">Ewb No</th>
+                                    <th class="sorting" tabindex="0" aria-controls="BuyerTable" rowspan="1" colspan="1" style="width: 123.463px;" aria-label=" Contact Person: activate to sort column ascending">Status</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 54.4375px;" aria-label="Action">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr role="row" class="odd">
+                                    <td>SALE/2025-19</td>
+                                    <td>10-02-2025</td>
+                                    <td>Kumar Supermarket</td>
+                                    <td>112510211605791</td>
+                                    <td>141011319423</td>
+                                    <td><label" style="color:green;">Generated</label"></td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <img src="~/assets/moduleimages/einvoice/einvoiceicon.svg" class="m-2 btn-edit AckNo" data-id="26" style="cursor:pointer;" title="View EIvoice" />
+                                            <img src="~/assets/moduleimages/einvoice/ewayicon.svg" class="m-2 btn-edit EwbNo" data-id="26" style="cursor:pointer;" title="View EWayBill" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr role="row" class="even">
+                                    <td>SALE/2025-18</td>
+                                    <td>25-02-2025</td>
+                                    <td>Kumar Supermarket</td>
+                                    <td>112510211602873</td>
+                                    <td></td>
+                                    <td><label" style="color:green;">Generated</label"></td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <img src="~/assets/moduleimages/einvoice/einvoiceicon.svg" class="m-2 btn-edit AckNo" data-id="26" style="cursor:pointer;" title="View EIvoice" />
+                                            <img src="~/assets/moduleimages/einvoice/ewayicon.svg" class="m-2 btn-edit EwbNo" data-id="26" style="cursor:pointer;" title="View EWayBill" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr role="row" class="odd">
+                                    <td>SALE/2025-17</td>
+                                    <td>17-02-2025</td>
+                                    <td>Aruvi Textiles Pvt Ltd.</td>
+                                    <td>112510211601582</td>
+                                    <td></td>
+                                    <td><label" style="color:green;">Generated</label"></td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <img src="~/assets/moduleimages/einvoice/einvoiceicon.svg" class="m-2 btn-edit AckNo" data-id="26" style="cursor:pointer;" title="View EIvoice" />
+                                            <img src="~/assets/moduleimages/einvoice/ewayicon.svg" class="m-2 btn-edit EwbNo" data-id="26" style="cursor:pointer;" title="View EWayBill" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr role="row" class="even">
+                                    <td>SALE/2025-16</td>
+                                    <td>17-02-2025</td>
+                                    <td>Aruvi Textiles Pvt Ltd.</td>
+                                    <td>112510211600325</td>
+                                    <td>191011319374</td>
+                                    <td><label" style="color:green;">Generated</label"></td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <img src="~/assets/moduleimages/einvoice/einvoiceicon.svg" class="m-2 btn-edit AckNo" data-id="26" style="cursor:pointer;" title="View EIvoice" />
+                                            <img src="~/assets/moduleimages/einvoice/ewayicon.svg" class="m-2 btn-edit EwbNo" data-id="26" style="cursor:pointer;" title="View EWayBill" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="dataTables_info" id="BuyerTable_info" role="status" aria-live="polite">Showing 1 to 4 of 4 entries</div>
+                <div class="dataTables_paginate paging_simple_numbers" id="BuyerTable_paginate">
+                    <ul class="pagination">
+                        <li class="paginate_button page-item previous disabled" id="BuyerTable_previous">
+                            <a href="#" aria-controls="BuyerTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+                        </li>
+                        <li class="paginate_button page-item active">
+                            <a href="#" aria-controls="BuyerTable" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                        </li>
+                        <li class="paginate_button page-item next disabled" id="BuyerTable_next">
+                            <a href="#" aria-controls="BuyerTable" data-dt-idx="2" tabindex="0" class="page-link">Next</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="EInvoiceModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="">E-Invoice</h2>
+                <span id="E-InvoiceClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden;">
+                <div class="main-border mt-2">
+                    <div class="row">
+                        <!-- First box with col-12 -->
+                        <div class="col-12 FirstColumn">
+                            <div class="border-box-1">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="Einvoicecard">
+                                            <div class="Einvoicecard-header">
+                                                <label>E-Invoice Details</label>
+                                            </div>
+                                            <div class="Einvoicecard-Body">
+                                                <div id="ServiceTypeDiv">
+                                                    <form id="ServiceTypeForm">
+                                                        <div class="Einvoice-info-row">
+                                                            <div class="Einvoice-info-label">Service Type</div>
+                                                            <div class="Einvoice-info-colon">:</div>
+                                                            <div class="Einvoice-info-value">
+                                                                <select class="form-control" id="documentType">
+                                                                    <option value="0">-- Select --</option>
+                                                                    <option value="1">E-Invoice</option>
+                                                                    <option value="2">E-WayBill</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                <div class="Einvoice-info-container" id="EInvoiceTypeDiv">
+                                                    <form id="GetEInvoiceForm">
+                                                        <div class="Einvoice-info-row" id="EInvoiceTypeColumn">
+                                                            <div class="Einvoice-info-label">Type</div>
+                                                            <div class="Einvoice-info-colon">:</div>
+                                                            <div class="Einvoice-info-value">
+                                                                <select class="form-control" id="EInvoiceDrop">
+                                                                    <option selected disabled>-- Select --</option>
+                                                                    <option value="1">Get E-Invoice by IRN </option>
+                                                                    <option value="2">Get E-Invoice by Document Details</option>
+                                                                    <option value="3">Cancel E-Invoice by IRN</option>
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="Einvoice-info-row" id="IRNColumn">
+                                                            <div class="Einvoice-info-label">IRN</div>
+                                                            <div class="Einvoice-info-colon">:</div>
+                                                            <div class="Einvoice-info-value">
+                                                                <select class="form-control" id="IRNDD" name="IRNDD" required>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="DocumentDetailsColumn">
+                                                            <div class="d-flex">
+                                                                <div class="Einvoice-info-row col-6 px-0" id="DocumentNoColumn">
+                                                                    <div class="Einvoice-info-label">Document No</div>
+                                                                    <div class="Einvoice-info-colon">:</div>
+                                                                    <div class="Einvoice-info-value">
+                                                                        <select class="form-control" id="DocumentNoDD" name="DocumentNoDD" required >
+                                                                        </select>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="Einvoice-info-row col-6 pr-0" id="DocumentDateColumn">
+                                                                    <div class="Einvoice-info-label">Document Date</div>
+                                                                    <div class="Einvoice-info-colon">:</div>
+                                                                    <div class="Einvoice-info-value">
+                                                                        <input type="date" class="form-control" id="DocumentDateVal" name="DocumentDateVal" required="" disabled="">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="CancelIRNOuterColumn">
+                                                            <div class="d-flex">
+                                                                <div class="Einvoice-info-row col-6 px-0" id="CancelReasonColumn">
+                                                                    <div class="Einvoice-info-label">Cancel Reason</div>
+                                                                    <div class="Einvoice-info-colon">:</div>
+                                                                    <div class="Einvoice-info-value">
+                                                                        <select class="form-control" id="CancelReasonDD" name="CancelReasonDD" required>
+                                                                            <option selected disabled>-- Select --</option>
+                                                                            <option value="1">Duplicate </option>
+                                                                            <option value="2">Data Entry Mistake</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="Einvoice-info-row col-6 pr-0" id="CancelRemarksColumn">
+                                                                    <div class="Einvoice-info-label">Cancel Remarks</div>
+                                                                    <div class="Einvoice-info-colon">:</div>
+                                                                    <div class="Einvoice-info-value">
+                                                                        <input type="text" class="form-control" id="CancelRemarksVal" name="CancelRemarksVal" required>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="Einvoice-info-row col-6 px-0 d-none" id="RejectDateColumn">
+                                                            <div class="Einvoice-info-label">Rejected Date</div>
+                                                            <div class="Einvoice-info-colon">:</div>
+                                                            <div class="Einvoice-info-value">
+                                                                <input type="date" class="form-control" id="RejectDateVal" name="RejectDateVal" required="">
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                <div class="Einvoice-info-container" id="EWaybillTypeDiv">
+                                                    <form id="GetEWayBillForm">
+                                                        <div class="Einvoice-info-row" id="EWaybillTypeColumn">
+                                                            <div class="Einvoice-info-label">Type</div>
+                                                            <div class="Einvoice-info-colon">:</div>
+                                                            <div class="Einvoice-info-value">
+                                                                <select class="form-control" id="EwayBillDrop">
+                                                                    <option selected disabled>-- Select --</option>
+                                                                    <option value="1">Get E-WayBill by IRN</option>
+                                                                    <option value="2">Get E-WayBill by E-WayBill Number</option>
+                                                                    <option value="3">Cancel E-WayBill by E-WayBill Number</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="Einvoice-info-row" id="EWBIRNColumn">
+                                                            <div class="Einvoice-info-label">IRN</div>
+                                                            <div class="Einvoice-info-colon">:</div>
+                                                            <div class="Einvoice-info-value">
+                                                                <select class="form-control" id="EWBIRNDD" name="EWBIRNDD" required="" data-select2-id="select2-data-EWBIRNDD" tabindex="-1" aria-hidden="true">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="Einvoice-info-row" id="EWBDDColumn">
+                                                            <div class="Einvoice-info-label">EwayBill Number </div>
+                                                            <div class="Einvoice-info-colon">:</div>
+                                                            <div class="Einvoice-info-value">
+                                                                <select class="form-control" id="EWBDD" name="EWBDD" required>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="EWBCancelOuterColumn">
+                                                            <div class="d-flex">
+                                                                <div class="Einvoice-info-row col-6 px-0" id="EWBCancelReasonColumn">
+                                                                    <div class="Einvoice-info-label">Cancel Reason</div>
+                                                                    <div class="Einvoice-info-colon">:</div>
+                                                                    <div class="Einvoice-info-value">
+                                                                        <select class="form-control" id="EWBCancelReasonDD" name="EWBCancelReasonDD" required>
+                                                                            <option selected disabled>-- Select --</option>
+                                                                            <option value="1">Duplicate </option>
+                                                                            <option value="2">Order Cancelled</option>
+                                                                            <option value="3">Data Entry Mistake</option>
+                                                                            <option value="4">Others</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="Einvoice-info-row col-6 pr-0" id="EWBCancelRemarksColumn">
+                                                                    <div class="Einvoice-info-label">Cancel Remarks</div>
+                                                                    <div class="Einvoice-info-colon">:</div>
+                                                                    <div class="Einvoice-info-value">
+                                                                        <input type="text" class="form-control" id="EWBCancelRemarksVal" name="EWBCancelRemarksVal" required="">
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="Einvoice-info-row col-6 px-0" id="GetEWBbyDateColumn">
+                                                            <div class="Einvoice-info-label">Date</div>
+                                                            <div class="Einvoice-info-colon">:</div>
+                                                            <div class="Einvoice-info-value">
+                                                                <input type="date" class="form-control" id="EWBDateVal" name="EWBDateVal" required="">
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="UpdateTransporterColumn"> </div>
+
+                                                        <div id="ExtendValidityColumn"> </div>
+                                                    </form>
+                                                </div>
+
+                                                <div id="EInvoiceFooterBtn">
+                                                    <div class="d-flex justify-content-center mt-2 mb-2">
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnEIByIRN" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnRejectedIRN" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnCancelIRN" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+
+                                                <div id="EWayBillFooterBtn">
+
+                                                    <div class="d-flex justify-content-center mt-2 mb-2">
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnEWBbyIRN" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnEWBCancel" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnRejectEWB" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnUpdateTransporter" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnExtendValidity" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnGetEWBbyEWBNumber" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                        <button type="button" class="btn quickbillbtn-outline mx-1" id="btnGetEWBbyDate" style="display: none;">
+                                                            Submit
+                                                        </button>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="" id="PDFDiv">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- secound box with col-12 -->
+                        <div class="col-12 FirstColumn">
+                            <div class="border-box-1">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="Einvoicecard">
+                                            <div class="Einvoicecard-header">
+                                                <label>Live Response</label>
+                                            </div>
+                                            <div class="Einvoicecard-Body">
+                                                <div class="nofound">
+                                                    <img src="~/assets/commonimages/einvoicenodata.svg" />
+                                                </div>
+                                                <div class="row" id="ResponseBodyDiv" style="display: none;">
+                                                    <div class="col-12" id="APIResponseDiv">
+                                                        <div class="info-container">
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Irn</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="Irn" name="Irn"></a></div>
+                                                            </div>
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Ack No</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="AckNo" name="AckNo"></a></div>
+                                                            </div>
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Ack Date</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value">
+                                                                    <a id="AckDate" name="AckDate"></a>
+                                                                </div>
+                                                            </div>
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">EwayBill Number</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="EwayBillNumber" name="EwayBillNumber"></a></div>
+                                                            </div>
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">EwayBill Date</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value">
+                                                                    <a id="EwayBillDate" name="EwayBillDate"></a>
+                                                                </div>
+                                                            </div>
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">EwayBill Valid Till</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value">
+                                                                    <a id="EwayBillValidTill" name="EwayBillValidTill"></a>
+                                                                </div>
+                                                            </div>
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Status</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value">
+                                                                    <a id="Status" name="Status"></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12" id="APICancelResponseDiv">
+
+                                                        <div class="info-container">
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Irn</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="Irn" name="Irn"></a></div>
+                                                            </div>
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">cancel Date</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="cancelDate" name="cancelDate"></a></div>
+                                                            </div>
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Status</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="Status" name="Status"></a></div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12" id="APIEwayBillResponseDiv">
+                                                        <div class="info-container">
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">EwayBill No</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="EwayBillNo" name="EwayBillNo"></a></div>
+                                                            </div>
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">EwayBill Date</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="EwayBillDate" name="EwayBillDate"></a></div>
+                                                            </div>
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Ewb Valid Till</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value">
+                                                                    <a id="EwbValidTill" name="EwbValidTill"></a>
+                                                                </div>
+                                                            </div>
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Generated Gst</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="GeneratedGst" name="GeneratedGst"></a></div>
+                                                            </div>
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Status</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value">
+                                                                    <a id="Status" name="Status"></a>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12" id="APICancelEwayBillResponseDiv">
+                                                        <div class="info-container">
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Eway Bill No</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="EwayBillNo" name="EwayBillNo"></a></div>
+                                                            </div>
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Cancel Date</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value"><a id="EwayBillCancelDate" name="EwayBillCancelDate"></a></div>
+                                                            </div>
+
+
+                                                            <div id="" class="info-row">
+                                                                <div class="info-label-Purchase">Status</div>
+                                                                <div class="info-colon">:</div>
+                                                                <div class="info-value">
+                                                                    <a id="Status" name="Status"></a>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="d-flex justify-content-center" id="ResponseErrorBodyDiv">
+                                                    <div class="errorfile-card" style="display: none;">
+                                                        <label id="ErrorText"> Not able to retreived Data,check error file in download folder</label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="" id="PDFDiv">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="button-container">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-sm-0 mt-2" id="PurchaseOrderCancelBtn">
+                                <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="BillAddressCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2>Edit Address</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="BillingAddressForm" novalidate="novalidate" data-select2-id="select2-data-BillingAddressForm">
+            <div class="row" id="BillingAddressBody">
+
+                <div style="display:none">
+                    <label id="LocationType"></label>
+                    <label id="WareHouseStoreId"></label>
+                    <label id="ShippingAddressIdLabel"></label>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" id="StoreName" name="StoreName" placeholder="Name" autocomplete="off" oninput="Common.allowOnlyTextLengthwithwhitespace(this,50)" disabled="" fdprocessedid="mhttqn">
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" class="form-control" id="StoreAddress" name="StoreAddress" placeholder="Address" autocomplete="off" oninput="Common.allowOnlyAddress(this,100)" required="" fdprocessedid="3itqzq">
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" id="StoreEmail" name="StoreEmail" placeholder="Email" oninput="Common.allowEmailAndLength(this, 50)" autocomplete="off" fdprocessedid="3iwtwm">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <input type="text" class="form-control" id="StoreCountry" name="StoreCountry" placeholder="Country" autocomplete="off" oninput="Common.allowOnlyTextLengthwithwhitespace(this,25)" required="" fdprocessedid="y5xdn2">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" class="form-control" id="StoreCity" name="StoreCity" placeholder="City" autocomplete="off" oninput="Common.allowOnlyTextLengthwithwhitespace(this,25)" required="" fdprocessedid="meo6gu">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Zipcode</label>
+                        <input type="text" class="form-control" id="StoreZipcode" name="StoreZipcode" placeholder="Zipcode" autocomplete="off" oninput="Common.allowOnlyNumberLength(this,6)" required="" fdprocessedid="o1sosb9">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Mobile No</label>
+                        <input type="text" class="form-control" id="StoreContactNumber" name="StoreContactNumber" placeholder="Mobile No" autocomplete="off" oninput="Common.allowOnlyContactNoAlternativeLength(this,16)" required="" fdprocessedid="4xiccf">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>GST No</label>
+                        <input type="text" class="form-control" id="StoreGSTNumber" name="StoreGSTNumber" placeholder="GST No" oninput="Inventory.allowGSTNumber(this, 15)" autocomplete="off" fdprocessedid="xvfdl8">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12" data-select2-id="select2-data-96-qm24">
+                    <div class="form-group" data-select2-id="select2-data-95-6b6e">
+                        <label>Place Of Supply</label>
+                        <select class="form-control select2-hidden-accessible" id="StateId" required="" tabindex="-1" aria-hidden="true" data-select2-id="select2-data-StateId"><option value="" data-select2-id="select2-data-98-9t9t">--Select--</option><option value="1" data-select2-id="select2-data-99-tfy7">JAMMU AND KASHMIR</option><option value="2" data-select2-id="select2-data-100-4p84">HIMACHAL PRADESH</option><option value="3" data-select2-id="select2-data-101-c9tm">PUNJAB</option><option value="4" data-select2-id="select2-data-102-eifq">CHANDIGARH</option><option value="5" data-select2-id="select2-data-103-4tzi">UTTARAKHAND</option><option value="6" data-select2-id="select2-data-104-cec2">HARYANA</option><option value="7" data-select2-id="select2-data-105-pxho">DELHI</option><option value="8" data-select2-id="select2-data-106-eoxq">RAJASTHAN</option><option value="9" data-select2-id="select2-data-107-fz9p">UTTAR PRADESH</option><option value="10" data-select2-id="select2-data-108-1bx5">BIHAR</option><option value="11" data-select2-id="select2-data-109-an0y">SIKKIM</option><option value="12" data-select2-id="select2-data-110-0i0b">ARUNACHAL PRADESH</option><option value="13" data-select2-id="select2-data-111-i93b">NAGALAND</option><option value="14" data-select2-id="select2-data-112-j230">MANIPUR</option><option value="15" data-select2-id="select2-data-113-vr1k">MIZORAM</option><option value="16" data-select2-id="select2-data-114-dvt9">TRIPURA</option><option value="17" data-select2-id="select2-data-115-yzvp">MEGHALAYA</option><option value="18" data-select2-id="select2-data-116-zrel">ASSAM</option><option value="19" data-select2-id="select2-data-117-tw2j">WEST BENGAL</option><option value="20" data-select2-id="select2-data-118-xgun">JHARKHAND</option><option value="21" data-select2-id="select2-data-119-i1dr">ODISHA</option><option value="22" data-select2-id="select2-data-120-w2fm">CHHATTISGARH</option><option value="23" data-select2-id="select2-data-121-o1y8">MADHYA PRADESH</option><option value="24" data-select2-id="select2-data-122-35kv">GUJARAT</option><option value="25" data-select2-id="select2-data-123-juze">DAMAN AND DIU</option><option value="26" data-select2-id="select2-data-124-95v5">DADRA AND NAGAR HAVELI</option><option value="27" data-select2-id="select2-data-125-2ijx">MAHARASHTRA</option><option value="29" data-select2-id="select2-data-126-5z03">KARNATAKA</option><option value="30" data-select2-id="select2-data-127-1jfo">GOA</option><option value="31" data-select2-id="select2-data-128-mued">LAKSHADWEEP</option><option value="32" data-select2-id="select2-data-129-hlg5">KERALA</option><option value="33" data-select2-id="select2-data-93-mi8h">TAMIL NADU</option><option value="34" data-select2-id="select2-data-130-zix6">PUDUCHERRY</option><option value="35" data-select2-id="select2-data-131-e2wo">ANDAMAN AND NICOBAR</option><option value="36" data-select2-id="select2-data-132-7zmb">TELANGANA</option><option value="37" data-select2-id="select2-data-133-zaxm">ANDHRA PRADESH</option><option value="38" data-select2-id="select2-data-134-pd48">LADAKH</option><option value="97" data-select2-id="select2-data-135-ehii">OTHER TERRITORY</option><option value="96" data-select2-id="select2-data-136-2g5s">OTHER COUNTRY</option></select><span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" data-select2-id="select2-data-91-u583" style="width: 17.6px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-StateId-container" aria-controls="select2-StateId-container"><span class="select2-selection__rendered" id="select2-StateId-container" role="textbox" aria-readonly="true" title="TAMIL NADU">TAMIL NADU</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <button type="button" class="btn btn-added mr-2" id="BillingAddressUpdateBtn" fdprocessedid="uwxt5">Update</button>
+        <button type="button" class="btn modal-close-btn" id="BillingAddressCancelBtn" fdprocessedid="qb11dq">Close</button>
+    </div>
+</div>
+
+
+@* <script src="~/js/purchaseorder.js"></script> *@
+<script src="~/js/einvoice.js"></script>

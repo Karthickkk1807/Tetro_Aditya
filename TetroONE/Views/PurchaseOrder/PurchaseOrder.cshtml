@@ -1,0 +1,583 @@
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.PurchaseOrder, Context.Session);
+}
+
+<link href="~/css/purchaseorder.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/purchase/purchaseordericon_1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox1"></div>
+                                    <h4 class="card-title" id="valCounterBox1"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/purchase/purchaseordericon_2.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox2"></div>
+                                    <h4 class="card-title" id="valCounterBox2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/purchase/purchaseordericon_3.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox3"></div>
+                                    <h4 class="card-title" id="valCounterBox3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img src="~/assets/moduleimages/purchase/purchaseordericon_4.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="lblCounterBox4"></div>
+                                    <h4 class="card-title" id="valCounterBox4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="filter-Column" class="Date-SearchColumn">
+    <div class="month-piker d-flex">
+        @{
+            if (access.Create)
+            {
+                <div class="pr-2">
+                    <input type="button" class="btn btn-primary purchaseactive" id="ToVendorGrid" value="To Vendor" fdprocessedid="9uvk5r" autocomplete="no-0.4231936747877184">
+                </div>
+                <div class="pr-2">
+                    <input type="button" class="btn btn-primary" id="FromDistributorGrid" value="From Distributor" fdprocessedid="9uvk5r" autocomplete="no-0.4231936747877184">
+                </div>
+            }
+        }
+        <div class="dropdown">
+            <button class="btn Bulk-Action dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                </svg>
+                Month
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2" style="min-width: 140px;">
+                <li><a id="downloadExcelBtn" class="dropdown-item active">Month</a></li>
+                <li><a class="dropdown-item" id="bulkEmployee">Custom</a></li>
+            </ul>
+        </div>
+
+        <div class="ftdate">
+            <div class="row" id="fromtodateCol" style="display:none;">
+                <div class="col-6" id="frmDate">
+                    <div class="form-group d-flex align-items-center">
+                        <label class="pr-1">From:</label>
+                        <input type="date" class="form-control" id="FromDate" />
+                    </div>
+                </div>
+                <div class="col-6" id="toDate">
+                    <div class="form-group mx-2 d-flex align-items-center">
+                        <label class="pr-1" id="toLbl">To:</label>
+                        <input type="date" class="form-control" id="ToDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="" id="monthPickerCol">
+                <div class="date-carousel" id="datemonth">
+                    <div class="date-nav">
+                        <button class="nav-button" id="decrement-month-btn2">◄</button>
+                        <span class="month-year" id="dateDisplay2"></span>
+                        <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <div class="searchbar">
+            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+            <button type="submit" class="searchbar__button">
+                <img src="~/assets/commonimages/search.svg" />
+            </button>
+        </div>
+
+        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+            <div class="add-imp-exp-btn">
+                <div class="exportsiconpop">
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="AddPurchaseOrderBtn" title="Add PurchaseOrder">
+                                    <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table   table-head-bg-primary basic-datatables table-hover tableResponsive" style="max-height:200px" id="PurchaseOrderData">
+    </table>
+</div>
+
+
+<div id="PurchaseOrderModal" class="modal" data-bs-loader-pms="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-xxl">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ModalHeading">Purchase Order</h2>
+                <span id="PurchaseOrderClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div class="Status-Div">
+                    <fieldset class="expensefild_1">
+                        <legend class="w-auto">PurchaseOrder Status</legend>
+                        <div class="horizontal-timeline">
+                            <div class="timeline-progress-line-fill"></div>
+                            <div class="timeline-progress-line"></div> 
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="px-3" id="POTopHeadbind">
+                   
+                </div>
+                <!--Dynmic table-->
+                <div class="px-3" id="MainPurchaseOrderPopTable">
+                    <div class="row DynmicTableRow">
+                        <div class="container-fluid mt-2">
+                            <div class="Purchasetable-container">
+                                <div class="Purchasetable-scroll">
+                                    <table class="table table-bordered" id="POProductTable">
+                                        <thead class="Dynthead">
+                                            <tr>
+                                                <th>S.No</th>
+                                                <th>Product Name <span style="visibility: hidden;">11111111</span></th>
+                                                <th>Price<span style="visibility: hidden;">1111</span></th>
+                                                <th>Quantity</th>
+                                                <th>Sub Total<span style="visibility: hidden;">1</span></th>
+                                                <th class="d-none">Discount <span style="visibility: hidden;">111111111</span></th>
+                                                <th id="CGSTHead">CGST<span style="visibility: hidden;">1111</span></th>
+                                                <th id="SGSTHead">SGST<span style="visibility: hidden;">1111</span></th>
+                                                <th id="IGSTHead">IGST<span style="visibility: hidden;">1111</span></th>
+                                                <th id="CESSHead">CESS<span style="visibility: hidden;">1111</span></th>
+                                                <th style="width: 65px;">Total</th>
+                                                <th style="width: 65px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="POProductTablebody" class="Dyntbody">
+
+                                            <!--Add Item-->
+                                            <tr id="AddItemButtonRow">
+                                                <td colspan="12" class="add-item">
+                                                    <div class="add-item">
+                                                        <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr id="SubtotalRow" style="background-color: #e4edf5;">
+                                                <td colspan="4"><div class="summary-label"><a>Sub Total</a></div></td>
+                                                <td style="padding: 4px;" id="subtotalTotalDiv"> <input type="text" id="SubTotalTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="CGSTTotalDiv"> <input type="text" id="CGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="SGSTTotalDiv"> <input type="text" id="SGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="IGSTTotalDiv"> <input type="text" id="IGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="CESSTotalDiv"> <input type="text" id="CESSTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+
+                                                <td colspan="3"><input type="text" id="Subtotal" disabled class="form-control" placeholder="0.00" style="width: 165px;background: #fbfbfb !important;"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-3" id="MainPurchaseProposalReturnPopTable">
+                    <div class="row DynmicTableRow">
+                        <div class="container-fluid mt-2">
+                            <div class="PurchaseProposalReturn-container">
+                                <div class="PurchaseProposalReturn-scroll">
+                                    <table class="table table-bordered" id="POProductTable">
+                                        <thead class="Dynthead">
+                                            <tr>
+                                                <th>S.No</th>
+                                                <th>Product Name <span style="visibility: hidden;">11111111111111111111</span></th>
+                                                <th>Price<span style="visibility: hidden;">1111</span></th>
+                                                <th>Quantity</th>
+                                                <th>Sub Total<span style="visibility: hidden;">1</span></th>
+                                                <th class="d-none">Discount <span style="visibility: hidden;">111111111</span></th>
+                                                <th id="PCGSTHead">CGST<span style="visibility: hidden;">1111</span></th>
+                                                <th id="PSGSTHead">SGST<span style="visibility: hidden;">1111</span></th>
+                                                <th id="PIGSTHead">IGST<span style="visibility: hidden;">1111</span></th>
+                                                <th id="PCESSHead">CESS<span style="visibility: hidden;">1111</span></th>
+                                                <th style="width: 65px;">Total</th>
+                                                <th style="width: 65px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="PurchaseProposalReturnTablebody" class="PurchaseProposalReturnbody">
+
+                                            <!--Add Item-->
+                                            <tr id="AddItemButtonRow">
+                                                <td colspan="12" class="add-item">
+                                                    <div class="add-item">
+                                                        <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr id="PRSubtotalRow" style="background-color: #e4edf5;">
+                                                <td colspan="4"><div class="summary-label"><a>Sub Total</a></div></td>
+                                                <td style="padding: 4px;" id="PsubtotalTotalDiv"> <input type="text" id="PRSubTotalTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
+                                                <td style="padding: 4px;" id="PCGSTTotalDiv"> <input type="text" id="PRCGSTTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
+                                                <td style="padding: 4px;" id="PSGSTTotalDiv"> <input type="text" id="PRSGSTTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
+                                                <td style="padding: 4px;" id="PIGSTTotalDiv"> <input type="text" id="PRIGSTTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
+                                                <td style="padding: 4px;" id="PCESSTotalDiv"> <input type="text" id="PRCESSTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
+
+                                                <td colspan="3"><input type="text" id="PRSubtotal" disabled class="form-control" placeholder="0.00" style="width: 165px;background: #fbfbfb !important; font-size: .875rem !important;"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Dynmic table-->
+                <!--Add Discount Column & Add Notes Column-->
+                <div class="px-3">
+                    <div class="row DynmicTableRow">
+                        <!--Notes & Terms Column-->
+                        <div class="col-lg-5 col-md-12 col-sm-12 col-12 order-2 order-md-2 order-lg-1 AddnotesDiv">
+                            <div class="row mt-3 mb-3">
+                                <!--Add Notes-->
+                                <div class="col-12">
+                                    <input class="AdddiscountLable px-0" id="AddNotesLable" type="button" value="+ Add Notes" fdprocessedid="ecr2ah">
+                                </div>
+                                <div id="AddNotes" class="col-12" style="display: none;">
+                                    <div class="addterms-Attchbg mb-2 mt-2">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Notes</label>
+                                                    <textarea class="form-controltext" id="AddNotesText" name="AddNotesText" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <input class="AdddiscountLable px-0 mb-2" id="HideNotesLable" type="button" value="✖ Hide Notes">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Add Terms & Conditions-->
+                                <div class="col-12">
+                                    <input class="AdddiscountLable px-0" id="AddTermsLable" type="button" value="+ Add Terms &amp; Conditions" fdprocessedid="wlm3ic">
+                                </div>
+                                <div id="AddTerms" class="col-12" style="display: none;">
+                                    <div class="addterms-Attchbg mb-2 mt-2">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Terms and Conditions</label>
+                                                    <textarea class="form-controltext" id="TermsAndCondition" name="TermsAndCondition" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <input class="AdddiscountLable px-0 mb-2" id="HideTermsLable" type="button" value="✖ Hide Terms &amp; Conditions">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Add Attachment-->
+                                <div class="col-12">
+                                    <input class="AdddiscountLable px-0" id="AddAttachLable" type="button" value="+ Add Attachment" fdprocessedid="7gduj">
+                                </div>
+                                <div id="AddAttachment" class="col-12" style="display: none;">
+                                    <div class="addterms-Attchbg mb-2 mt-2">
+                                        <div class="row">
+                                            <div class="col-12" style="height: 120px;margin-top:5px;">
+                                                <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 120px;">
+                                                    <!-- Add a custom button for choosing files -->
+                                                    <label class=" d-flex justify-content-center align-content-center mt-3 " style="text-decoration:underline; color:#7D7C7C;">
+                                                        <b>Click Here to Attach your files</b>
+                                                        <input type="file" id="fileInput" multiple="" class="custom-file-input valid" aria-invalid="false">
+                                                    </label>
+                                                    <div class="file-preview d-flex justify-content-center" id="preview" style="display: block;">
+                                                        <div class="attachrow">
+                                                            <div class="attachcolumn">
+                                                                <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                            </div>
+                                                            <div class="attachcolumn">
+                                                                <ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"> </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 attachLableDiv">
+                                                <input class="AdddiscountLable px-0 mt-2" id="HideAttachlable" type="button" value="✖ Hide Attachment">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Discount Column-->
+                        <div class="col-lg-7 col-md-12 col-sm-12 col-12 order-1 order-md-1 order-lg-2">
+                            <div class="row mt-3">
+                                <!--Discount Div-->
+                                <div class="col-12 d-none">
+                                    <div class="input-group-append d-flex justify-content-end">
+                                        <input class="dropdown-toggle AdddiscountLable px-0 btn" id="OtherchargesAdd" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="+ Add discount and More">
+                                        <div class="dropdown-menu" id="OtherChargesDropDown" style="left: unset;">
+                                            <a class="dropdown-item discountCharges">Add Discount</a>
+                                            <a class="dropdown-item OtherCharges">Add Others</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form id="frmtaxdiscountothers" class="w-100" novalidate="novalidate">
+                                    <div id="dynamicBindRow">
+                                    </div>
+                                </form>
+                                <!--Discount Div-->
+                                <!--Grand Total-->
+                                <div class="col-12">
+                                    <div class="mt-3">
+                                        <div id="RoundOffDiv" class="round-off-container">
+                                            <label for="roundOff" class="round-off-label">Round Off Value</label>
+                                            <input type="text" id="roundOff" name="roundOff" class="form-control round-off-input" placeholder="0.00" disabled="" fdprocessedid="t5zlur">
+                                        </div>
+                                        <div class="round-off-container">
+                                            <label for="GrantTotal" class="round-off-label GTL">Grand Total</label>
+                                            <input type="text" id="GrantTotal" name="GrantTotal" class="form-control round-off-input" placeholder="0.00" disabled="" fdprocessedid="gq8ki">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--loyalty-point-container-->
+                                <!--Paid-From-container-->
+                                <div class="col-12 d-none">
+                                    <form id="FormPaidBalance" novalidate="novalidate">
+                                        <div class="row justify-content-end">
+                                            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                                                <div class="form-group">
+                                                    <label>Paid From</label>
+                                                    <select class="form-control" id="PaidFrom" name="PaidFrom" required="">
+                                                        <option value="">-- Select --</option>
+                                                        <option value="2">Debit</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-md-6 col-sm-6 col-6" id="InvoiceNoDiv">
+                                                <div class="form-group">
+                                                    <label>Days</label>
+                                                    <input type="text" class="form-control" id="PaidFromDays" name="PaidFromDays" placeholder="Days" oninput="Common.allowOnlyNumberLength(this,6)" autocomplete="off" maxlength="3" required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6 col-sm-6 col-6" id="InvoiceNoDiv">
+                                                <div class="form-group">
+                                                    <label>Due Date</label>
+                                                    <input type="date" class="form-control" id="PaidFromDueDate" name="PaidFromDueDate" autocomplete="off" required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row justify-content-end">
+                                                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6 mt-2" style="align-content:center;align-items:center">
+                                                        <div id="ExistingBalRow" class="pl-3">
+                                                            <div class="d-flex justify-content-center">
+                                                                <lable class="ExtngLable" id="LimitValue" style="color: #ad5d00;">Existing Balance ()</lable>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6 mt-2 PartiallyPaidHide" style="align-content: center; align-items: center; display: none;">
+                                                        <div class="d-flex justify-content-end">
+                                                            <input type="checkbox" name="IsPartiallyPaid" id="IsPartiallyPaid" value="">
+                                                            <lable class="ExtngLable ml-1">Partially Paid</lable>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-6 col-lg-6 col-md-4 col-sm-12 col-12" id="ModeOfPaymentContainer">
+                                                        <div id="appendContainer" class="my-2">
+                                                            <div class="input-group" id="ModeOfPaymentStaticContainer">
+                                                                <!-- Store Name Input on the Left -->
+                                                                <input type="text" id="PaymenyTextBox" class="form-control PaymenyTextBox" placeholder="Amount">
+
+                                                                <!-- Dropdown for Bulk Actions in the Middle -->
+                                                                <div class="payment-drop">
+                                                                    <select class="form-select form-control ModeOfPaymentId" id="ModeOfPaymentId" required><option value="" style="font-weight: 400;">-- Select --</option><option value="1">Cash</option><option value="2">UPI	Paytm</option><option value="3">Net banking</option><option value="4">Paytm</option></select>
+                                                                </div>
+
+                                                                <!-- Add Button on the Right -->
+                                                                <button id="addPartialPayment" class="btn AddStockBtn ml-2" type="button">
+                                                                    <i class="fas fa-plus"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="input-group mt-2 mb-2 MOPdynamicRow">
+                                                                <input type="text" id="PaymenyTextBox2" name="PaymenyTextBox2" class="MOPAmount form-control" placeholder="Amount" oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" required="" fdprocessedid="ndswvr">
+                                                                <div class="payment-drop">
+                                                                    <select class="form-select form-control ModeOfPaymentId" name="ModeOfPaymentId2" id="ModeOfPaymentId2" required="" fdprocessedid="7vuna">
+                                                                    </select>
+                                                                </div>
+                                                                <button class="btn DynrowRemove PaymentDynremoveBtn ml-2 mt-0" type="button" fdprocessedid="45ro5">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Statuscolumn-->
+                        <div class="Statuscolumn col-12 order-3">
+                            <form id="FormStatus">
+                                <div class="row" style="margin-top: 5px;">
+                                    <div class="col-lg-10 col-md-9 col-6" style="visibility: hidden;">
+                                        <div class="form-group">
+                                            <label>Balance Amount</label>
+                                            <input type="text" class="form-control" id="BalanceAmount" name="BalanceAmount" placeholder="0.00" disabled="" autocomplete="off" maxlength="10">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-3 col-6 statusError">
+                                        <div class="form-group" id="statusError">
+                                            <label>Status<span id="Asterisk">*</span></label>
+                                            <select id="PurchaseOrderStatusId" class="form-control" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <!--Add Discount Column & Add Notes Column-->
+            </div>
+
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="button-container d-lg-flex d-block justify-content-center">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="PurchaseOrderSaveBtn">
+                                <i class="fas fa-save mr-1"></i>
+                                <span>Save</span><span class="shortcut-key">[ Ctrl+S ]</span>
+                            </button>
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPordersaveprintbtn">
+                                <i class="fas fa-print mr-1"></i> <span> Save &amp; Print</span><span class="shortcut-key">[ Alt + P ]</span>
+                            </button>
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPreviewPorder">
+                                <i class="fas fa-eye mr-1"></i> <span>Preview</span><span class="shortcut-key">[ Alt + V ]</span>
+                            </button>
+
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnsharePorder" data-bs-toggle="modal" data-bs-target="#emailModal">
+                                <i class="fas fa-share"></i> <span>Share</span><span class="shortcut-key">[ Alt + H ]</span>
+                            </button>
+                            <!-- Dropdown Menu -->
+                            <ul class="dropdown-menu shadow-lg sharedrop" id="ShareDropdownitems" aria-labelledby="btnsharePorder" style="display: none;">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" id="PurchaseOrderWhatsAppBtn">
+                                        <i class="fab fa-whatsapp me-3 whatsapp-icon"></i> WhatsApp
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" id="PurchaseOrderMailBtn">
+                                        <i class="fas fa-envelope me-3 email-icon"></i> Email
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="#" id="downloadLink">
+                                        <i class="fas fa-download me-3 download-icon"></i> Download
+                                    </a>
+                                </li>
+
+                                <div id="SpinnerWhatsApp" style="position: absolute; display: none;">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </ul>
+
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="PurchaseOrderCancelBtn">
+                                <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
+                            </button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script src="~/js/purchaseorder.js"></script>
+<script src="~/js/purchaseorderreturn.js"></script>
+<script src="~/js/productadd.js"></script>
+<script src="~/js/inventory.js"></script>
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+
+    $('#btnsharePorder').click(function () {
+        $('#ShareDropdownitems').toggle();
+    });
+
+</script>

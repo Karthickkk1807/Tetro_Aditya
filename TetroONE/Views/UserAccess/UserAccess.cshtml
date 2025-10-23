@@ -1,0 +1,64 @@
+﻿@using System.Security.Claims
+@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.UserAccess, Context.Session);
+}
+<link href="~/css/useraccess.css" rel="stylesheet" />
+
+<div id="uder-id" class="">
+    <div class="page-headera mb-2">
+        <div class="DropdownColumn">
+            <div class="user-title">
+                <h4 class="page-titlea">
+                    <img src="~/assets/sidebaricons/useraccess.png" width="25" />
+                    User Access
+                </h4>
+            </div>
+            <div class="user-drop">
+                <div class="info-row mr-2">
+                    <div class="info-label-Purchase" style="width: 63px;">Category</div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">
+                        <select class="form-control" id="Category" name="Category">
+                        </select>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label-Purchase">Value</div>
+                    <div class="info-colon">:</div>
+                    <div class="info-value">
+                        <select class="form-control" id="Value" name="Value">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="searchcolumn">
+            <div class="searchbar mr-2">
+                <input type="text" class="searchbar__inputtableFilter_User" name="q" id="tableFilter_User" placeholder="Search" style="height: 30px;">
+                <button type="submit" class="searchbar__button" style="height: 30px;">
+                    <img src="/assets/commonimages/search.svg">
+                </button>
+            </div>
+            @if (access.Update)
+            {
+                <a class="btn btn-update text-white" id="UpdateUserAccess" style="padding: 3px 7px 2px 8px; height: 30px;">Update</a>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @* <span class="autoSaveMessage">Note:- Update will auto save</span> *@
+            <div class="table-responsive">
+                <table id="collapsed" class="table table-head-bg-primary basic-tree-table">
+                    <thead class="head-col" id="UserAccessHeader">
+                    </thead>
+                    <tbody id="UserAccessData">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/useraccess.js"></script>

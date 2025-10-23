@@ -1,0 +1,38 @@
+﻿.mrselect {
+    height: 32px;
+    border-color: #e6e6e6;
+}
+
+.AddStockBtn:hover {
+    background-color: #1A2A;
+    color: white;
+    box-shadow: 0 3px 11px rgb(58 169 0 / 93%);
+}
+
+.checkbox-label {
+    filter: blur(1px); /* Initially blur the text */
+    transition: filter 0.3s ease-in-out;
+}
+
+input[type="checkbox"]:hover + .checkbox-label,
+input[type="checkbox"]:checked + .checkbox-label {
+    filter: blur(0); /* Remove blur on hover or when checked */
+}
+
+#VendorTable {
+    width: 100% !important;
+}
+#Managetable{
+    width:500px;
+}
+.dataTables_scrollBody {
+    height: 330px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+#VendorProductList {
+    height: 168px !important;
+    overflow-y: scroll !important;
+}

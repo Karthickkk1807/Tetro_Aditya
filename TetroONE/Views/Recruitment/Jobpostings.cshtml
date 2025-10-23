@@ -1,0 +1,771 @@
+﻿<link href="~/css/job.css" rel="stylesheet" />
+
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img id="CounterBoxImg1" src="~/assets/sidebaricons/recruitment/jobdetailsicon_1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox1">Total</div>
+                                    <h4 class="card-title" id="CounterValBox1">66</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                    <img id="CounterBoxImg2" src="~/assets/sidebaricons/recruitment/job_icon2.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox2">Draft / Approval</div>
+                                    <h4 class="card-title" id="CounterValBox2">10 / 38</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img id="CounterBoxImg3" src="~/assets/sidebaricons/recruitment/job_icon3.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox3">Open / On-Hold</div>
+                                    <h4 class="card-title" id="CounterValBox3">4 / 4</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img id="CounterBoxImg4" src="~/assets/sidebaricons/recruitment/job_icon4.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox4">Closed</div>
+                                    <h4 class="card-title" id="CounterValBox4">10</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="filter-Column" class="Date-SearchColumn">
+    <div class="month-piker d-flex">
+        <div class="dropdown">
+            <button class="btn Bulk-Action dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                </svg>
+                Month
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2" style="min-width: 140px;">
+                <li><a id="downloadExcelBtn" class="dropdown-item active">Month</a></li>
+                <li><a class="dropdown-item" id="bulkEmployee">Custom</a></li>
+            </ul>
+        </div>
+
+        <div class="ftdate">
+            <div class="row" id="fromtodateCol" style="display:none;">
+                <div class="co-6" id="frmDate">
+                    <div class="form-group d-flex align-items-center">
+                        <label class="pr-1">From:</label>
+                        <input type="date" class="form-control" id="FromDate" />
+                    </div>
+                </div>
+                <div class="co-6" id="toDate">
+                    <div class="form-group mx-2 d-flex align-items-center">
+                        <label class="pr-1" id="toLbl">To:</label>
+                        <input type="date" class="form-control" id="ToDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="" id="monthPickerCol">
+                <div class="date-carousel" id="datemonth">
+                    <div class="date-nav">
+                        <button class="nav-button" id="decrement-month-btn2">◄</button>
+                        <span class="month-year" id="dateDisplay2">September 2025</span>
+                        <button class="nav-button" id="increment-month-btn2">►</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <div class="searchbar">
+            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+            <button type="submit" class="searchbar__button">
+                <img src="~/assets/commonimages/search.svg" />
+            </button>
+        </div>
+
+        <div class="datapiker ml-2 mt-1" style="position: relative;">
+            <div class="add-imp-exp-btn">
+                <div class="exportsiconpop">
+                    <span class="pop">
+                        <a id="AddJob" title="Add Job">
+                            <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="" id="JobDynamic" style="margin-top:-12px;">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="jobTable"></table>
+    </div>
+</div>
+
+<div id="JobCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="JobHeader">Add Job Details</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormJob">
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="accordion-header">
+                    <h2 id="Styleentery" class="mb-0 Styleentery">
+                        <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                <strong class="text-white">
+                                    Job Info
+                                </strong>
+                                <i class="fas fa-angle-down text-white"></i>
+                            </p>
+                        </a>
+                    </h2>
+                </div>
+                <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="Styleenterydetalis" class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Job Id</label>
+                                    <input type="text" class="form-control" placeholder="Ex: Job_101" id="JobId" name="JobId" maxlength="50" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Job Type<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="JobTypeId" name="JobTypeId" required>
+                                        <option value="1">--Select--</option>
+                                        <option value="2">Internal</option>
+                                        <option value="3">External</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Job Name<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: .Net Developer" id="JobName" name="JobName" maxlength="50" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Job Category<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="JobCategory" name="JobCategory" required>
+                                        <option value="1">--Select--</option>
+                                        <option value="2">Back End</option>
+                                        <option value="3">Frond End</option>
+                                        <option value="4">Full Stack</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Employment Type<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="EmploymentType" name="EmploymentType" required>
+                                        <option value="1">--Select--</option>
+                                        <option value="2">Full Time</option>
+                                        <option value="3">Part time</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Department Type<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="DepartmentType" name="DepartmentType" required>
+                                        <option value="1">--Select--</option>
+                                        <option value="2">Full Stack</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Primary Skill<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: C#" id="PrimarySkill" name="PrimarySkill" maxlength="50" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Secondary Skill<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: C#" id="SecondarySkill" name="SecondarySkill" maxlength="50" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Hiring Location<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="HiringLocation" name="HiringLocation" required>
+                                        <option value="1">--Select--</option>
+                                        <option value="2">Gobichettipalayam Branch</option>
+                                        <option value="3">Chennai Branch</option>
+                                        <option value="3">Kanapathy Towers</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Hiring Manager<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="HiringManager" name="HiringManager" required>
+                                        <option value="1">--Select--</option>
+                                        <option value="2">Satheesh Kumar</option>
+                                        <option value="3">Kavinesh Rajasekar</option>
+                                        <option value="4">Prabhu M</option>
+                                        <option value="5">Priya K</option>
+                                        <option value="6">Priya K</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-2 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label># Opg<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: #" id="Opg" name="Opg" maxlength="50" required />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-4 col-sm-6 col-6 pl-0">
+                                <div class="form-group">
+                                    <label for="OpeningExpiryDate">
+                                        Open / Expiry Date <span id="Asterisk">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="OpeningExpiryDate" placeholder="Select Date">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-6">
+                                <div class="form-group">
+                                    <label>Salary <span id="Asterisk">*</span></label>
+                                    <div class="d-flex" style="gap: 3px;">
+                                        <select class="form-control" id="SalaryType" name="SalaryType" required>
+                                            <option value="1">INR</option>
+                                        </select>
+                                        <input type="text" class="form-control" id="SalaryMinRange" name="SalaryMinRange" oninput="Common.allowOnlyNumberLength(this,7)" placeholder="Min Sal">
+                                        <input type="text" class="form-control" id="SalaryMaxRange" name="SalaryMaxRange" oninput="Common.allowOnlyNumberLength(this,7)" placeholder="Max Sal">
+                                    </div>
+                                    <label class="SalaryMinError" style="display: none;">This field is required.</label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-6">
+                                <div class="form-group">
+                                    <label>Experience <span id="Asterisk">*</span></label>
+                                    <div class="d-flex" style="gap: 3px;">
+                                        <select class="form-control" id="SalaryType" name="SalaryType" disabled>
+                                            <option value="1">Yrs</option>
+                                        </select>
+                                        <input type="text" class="form-control" id="SalaryMinRange" name="SalaryMinRange" oninput="Common.allowOnlyNumberLength(this,7)" placeholder="Min Exp">
+                                        <input type="text" class="form-control" id="SalaryMaxRange" name="SalaryMaxRange" oninput="Common.allowOnlyNumberLength(this,7)" placeholder="Max Exp">
+                                    </div>
+                                    <label class="SalaryMinError" style="display: none;">This field is required.</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Work Mode<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="WorkModeType" name="WorkModeType" required>
+                                        <option value="1">--Select--</option>
+                                        <option value="2">Contract</option>
+                                        <option value="3">Home</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                                <div class="description-container">
+                                    <label>Description</label>
+                                    <div class="editor-toolbar">
+                                        <span class="toolbar-icon" title="Fullscreen">⛶</span>
+                                        <span class="toolbar-icon" title="Align Right">➡️</span>
+                                        <span class="toolbar-icon" title="Align Left">⬅️</span>
+                                        <span class="toolbar-icon" title="Link">🔗</span>
+                                        <span class="toolbar-icon" title="Underline">U</span>
+                                        <span class="toolbar-icon" title="Bold">B</span>
+                                        <span class="toolbar-icon" title="Info">i</span>
+                                        <select class="font-size">
+                                            <option>Font Size</option>
+                                            <option>Small</option>
+                                            <option>Medium</option>
+                                            <option>Large</option>
+                                        </select>
+                                    </div>
+                                    <textarea id="description" placeholder="Comment here"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="accordion-header">
+                    <h2 id="Styleentery" class="mb-0 Styleentery">
+                        <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                <strong class="text-white">
+                                    Pipeline Info
+                                </strong>
+                                <i class="fas fa-angle-down text-white"></i>
+                            </p>
+                        </a>
+                    </h2>
+                </div>
+                <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="Styleenterydetalis" class="card-body">
+                        <div class="d-flex justify-content-end" style="margin-right: 13px;margin-top: -6px;margin-bottom: -6px;">
+                            <span class="Dynamicbutton plusDynamic">+</span>
+                        </div>
+                        <div class="dynamiclyappendhtml">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="accordion-header">
+                    <h2 id="Styleentery" class="mb-0 Styleentery">
+                        <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                <strong class="text-white">
+                                    Job Publishing Platform Info
+                                </strong>
+                                <i class="fas fa-angle-down text-white"></i>
+                            </p>
+                        </a>
+                    </h2>
+                </div>
+                <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="Styleenterydetalis" class="card-body">
+                        <div class="row">
+                            <div class="col-6 pr-1">
+                                <div class="card">
+                                    <div class="card-body" style="border-radius: 10px !important; background: #ffffff !important;border: 1px solid #cccccc !important;">
+                                        <h3 class="card-title" style="font-size: 16px;font-weight: 700;font-family: sans-serif;color: #49505b;margin-top: 0px; margin-bottom: 3px;">
+                                            <img src="~/assets/moduleusedtetroone/website_icon.svg" style="width: 17px;margin-right: 3px;margin-left: 4px;margin-top: -3px;" /> Company Website
+                                        </h3>
+                                        <p style="font-size: 12px; color: black; font-family: sans-serif; line-height: 14px;">Your job, front and center - on your career page.</p>
+                                        <div class="row col-12 p-0" style="margin-left: 0px;margin-top: -9px;">
+                                            <div class="col-6 pl-0 pr-1">
+                                                <span class="btn btn-primary w-100 dynamicOnbtn" style="padding-top: 1px;padding-bottom: 1px;">On</span>
+                                            </div>
+                                            <div class="col-6 pl-1 pr-0">
+                                                <span class="btn btn-primary w-100 dynamicPerviewbtn" style="padding-top: 1px;padding-bottom: 1px;"><i class="fas fa-eye" style="margin-right: 5px;"></i>Preview</span>
+                                            </div>
+                                            <div class="col-12 pl-0 p-0">
+                                                <span class="btn btn-danger w-100 dynamicOffbtn" style="padding-top: 1px;padding-bottom: 1px;">Off</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 pl-1">
+                                <div class="card">
+                                    <div class="card-body" style="border-radius: 10px !important; background: #ffffff !important;border: 1px solid #cccccc !important;">
+                                        <h3 class="card-title" style="font-size: 16px;font-weight: 700;font-family: sans-serif;color: #49505b;margin-top: 0px; margin-bottom: 3px;">
+                                            <img src="~/assets/moduleusedtetroone/linkedin_icon.svg" style="width: 17px;margin-right: 3px;margin-left: 4px;margin-top: -3px;" /> Linkedin
+                                        </h3>
+                                        <p style="font-size: 12px; color: black; font-family: sans-serif; line-height: 14px;">Reach top talent where professional connect.</p>
+                                        <div class="row col-12 p-0" style="margin-left: 0px;margin-top: -9px;">
+                                            <div class="col-6 pl-0 pr-1">
+                                                <span class="btn btn-primary w-100 dynamicOnbtn" style="padding-top: 1px;padding-bottom: 1px;">On</span>
+                                            </div>
+                                            <div class="col-6 pl-1 pr-0">
+                                                <span class="btn btn-primary w-100 dynamicPerviewbtn" style="padding-top: 1px;padding-bottom: 1px;"><i class="fas fa-eye" style="margin-right: 5px;"></i>Preview</span>
+                                            </div>
+                                            <div class="col-12 pl-0 p-0">
+                                                <span class="btn btn-danger w-100 dynamicOffbtn" style="padding-top: 1px;padding-bottom: 1px;">Off</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 pr-1">
+                                <div class="card">
+                                    <div class="card-body" style="border-radius: 10px !important; background: #ffffff !important;border: 1px solid #cccccc !important;">
+                                        <h3 class="card-title" style="font-size: 16px;font-weight: 700;font-family: sans-serif;color: #49505b;margin-top: 0px; margin-bottom: 3px;">
+                                            <img src="~/assets/moduleusedtetroone/Naukri_icon.svg" style="width: 17px;margin-right: 3px;margin-left: 4px;margin-top: -3px;" /> Naukri
+                                        </h3>
+                                        <p style="font-size: 12px; color: black; font-family: sans-serif; line-height: 14px;">India's trusted job protal for serious candidates.</p>
+                                        <div class="row col-12 p-0" style="margin-left: 0px;margin-top: -9px;">
+                                            <div class="col-6 pl-0 pr-1">
+                                                <span class="btn btn-primary w-100 dynamicOnbtn" style="padding-top: 1px;padding-bottom: 1px;">On</span>
+                                            </div>
+                                            <div class="col-6 pl-1 pr-0">
+                                                <span class="btn btn-primary w-100 dynamicPerviewbtn" style="padding-top: 1px;padding-bottom: 1px;"><i class="fas fa-eye" style="margin-right: 5px;"></i>Preview</span>
+                                            </div>
+                                            <div class="col-12 pl-0 p-0">
+                                                <span class="btn btn-danger w-100 dynamicOffbtn" style="padding-top: 1px;padding-bottom: 1px;">Off</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 pl-1">
+                                <div class="card">
+                                    <div class="card-body" style="border-radius: 10px !important; background: #ffffff !important;border: 1px solid #cccccc !important;">
+                                        <h3 class="card-title" style="font-size: 16px;font-weight: 700;font-family: sans-serif;color: #49505b;margin-top: 0px; margin-bottom: 3px;">
+                                            <img src="~/assets/moduleusedtetroone/Indeed_Icon.svg" style="width: 17px;margin-right: 3px;margin-left: 4px;margin-top: -3px;" />
+                                            Indeed
+                                        </h3>
+                                        <p style="font-size: 12px; color: black; font-family: sans-serif; line-height: 14px;">Get seen by millions on the world's #1 job site.</p>
+                                        <div class="row col-12 p-0" style="margin-left: 0px;margin-top: -9px;">
+                                            <div class="col-6 pl-0 pr-1">
+                                                <span class="btn btn-primary w-100 dynamicOnbtn" style="padding-top: 1px;padding-bottom: 1px;">On</span>
+                                            </div>
+                                            <div class="col-6 pl-1 pr-0">
+                                                <span class="btn btn-primary w-100 dynamicPerviewbtn" style="padding-top: 1px;padding-bottom: 1px;"><i class="fas fa-eye" style="margin-right: 5px;"></i>Preview</span>
+                                            </div>
+                                            <div class="col-12 pl-0 p-0">
+                                                <span class="btn btn-danger w-100 dynamicOffbtn" style="padding-top: 1px;padding-bottom: 1px;">Off</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveJobPost">Save</a>
+                    <a class="btn btn-primary m-r-20 text-white" id="PreviewJobPost">Preview</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="JobDescriptionCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="JobDescriptionHeader">Job Post Perview</h2>
+        <span id="CloseDescriptionCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormJobPerview">
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                    <div class="description-container description1">
+                        <div class="editor-toolbar">
+                            <span class="toolbar-icon" title="Fullscreen">⛶</span>
+                            <span class="toolbar-icon" title="Align Right">➡️</span>
+                            <span class="toolbar-icon" title="Align Left">⬅️</span>
+                            <span class="toolbar-icon" title="Link">🔗</span>
+                            <span class="toolbar-icon" title="Underline">U</span>
+                            <span class="toolbar-icon" title="Bold">B</span>
+                            <span class="toolbar-icon" title="Info">i</span>
+                            <select class="font-size">
+                                <option>Font Size</option>
+                                <option>Small</option>
+                                <option>Medium</option>
+                                <option>Large</option>
+                            </select>
+                        </div>
+
+                        <!-- changed textarea to contenteditable div -->
+                        <div id="description1" class="description-textarea description1-textarea"
+                             contenteditable="true" style="min-height:200px; border:1px solid #ccc; padding:10px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+        </div>
+    </div>
+</div>
+
+
+<div id="JobPreviewCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="JobDescriptionHeader">Job Post Perview</h2>
+        <span id="CloseDescriptionCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormJobPerview">
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+
+                    <div class="job-preview-box" style="background:#fff;border-radius:12px;font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,sans-serif;color:#333;">
+                        <div class="row col-12 pr-0">
+                            <!-- Header Section -->
+                            <div class="col-6 p-0">
+                                <div style="display:flex;align-items:center;gap:12px;margin-bottom:15px;">
+                                    <div style="width: 50px;height: 50px;border-radius:50%;background: #ffe7c3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;">U</div>
+                                    <div>
+                                        <h3 style="margin:0;font-size: 17px;font-weight:700;color:#1a1a1a;font-family: system-ui;">UI Developer</h3>
+                                        <p style="margin:0;font-size:12px;color:#777;">Front End</p>
+                                        <p style="margin:0;font-size:12px;color:#777;"><img src="~/assets/moduleusedtetroone/location.svg" style="width: 15px;margin-top: -4px;" /> Coimbatore, Tamilnadu</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Info Row -->
+                            <div class="col-6 p-0">
+                                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:15px;font-size:13px;color:#555;">
+                                    <span style="display:inline-flex;align-items:center;gap: 2px;background:#f1f3f4;padding: 2px 3px;border-radius:8px;font-size: 11px;">
+                                        <img src="~/assets/moduleusedtetroone/experience.svg" />  0 - 2 Years
+                                    </span>
+                                    <span style="display:inline-flex;align-items:center;gap: 2px;background:#f1f3f4;padding: 2px 3px;border-radius:8px;font-size: 11px;">
+                                        <img src="~/assets/moduleusedtetroone/employmenttype.svg" /> On-site
+                                    </span>
+                                    <span style="display:inline-flex;align-items:center;gap: 2px;background:#f1f3f4;padding: 2px 3px;border-radius:8px;font-size: 11px;">
+                                        <img src="~/assets/moduleusedtetroone/workmode.svg" />Full-Time
+                                    </span>
+                                    <span style="display:inline-flex;align-items:center;gap: 2px;background:#f1f3f4;padding: 2px 3px;border-radius:8px;font-size: 11px;">
+                                        <img src="~/assets/moduleusedtetroone/ctc.svg" /> 1 LPA - 3.5 LPA
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:11px">
+                            <span style="background:#e3f2fd;color:#1976d2;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;">HTML5</span>
+                            <span style="background:#fce4ec;color:#d81b60;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;">CSS</span>
+                            <span style="background:#fff8e1;color:#f9a825;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;">Javascript</span>
+                            <span style="background:#e0f7fa;color:#00838f;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;">React.js</span>
+                            <span style="background:#ffe0b2;color:#ef6c00;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;">Angular</span>
+                        </div>
+
+                        <hr />
+                        <!-- Job Description -->
+                        <h4 style="font-size:13px;font-weight:700;margin-bottom:6px;">Job Description :</h4>
+                        <p style="font-size:11px;line-height:1.6;margin-bottom:20px;">
+                            We are seeking a skilled and creative UI Developer to join our development team. As a UI Developer,
+                            you will be responsible for translating design wireframes and concepts into responsive, user-friendly,
+                            and visually appealing web interfaces. You will work closely with UX designers, back-end developers,
+                            and product managers to deliver high-quality digital experiences.
+                        </p>
+
+                        <!-- Primary Skills -->
+                        <h4 style="font-size:13px;font-weight:700;margin-bottom:6px;">Primary Skills :</h4>
+                        <ol style="padding-left:18px;font-size:11px;line-height:1.6;">
+                            <li><strong>HTML5, CSS3 & JavaScript</strong><br>Core technologies for building structured, styled, and interactive UIs.</li>
+                            <li><strong>Responsive & Cross-Browser Design</strong><br>Creating adaptable, consistent layouts across devices and browsers.</li>
+                            <li><strong>Modern Front-End Frameworks</strong><br>Skilled in React.js, Angular, or Vue.js for scalable UI development.</li>
+                            <li><strong>Version Control & Collaboration Tools</strong><br>Experienced with Git and team workflows using GitHub/GitLab.</li>
+                            <li><strong>UI Performance, Accessibility & Best Practices</strong><br>Focused on fast, accessible, and standards-compliant interfaces.</li>
+                        </ol>
+
+                        <!-- Secondary Skills -->
+                        <h4 style="font-size:13px;font-weight:700;margin-top:15px;margin-bottom:6px;">Secondary Skills :</h4>
+                        <ol style="padding-left:18px;font-size:11px;line-height:1.6;">
+                            <li><strong>CSS Preprocessors & UI Libraries</strong> – Experience with SASS/LESS, Bootstrap, Tailwind for scalable styling.</li>
+                            <li><strong>Design & Prototyping Tools</strong> – Familiar with Figma, Adobe XD, or Sketch for Ul collaboration.</li>
+                            <li><strong>TypeScript & API Integration</strong> – Enhancing JavaScript with typing and connecting Uls to REST APIS.</li>
+                            <li><strong>Build, Testing & Automation</strong> – Hands-on with Webpack, Jest, Cypress for optimized workflows and testing.</li>
+                            <li><strong>Agile & DevOps Exposure</strong> – Basic understanding of agile practices, CI/CD pipelines, and version control.</li>
+                        </ol>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const textarea = document.getElementById('description');
+      const icons = document.querySelectorAll('.toolbar-icon');
+      const fontSizeSelect = document.querySelector('.font-size');
+
+      icons.forEach((icon) => {
+        icon.addEventListener('click', () => {
+          const action = icon.title.trim();  // trim in case of spaces
+          if (action === 'Bold') {
+            textarea.style.fontWeight =
+              textarea.style.fontWeight === 'bold' ? 'normal' : 'bold';
+          } else if (action === 'Underline') {
+            textarea.style.textDecoration =
+              textarea.style.textDecoration === 'underline'
+                ? 'none'
+                : 'underline';
+          } else if (action === 'Align Right') {
+            textarea.style.textAlign = 'right';
+          } else if (action === 'Align Left') {
+            textarea.style.textAlign = 'left';
+          }
+        });
+      });
+
+      fontSizeSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'Small') textarea.style.fontSize = '12px';
+        else if (e.target.value === 'Medium') textarea.style.fontSize = '14px';
+        else if (e.target.value === 'Large') textarea.style.fontSize = '18px';
+      });
+    });
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Target only Description1 textarea and its toolbar
+      const textarea = document.getElementById('description1'); // ✅ updated ID
+      const container = document.querySelector('.description1'); // ✅ updated class container
+      const icons = container.querySelectorAll('.toolbar-icon'); // only inside this container
+      const fontSizeSelect = container.querySelector('.font-size'); // only inside this container
+
+      // ---- Toolbar actions ----
+      icons.forEach((icon) => {
+        icon.addEventListener('click', () => {
+          const action = icon.title.trim();
+          if (action === 'Bold') {
+            textarea.style.fontWeight =
+              textarea.style.fontWeight === 'bold' ? 'normal' : 'bold';
+          } else if (action === 'Underline') {
+            textarea.style.textDecoration =
+              textarea.style.textDecoration === 'underline' ? 'none' : 'underline';
+          } else if (action === 'Align Right') {
+            textarea.style.textAlign = 'right';
+          } else if (action === 'Align Left') {
+            textarea.style.textAlign = 'left';
+          }
+        });
+      });
+
+      // ---- Font size ----
+      fontSizeSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'Small') textarea.style.fontSize = '12px';
+        else if (e.target.value === 'Medium') textarea.style.fontSize = '14px';
+        else if (e.target.value === 'Large') textarea.style.fontSize = '18px';
+      });
+
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const editableDiv = document.getElementById('description1');
+      const container = document.querySelector('.description1');
+      const icons = container.querySelectorAll('.toolbar-icon');
+      const fontSizeSelect = container.querySelector('.font-size');
+
+      // Insert HTML content (will render as formatted)
+      const htmlContent = `<h2>📢 We’re Hiring: Front-End Developer</h2>
+    <p>Bring designs to life and build user experiences that wow! 🎯</p>
+
+    <p class="section-title">🛠 Tech Skills We Love</p>
+    <ul>
+        <li>HTML5, CSS3, JavaScript</li>
+        <li>React / Angular / Vue</li>
+        <li>Responsive design & cross-browser compatibility</li>
+        <li>Clean, maintainable code</li>
+    </ul>
+
+    <p class="section-title">👀 What We Look For</p>
+    <ul>
+        <li>Passion for UI/UX</li>
+        <li>Team player mindset</li>
+        <li>Problem-solving attitude</li>
+    </ul>
+
+    <p class="location">📍 Location: [Your City] | ⏱ Full-Time | 💼 [Experience Level]</p>
+    <p class="apply">📧 Apply now: careers[yourcompany].com | [Apply Link]</p>
+
+    <p class="hashtags">
+        Tag a friend or connect with us to know more! <br>
+        #FrontendDeveloper #WebDeveloper #ReactJS #UIUX #HiringNow #TechJobs #JoinOurTeam
+    </p>`;
+
+      editableDiv.innerHTML = htmlContent;
+
+      // Toolbar buttons now act on contenteditable div
+      icons.forEach((icon) => {
+        icon.addEventListener('click', () => {
+          const action = icon.title.trim();
+          if (action === 'Bold') {
+            document.execCommand('bold');
+          } else if (action === 'Underline') {
+            document.execCommand('underline');
+          } else if (action === 'Align Right') {
+            editableDiv.style.textAlign = 'right';
+          } else if (action === 'Align Left') {
+            editableDiv.style.textAlign = 'left';
+          }
+        });
+      });
+
+      fontSizeSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'Small') editableDiv.style.fontSize = '12px';
+        else if (e.target.value === 'Medium') editableDiv.style.fontSize = '14px';
+        else if (e.target.value === 'Large') editableDiv.style.fontSize = '18px';
+      });
+    });
+</script>
+
+<script src="~/js/job.js"></script>
+

@@ -1,0 +1,164 @@
+﻿.DynPageRow-Div {
+    border: 1px solid #c7c7c7;
+}
+
+#BillFromColumn {
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.DynmicTableRow {
+    border-right: 1px solid #c7c7c7;
+    border-left: 1px solid #c7c7c7;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.Purchasetable-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.Purchasetable-scroll {
+    overflow-y: auto;
+    display: block;
+}
+
+tbody {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.Dyntbody tr td {
+    border-color: #dbdbdb !important;
+    padding: 0.40rem;
+}
+
+.Dyntbody tr td {
+    vertical-align: baseline;
+}
+
+.add-item {
+    border: 2px dashed #007bff;
+    color: #007bff;
+    cursor: pointer;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.Dynthead tr th {
+    height: 50px;
+    background-color: #a3c1df !important;
+    color: #001d3a;
+    border-color: #dbdbdb !important;
+    white-space: nowrap;
+}
+
+.scrap-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.scrap-preview {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+    .scrap-preview h4 {
+        margin: 0;
+        font-weight: bold;
+        text-align: center;
+    }
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* margin-bottom: 25px; */
+}
+
+.info-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.info-label-Purchase {
+    width: 120px;
+    font-weight: 600;
+}
+
+.info-colon {
+    margin: 0 5px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.info-value {
+    flex: 1;
+    text-align: left;
+    color: #888888;
+}
+
+.scrap-inputs {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#AssetTotal {
+    background: #fbfbfb;
+}
+
+.scrap-inputs .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.AddnotesDiv {
+    border-right: 1px solid #c7c7c7;
+}
+
+textarea.form-controltext {
+    display: block;
+    width: 100%; 
+    font-size: 13px;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15sease-in-out, box-shadow .15sease-in-out;
+    margin-bottom: 1rem;
+}
+
+.quickbillbtn-outline {
+    color: #1c3c5c;
+    background-color: #a3c1df;
+    /* background-image: linear-gradient(to right, #c4c2ff, #7c78f7); */
+    background-repeat: no-repeat;
+    border-color: #5b7d9e;
+    transition: all 0.6sease;
+    font-size: 12px !important;
+    font-weight: 700;
+}
+
+.btn-added {
+    background-color: #1A2A47;
+    color: white;
+    transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    height: min-content;
+}
+
+.DynrowRemove {
+    color: white !important;
+}
+
+#ScrapTable {
+    width: 100% !important;
+    margin-top: -17px !important;
+} 

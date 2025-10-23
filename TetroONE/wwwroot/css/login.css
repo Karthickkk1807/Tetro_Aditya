@@ -1,0 +1,286 @@
+﻿
+body {
+    background-image: url(/assets/commonimages/login-bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.log-in {
+    width: 300px;
+    border: none;
+    border-radius: 6px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.log-head {
+    background-color: #6C18A4;
+    color: #fff;
+    width: 270px;
+    z-index: 1px;
+    position: absolute;
+    top: -20px;
+    left: 15px;
+    height: 100px;
+    -webkit-box-shadow: 0px 9px 12px -6px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 9px 12px -6px rgba(0,0,0,0.75);
+    box-shadow: 0px 9px 12px -6px rgba(0,0,0,0.75);
+}
+
+.log {
+    position: absolute;
+    top: 35px;
+    left: 95px;
+}
+
+.log-text {
+    margin-top: 70px;
+    color: #878787 !important;
+    font-size: 12px;
+}
+
+.log-btn {
+    background-color: #6C18A4 !important;
+    color: #fff;
+    width: 100px;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    left: 110px;
+}
+
+.pass {
+    margin-top: 30px;
+}
+
+/*.forgotpass {
+    padding: 0px 0px 30px 0px;
+}
+*/
+
+.mainDivForPoweredBy {
+    margin-top: 54px;
+}
+
+.forgot {
+    width: 400px;
+    text-align: left;
+    margin-left: -55px;
+}
+
+.main {
+    margin-top: 20px;
+}
+
+.otp {
+    padding: 0px 0px 20px 0px;
+    margin-left: -25px;
+}
+
+.otp-c {
+    font-size: 14px;
+    text-align: center;
+}
+
+    .otp-c a {
+        color: #96B5F7;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+.otp-btn {
+    background-color: #6C18A4 !important;
+    color: #fff;
+    width: 70px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 85px;
+}
+
+.reset {
+    margin-left: -50px;
+}
+
+.reset-pin {
+    padding: 0px 0px 40px 0px;
+}
+
+.pin {
+    padding-top: 30px;
+}
+
+.sign {
+    padding: 100px 0px 60px 0px;
+}
+
+.signup {
+    margin-left: -25px;
+}
+
+.input-group-text {
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(113,0,189,1)), color-stop(35%, rgba(113,0,189,1)), color-stop(71%, rgba(157,10,255,1)), color-stop(100%, rgba(165,60,236,1)));
+    background: -webkit-linear-gradient(left, rgba(113,0,189,1) 0%, rgba(113,0,189,1) 35%, rgba(157,10,255,1) 71%, rgba(165,60,236,1) 100%);
+    background: -o-linear-gradient(left, rgba(113,0,189,1) 0%, rgba(113,0,189,1) 35%, rgba(157,10,255,1) 71%, rgba(165,60,236,1) 100%);
+    background: -ms-linear-gradient(left, rgba(113,0,189,1) 0%, rgba(113,0,189,1) 35%, rgba(157,10,255,1) 71%, rgba(165,60,236,1) 100%);
+    background: linear-gradient(to right, rgba(113,0,189,1) 0%, rgba(113,0,189,1) 35%, rgba(157,10,255,1) 71%, rgba(165,60,236,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7100bd', endColorstr='#a53cec', GradientType=1 );
+}
+
+.symbol i {
+    font-size: 24px !important;
+    color: white !important;
+}
+
+.icon i {
+    color: white !important;
+}
+
+input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border: 1px solid #6C18A4 !important;
+}
+
+input {
+    font-size: 12px !important;
+}
+
+
+.password-toggle {
+    position: relative;
+}
+
+    .password-toggle .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        z-index: 1000 !important;
+    }
+
+#ToggleEye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 12;
+}
+
+#ToggleEyeNew, #ToggleEyeConfirm {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 12;
+}
+
+#emailInput {
+    margin-right: -7px;
+}
+
+#password1 {
+    border-radius: 0 4px 4px 0;
+}
+
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.input-group > .custom-file, .input-group > .custom-select, .input-group > .form-control {
+    position: relative;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    width: 50% !important;
+    margin-bottom: 0;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#validation-error {
+    color: red;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.poweredBy {
+    font-size: 13px;
+    color: #6C18A4;
+}
+
+.companylogo {
+    width: 150px;
+    margin-top: -10px;
+}
+
+
+.signUp, .forgetPass {
+    color: #007bff !important;
+    cursor: pointer;
+}
+
+    .signUp:hover {
+        text-decoration: underline !important;
+    }
+
+    .forgetPass:hover {
+        text-decoration: underline !important;
+    }
+
+#backToForget, #resendOtp {
+    cursor: pointer;
+    color: #007bff !important;
+}
+
+    #backToForget:hover, #resendOtp:hover {
+        text-decoration: underline !important;
+    }
+
+#OtpBtn {
+    margin-top: -10px;
+}
+
+#otpvalidation-error, #passerrorMessage, #otperrorMessage, #otpvalidation-error, #ConfirmPasswordError {
+    color: red;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/*mani change*/
+@media(max-width:992px)
+{
+    .forgetPass {
+        margin-right: 55px !important;
+    }
+    body {
+        background-image: url(/assets/CommonImages/login-bg.png);
+        background-repeat: no-repeat;
+        background-size: auto;
+    }
+}
+
+@media(min-width:992px)
+{
+    .forgetPass {
+        margin-right: 55px !important;
+    }
+
+}
+
+@media(max-width:520px)
+{
+    .otp {
+        padding: 0px 0px 20px 0px;
+        margin-left: 0px;
+    }
+}

@@ -1,0 +1,401 @@
+﻿@using System.Security.Claims
+@{
+    var companyId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.DenyOnlySid).Value);
+
+}
+
+
+<link href="~/css/companysettings.css" rel="stylesheet" />
+
+
+<div class="card m-b-10">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-6">
+                <h4 class="card-title">Company Info</h4>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" id="Companyform">
+        <form id="FormSetting">
+            <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-6 order-2 order-md-1">
+                    <div class="form-group">
+                        <label>Company Name<span id="Asterisk">*</span></label>
+                        <input id="CompanyName" name="CompanyName" type="text" class="form-control" placeholder="Company Name" oninput="Common.allowOnlyTextAndampersand(this, 50)" maxlength="50" required>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-5 col-md-6 col-6 order-3 order-md-2 Addressdown">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input id="Address" name="Address" type="text" class="form-control" placeholder="Company Address" maxlength="500">
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-3 col-12 order-1 order-md-3 picbox imageup">
+                 <label class="Signaturelabel">Company Logo</label> 
+                    <div class="d-flex">
+                        <label class="picture" for="imageUploadlabel-manageuser" tabindex="0">
+                            <span class="avatar-preview">
+                                <img class="imagePreview-manageuser" id="CompanyLogoUpload">
+                            </span>
+                            <label class="d-none" id="ExistingImage"></label>
+                        </label>
+                        <div class="company-avatar-upload">
+                            <div class="avatar-edit">
+                                <input type="file" id="imageUploadlabel-manageuser"
+                                       class="imageUpload-manageuser" accept=".png, .jpg, .jpeg">
+                                <label for="imageUploadlabel-manageuser">
+                                    <img src="/assets/commonimages/camera.svg">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-6 order-4 order-md-4">
+                    <div class="form-group minus-top">
+                        <label>City</label>
+                        <input id="City" name="City" type="text" class="form-control" placeholder="City" oninput="Common.allowOnlyTextLength(this,50)">
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-6 order-5 order-md-5">
+                    <div class="form-group minus-top">
+                        <label>State</label>
+                        <input id="State" name="State" type="text" class="form-control" placeholder="State" oninput="Common.allowOnlyTextLength(this,50)">
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-6 order-6 order-md-6">
+                    <div class="form-group minus-top">
+                        <label>Country</label>
+                        <input id="Country" name="Country" type="text" class="form-control" placeholder="Country" oninput="Common.allowOnlyTextLength(this,20)">
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-6 order-7 order-md-7">
+                    <div class="form-group minus-top">
+                        <label>Zipcode</label>
+                        <input id="Zipcode" name="Zipcode" type="text" class="form-control" placeholder="Zipcode" oninput="Common.allowOnlyNumberLength(this,6)">
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-6 order-8 order-md-9">
+                    <div class="form-group minus-top2">
+                        <label>Contact Number<span id="Asterisk">*</span></label>
+                        <input id="ContactNumber" name="ContactNumber" type="text" class="form-control" placeholder="Contact Number" minlength="10" oninput="Common.allowOnlyNumberLength(this,10)" required>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-6 order-9 order-md-10">
+                    <div class="form-group minus-top2">
+                        <label>Email</label>
+                        <input id="Email" name="Email" type="text" class="form-control" placeholder="Email" oninput="Common.allowEmailAndLength(this, 50)">
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 col-6 order-10 order-md-11">
+                    <div class="form-group minus-top2">
+                        <label>Website</label>
+                        <input id="Website" name="Website" type="text" class="form-control"
+                               placeholder="Website" oninput="Common.allowOnlyValidURL(this,100)">
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-3 order-11 order-md-12 col-6" id="GSTNumberHide">
+                    <div class="form-group minus-top2">
+                        <label>GST Number</label>
+                        <input id="GSTNumber" name="GSTNumber" type="text" class="form-control" placeholder="GST Number" oninput="Common.allowGST(this,15)">
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-6 col-md-6 col-12 order-12 order-xl-8" id="SignatureDiv">
+                    <label class="Signaturelabel">Signature</label>
+                    <div class="d-flex">
+                        <label class="picture" for="addSignatureLabel" tabindex="0">
+                            <span class="avatar-preview">
+                                <img class="imagePreview-Signature" id="signatureUpload">
+                            </span>
+                            <label class="d-none" id="SignatureExistingImage"></label>
+                        </label>
+                        <div class="company-sign-avatar-upload">
+                            <div class="avatar-edit">
+                                <input type="file" id="addSignatureLabel"
+                                       class="imageUpload-Signature" accept=".png, .jpg, .jpeg">
+                                <label for="addSignatureLabel">
+                                    <img src="/assets/commonimages/camera.svg">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+
+        </form>
+    </div>
+    <div class="col-12 d-flex justify-content-center mb-3 createbtn">
+        <input id="UpdateSetting" type="button" class="btn btn-update save m-r-20" value="Update">
+        <input id="AddAlternativeCompany" type="button" class="btn btn-primary save m-r-20" value="">
+    </div>
+</div>
+@if (companyId ==1)
+{
+    <div class="mt-3">
+        @* table-responsive *@
+
+        <fieldset class="expensefild1">
+            <legend class="w-auto">
+                Alternate Company Info
+                <input id="AddCompanyBtn" type="button" class="btn btn-primary Btn-add" value="Add New" style="position: absolute; right: 5%; margin-top: -7px;">
+            </legend>
+            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AlternativeCompanyTable"></table>
+        </fieldset>
+    </div>
+}
+@if (companyId ==1)
+{
+    <div class="mt-3">
+        @* table-responsive *@
+
+        <fieldset class="expensefild1">
+            <legend class="w-auto">
+                Bank Info
+                <input id="AddBankBtn" type="button" class="btn btn-primary Btn-add" value="Add New" style="position: absolute; right: 5%; margin-top: -7px;">
+            </legend>
+            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="BankTable"></table>
+        </fieldset>
+    </div>
+}
+<div class="mt-3">
+    <fieldset class="expensefild1">
+        <legend class="w-auto">
+            Plant Info
+            <input id="AddBranchBtn" type="button" class="btn btn-primary Btn-add" value="Add Branch" style="position: absolute; right: 5%; margin-top: -7px;">
+        </legend>
+        <div class="row" id="GetBranchDetails">
+        </div>
+    </fieldset>
+</div>
+
+<div id="BankCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="BankHeader">Add New Bank</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="accordion" id="styleAccordionluf3ws29vt">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Bank Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormBank">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>IFSC Code</label>
+                                            <input type="text" id="IFSCCode" name="IFSCCode" class="form-control" autocomplete="off" placeholder="Ex: SBIN0001234">
+                                            <label id="ifscError" class="error" style="color: red; display: none;">Invalid IFSC Code</label>
+                                            <label id="ifscValid" style="color: green; display: none;">Valid IFSC Code</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Bank Name</label>
+                                            <input type="text" id="BankName" name="BankName" class="form-control" placeholder="Ex: State Bank of India" autocomplete="off" oninput="Common.allowOnlyTextLength(this, 25)" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Branch Name</label>
+                                            <input type="text" id="BranchName" name="BranchName" class="form-control" placeholder="Ex: Main Branch" autocomplete="off" oninput="Common.allowOnlyTextLength(this, 25)" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Account Type</label>
+                                            <select class="form-select form-control" id="AccountType" autocomplete="off" name="AccountType">
+                                                <option value="">--Select--</option>
+                                                <option value="Current">Current</option>
+                                                <option value="Savings">Savings</option>
+                                                <option value="Cash Credit">Cash Credit</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Account Name</label>
+                                            <input type="text" id="AccountName" name="AccountName" class="form-control" autocomplete="off" placeholder="Ex: Bank User Name" oninput="Common.allowOnlyTextLength(this, 50)">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Account Number</label>
+                                            <input type="text" id="AccountNumber" name="AccountNumber" class="form-control" autocomplete="off" placeholder="Ex: 123456789012" oninput="Common.allowOnlyNumberLength(this,16)">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 branch">
+                                        <div class="form-group">
+                                            <label>UPI Id</label>
+                                            <input type="text" id="UPIId" name="UPIid" class="form-control" placeholder="Ex: example@upi" autocomplete="off" maxlength="50">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveBank">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="AddBranchCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="BranchHeader"></h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Branch Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormBranch">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Branch Name<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: S.K.Jain and Sons." id="BranchName" name="BranchName" required maxlength="50" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Address</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="BranchAddress" name="BranchAddress" maxlength="500" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>City<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: Chennai" id="BranchCity" name="BranchCity" required oninput="Common.allowOnlyTextLength(this,50)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>State<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: TamilNadu" id="BranchState" name="BranchState" required oninput="Common.allowOnlyTextLength(this,50)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Country</label>
+                                            <input type="text" class="form-control" placeholder="Ex: India" id="BranchCountry" name="BranchCountry" oninput="Common.allowOnlyTextLength(this,20)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Zipcode</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 600028" id="BranchZipCode" name="BranchZipCode" oninput="Common.allowOnlyNumberLength(this,6)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Contact No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex:9876543210" id="BranchContactNo" name="BranchContactNo" required oninput="Common.allowOnlyContactNoAlternativeLength(this,20)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input type="text" class="form-control Email" placeholder="Ex: example@gmail.com" id="Email" name="Email" oninput="Common.allowEmailAndLength(this, 50)" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordionluf3ws29vt">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne1" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Contact Person Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+
+                            <div class="d-flex justify-content-end align-items-start">
+                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRow(this)">
+                                    <i class="fas fa-plus" id="AddButton"></i>
+                                </button>
+                            </div>
+                            <form id="FormBranchContact">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveBranch">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/companysetting.js"></script>

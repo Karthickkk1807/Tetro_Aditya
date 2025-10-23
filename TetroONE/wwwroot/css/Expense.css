@@ -1,0 +1,31 @@
+﻿fieldset {
+    border: 2px solid #37428f !important;
+    padding: 5px 15px 5px 15px;
+    border-radius: .25rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 0 10px rgb(105 119 255 / 30%);
+}
+
+#Asterisk {
+    color: red;
+    margin-left: 4px;
+}
+
+/*#dyanmicplusbtn {
+    position: absolute;
+    top: -15px !important;
+    right: 2% !important;
+}*/
+
+.DynamicLable {
+    margin-bottom: 8px
+}
+#ExpenseData {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    height: 330px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}

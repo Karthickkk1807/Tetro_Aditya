@@ -1,0 +1,1566 @@
+﻿<link href="~/css/candidates.css" rel="stylesheet" />
+
+<div class="MainDiv">
+    <div class="row quick-db m-b-5">
+        <div class="col-lg-12">
+            <div class="row m-t-25">
+                <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                    <div class="card card-stats card-round quick-db-box">
+                        <div class="card-body ">
+                            <div class="row align-items-center">
+                                <div class="col-icon">
+                                    <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                        <img id="CounterBoxImg1" src="~/assets/sidebaricons/recruitment/jobdetailsicon_1.svg" />
+                                    </div>
+                                </div>
+                                <div class="col col-stats ml-3">
+                                    <div class="numbers">
+                                        <div class="card-category" id="CounterTextBox1">Scheduled</div>
+                                        <h4 class="card-title" id="CounterValBox1">72</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                    <div class="card card-stats card-round quick-db-box">
+                        <div class="card-body ">
+                            <div class="row align-items-center">
+                                <div class="col-icon">
+                                    <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                        <img id="CounterBoxImg2" src="~/assets/sidebaricons/recruitment/job_icon2.svg" />
+                                    </div>
+                                </div>
+                                <div class="col col-stats ml-3">
+                                    <div class="numbers">
+                                        <div class="card-category" id="CounterTextBox2">Selected</div>
+                                        <h4 class="card-title" id="CounterValBox2">58</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                    <div class="card card-stats card-round quick-db-box">
+                        <div class="card-body ">
+                            <div class="row align-items-center">
+                                <div class="col-icon">
+                                    <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                        <img id="CounterBoxImg3" src="~/assets/sidebaricons/recruitment/job_icon3.svg" />
+                                    </div>
+                                </div>
+                                <div class="col col-stats ml-3">
+                                    <div class="numbers">
+                                        <div class="card-category" id="CounterTextBox3">OfferAccepted</div>
+                                        <h4 class="card-title" id="CounterValBox3">50</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                    <div class="card card-stats card-round quick-db-box">
+                        <div class="card-body ">
+                            <div class="row align-items-center">
+                                <div class="col-icon">
+                                    <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                        <img id="CounterBoxImg4" src="~/assets/sidebaricons/recruitment/job_icon4.svg" />
+                                    </div>
+                                </div>
+                                <div class="col col-stats ml-3">
+                                    <div class="numbers">
+                                        <div class="card-category" id="CounterTextBox4">Onboarded</div>
+                                        <h4 class="card-title" id="CounterValBox4">48</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="filter-Column" class="Date-SearchColumn">
+        <div class="month-piker d-flex">
+            <span class="btn likebutton ActiveTopButton">Candidates</span>
+            <span class="btn likebutton ml-2">Profiles</span>
+        </div>
+        <div class="d-flex justify-content-end">
+            <div class="searchbar">
+                <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                <button type="submit" class="searchbar__button">
+                    <img src="~/assets/commonimages/search.svg" />
+                </button>
+            </div>
+
+            <div class="datapiker ml-2 mt-1" style="position: relative;">
+                <div class="add-imp-exp-btn">
+                    <div class="exportsiconpop">
+                        <span class="pop">
+                            <a id="AddCandidates" title="Add Candidates">
+                                <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="" id="CandidatesDynamic" style="margin-top:-12px;">
+        <div class="table-responsive">
+            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="candidateTable"></table>
+        </div>
+    </div>
+</div>
+
+<div id="CandidatesCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="CandidatesHeader">Add Candidates Details</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormCandidates">
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Candidate Id</label>
+                            <input type="text" class="form-control" placeholder="Ex: CANDI_101" id="CandidateId" name="CandidateId" maxlength="50" required disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label for="resume" class="form-label">Resume <span id="Asterisk">*</span></label></label>
+                            <div class="custom-file-upload">
+                                <input type="file" id="resume" name="resume" required>
+                                <span class="file-label">Upload Resume</span>
+                                <span class="upload-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="upload-icon" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.6a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.6a.5.5 0 0 1 .5-.5z" />
+                                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+                                    </svg>
+                                </span>
+                                @* <span class="upload-icon">&#8682;</span> *@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>First Name<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: Kavinesh" id="FirstName" name="FirstName" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Last Name<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: Rajasekar" id="LastName" name="LastName" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Email<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: abc@gmail.com" id="Email" name="Email" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Contact Number<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 99*******17" id="ContactNumber" name="ContactNumber" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Applied For<span id="Asterisk">*</span></label>
+                            <select class="form-control" id="AppliedFor" name="AppliedFor" required>
+                                <option value="1">--Select--</option>
+                                <option value="2">Back End</option>
+                                <option value="3">Frond End</option>
+                                <option value="4">Full Stack</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Applied Source<span id="Asterisk">*</span></label>
+                            <select class="form-control" id="AppliedSource" name="AppliedSource" required>
+                                <option value="1">--Select--</option>
+                                <option value="2">Full Time</option>
+                                <option value="3">Part time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Gender<span id="Asterisk">*</span></label>
+                            <select class="form-control" id="Gender" name="Gender" required>
+                                <option value="1">--Select--</option>
+                                <option value="2">Male</option>
+                                <option value="3">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Primary Skill<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: C#" id="PrimarySkill" name="PrimarySkill" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Secondary Skill<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: C#" id="SecondarySkill" name="SecondarySkill" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Total Experience<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 12.8 => Yrs.Mon" id="TotalExperience" name="TotalExperience" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Current Company<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: ABCSoft" id="CurrentCompany" name="CurrentCompany" maxlength="50" required disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Current CTC<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 12LPA" id="CurrentCTC" name="CurrentCTC" maxlength="50" required disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Exp CTC<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 15LPA" id="ExpCTC" name="ExpCTC" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Is Immediate Joiner<span id="Asterisk">*</span></label>
+                            <select class="form-control" id="IsImmediateJoiner" name="IsImmediateJoiner" required>
+                                <option value="1">--Select--</option>
+                                <option value="2">Yes</option>
+                                <option value="3">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label for="joining_date" class="form-label">Exp Joining Date <span style="color:red">*</span></label>
+                            <div class="custom-date-picker">
+                                <input type="date" id="joining_date" name="joining_date" required placeholder="dd/mm/yyyy">
+                                <span class="calendar-icon">🗓</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Linkedin Link<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: www.linkedin.com/in/******" id="LinkedinLink" name="LinkedinLink" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-12 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Description<span id="Asterisk">*</span></label>
+                            <textarea class="form-control Description" id="Description" name="Description" autocomplete="off" rows="5" maxlength="250" placeholder="Comment here"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveCandidates">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ProfileCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="ProfileHeader">Add Profile Details</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormProfile">
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Profile Id</label>
+                            <input type="text" class="form-control" placeholder="Ex: PROF_101" id="ProfileId" name="ProfileId" maxlength="50" required disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label for="resume" class="form-label">Resume <span id="Asterisk">*</span></label></label>
+                            <div class="custom-file-upload">
+                                <input type="file" id="resume" name="resume" required>
+                                <span class="file-label">Upload Resume</span>
+                                <span class="upload-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="upload-icon" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5V13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.6a.5.5 0 0 1 1 0V13a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.6a.5.5 0 0 1 .5-.5z" />
+                                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V10.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z" />
+                                    </svg>
+                                </span>
+                                @* <span class="upload-icon">&#8682;</span> *@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>First Name<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: Kavinesh" id="FirstName" name="FirstName" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Last Name<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: Rajasekar" id="LastName" name="LastName" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Email<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: abc@gmail.com" id="Email" name="Email" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Contact Number<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 99*******17" id="ContactNumber" name="ContactNumber" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Applied Source<span id="Asterisk">*</span></label>
+                            <select class="form-control" id="AppliedSource" name="AppliedSource" required>
+                                <option value="1">--Select--</option>
+                                <option value="2">Full Time</option>
+                                <option value="3">Part time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Gender<span id="Asterisk">*</span></label>
+                            <select class="form-control" id="Gender" name="Gender" required>
+                                <option value="1">--Select--</option>
+                                <option value="2">Male</option>
+                                <option value="3">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Primary Skill<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: C#" id="PrimarySkill" name="PrimarySkill" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Secondary Skill<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: C#" id="SecondarySkill" name="SecondarySkill" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Total Experience<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 12.8 => Yrs.Mon" id="TotalExperience" name="TotalExperience" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Current Company<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: ABCSoft" id="CurrentCompany" name="CurrentCompany" maxlength="50" required disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Current CTC<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 12LPA" id="CurrentCTC" name="CurrentCTC" maxlength="50" required disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Exp CTC<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 15LPA" id="ExpCTC" name="ExpCTC" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Is Immediate Joiner<span id="Asterisk">*</span></label>
+                            <select class="form-control" id="IsImmediateJoiner" name="IsImmediateJoiner" required>
+                                <option value="1">--Select--</option>
+                                <option value="2">Yes</option>
+                                <option value="3">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label for="joining_date" class="form-label">Exp Joining Date <span style="color:red">*</span></label>
+                            <div class="custom-date-picker">
+                                <input type="date" id="joining_date" name="joining_date" required placeholder="dd/mm/yyyy">
+                                <span class="calendar-icon">🗓</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Linkedin Link<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: www.linkedin.com/in/******" id="ExpCTC" name="ExpCTC" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-12 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Description<span id="Asterisk">*</span></label>
+                            <textarea class="form-control Description" id="Description" name="Description" autocomplete="off" rows="5" maxlength="250" placeholder="Comment here"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-primary m-r-20 text-white" id="SaveProfile">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt--3" id="CandidatesEditScreen">
+
+    <div class="card card-custom editScreen p-3">
+        <div class="row col-12">
+            <div class="col-3 p-0">
+                <div class="profile-header">
+                    <div class="avatar">S</div>
+                    <div class="profile-info">
+                        <h5>Sarath R <i class="fab fa-linkedin text-primary"></i></h5>
+                        <small>Front End Developer</small><br />
+                        <p><img src="~/assets/moduleusedtetroone/candidates editscreen/mangertag.svg" />Sakchi R</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="row text-muted">
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/usertag.svg" /><span>CND_1</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/calendar.svg" /><span>10/07/2025</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/currentcompanytag.svg" /><span>Wipro</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/gendertag.svg" /><span>Male</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/sms.svg" /><span>abcd@gmail.com</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/experience.svg" /><span>3.0 Years</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/linkedinlinktag.svg" /><span>linkedin.com/in/...</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/skillstag.svg" /><span>HTML, CSS, Bootstrap</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/call.svg" /><span>+91 0987654321</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/wallettag.svg" /><span>3LPA / 6LPA</span></div>
+                    <div class="col-md-3"><img src="~/assets/moduleusedtetroone/candidates editscreen/document-download.svg" /><span><a style="color: blue;text-decoration: underline;">Download Resume</a></span></div>
+
+                    <!-- Back Button -->
+                    <button class="Leave-btn">
+                        <img src="~/assets/moduleusedtetroone/candidates editscreen/backarrowtag.svg" />
+                    </button>
+
+                    <!-- Profile Edit Button -->
+                    <button class="AddCandidate-btn" title="Go Back">
+                        <img src="~/assets/moduleusedtetroone/candidates editscreen/useredit.svg" />
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidature Status -->
+    <div class="card card-custom editScreen pt-1 pl-2 pr-2 pb-0 mb-2">
+        <div class="form-group">
+            <label>Candidature Status <span id="Asterisk">*</span></label>
+        </div>
+        <div class="row col-12">
+            <div class="col-3 p-0">
+                <div class="form-inline mb-3">
+                    <select class="form-control mr-2" style="width: 163px;">
+                        <option>Choose Status</option>
+                        <option value="1">Yet to schedule</option>
+                        <option value="2">Scheduled</option>
+                        <option value="3">Rescheduled</option>
+                        <option value="4">In-Progress</option>
+                        <option value="5" selected>Onboarded</option>
+                    </select>
+                    <button class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="stepper">
+                    <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div><p>Scheduled</p></div>
+                    <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div><p>In-progress</p></div>
+                    <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div><p>Selected</p></div>
+                    <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div><p>Offer Released</p></div>
+                    <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div><p>Offer Accepted</p></div>
+                    <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div><p>Yet to Onboarded</p></div>
+                    <div class="step"><div class="circle green"><i class="fas fa-check"></i></div><p>Onboarded</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link Nav-Screen active" href="#">Pipeline</a></li>
+        <li class="nav-item"><a class="nav-link Nav-Screen" href="#">Other Details</a></li>
+        <li class="nav-item"><a class="nav-link Nav-Screen" href="#">Documents</a></li>
+        <li class="nav-item"><a class="nav-link Nav-Screen" href="#">Education Info</a></li>
+        <li class="nav-item"><a class="nav-link Nav-Screen" href="#">Career Info</a></li>
+    </ul>
+
+    <!-- Interview Cards -->
+    <div class="card card-custom DetailsView interview-card mt--2">
+        <div class="pippline-content">
+            <div class="pippline-name">
+                <img src="~/assets/moduleusedtetroone/candidates editscreen/pipelinetag.svg" />
+                <div>
+                    <h6>Screening (Phone/Video)</h6>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/location.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />India - Coimbatore (Suguna Building)</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/calendar.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />10/07/2025</p>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/clock.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />10:00 AM to 12:15 PM</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/interviewerstag.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />Sakchi, Sarath, Saran,</p>
+                    <p class="mb-0" style="font-size: 10px; font-weight: 600; margin-left: 21px;">Sanjith, Tharani</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <span class="ana-span badge text-white" style="background:#007700;width: 97px;font-size: 12px;height: 22px;">
+                        Selected
+                    </span>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="far fa-star" style="font-size: 22px;"></i>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div style="position: absolute;top: -1px;right: 0px;">
+                    <h6>
+                        <span class="badge badgeLevel">
+                            <span style="margin-right: 10px;">Level 1</span> <img src="~/assets/moduleusedtetroone/candidates editscreen/more.svg" class="menu-toggle" style="width: 14px;margin-top: -3px;margin-right: -5px;" />
+                            
+                            <div class="menu-dot">
+                                <ul class="menu-list">
+                                    <li class="menu-item p-0" id="ScheduleCanvaOff"><a href="#"><img src="~/assets/moduleusedtetroone/candidates editscreen/calendar.svg" style="width: 15px;margin-top: 1px; margin-right: -1px" /><span style="font-size: 10px;">Schedule</span></a></li>
+                                    <li class="menu-item p-0" id="ScheduleCanvaOff"><a href="#"><img src="~/assets/moduleusedtetroone/candidates editscreen/rescheduletag.svg" style="width: 15px;margin-top: 1px; margin-right: -1px" /><span style="font-size: 10px;">Reschedule</span></a></li>
+                                    <li class="menu-item p-0" id="ScheduleCanvaOff"><a href="#"><img src="~/assets/moduleusedtetroone/candidates editscreen/reviewtag.svg" style="width: 15px;margin-top: 1px; margin-right: -1px" /><span style="font-size: 10px;">Review</span></a></li>
+                                </ul>
+                            </div>
+                        </span>
+                    </h6>
+                </div>
+                <div style="position: absolute;top: 56px;right: 8px;">
+                    <h6 style="font-size: small;font-weight: 700;color: #155f1c"><img src="~/assets/moduleusedtetroone/candidates editscreen/sms.svg" style=" width: 18px; margin-top: -3px;" /> Sent</h6>
+                </div>
+            </div>  
+        </div>
+    </div>
+
+
+    <div class="card card-custom DetailsView interview-card">
+        <div class="pippline-content">
+            <div class="pippline-name">
+                <img src="~/assets/moduleusedtetroone/candidates editscreen/pipelinetag.svg" />
+                <div>
+                    <h6>Technical Interview 1</h6>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/location.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />India - Coimbatore (Suguna Building)</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/calendar.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />10/07/2025</p>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/clock.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />10:00 AM to 12:15 PM</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/interviewerstag.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />Sakchi, Sarath, Saran,</p>
+                    <p class="mb-0" style="font-size: 10px; font-weight: 600; margin-left: 21px;">Sanjith, Tharani</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <span class="ana-span badge text-white" style="background:#007700;width: 97px;font-size: 12px;height: 22px;">
+                        Selected
+                    </span>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div style="position: absolute;top: -1px;right: 0px;">
+                    <h6>
+                        <span class="badge badgeLevel">
+                            <span style="margin-right: 10px;">Level 2</span> <img src="~/assets/moduleusedtetroone/candidates editscreen/more.svg" style="width: 14px;margin-top: -3px;margin-right: -5px;" />
+                        </span>
+                    </h6>
+                </div>
+                <div style="position: absolute;top: 56px;right: 8px;">
+                    <h6 style="font-size: small;font-weight: 700;color: #155f1c"><img src="~/assets/moduleusedtetroone/candidates editscreen/sms.svg" style=" width: 18px; margin-top: -3px;" /> Sent</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-custom DetailsView interview-card">
+        <div class="pippline-content">
+            <div class="pippline-name">
+                <img src="~/assets/moduleusedtetroone/candidates editscreen/pipelinetag.svg" />
+                <div>
+                    <h6>Technical Interview 2</h6>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/location.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />India - Coimbatore (Suguna Building)</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/calendar.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />10/07/2025</p>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/clock.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />10:00 AM to 12:15 PM</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <p class="mb-0" style="font-size: 10px;font-weight: 600;"><img src="~/assets/moduleusedtetroone/candidates editscreen/interviewerstag.svg" style="width: 17px;margin-top: -4px; margin-right: 3px" />Sakchi, Sarath, Saran,</p>
+                    <p class="mb-0" style="font-size: 10px; font-weight: 600; margin-left: 21px;">Sanjith, Tharani</p>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <span class="ana-span badge text-white" style="background:#007700;width: 97px;font-size: 12px;height: 22px;">
+                        Selected
+                    </span>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                    <i class="fas fa-star" style="color: #ffdd00;font-size: 22px;"></i>
+                </div>
+            </div>
+            <div class="pippline-name">
+                <div style="position: absolute;top: -1px;right: 0px;">
+                    <h6>
+                        <span class="badge badgeLevel">
+                            <span style="margin-right: 10px;">Level 3</span> <img src="~/assets/moduleusedtetroone/candidates editscreen/more.svg" style="width: 14px;margin-top: -3px;margin-right: -5px;" />
+                        </span>
+                    </h6>
+                </div>
+                <div style="position: absolute;top: 56px;right: 8px;">
+                    <h6 style="font-size: small;font-weight: 700;color: #007700"><img src="~/assets/moduleusedtetroone/candidates editscreen/sms.svg" style=" width: 18px; margin-top: -3px;" />Sent</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container OtherDetailsDiv">
+        <div class="accordion" id="styleAccordionluf3ws29vt">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">
+                                Official Info
+                            </strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
+                <div id="Styleenterydetalis" class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Designation<span id="Asterisk">*</span></label>
+                                <select class="form-control" id="Designation" name="Designation" required>
+                                    <option value="1">--Select--</option>
+                                    <option value="2">Fullstack Developer</option>
+                                    <option value="3">UI UX</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Reporting Person<span id="Asterisk">*</span></label>
+                                <select class="form-control" id="ReportingPerson" name="ReportingPerson" required>
+                                    <option value="1">--Select--</option>
+                                    <option value="2">Kavinesh Rajasekar</option>
+                                    <option value="3">Tharani</option>
+                                    <option value="4">Karthick</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Grade Type<span id="Asterisk">*</span></label>
+                                <select class="form-control" id="GradeType" name="GradeType" required>
+                                    <option value="1">--Select--</option>
+                                    <option value="2">Grade 1</option>
+                                    <option value="3">Grade 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Pay Type<span id="Asterisk">*</span></label>
+                                <select class="form-control" id="PayType" name="PayType" required>
+                                    <option value="1">--Select--</option>
+                                    <option value="2">Hourly</option>
+                                    <option value="3">Daily</option>
+                                    <option value="4">Weekly</option>
+                                    <option value="5">Bi-Monthly</option>
+                                    <option value="6">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Payment Type<span id="Asterisk">*</span></label>
+                                <select class="form-control" id="PaymentType" name="PaymentType" required>
+                                    <option value="1">--Select--</option>
+                                    <option value="2">Cash</option>
+                                    <option value="3">Account</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Candidate CTC<span id="Asterisk">*</span></label>
+                                <input type="text" class="form-control" placeholder="Ex: .Net Developer" id="JobName" name="JobName" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label for="joining_date" class="form-label">Exp Joining Date <span style="color:red">*</span></label>
+                                <div class="custom-date-picker">
+                                    <input type="date" id="joining_date" name="joining_date" required placeholder="dd/mm/yyyy">
+                                    <span class="calendar-icon">🗓</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion" id="styleAccordionluf3ws29vt">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne1" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">
+                                Candidate Info
+                            </strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                <div id="Styleenterydetalis" class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" class="form-control" placeholder="Ex: Address" id="Address" name="Address" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" class="form-control" placeholder="Ex: Erode" id="City" name="City" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" class="form-control" placeholder="Ex: Chennai" id="State" name="State" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <input type="text" class="form-control" placeholder="Ex: India" id="Country" name="Country" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>ZipCode</label>
+                                <input type="text" class="form-control" placeholder="Ex: 638502" id="ZipCode" name="ZipCode" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label for="joining_date" class="form-label">Date Of Birth</label>
+                                <div class="custom-date-picker">
+                                    <input type="date" id="joining_date" name="joining_date" required placeholder="dd/mm/yyyy">
+                                    <span class="calendar-icon">🗓</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Religion</label>
+                                <select class="form-control" id="Religion" name="Religion" required>
+                                    <option value="1">--Select--</option>
+                                    <option value="2">Hindu</option>
+                                    <option value="3">Muslim</option>
+                                    <option value="4">Christian</option>
+                                    <option value="5">Others</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Marital Status</label>
+                                <select class="form-control" id="MaritalStatus" name="MaritalStatus" required>
+                                    <option value="1">--Select--</option>
+                                    <option value="2">Married</option>
+                                    <option value="3">UnMarried</option>
+                                    <option value="4">Others</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Personal Email</label>
+                                <input type="text" class="form-control" placeholder="Ex: abc@gmail.com" id="PersonalEmail" name="PersonalEmail" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Aadhaar No</label>
+                                <input type="text" class="form-control" placeholder="Ex: 0939 9834 3762 8373" id="AadhaarNo" name="AadhaarNo" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>PAN Number</label>
+                                <input type="text" class="form-control" placeholder="Ex: SJHH***376" id="PANNumber" name="PANNumber" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Passport Number</label>
+                                <input type="text" class="form-control" placeholder="Ex: 93847****2365" id="PassportNumber" name="PassportNumber" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label for="joining_date" class="form-label">Passport Exp Date</label>
+                                <div class="custom-date-picker">
+                                    <input type="date" id="joining_date" name="joining_date" required placeholder="dd/mm/yyyy">
+                                    <span class="calendar-icon">🗓</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>UAN Number</label>
+                                <input type="text" class="form-control" placeholder="Ex: 93847****2365" id="UANNumber" name="UANNumber" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>PF Number</label>
+                                <input type="text" class="form-control" placeholder="Ex: 93847****2365" id="PFNumber" name="PFNumber" maxlength="50" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container documentTableShow">
+        <div class="accordion" id="styleAccordionluf3ws29vt">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">Documents to be uploaded</strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+
+            <div id="collapse3" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                <div id="Styleenterydetalis" class="card-body">
+                    <div class="doc-grid">
+                        <div class="doc-item">
+                            <span>Offer Letter</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Aadhar Card</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>PAN Card</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Passport</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Passport-size Photograph</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Birth Certificate</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Mark Sheets</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Degree Certificates</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Provisional Certificates</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Transfer Certificate</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Relieving Letter</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Experience Certificates</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Salary Slips</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="doc-item">
+                            <span>Bank Account Statement</span>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="upload-container">
+                <!-- Aadhaar -->
+                <div class="upload-box p-2">
+                    <h3 style="font-size: 12px;font-weight: 800;margin-bottom: 6px;color: black;">
+                        Aadhar Card
+                    </h3>
+                    <div class="drop-area d-flex align-items-center p-3 border rounded">
+                        <div class="icon" style="margin-left: 32px;">
+                            <img src="~/assets/moduleusedtetroone/candidates editscreen/uploadtag.svg" alt="Upload" style="width: 22px;" />
+                        </div>
+                        <div class="text">
+                            <p class="m-0">Drag your file(s) or <span class="text-primary customBrowse" style="cursor:pointer;">browse</span></p>
+                            <small class="text-muted">Max 10 MB files are allowed</small>
+                        </div>
+                    </div>
+                    <input type="file" class="hiddenFileInput" style="display:none;" multiple />
+                    <div class="info">Only support .jpg, .png, .svg and zip files</div>
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <div>
+                                <span style="font-size: 10px;font-weight: 900;">Uploading...</span><br>
+                                <span class="m-0" style="font-size: 10px;">
+                                    65% • 30 seconds remaining
+                                    <span style="float: inline-end;">
+                                        <button class="CloseXButton" title="Cancel">x</button>
+                                    </span>
+                                    <span style="float: inline-end;margin-right: 4px;">
+                                        <button class="PauseButton" title="Pause">⏸</button>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="progress-bar"><div style="width:65%"></div></div>
+                    </div>
+                </div>
+
+                <!-- PAN -->
+                <div class="upload-box p-2">
+                    <h3 style="font-size: 12px;font-weight: 800;margin-bottom: 6px;color: black;">
+                        PAN Card
+                    </h3>
+                    <div class="drop-area d-flex align-items-center p-3 border rounded">
+                        <div class="icon" style="margin-left: 32px;">
+                            <img src="~/assets/moduleusedtetroone/candidates editscreen/uploadtag.svg" alt="Upload" style="width: 22px;" />
+                        </div>
+                        <div class="text">
+                            <p class="m-0">Drag your file(s) or <span class="text-primary customBrowse" style="cursor:pointer;">browse</span></p>
+                            <small class="text-muted">Max 10 MB files are allowed</small>
+                        </div>
+                    </div>
+                    <input type="file" class="hiddenFileInput" style="display:none;" multiple />
+                    <div class="info">Only support .jpg, .png, .svg and zip files</div>
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <div>
+                                <span style="font-size: 10px;font-weight: 900;">Uploading...</span><br>
+                                <span class="m-0" style="font-size: 10px;">
+                                    65% • 30 seconds remaining
+                                    <span style="float: inline-end;">
+                                        <button class="CloseXButton" title="Cancel">x</button>
+                                    </span>
+                                    <span style="float: inline-end;margin-right: 4px;">
+                                        <button class="PauseButton" title="Pause">⏸</button>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="progress-bar"><div style="width:65%"></div></div>
+                    </div>
+                </div>
+
+                <!-- Passport -->
+                <div class="upload-box p-2">
+                    <h3 style="font-size: 12px;font-weight: 800;margin-bottom: 6px;color: black;">
+                        Passport
+                    </h3>
+                    <div class="drop-area d-flex align-items-center p-3 border rounded">
+                        <div class="icon" style="margin-left: 32px;">
+                            <img src="~/assets/moduleusedtetroone/candidates editscreen/uploadtag.svg" alt="Upload" style="width: 22px;" />
+                        </div>
+                        <div class="text">
+                            <p class="m-0">Drag your file(s) or <span class="text-primary customBrowse" style="cursor:pointer;">browse</span></p>
+                            <small class="text-muted">Max 10 MB files are allowed</small>
+                        </div>
+                    </div>
+                    <input type="file" class="hiddenFileInput" style="display:none;" multiple />
+                    <div class="info">Only support .jpg, .png, .svg and zip files</div>
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <div>
+                                <span style="font-size: 10px;font-weight: 900;">Uploading...</span><br>
+                                <span class="m-0" style="font-size: 10px;">
+                                    65% • 30 seconds remaining
+                                    <span style="float: inline-end;">
+                                        <button class="CloseXButton" title="Cancel">x</button>
+                                    </span>
+                                    <span style="float: inline-end;margin-right: 4px;">
+                                        <button class="PauseButton" title="Pause">⏸</button>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="progress-bar"><div style="width:65%"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-action d-flex justify-content-center mt-4">
+                <a class="btn btn-primary m-r-20 text-white" id="SaveProfile">Sumbit</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="timeline-container EducationInfo">
+        <div class="stepper-vertical">
+            <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div></div>
+            <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div></div>
+            <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div></div>
+        </div>
+        <div class="timeline-content ml-2 mr-2">
+            <span class="d-flex justify-content-end"><a class="btn btn-primary m-r-20 text-white" id="Sumbit">Add</a></span>
+            <div class="card p-3 mt--2">
+                <div class="pippline-content">
+                    <div class="pippline-name">
+                        <div>
+                            <h6>Master of Computer Applications</h6>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -4px;"><span>Post Graduate</span></p>
+                            <span style="font-size: 13px;">SNS Rajalakshmi college of arts &amp; science</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -5px;"><span>Year of Passing</span></p>
+                            <span style="font-size: 13px;">2023</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>CGPA</span></p>
+                            <span style="font-size: 13px;">7.5</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>University</span></p>
+                            <span style="font-size: 13px;">Bharathiar University</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <i class="btn-edit mx-1" data-id="Kavinesh Rajasekar" title="Edit">
+                                <img src="/assets/commonimages/edit.svg">
+                            </i>
+                            <i class="btn-delete alert_delete mx-1" data-id="Kavinesh Rajasekar" title="Delete">
+                                <img src="/assets/commonimages/delete.svg">
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-3">
+                <div class="pippline-content">
+                    <div class="pippline-name">
+                        <div>
+                            <h6>Master of Computer Applications</h6>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -4px;"><span>Post Graduate</span></p>
+                            <span style="font-size: 13px;">SNS Rajalakshmi college of arts &amp; science</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -5px;"><span>Year of Passing</span></p>
+                            <span style="font-size: 13px;">2023</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>CGPA</span></p>
+                            <span style="font-size: 13px;">7.5</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>University</span></p>
+                            <span style="font-size: 13px;">Bharathiar University</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <i class="btn-edit mx-1" data-id="Kavinesh Rajasekar" title="Edit">
+                                <img src="/assets/commonimages/edit.svg">
+                            </i>
+                            <i class="btn-delete alert_delete mx-1" data-id="Kavinesh Rajasekar" title="Delete">
+                                <img src="/assets/commonimages/delete.svg">
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-3">
+                <div class="pippline-content">
+                    <div class="pippline-name">
+                        <div>
+                            <h6>Master of Computer Applications</h6>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -4px;"><span>Post Graduate</span></p>
+                            <span style="font-size: 13px;">SNS Rajalakshmi college of arts &amp; science</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -5px;"><span>Year of Passing</span></p>
+                            <span style="font-size: 13px;">2023</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>CGPA</span></p>
+                            <span style="font-size: 13px;">7.5</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>University</span></p>
+                            <span style="font-size: 13px;">Bharathiar University</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <i class="btn-edit mx-1" data-id="Kavinesh Rajasekar" title="Edit">
+                                <img src="/assets/commonimages/edit.svg">
+                            </i>
+                            <i class="btn-delete alert_delete mx-1" data-id="Kavinesh Rajasekar" title="Delete">
+                                <img src="/assets/commonimages/delete.svg">
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*  <div class="card p-3">
+            <div class="pippline-content">
+                <div class="pippline-name">
+                    <div>
+                        <h6>Bachelor of Computer Applications</h6>
+                        <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -4px;"><span>Under Graduate</span></p>
+                        <span style="font-size: 13px;">Gobi arts & science college</span>
+                    </div>
+                </div>
+                <div class="pippline-name">
+                    <div>
+                        <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -5px;"><span>Year of Passing</span></p>
+                        <span style="font-size: 13px;">2021</span>
+                    </div>
+                </div>
+                <div class="pippline-name">
+                    <div>
+                        <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>CGPA</span></p>
+                        <span style="font-size: 13px;">7.9</span>
+                    </div>
+                </div>
+                <div class="pippline-name">
+                    <div>
+                        <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>University</span></p>
+                        <span style="font-size: 13px;">Bharathiar University</span>
+                    </div>
+                </div>
+                <div class="pippline-name">
+                    <div>
+                        <i class="btn-edit mx-1" data-id="Kavinesh Rajasekar" title="Edit">
+                            <img src="/assets/commonimages/edit.svg">
+                        </i>
+                        <i class="btn-delete alert_delete mx-1" data-id="Kavinesh Rajasekar" title="Delete">
+                            <img src="/assets/commonimages/delete.svg">
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-3">
+            <div class="pippline-content">
+                <div class="pippline-name">
+                    <div>
+                        <h6>HSC</h6> 
+                        <span style="font-size: 13px;">Shree Gurukulam Higher Secondary School</span>
+                    </div>
+                </div>
+                <div class="pippline-name">
+                    <div>
+                        <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -5px;"><span>Year of Passing</span></p>
+                        <span style="font-size: 13px;">2018</span>
+                    </div>
+                </div>
+                <div class="pippline-name">
+                    <div>
+                        <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>CGPA</span></p>
+                        <span style="font-size: 13px;">7.5</span>
+                    </div>
+                </div>
+                <div class="pippline-name">
+                    <div>
+                        <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>Board</span></p>
+                        <span style="font-size: 13px;">Tamil Nadu</span>
+                    </div>
+                </div>
+                <div class="pippline-name">
+                    <div>
+                        <i class="btn-edit mx-1" data-id="Kavinesh Rajasekar" title="Edit">
+                            <img src="/assets/commonimages/edit.svg">
+                        </i>
+                        <i class="btn-delete alert_delete mx-1" data-id="Kavinesh Rajasekar" title="Delete">
+                            <img src="/assets/commonimages/delete.svg">
+                        </i>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+    </div>
+
+    <div class="timeline-container CareerInfo">
+        <div class="stepper-vertical">
+            <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div></div>
+            <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div></div> 
+        </div>
+        <div class="timeline-content ml-2 mr-2">
+            <span class="d-flex justify-content-end"><a class="btn btn-primary m-r-20 text-white" id="Sumbit">Add</a></span>
+            <div class="card p-3 mt--2">
+                <div class="pippline-content">
+                    <div class="pippline-name">
+                        <div>
+                            <h6>Fuzionest</h6>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -4px;"><span>UI UX Designer</span></p>
+                            <span style="font-size: 13px;">Coimbatore</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -5px;"><span>Period From</span></p>
+                            <span style="font-size: 13px;">2023</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>Period To</span></p>
+                            <span style="font-size: 13px;">2023</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span>Years of Experience</span></p>
+                            <span style="font-size: 13px;">2</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <i class="btn-edit mx-1" data-id="Kavinesh Rajasekar" title="Edit">
+                                <img src="/assets/commonimages/edit.svg">
+                            </i>
+                            <i class="btn-delete alert_delete mx-1" data-id="Kavinesh Rajasekar" title="Delete">
+                                <img src="/assets/commonimages/delete.svg">
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-3">
+                <div class="pippline-content">
+                    <div class="pippline-name">
+                        <div>
+                            <h6>Fuzionest</h6>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -4px;"><span>UI UX Designer</span></p>
+                            <span style="font-size: 13px;">Coimbatore</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;margin-top: -5px;"><span>Period From</span></p>
+                            <span style="font-size: 13px;">2025</span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span style="color: green;">--Still Working--</span></p>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <p class="mb-0" style="font-size: 12px;font-weight: 900;"><span></span></p>
+                            <span style="font-size: 13px;"></span>
+                        </div>
+                    </div>
+                    <div class="pippline-name">
+                        <div>
+                            <i class="btn-edit mx-1" data-id="Kavinesh Rajasekar" title="Edit">
+                                <img src="/assets/commonimages/edit.svg">
+                            </i>
+                            <i class="btn-delete alert_delete mx-1" data-id="Kavinesh Rajasekar" title="Delete">
+                                <img src="/assets/commonimages/delete.svg">
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+
+<div id="ScheduledCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="ScheduledHeader">Screening (Phone/Video) Details - UI/UX Developer</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormScheduled">
+            <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Interview Mode</label>
+                            <input type="text" class="form-control" placeholder="Face To Face" id="InterviewMode" name="InterviewMode" maxlength="50" required disabled />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label for="joining_date" class="form-label">Interview Date <span style="color:red">*</span></label>
+                            <div class="custom-date-picker">
+                                <input type="date" id="joining_date" name="joining_date" required placeholder="dd/mm/yyyy">
+                                <span class="calendar-icon">🗓</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Start Time<span id="Asterisk">*</span></label>
+                            <input type="time" class="form-control" placeholder="Ex: 0:00" id="StartTime" name="StartTime" maxlength="50" required />
+                        </div>
+                    </div>  
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Duration<span id="Asterisk">*</span></label>
+                            <select class="form-control" id="Duration" name="Duration" required>
+                                <option value="1">--Select--</option>
+                                <option value="2">10:00 to 12:00 AM</option>
+                                <option value="3">09:00 to 11:00 AM</option>
+                                <option value="4">04:00 to 08:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>End Time<span id="Asterisk">*</span></label>
+                            <input type="time" class="form-control" placeholder="Ex: 0:00" id="EndTime" name="EndTime" maxlength="50" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Location<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" placeholder="Ex: 0:00" id="Location" name="Location" maxlength="50" required />
+                        </div>
+                    </div> 
+                    <div class="col-md-6 col-lg-12 col-sm-12 col-12 mt-2">
+                        <div class="form-group">
+                            <label>Main Interviewer</label> 
+                            <select class="form-control" id="MainInterviewerId" name="MainInterviewerId" multiple> 
+                                <option value="1" selected>Kavinesh Rajasekar</option>
+                                <option value="2" selected>Satheesh Kumar</option>
+                                <option value="3">Tharani</option>
+                                <option value="4">Karthich</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-12 col-sm-12 col-12 mt-2">
+                        <div class="form-group">
+                            <label>Sub Interviewer</label> 
+                            <select class="form-control" id="SubInterviewerId" name="SubInterviewerId" multiple> 
+                                <option value="1">Kavinesh RPKS</option>
+                                <option value="2" selected>Dhanush</option>
+                                <option value="3">Satheesh</option>
+                                <option value="4">Saranya</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-12 col-sm-6 col-6">
+                        <div class="form-group">
+                            <label>Description<span id="Asterisk">*</span></label>
+                            <textarea class="form-control Description" id="Description" name="Description" autocomplete="off" rows="5" maxlength="250" placeholder="Comment here"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-primary m-r-20 text-white" id="SaveSchedule">Preview</a>
+                    <a class="btn btn-primary m-r-20 text-white" id="SaveSchedule">Mail</a>
+                    <a class="btn btn-primary m-r-20 text-white" id="SaveSchedule">Schedule</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+<script src="~/js/candidates.js"></script>
+
+

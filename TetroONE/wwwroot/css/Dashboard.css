@@ -1,0 +1,11 @@
+﻿#table-header, #ticketing-status-list > div {
+    display: flex;
+    justify-content: space-between;
+    min-width: 100%;
+}
+
+    #table-header div, #ticketing-status-list div > div {
+        flex: 1;
+        min-width: 100px;
+    }
+     

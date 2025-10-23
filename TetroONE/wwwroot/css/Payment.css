@@ -1,0 +1,65 @@
+﻿.paymentTableHead {
+    background-color: #a3c1df;
+    color: #001d3a;
+}
+
+.DynrowRemovePayment {
+    background: none;
+    color: red;
+    transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    border: 1px solid red;
+    width: 30px;
+    border-radius: 50%;
+    height: 30px;
+    padding: 4px;
+}
+
+    .DynrowRemovePayment i {
+        margin-left: 1px;
+    }
+
+    .DynrowRemovePayment:hover {
+        background-color: #aa1111aa;
+        color: white;
+        box-shadow: 0 3px 11px rgb(169 0 0 / 93%);
+    }
+
+#paymentTable tbody + tbody {
+    border-top: none !important;
+}
+
+
+#PaymentTable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    height: 334px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+.scrollable-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scrollable-table {
+    max-height: 335px;
+    overflow-y: auto;
+    display: block;
+}
+
+.paymentTableHead th {
+    position: sticky;
+    top: -1px;
+    z-index: 2;
+    background: #a3c1df;
+}
+
+#PaymentTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table {
+    margin-top: 5px !important;
+}

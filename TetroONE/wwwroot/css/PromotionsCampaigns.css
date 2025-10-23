@@ -1,0 +1,779 @@
+﻿#counterBoxText1, #counterBoxText2, #counterBoxText3, #counterBoxText4 {
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: #57596c !important;
+}
+
+#counterBoxVal1, #counterBoxVal2, #counterBoxVal3, #counterBoxVal4 {
+    font-weight: 600 !important;
+    font-size: 14px;
+    color: #6c757d !important;
+    display: flex;
+    justify-content: center;
+}
+
+#tableFilter {
+    width: 100%;
+}
+
+/* accordion css */
+.info-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.info-card-header {
+    background: linear-gradient(to right, #3a46a9 0%, #0d0326 100%);
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.info-card-body, .info-card-footer {
+    padding: 15px;
+    display: none; /* Initially hidden */
+}
+
+    .info-card-body.show, .info-card-footer.show {
+        display: block; /* Show when toggled */
+    }
+
+.arrow {
+    font-size: 12px;
+    transition: transform 0.3s; /* Smooth rotation */
+    color: white;
+}
+
+.show-arrow {
+    transform: rotate(180deg); /* Rotate arrow when card is expanded */
+}
+
+.Title {
+    color: white;
+}
+/* accordion css */
+.badge {
+    border-radius: 5px;
+    margin-left: auto;
+    line-height: 1;
+    padding: 6px 10px;
+    vertical-align: middle;
+    font-weight: 400;
+    font-size: 13px;
+    border: 1px solid #dfd6d6;
+    color: white;
+    cursor: pointer;
+}
+
+.fa-whatsapp, .fa-envelope, .fa-edit, .fa-trash-alt {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.fa-edit, .fa-trash-alt {
+    font-size: 15px;
+}
+
+.fa-whatsapp, .fa-envelope {
+    font-size: 17px;
+    margin-top: -1px;
+}
+
+.border {
+    border-bottom: 0.5px solid;
+}
+
+#tickMark {
+    z-index: 1; /*Ensure it's above the badge*/
+}
+
+.plus {
+    margin-right: 0px;
+    padding-right: 3px;
+    margin-left: 0px;
+}
+
+/*.tickMark {
+    position: absolute;
+    top: -4px;
+    left: 44px;
+    font-size: 19px;
+    color: black;
+    z-index: 1;*/ /* Ensure it's above the badge */
+/*}*/
+
+/*for Multiple select*/
+.select2-selection--multiple {
+    display: inline-block !important;
+}
+
+.select2-container .select2-search--inline .select2-search__field {
+    box-sizing: border-box;
+    border: none;
+    font-size: 100%;
+    margin-top: 5px;
+    margin-left: 14px;
+    padding: 0;
+    max-width: 100%;
+    resize: none;
+    height: 18px;
+    vertical-align: bottom;
+    font-family: sans-serif;
+    overflow: hidden;
+    word-break: keep-all;
+}
+
+#ProductTypesMultiShow > div > span > span.selection > span > span > textarea {
+    margin-top: -15px;
+    margin-left: 0px;
+}
+
+#select2-ProductTypesMulti-container > li > button {
+    /*border: none;*/
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+    margin-right: 0.2rem !important;
+    margin-left: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
+}
+
+
+#ProductTypesMultiShow > div > span > span.selection > span {
+    overflow: auto;
+}
+
+/*for Multiple select*/
+
+textarea {
+    border: 1px solid #ced4da;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-right: 30px;
+    padding-bottom: 5px;
+}
+
+.custom-padding {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+/*.discount-btn {
+    height: 35px;
+}
+
+#ember328 {
+    width: 35px;
+}*/
+
+/*=====================================================================================toggle style=========================================================================*/
+
+
+input[switch] {
+    display: none;
+}
+
+    input[switch] + label {
+        font-size: 1.5em;
+        line-height: 1;
+        width: 6.5rem;
+        height: 2rem;
+        background-color: #ddd;
+        background-image: none;
+        border-radius: 2rem;
+        padding: 0.1666666667rem;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2) inset;
+        font-family: inherit;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+    }
+
+        input[switch] + label:before {
+            /* Label */
+            text-transform: uppercase;
+            color: #000000;
+            content: attr(data-off-label);
+            display: block;
+            font-family: cursive;
+            font-family: FontAwesome, inherit;
+            font-weight: 900;
+            font-size: 12px;
+            line-height: 2rem;
+            position: absolute;
+            right: 1.9rem;
+            margin: 0.2166666667rem;
+            top: -2px;
+            text-align: center;
+            min-width: 1.6666666667rem;
+            overflow: hidden;
+            -webkit-transition: all 0.1s ease-in-out;
+            transition: all 0.1s ease-in-out;
+        }
+
+        input[switch] + label:after {
+            /* Slider */
+            content: '';
+            position: absolute;
+            left: 0.1rem;
+            background-color: #f7f7f7;
+            box-shadow: none;
+            border-radius: 2rem;
+            height: 1.7rem;
+            width: 1.7rem;
+            top: 2px;
+            -webkit-transition: all 0.1s ease-in-out;
+            transition: all 0.1s ease-in-out;
+        }
+
+    input[switch]:checked + label {
+        background-color: lightblue;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.15)), to(rgba(0, 0, 0, 0.2)));
+        background-image: linear-gradient(rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.2));
+        box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3) inset;
+    }
+
+        input[switch]:checked + label:before {
+            color: #fff;
+            content: attr(data-on-label);
+            font-size: 12px;
+            right: auto;
+            left: 0.3166666667rem;
+            font-family: cursive;
+        }
+
+        input[switch]:checked + label:after {
+            left: 4.7rem;
+            background-color: #f7f7f7;
+            box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.3);
+        }
+
+input[switch="bool"] + label {
+    background-color: rgb(0, 244, 176);
+}
+
+input[switch="abcd"] + label {
+    background-color: #fbd100;
+}
+
+input[switch="bool"] + label:before {
+    color: #000000 !important;
+}
+
+input[switch="bool"]:checked + label {
+    background-color: #3ad5cb;
+}
+
+input[switch="abcd"]:checked + label {
+    background-color: #4908b1;
+}
+
+input[switch="bool"]:checked + label:before {
+    color: #000000 !important;
+}
+
+input[switch="default"]:checked + label {
+    background-color: #a2a2a2;
+}
+
+    input[switch="default"]:checked + label:before {
+        color: #fff !important;
+    }
+
+input[switch="success"] + label {
+    background-color: rgb(225, 33, 33);
+}
+
+    input[switch="success"] + label:before {
+        color: #fff !important;
+    }
+
+input[switch="success"]:checked + label {
+    background-color: #40d340;
+}
+
+    input[switch="success"]:checked + label:before {
+        color: #fff !important;
+    }
+
+input[switch="warning"]:checked + label {
+    background-color: gold;
+}
+
+    input[switch="warning"]:checked + label:before {
+        color: #fff !important;
+    }
+
+
+/*================================================================================Off-Canvas  style=========================================================================*/
+
+/*Off-Canvas Main container style */
+/*.offcanvas-container {
+    width: 0;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    overflow: hidden;
+    transition: 0.5s;
+    z-index: 100000;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}*/
+
+/* Off-Canvas Header */
+/*.offcanvas-header {
+    padding: 7px 10px 7px 10px;
+    background: linear-gradient(to right, #3a46a9 0%, #0d0326 100%);
+    border-bottom: 1px solid #ddd;
+    flex-shrink: 0;
+}*/
+
+/* Optional: Additional styling for header and button */
+/*.offcanvas-header h2 {
+        font-size: 1rem;
+        margin: 0;
+        font-weight: 700;
+        color: #fff;
+    }
+
+.Heading-body-offCanvas {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 700;
+    color: #000000;
+}*/
+
+/* Off-Canvas Body */
+/*.offcanvas-body {
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-grow: 1;
+}*/
+
+/* Off-Canvas Footer */
+/*.offcanvas-footer {
+    padding: 8px;
+    flex-shrink: 0;
+    text-align: center;
+}*/
+/* Button styles */
+/*.open-btn {
+    cursor: pointer;
+}
+
+.btn-close {
+    height: 28px;
+    width: 28px;
+    border-radius: 4px;
+    border: 1px solid #b8ccff;
+    background: #f6f9ff;
+    cursor: pointer;
+}*/
+
+/* Content overlay */
+/*.content-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 99999;
+}*/
+
+/*================================================================================Off-Canvas  style=========================================================================*/
+#LabelCC, #LabebCC {
+    border: none;
+    background-color: #5819ca;
+    border-radius: 3px;
+}
+
+#ClientEmail {
+    color: #000000 !important;
+}
+
+#UncheckProductShow, #UncheckFestivalShow {
+    padding-left: 30px;
+}
+
+.NameShowingForTable {
+    padding-left: 4px;
+}
+
+.NameShowingForTablePstyle {
+    font-size: 14px;
+    line-height: 1.82;
+    margin-bottom: 0.1rem !important;
+    word-break: break-word;
+    white-space: nowrap;
+    font-weight: 600;
+    font-family: cursive;
+    color: #191614;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.table-responsive {
+    margin-left: 0px !important;
+    padding-left: 4px !important;
+    width: 100% !important;
+    margin-top: -15px;
+}
+/* Tables with 43vh height */
+#FestivalTable .dataTables_scrollBody,
+#BuyOneTable .dataTables_scrollBody,
+#GetOneTable .dataTables_scrollBody,
+#DiscountTable .dataTables_scrollBody {
+    height: 43vh !important;
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+/* Table with 103vh height */
+#CampaignsTable .dataTables_scrollBody {
+    height: 103vh !important;
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+/*#SubmitFilter {
+    height: 23px !important;
+    background-color: rgb(88 25 202);
+    border: none;
+    color: white;
+    width: 100px;
+    border-radius: 3px;
+    top: 10px;
+}*/
+/*=====================================================This CSS in Jquery in INLINE CSS For Email======================================================
+.CommonContet {
+    border: 1px solid #a6a6a6;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    padding: 8px;
+}
+
+.HeadCRMTypeContet {
+    font-family: cursive;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.MainBorderDiv {
+    padding: 8px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #aeaeae;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.info-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.info-label {
+    width: 107px;
+    font-family: monospace;
+}
+
+.info-value {
+    flex: 1;
+    text-align: left;
+    color: #888888;
+    overflow: hidden;
+}
+
+.Maintext {
+    font-size: large;
+    font-family: cursive;
+    display:flex;
+    justify-content: start;
+}
+
+====================================================This CSS in Jquery in INLINE CSS Email===========================================================*/
+#SendButton {
+    background-color: rgb(49, 206, 54);
+    width: auto !important;
+}
+/*Off-Canvas css*/
+#emojiBtn {
+    margin-top: 12px;
+    border: none;
+}
+
+#emojiPicker {
+    cursor: pointer;
+    z-index:5 !important;
+}
+
+/* ==========================================================================Table CSS============================================================== */
+
+.fa-search {
+    position: absolute;
+    top: 10px;
+    right: 27px;
+}
+
+#tableFilter {
+    text-indent: 4px;
+    padding-left: 24px;
+}
+
+.dataTables_filter {
+    display: none;
+}
+
+.SearchBoxFilter {
+    padding-left: 23px;
+}
+
+#DiscountTable,
+#BuyOneTable,
+#GetOneTable,
+#FestivalTable,
+#GetOneTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div,
+#FestivalTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div,
+#BuyOneTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div {
+    width: 100% !important;
+}
+
+#GetOneTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody,
+#BuyOneTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+    height: 25vh !important; /* No !important unless necessary */
+}
+ 
+.qty-Buy1Get1 {
+    width: 100%;
+}
+
+/*.qty-FestivalOffer {
+    width: 100%;
+}*/
+.qty-FestivalOffer {
+    width: 112%;
+}
+
+/*#DiscountTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr > th:nth-child(2) > div {
+    position: absolute;
+    top: 31.5px;
+    left: 15px;
+}*/
+
+/*#DiscountTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr > th:nth-child(2) {
+    padding-left: 20px !important;
+}*/
+
+/*#DiscountTable td {
+    padding-left: 20px !important;
+}
+*/
+#CampaignsTable {
+    width: 100% !important;
+    margin-top: 12px !important;
+}
+
+#CampaignsTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table, #CRMMainTable {
+    padding-left: 0px !important;
+}
+ 
+#MineAttendanceData > div > div {
+    padding-left: 0px !important;
+    margin-top: 0px;
+}
+
+/*#CRMMainTable > tbody > tr > td:last-child {
+    display: flex;
+    justify-content: end;
+    padding-right: 0px !important;
+}*/
+
+/*#CRMMainTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr > th.sorting_disabled {
+    display: flex;
+    justify-content: center;
+}*/
+
+#CampaignsTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+    max-height: 376px !important;
+    margin-top: -30px !important;
+}
+ 
+
+@media screen and (max-width: 767px) {
+    div .dataTables_wrapper div div.dataTables_paginate ul.pagination li {
+        margin-bottom: 0px !important;
+        margin-left: 0px !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    div.dataTables_wrapper div.dataTables_length, div.dataTables_wrapper div.dataTables_filter, div.dataTables_wrapper div.dataTables_info, div.dataTables_wrapper div.dataTables_paginate {
+        text-align: center;
+        margin-top: 0px !important;
+        margin-bottom: 10px;
+    }
+}
+
+.TableTabAlagin {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+#BuyOneTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table, #GetOneTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table, #FestivalTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table, #DiscountTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table {
+    width: 100% !important;
+}
+
+#DiscountTable th:first-child, #DiscountTable td:first-child, #FestivalTable th:first-child, #FestivalTable td:first-child, #GetOneTable th:first-child, #GetOneTable td:first-child, #BuyOneTable th:first-child, #BuyOneTable td:first-child {
+    display: none;
+}
+
+#DiscountTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr > th:nth-child(1), #FestivalTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr > th:nth-child(1), #BuyOneTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr > th:nth-child(1), #GetOneTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div > table > thead > tr > th:nth-child(1) {
+    display: none;
+}
+
+#DiscountTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div {
+    width: 100% !important;
+}
+
+/* ==========================================================================Table CSS============================================================== */
+/*Nav Tab CSS*/
+/*.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #000000 !important;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.nav-link {
+    color: #2352a7 !important;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}*/
+
+/*Nav Tab CSS*/
+
+.accordiondesignGridShow {
+    display: none;
+}
+
+#CRMMainTable td {
+    white-space: nowrap;
+}
+
+/*#CRMMainTable > tbody > tr > td:last-child {
+    display: flex;
+    justify-content: end;
+    padding-right: 0px !important;
+}*/
+
+/*================================================================================What'sApp CSS===============================================================================*/
+
+
+/*massage convey*/
+
+.Summacontainer {
+    width: 400px;
+    padding: 10px;
+}
+
+.message-blue {
+    position: relative;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 20px !important;
+    padding: 10px;
+    background-color: #ffffff;
+    width: 315px;
+    height: auto !important;
+    text-align: left;
+    font: 400 .9em 'Open Sans', sans-serif;
+    border-radius: 10px;
+}
+
+.message-content {
+    padding: 0;
+    margin: 0;
+}
+
+.message-timestamp-left {
+    position: absolute;
+    font-size: 0.85em;
+    font-weight: 900;
+    bottom: 4px;
+    left: 13px;
+}
+
+.message-blue:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 15px solid #ffffff;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    top: 0;
+    left: -15px;
+}
+
+/*massage convey End*/
+
+/*================================================================================What'sApp CSS End=============================================================================*/
+
+.card-table .card-body {
+    padding: 0rem !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+#PlusButton {
+    display: flex !important;
+    justify-content: end !important;
+    margin-right: 1%;
+    margin-top: -10px;
+}
+
+.buttonclass {
+    display: flex !important;
+    justify-content: end !important;
+}
+
+
+#myTab {
+    margin-top: -30px;
+    padding-left: 4px;
+}
+
+@media(max-width:760px) {
+    #myTab {
+        margin-top: 0px;
+    }
+}
+@media(max-width:560px)
+{
+    .btn-Addpage {
+        margin-top: 0% !important;
+        margin-right:5% !important;
+    }
+}
