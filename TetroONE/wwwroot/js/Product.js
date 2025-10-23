@@ -1,6 +1,6 @@
 ﻿var productId = 0;
-var FranchiseId = 0;
-var FranchiseDropdown = [];
+var PlantId = 0;
+var PlantDropdown = [];
 var ProducTab = 0;
 var titleForHeaderProductTab = "";
 var dynamicInputsHtmlForManPower = "";
@@ -14,9 +14,9 @@ $(document).ready(async function () {
 
     titleForHeaderProductTab = "Raw Material";
 
-    var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+    var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
     var productTypeId = 1;
-    Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: productTypeId, FranchiseId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
+    Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: productTypeId, PlantId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
     Common.bindDropDownParent('PrimaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('SecondaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('ProductTypeId', 'ProductInfoForm', 'ProductType');
@@ -72,8 +72,8 @@ $(document).ready(async function () {
 
     });
 
-    var franchiseData = await Common.bindDropDownSync('Franchise');
-    FranchiseDropdown = JSON.parse(franchiseData);
+    var PlantData = await Common.bindDropDownSync('Plant');
+    PlantDropdown = JSON.parse(PlantData);
 
     $('.ProductFlavors').hide();
     $('#ProductProcessHide').hide();
@@ -104,7 +104,7 @@ $(document).ready(async function () {
         $('#FormRawMaterialInfoData #BindRawMaterialInfoData').empty('');
         $('#FormQVMappingData #BindQVMappingData').empty('');
         $('.ProductDescription').removeClass('col-lg-12 col-md-12 col-sm-12 col-12').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
-        Common.bindDropDown('FranchiseName', 'Franchise');
+        Common.bindDropDown('PlantName', 'Franchise');
         $('#BindProductDyanimcData .ProductFranchiseInfo').remove();
 
         Common.ajaxCall("GET", "/Product/GetProductProcess", { ModuleName: "ProductionStages" }, GetProductProcessSuccess, null);
@@ -178,7 +178,7 @@ $(document).ready(async function () {
         $.each(ClosestDiv, function (index, values) {
             var ProductFranchiseMappingId = $(values).find('.productFranchiseMappingId').val();
             var ProductId = parseInt(productId) || null;
-            var FranchiseId = $(values).find('.FranchiseName').val();
+            var PlantId = $(values).find('.PlantName').val();
             var PrimaryPrice = $(values).find('.PrimaryPrice').val();
             var SecondaryPrice = $(values).find('.SecondaryPrice').val();
             var OpeningStock = $(values).find('.OpeningStock').val();
@@ -187,7 +187,7 @@ $(document).ready(async function () {
             FranchiseData.push({
                 ProductFranchiseMappingId: parseInt(ProductFranchiseMappingId) || null,
                 ProductId: ProductId,
-                FranchiseId: parseInt(FranchiseId) || null,
+                PlantId: parseInt(PlantId) || null,
                 PrimaryPrice: parseFloat(PrimaryPrice),
                 SecondaryPrice: parseFloat(SecondaryPrice),
                 OpeningStock: parseFloat(OpeningStock),
@@ -297,10 +297,10 @@ $(document).ready(async function () {
                         </div>
                      </div>`;
             $('#ProductDynamic').append(html);
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+            var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
             //$('.QcMappingHide').show();
             $('#ProcessBtnhide').hide();
-            Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: 1, FranchiseId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
+            Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: 1, PlantId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
         }
         else if (titleForHeaderProductTab == "Finished Product") {
             $('#ProductDynamic').empty('');
@@ -312,34 +312,10 @@ $(document).ready(async function () {
             $('#ProductDynamic').append(html);
             $('#ProcessBtnhide').show();
             /*$('.QcMappingHide').hide();*/
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-            Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: 2, FranchiseId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
-        } else if (titleForHeaderProductTab == "Transit") {
-            $('#ProductDynamic').empty('');
-            var html = `<div class="col-sm-12 p-0">
-                        <div class="table-responsive">
-                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductTable"></table>
-                        </div>
-                     </div>`;
-            $('#ProductDynamic').append(html);
-            $('#ProcessBtnhide').hide();
-            //$('.QcMappingHide').show();
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-            Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: 3, FranchiseId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
-        }
-        else if (titleForHeaderProductTab == "Others") {
-            $('#ProductDynamic').empty('');
-            var html = `<div class="col-sm-12 p-0">
-                        <div class="table-responsive">
-                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductTable"></table>
-                        </div>
-                     </div>`;
-            $('#ProductDynamic').append(html);
-            $('#ProcessBtnhide').hide();
-            //$('.QcMappingHide').show();
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-            Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: 4, FranchiseId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
-        }
+            var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
+            Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: 2, PlantId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
+        } 
+       
     });
 
     $(document).on('click', '.btn-edit', function () {
@@ -360,7 +336,7 @@ $(document).ready(async function () {
         $('#FormRawMaterialInfoData #BindRawMaterialInfoData').empty('');
         productId = $(this).data('id');
         var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-        Common.ajaxCall("GET", "/Product/GetProductId", { ProductId: productId, FranchiseId: franchiseId }, EditProductSuccess, null);
+        Common.ajaxCall("GET", "/Product/GetProductId", { ProductId: productId, PlantId: franchiseId }, EditProductSuccess, null);
 
         $('#ProductCanvas .collapse').removeClass('show');
         $('#ProductCanvas #collapse1').addClass('show');
@@ -1012,11 +988,6 @@ function ProductSuccess(response) {
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
-        } else if (activeTabText.includes("Transit")) {
-            $('#CounterImage1').prop('src', '/assets/moduleimages/inventory/transitproducticon_1.svg');
-            $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/transitproducticon_2.svg');
-            $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/transitproducticon_3.svg');
-            $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/transitproducticon_4.svg');
         }
 
         var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
@@ -1044,27 +1015,18 @@ function ProductInsertUpdateSuccess(response) {
                      </div>`;
         $('#ProductDynamic').append(html);
         $('#ProcessBtnhide').hide();
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+        var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
 
         var PassingData = {};
         if (titleForHeaderProductTab == "Raw Material") {
-            PassingData = { ProductTypeId: 1, FranchiseId: parseInt(FranchiseMappingId) }
+            PassingData = { ProductTypeId: 1, PlantId: parseInt(FranchiseMappingId) }
             $('#ProcessBtnhide').hide();
             //$('.QcMappingHide').show();
         } else if (titleForHeaderProductTab == "Finished Product") {
-            PassingData = { ProductTypeId: 2, FranchiseId: parseInt(FranchiseMappingId) }
+            PassingData = { ProductTypeId: 2, PlantId: parseInt(FranchiseMappingId) }
             $('#ProcessBtnhide').show();
             //$('.QcMappingHide').hide();
-        } else if (titleForHeaderProductTab == "Transit") {
-            PassingData = { ProductTypeId: 3, FranchiseId: parseInt(FranchiseMappingId) }
-            $('#ProcessBtnhide').hide();
-            //$('.QcMappingHide').show();
-        }
-        else if (titleForHeaderProductTab == "Others") {
-            PassingData = { ProductTypeId: 4, FranchiseId: parseInt(FranchiseMappingId) }
-            $('#ProcessBtnhide').hide();
-           
-        }
+        } 
 
         Common.ajaxCall("GET", "/Product/GetProduct", PassingData, ProductSuccess, null);
     }
@@ -1100,42 +1062,31 @@ function EditProductSuccess(response) {
             var rowadd = $('.ProductFranchiseInfo').length
             var DynamicLableNo = rowadd + 1;
 
-            var FranchiseSelectOptions = "";
+            var PlantSelectOptions = "";
 
             var defaultOption = '<option value="">--Select--</option>';
 
-            var FranchiseSelectOptions = FranchiseDropdown[0].map(function (FranchiseId) {
-                var isSelected = FranchiseId.FranchiseId == value.FranchiseId ? 'selected' : '';
-                return `<option value="${FranchiseId.FranchiseId}" ${isSelected}>${FranchiseId.FranchiseName}</option>`;
+            var PlantSelectOptions = PlantDropdown[0].map(function (PlantId) {
+                var isSelected = PlantId.PlantId == value.PlantId ? 'selected' : '';
+                return `<option value="${PlantId.PlantId}" ${isSelected}>${PlantId.PlantName}</option>`;
             }).join('');
 
             var dynamicHTML = `
 
                 <div class="row ProductFranchiseInfo">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
-                            <label class="DynamicLable">Franchise Info ${DynamicLableNo}</label>
+                            <label class="DynamicLable">Plant Info ${DynamicLableNo}</label>
                             <label class="productFranchiseMappingId d-none">${value.ProductFranchiseMappingId}</label>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-6 ProductCategory">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-6 ProductCategory">
 	        			<div class="form-group">
-	        				<label>Franchise Name<span id="Asterisk">*</span></label>
-	        				<select class="select FranchiseName" id="FranchiseName${numberIncr}" name="FranchiseName${numberIncr}" required>
-                                 ${defaultOption}${FranchiseSelectOptions}
+	        				<label>Plant Name<span id="Asterisk">*</span></label>
+	        				<select class="select PlantName" id="PlantName${numberIncr}" name="PlantName${numberIncr}" required>
+                                 ${defaultOption}${PlantSelectOptions}
 	        				</select>
 	        			</div>
 	        		</div>
-	                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	                	<div class="form-group">
-	                		<label>Primary Price<span id="Asterisk">*</span></label>
-	                		<input type="text" class="form-control PrimaryPrice" id="PrimaryPrice${numberIncr}" name="PrimaryPrice${numberIncr}" placeholder="0" value="${value.PrimaryPrice}" autocomplete="off" maxlength="10" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)">
-	                	</div>
-	                </div>
-	                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	                	<div class="form-group">
-	                		<label>Secondary Price<span id="Asterisk">*</span></label>
-	                		<input type="text" class="form-control SecondaryPrice" id="SecondaryPrice${numberIncr}" name="SecondaryPrice${numberIncr}" placeholder="0" value="${value.SecondaryPrice}" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" disabled required>
-	                	</div>
-	                </div>
+	               
 	                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
 	                	<div class="form-group">
 	                		<label>Opening Stock<span id="Asterisk">*</span></label>
@@ -1148,13 +1099,8 @@ function EditProductSuccess(response) {
 	                		<input type="text" class="form-control StockInHand" id="StockInHand${numberIncr}" name="StockInHand${numberIncr}" placeholder="Stock In Hand" value="${value.StockInHand}" autocomplete="off" disabled>
 	                	</div>
 	                </div>
-	                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4">
-	                	<div class="form-group">
-	                		<label>Reorder Level<span id="Asterisk">*</span></label>
-	                		<input type="text" class="form-control ReOrderlevel" id="ReOrderlevel${numberIncr}" name="ReOrderlevel${numberIncr}" placeholder="Reorder Level" value="${value.ReOrderlevel}" autocomplete="off" required>
-	                	</div>
-	                </div>
-                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-2 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
+	                
+                     <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-2 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
                         <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
                             <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
                         </div>
@@ -1163,7 +1109,7 @@ function EditProductSuccess(response) {
             `;
 
             $('#FormProductFranchiseData #BindProductDyanimcData').append(dynamicHTML);
-            $('.FranchiseName').each(function () {
+            $('.PlantName').each(function () {
                 $(this).select2({
                     dropdownParent: $(this).parent()
                 });
@@ -1283,16 +1229,16 @@ function dyanmicRow() {
     var rowadd = $('.ProductFranchiseInfo').length
     var DynamicLableNo = rowadd + 1;
 
-    var FranchiseSelectOptions = "";
+    var PlantSelectOptions = "";
 
     var defaultOption = '<option value="">--Select--</option>';
 
     var Initial = parseInt(0);
-    if (FranchiseDropdown != null && FranchiseDropdown.length > 0 && FranchiseDropdown[0].length > 0) {
-        FranchiseSelectOptions = FranchiseDropdown[0].map(function (FranchiseId) {
-            return `<option value="${FranchiseId.FranchiseId}">${FranchiseId.FranchiseName}</option>`;
+    if (PlantDropdown != null && PlantDropdown.length > 0 && PlantDropdown[0].length > 0) {
+        PlantSelectOptions = PlantDropdown[0].map(function (PlantId) {
+            return `<option value="${PlantId.PlantId}">${PlantId.PlantName}</option>`;
         }).join('');
-        var numberOfOptions = FranchiseDropdown[0].length;
+        var numberOfOptions = PlantDropdown[0].length;
         var DropDownVal = parseInt(numberOfOptions);
     }
     //Ensure that Initial and DropDownVal are both numbers
@@ -1301,29 +1247,18 @@ function dyanmicRow() {
             `
             <div class="row ProductFranchiseInfo">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
-                        <label class="DynamicLable">Franchise Info ${DynamicLableNo}</label>
+                        <label class="DynamicLable">Plant Info ${DynamicLableNo}</label>
                         <label class="productFranchiseMappingId d-none"></label>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-6 ProductCategory">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-6 ProductCategory">
 	    			<div class="form-group">
-	    				<label class="FranchiseLable">Franchise Name<span id="Asterisk">*</span></label>
-	    				<select class="select FranchiseName" id="FranchiseName${numberIncr}" name="FranchiseName${numberIncr}" required>
-                             ${defaultOption}${FranchiseSelectOptions}
+	    				<label class="FranchiseLable">Plant Name<span id="Asterisk">*</span></label>
+	    				<select class="select PlantName" id="PlantName${numberIncr}" name="PlantName${numberIncr}" required>
+                             ${defaultOption}${PlantSelectOptions}
 	    				</select>
 	    			</div>
 	    		</div>
-	            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	            	<div class="form-group">
-	            		<label>Primary Price<span id="Asterisk">*</span></label>
-	            		<input type="text" class="form-control PrimaryPrice" id="PrimaryPrice${numberIncr}" name="PrimaryPrice${numberIncr}" placeholder="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" required>
-	            	</div>
-	            </div>
-	            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	            	<div class="form-group">
-	            		<label>Secondary Price<span id="Asterisk">*</span></label>
-	            		<input type="text" class="form-control SecondaryPrice" id="SecondaryPrice${numberIncr}" name="SecondaryPrice${numberIncr}" placeholder="0" value="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" disabled required>
-	            	</div>
-	            </div>
+	            
 	           <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
 	            	<div class="form-group">
 	            		<label>Opening Stock<span id="Asterisk">*</span></label>
@@ -1336,13 +1271,8 @@ function dyanmicRow() {
 	            		<input type="text" class="form-control StockInHand" id="StockInHand${numberIncr}" name="StockInHand${numberIncr}" placeholder="Stock In Hand" autocomplete="off" disabled>
 	            	</div>
 	            </div>
-	            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4">
-	            	<div class="form-group">
-	            		<label>Reorder Level<span id="Asterisk">*</span></label>
-	            		<input type="text" class="form-control ReOrderlevel" id="ReOrderlevel${numberIncr}" name="ReOrderlevel${numberIncr}" placeholder="Reorder Level" autocomplete="off" required>
-	            	</div>
-	            </div>
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-2 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
+	            
+                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-2 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
                     <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
                         <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
                     </div>
@@ -1351,7 +1281,7 @@ function dyanmicRow() {
         `;
     }
     $('#FormProductFranchiseData #BindProductDyanimcData').append(dynamicHTML);
-    $('.FranchiseName').each(function () {
+    $('.PlantName').each(function () {
         $(this).select2({
             dropdownParent: $(this).parent()
         });

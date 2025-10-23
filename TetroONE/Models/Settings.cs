@@ -26,13 +26,7 @@ namespace TetroONE.Models
         public string Email { get; set; }
         public string Website { get; set; }
         public string GSTNumber { get; set; }
-        public string? BankName { get; set; }
-        public string? BranchName { get; set; }
-        public string? AccountType { get; set; }
-        public string? AccountName { get; set; }
-        public string? AccountNumber { get; set; }
-        public string? IFSCCode { get; set; }
-        public string? UPIId { get; set; }
+       
         public string ExistingImage { get; set; }
         public string Signature { get; set; }
         public string SignatureExistingImage { get; set; }
@@ -58,13 +52,7 @@ namespace TetroONE.Models
         public string? Email { get; set; }
         public string? Website { get; set; }
         public string? GSTNumber { get; set; }
-        public string? BankName { get; set; }
-        public string? BranchName { get; set; }
-        public string? AccountType { get; set; }
-        public string? AccountName { get; set; }
-        public string? AccountNumber { get; set; }
-        public string? IFSCCode { get; set; }
-        public string? UPIId { get; set; }
+       
     }
 
 
@@ -89,6 +77,41 @@ namespace TetroONE.Models
         public string? UPIId { get; set; }
     }
 
+
+
+    public class GetPlantDetails
+    {
+        public int LoginUserId { get; set; }
+        public int? PlantId { get; set; }
+    }
+
+    public class InsertPlantDetails
+    {
+        public int LoginUserId { get; set; }
+        public int? PlantId { get; set; }
+        public string? PlantName { get; set; }
+        public string? PlantAddress { get; set; }
+        public string? PlantCity { get; set; }
+        public string? PlantState { get; set; }
+        public string? PlantZipCode { get; set; }
+        public string? PlantContactNo { get; set; }
+        public string? PlantEmail { get; set; }
+        public string? PlantCountry { get; set; }
+        public bool? IsActive { get; set; }
+        public List<ContactPersonDetailsPlant> ContactPersonDetailsPlant { get; set; }
+        public DataTable TVP_ContactPersonDetails { get; set; }
+    }
+
+    public class ContactPersonDetailsPlant
+    {
+        public int? ContactPersonId { get; set; }   
+        public string? Salutation { get; set; }
+        public string? ContactPersonName { get; set; }
+        public string? ContactNumber { get; set; }
+        public string? Email { get; set; }
+        public bool? IsPrimary { get; set; }
+        public int? ContactId { get; set; }
+    }
 
     //=============================================================================EndOfSettings============================================================================
 

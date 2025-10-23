@@ -773,7 +773,15 @@ async function ProposalRequestGetNotNull(response) {
             var newRow = `
                 <tr class="product-row TypingProductname" MappingProduct-id="${value.ProposalRequestProductMappingId}">
                     <td class="sno"></td>
-                    <td><input type="text" name="ProductName${unique}" id="ProductName${unique}" class="form-control TypeProduct" value="${value.ProposalName}" required/></td>
+                    <td>
+                        <textarea
+                            name="ProductName${unique}" 
+                            id="ProductName${unique}" 
+                            class="form-control TypeProduct" 
+                            required
+                            rows="2"
+                            placeholder="Enter product name">${value.ProposalName || ''}</textarea>
+                    </td>
                     <td> 
                         <button class="btn DynrowRemove" style="margin-top: 1px;" type="button">
                             <i class="fas fa-trash-alt"></i>
@@ -1514,7 +1522,16 @@ function createNewRow() {
     var newRow = `
     <tr class="product-row TypingProductname">
         <td class="sno"></td>
-        <td><input type="text" name="ProductName${unique}" id="ProductName${unique}" class="form-control TypeProduct" required/></td>
+       <td>
+            <textarea
+                name="ProductName${unique}" 
+                id="ProductName${unique}" 
+                class="form-control TypeProduct" 
+                required
+                rows="2"
+                placeholder="Enter product name"></textarea>
+        </td>
+
         <td> 
             <button class="btn DynrowRemove" style="margin-top: 1px;" type="button">
                 <i class="fas fa-trash-alt"></i>

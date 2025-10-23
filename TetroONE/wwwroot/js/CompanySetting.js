@@ -1,5 +1,5 @@
 ﻿var alternateCompanyId = 0;
-var branchId = 0;
+var PlantId = 0;
 var BankId = 0;
 $(document).ready(function () {
     $(document).on('focus', ':input', function () {
@@ -18,7 +18,7 @@ $(document).ready(function () {
     Common.ajaxCall("GET", "/Settings/GetCompanyAlternativeSetting", { AlternateCompanyId: null }, AlternativeCompanySuccess, null);
 
     Common.ajaxCall("GET", "/Settings/GetBankDetails", { BankId: null }, BankSuccess, null);
-    //Common.ajaxCall("GET", "/Settings/GetBranch", { BranchId: null }, BranchSuccess, null);
+    Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: null }, PlantSuccess, null);
     $(document).on('click', '#UpdateSetting', function () {
         if (!Common.validateEmailwithErrorwithParent('FormSetting', 'Email')) {
             return false;
@@ -47,8 +47,7 @@ $(document).ready(function () {
                 objvalue.Signature = null;
             }
 
-            objvalue.BankName = $('#BankName').val();
-            objvalue.BranchName = $('#BranchName').val();
+         
 
             Common.ajaxCall("POST", "/Settings/UpdateSetting", JSON.stringify(objvalue), UpdateSuccess, null);
         }
@@ -108,7 +107,7 @@ $(document).ready(function () {
         Common.ajaxCall("GET", "/Settings/GetCompanyAlternativeSetting", { AlternateCompanyId: alternateCompanyId }, AlterBindDataSuccess, null);
     });
 
-    $(document).on('click', '.btn-delete', async function () {
+    $(document).on('click', '#AlternativeCompanyTable .btn-delete', async function () {
         var response = await Common.askConfirmation();
         if (response == true) {
             alternateCompanyId = $(this).data('id');
@@ -126,9 +125,7 @@ $(document).ready(function () {
             var AlterCompanyId = parseInt(alternateCompanyId);
             objvalue.AlternateCompanyId = AlterCompanyId > 0 ? AlterCompanyId : null;;
             objvalue.ContactNumber = $('#ContactNumber').val();
-           
-            objvalue.BankName = $('#BankName').val();
-            objvalue.BranchName = $('#BranchName').val();
+      
 
             Common.ajaxCall("POST", "/Settings/InsertAlternativeSetting", JSON.stringify(objvalue), InsertUpdateSuccess, null);
         }
@@ -146,7 +143,7 @@ $(document).ready(function () {
     //        objvalue.ContactNumber = $('#ContactNumber').val();
 
     //        objvalue.BankName = $('#BankName').val();
-    //        objvalue.BranchName = $('#BranchName').val();
+    //        objvalue.BranchName = $('#PlantName').val();
 
     //        Common.ajaxCall("POST", "/Settings/InsertAlternativeSetting", JSON.stringify(objvalue), InsertUpdateSuccess, null);
     //    }
@@ -168,20 +165,15 @@ function InsertUpdateSuccess(response) {
     }
 }
 
-//function InsertUpdateSuccess(response) {
-//    if (response.status) {
-//        Common.successMsg(response.message);
-//        Common.ajaxCall("GET", "/Settings/GetCompanyAlternativeSetting", { AlternateCompanyId: null }, AlternativeCompanySuccess, null);
-//        Common.ajaxCall("GET", "/Settings/GetCompanySetting", null, CompanySuccess, null);
-//        //$('#BankInfoHide').show();
-//        $('#AddAlternativeCompany').hide();
-//        $('#UpdateSetting').show();
-//        $('#IsPrimaryHide').hide();
-//        $('#GSTNumberHide').removeClass('col-md-2 col-6');
-//        $('#GSTNumberHide').addClass('col-md-3 col-6');
-//        $('#imageUploadlabel-manageuser').prop('disabled', false);
-//    }
-//}
+function InsertUpdateBankSuccess(response) {
+    if (response.status) {
+        Common.successMsg(response.message);
+        Common.ajaxCall("GET", "/Settings/GetBankDetails", { BankId: null }, BankSuccess, null);
+        //$('#BankInfoHide').show();
+        $("#BankCanvas").css("width", "0%");
+        $('#fadeinpage').removeClass('fadeoverlay');
+    }
+}
 
 function CompanySuccess(response) {
     if (response.status) {
@@ -356,109 +348,35 @@ $(document).on('click', '#AddBankBtn', function () {
 
     Common.removeMessage('FormBank');
 
-
-
-
     $('#SaveBank').text('Save').addClass('btn-success').removeClass('btn-update');
 
     $('#loader-pms').hide();
-    
 
-    Common.ajaxCall("GET", "/Contact/GetProductListVendor", { ModuleName: "Vendor" }, ProductListSuccess, null);
-
-    Common.ajaxCall("GET", "/Myprofile/GetFranchise", null, FranchiseSuccess, null);
 
     $('#BankCanvas.collapse').removeClass('show');
     $('#collapse1').addClass('show');
 });
 
 
-$(document).on('click', '#SaveClient', function (e) {
-
-    if (!Common.validateEmailwithErrorwithParent('FormVendor', 'Email')) {
-        return false;
-    }
-
-    var isValid = true;
-    $('.Email').each(function () {
-        var inputField = $(this);
-        var parentElement = inputField.closest('.form-group');
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputField.val()) && inputField.val() != "") {
-            inputField.addClass('error');
-            isValid = false;
-        } else {
-            inputField.removeClass('error');
-            parentElement.find('.error-message').remove();
-        }
-    });
+$(document).on('click', '#SaveBank', function (e) {
 
     e.preventDefault();
-    var isFormValid = validateFormAccordions('.accordion');
+   
 
-    var PrimaryValid = isPrimaryChecked('IsPrimary', 'Vendorcontact');
-
-    if (isFormValid && PrimaryValid && isValid && $("#FormVendor").valid() && $("#FormVendorBank").valid() && $("#FormVendorContact").valid()) {
-        var DataUpdate1 = JSON.parse(JSON.stringify(jQuery('#FormVendor').serializeArray()));
-        var DataUpdate2 = JSON.parse(JSON.stringify(jQuery('#FormVendorBank').serializeArray()));
-
-        var DataUpdate = DataUpdate1.concat(DataUpdate2);
+    if ($("#FormBank").valid()) {
+        var DataUpdate = JSON.parse(JSON.stringify(jQuery('#FormBank').serializeArray()));
 
         var objvalue = {};
         $.each(DataUpdate, function (index, item) {
             objvalue[item.name] = item.value;
         });
 
-        objvalue.IsActive = $('#IsActive').is(':checked');
+        objvalue.BankId = BankId > 0 ? BankId : null;
         objvalue.BankName = $('#BankName').val();
         objvalue.BranchName = $('#BranchName').val();
-        objvalue.MaxCreditLimit = Common.parseFloatInputValue('MaxCreditLimit') || null;
-        objvalue.CurrentCreditLimit = Common.parseFloatInputValue('CurrentCreditLimit') || null;
-
-        var ContactPerson = [];
-        var ClosestDiv = $('#FormVendorContact .Vendorcontact');
-        $.each(ClosestDiv, function (index, values) {
-            var getContactPersonId = $(values).find('.clientContactPersonId').data('id');
-            var getSalutationValues = $(values).find('.Salutation').val();
-            var getClientContactPersonNameValues = $(values).find('.ContactPerson').val();
-            var getContactNumberValues = $(values).find('.MobileNumber').val();
-            var geEmailtValues = $(values).find('.Email').val();
-            var getIsPrimaryValues = $(values).find('.IsPrimary').prop('checked');
-            ContactPerson.push({
-                ContactPersonId: parseInt(getContactPersonId) || null,
-                Salutation: getSalutationValues,
-                ContactPersonName: getClientContactPersonNameValues,
-                ContactNumber: getContactNumberValues,
-                Email: geEmailtValues,
-                IsPrimary: getIsPrimaryValues,
-                ContactId: parseInt(vendorId) || null
-            });
-        });
-        objvalue.contactPersonDetails = ContactPerson;
-
-        var ProductList = [];
-        var ClosestDivProductList = $('#FormVendorProductMapp #VendorProductList input[type="checkbox"]:checked');
-
-        $.each(ClosestDivProductList, function (index, element) {
-            var ProductId = $(element).data('id');
-            var IsPrimary = $(element).prop('checked');
-            var getProductMappingId = $(element).siblings('.ProductMappingId').text();
-
-            ProductList.push({
-                VendorProductMappingId: parseInt(getProductMappingId) || null,
-                VendorId: parseInt(vendorId) || null,
-                ProductId: ProductId
-            });
-        });
-
-        objvalue.vendorProductMappingDetails = ProductList;
 
 
-
-
-        objvalue.VendorId = parseInt(vendorId) || null;
-        objvalue.StateId = parseInt($('#StateId').val()) || null;
-        Common.ajaxCall("POST", "/Contact/InsertUpdareVendorDetails", JSON.stringify(objvalue), VendorInsertUpdateSuccess, null);
+        Common.ajaxCall("POST", "/Settings/InsertBankDetails", JSON.stringify(objvalue), InsertUpdateBankSuccess, null);
     }
 });
 $(document).on('click', '#CloseCanvas', function () {
@@ -466,14 +384,59 @@ $(document).on('click', '#CloseCanvas', function () {
     $('#fadeinpage').removeClass('fadeoverlay');
 });
 
+
+
+
+$(document).on('click', '#BankTable .btn-edit', function () {
+    $('#loader-pms').show();
+    var windowWidth = $(window).width();
+    if (windowWidth <= 600) {
+        $("#BankCanvas").css("width", "95%");
+    } else if (windowWidth <= 992) {
+        $("#BankCanvas").css("width", "50%");
+    } else {
+        $("#BankCanvas").css("width", "39%");
+    }
+    //CanvasOpenFirstShowingVendor();
+    Common.removeMessage('FormBank');
+    
+    $('#fadeinpage').addClass('fadeoverlay');
+    $("#BankHeader").text('Edit Bank Details');
+    $('#SaveBank').text('Update').addClass('btn-update').removeClass('btn-success');
+   
+    BankId = $(this).data('id');
+   
+    Common.ajaxCall("GET", "/Settings/GetBankDetails", { BankId: BankId }, editSuccess, null);
+
+    $('#BankCanvas.collapse').removeClass('show');
+    $('#collapse1').addClass('show');
+});
+
+$(document).on('click', '#BankTable .btn-delete', async function () {
+    var response = await Common.askConfirmation();
+    if (response == true) {
+        var BankId = $(this).data('id');
+        Common.ajaxCall("GET", "/Settings/DeleteBankDetails", { BankId: BankId }, InsertUpdateBankSuccess, null);
+    }
+});
+
+function editSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+        $('#loader-pms').hide()
+        Common.bindData(data[0]);
+       
+    }
+}
+
 /*   ===================================================================================================================*/
 
-function BranchSuccess(response) {
+function PlantSuccess(response) {
     if (response.status) {
-        $('#GetBranchDetails').empty();
+        $('#GetPlantDetails').empty();
         var data = JSON.parse(response.data);
         var html = "";
-        if (data[0][0].BranchId != null && data[0][0].BranchId != "") {
+        if (data[0][0].PlantId != null && data[0][0].PlantId != "") {
             $.each(data[0], function (index, branchData) {
                 html += `
                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
@@ -484,68 +447,79 @@ function BranchSuccess(response) {
                             <div class="counter-value" id="CounterBoxVal1">${branchData.City}</div>
                         </div>
                         <div class="d-flex flex-column align-items-end" style="gap: 8px;">
-                            <i class="btn-edit-Branch mx-1" title="Edit" data-id="${branchData.BranchId}"><img src="/assets/commonimages/edit.svg"></i>
-                            <i class="btn-delete-Branch alert_delete mx-1" title="Delete" data-id="${branchData.BranchId}"><img src="/assets/commonimages/delete.svg"></i>
+                            <i class="btn-edit-Plant mx-1" title="Edit" data-id="${branchData.PlantId}"><img src="/assets/commonimages/edit.svg"></i>
+                            <i class="btn-delete-Plant alert_delete mx-1" title="Delete" data-id="${branchData.PlantId}"><img src="/assets/commonimages/delete.svg"></i>
                         </div>
                     </div>
                 </div>
                 `;
             });
 
-            $('#GetBranchDetails').append(html);
+            $('#GetPlantDetails').append(html);
         }
         else {
             var html = `<div class="col-12 d-flex justify-content-center"><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>`;
-            $('#GetBranchDetails').append(html);
+            $('#GetPlantDetails').append(html);
         }
     }
 }
 
-$(document).on('click', '#AddBranchBtn', function () {
-    branchId = 0;
+$(document).on('click', '#AddPlantBtn', function () {
+    PlantId = 0;
     var windowWidth = $(window).width();
     if (windowWidth <= 600) {
-        $("#AddBranchCanvas").css("width", "95%");
+        $("#AddPlantCanvas").css("width", "95%");
     } else if (windowWidth <= 992) {
-        $("#AddBranchCanvas").css("width", "50%");
+        $("#AddPlantCanvas").css("width", "50%");
     } else {
-        $("#AddBranchCanvas").css("width", "39%");
+        $("#AddPlantCanvas").css("width", "39%");
     }
+
     $('#fadeinpage').addClass('fadeoverlay');
-    $('#BranchHeader').text('Add Branch Details');
-    $('#AddBranchCanvas .collapse').removeClass('show');
-    $('#collapse1').addClass('show');
-    Common.removevalidation('FormBranch');
-    Common.removevalidation('FormBranchContact');
-    $('#FormBranchContact .Branchcontact').remove('');
+    $('#PlantHeader').text('Add Plant Details');
+
+    //// Close all accordion panels
+    //$('#AddPlantCanvas .collapse').removeClass('show');
+    //$('#AddPlantCanvas [data-toggle="collapse"]').attr('aria-expanded', 'false');
+
+    //// Open the first (Plant Info)
+    $('#AddPlantCanvas #collapse1').addClass('show');
+    //$('#styleAccordion [data-target="#collapse1"]').attr('aria-expanded', 'true');
+
+    // Reset forms
+    Common.removevalidation('FormPlant');
+    Common.removevalidation('FormPlantContact');
+    $('#FormPlantContact .Plantcontact').remove();
     duplicateRow();
-    $('#SaveBranch').text('Save').removeClass('btn-update').addClass('btn-success');
+
+    $('#SavePlant').text('Save').removeClass('btn-update').addClass('btn-success');
 });
+
 
 $(document).on('click', '#CloseCanvas', function () {
-    $("#AddBranchCanvas").css("width", "0%");
+    $("#AddPlantCanvas").css("width", "0%");
     $('#fadeinpage').removeClass('fadeoverlay');
-    Common.removevalidation('FormBranch');
-    Common.removevalidation('FormBranchContact');
-    $('#FormBranchContact .Branchcontact').remove('');
+    Common.removevalidation('FormPlant');
+    Common.removevalidation('FormPlantContact');
+    $('#FormPlantContact .Plantcontact').remove('');
 });
 
-$(document).on('click', '.btn-edit-Branch', function () {
-    branchId = $(this).data('id');
-    $('#SaveBranch').text('Update').removeClass('btn-success').addClass('btn-update');
-    Common.ajaxCall("GET", "/Settings/GetBranch", { BranchId: branchId }, BranchNotNullSuccess, null);
+$(document).on('click', '.btn-edit-Plant', function () {
+    PlantId = $(this).data('id');
+    $('#SavePlant').text('Update').removeClass('btn-success').addClass('btn-update');
+    Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: PlantId }, PlantNotNullSuccess, null);
 });
 
-$(document).on('click', '.btn-delete-Branch', async function () {
+$(document).on('click', '.btn-delete-Plant', async function () {
     var response = await Common.askConfirmation();
     if (response == true) {
-        branchId = $(this).data('id');
-        Common.ajaxCall("GET", "/Settings/DeleteBranch", { BranchId: branchId }, InsertUpdateBranchSuccess, null);
+        PlantId = $(this).data('id');
+        Common.ajaxCall("GET", "/Settings/DeletePlantDetails", { PlantId: PlantId }, InsertUpdatePlantSuccess, null);
     }
 });
 
-$(document).on('click', '#SaveBranch', function (e) {
-    if (!Common.validateEmailwithErrorwithParent('FormBranch', 'Email')) {
+$(document).on('click', '#SavePlant', function (e) {
+    if (!Common.validateEmailwithErrorwithParent('FormPlant', 'PlantEmail')) {
         return false;
     }
 
@@ -564,24 +538,24 @@ $(document).on('click', '#SaveBranch', function (e) {
     });
 
     e.preventDefault();
-    var isFormValid = validateFormAccordions('.accordion');
+    //var isFormValid = validateFormAccordions('.accordion');
 
-    var PrimaryValid = isPrimary('IsPrimary', 'Branchcontact');
-    if (isFormValid && PrimaryValid && isValid && $("#FormBranch").valid()) {
+    var PrimaryValid = isPrimary('IsPrimary', 'Plantcontact');
+    if (PrimaryValid && isValid && $("#FormPlant").valid()) {
 
-        var DataStatic = JSON.parse(JSON.stringify(jQuery('#FormBranch').serializeArray()));
+        var DataStatic = JSON.parse(JSON.stringify(jQuery('#FormPlant').serializeArray()));
         var objvalue = {};
         $.each(DataStatic, function (index, item) {
             objvalue[item.name] = item.value;
         });
 
-        objvalue.BranchId = branchId > 0 ? branchId : null;
-        objvalue.BranchEmail = $('#FormBranch #Email').val() || null;
+        objvalue.PlantId = PlantId > 0 ? PlantId : null;
+        objvalue.PlantEmail = $('#FormPlant #PlantEmail').val() || null;
         objvalue.IsActive = true;
-        //objvalue.IsActive = $('#FormBranch #IsActive').is(':checked');
+        //objvalue.IsActive = $('#FormPlant #IsActive').is(':checked');
 
         var ContactPerson = [];
-        var ClosestDiv = $('#FormBranchContact .Branchcontact');
+        var ClosestDiv = $('#FormPlantContact .Plantcontact');
         $.each(ClosestDiv, function (index, values) {
             var getContactPersonId = $(values).find('.clientContactPersonId').data('id');
             var getSalutationValues = $(values).find('.Salutation').val();
@@ -596,69 +570,69 @@ $(document).on('click', '#SaveBranch', function (e) {
                 ContactNumber: getContactNumberValues,
                 Email: geEmailtValues,
                 IsPrimary: getIsPrimaryValues,
-                ContactId: parseInt(branchId) || null
+                ContactId: parseInt(PlantId) || null
             });
         });
 
-        objvalue.ContactPersonDetails = ContactPerson;
+        objvalue.ContactPersonDetailsPlant = ContactPerson;
 
-        Common.ajaxCall("POST", "/Settings/InsertUpdateBranch", JSON.stringify(objvalue), InsertUpdateBranchSuccess, null);
+        Common.ajaxCall("POST", "/Settings/InsertPlantDetails", JSON.stringify(objvalue), InsertUpdatePlantSuccess, null);
     }
 });
 
 
-function InsertUpdateBranchSuccess(response) {
+function InsertUpdatePlantSuccess(response) {
     if (response.status) {
         Common.successMsg(response.message);
-        $("#AddBranchCanvas").css("width", "0%");
+        $("#AddPlantCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
-        Common.removevalidation('FormBranch');
-        Common.removevalidation('FormBranchContact');
-        $('#FormBranchContact .Branchcontact').remove('');
-        Common.ajaxCall("GET", "/Settings/GetBranch", { BranchId: null }, BranchSuccess, null);
+        Common.removevalidation('FormPlant');
+        Common.removevalidation('FormPlantContact');
+        $('#FormPlantContact .Plantcontact').remove('');
+        Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: null }, PlantSuccess, null);
     }
     else
         Common.errorMsg(response.message);
 }
 
-function BranchNotNullSuccess(response) {
+function PlantNotNullSuccess(response) {
     if (response.status) {
 
         var windowWidth = $(window).width();
         if (windowWidth <= 600) {
-            $("#AddBranchCanvas").css("width", "95%");
+            $("#AddPlantCanvas").css("width", "95%");
         } else if (windowWidth <= 992) {
-            $("#AddBranchCanvas").css("width", "50%");
+            $("#AddPlantCanvas").css("width", "50%");
         } else {
-            $("#AddBranchCanvas").css("width", "39%");
+            $("#AddPlantCanvas").css("width", "39%");
         }
-        $('#BranchHeader').text('Edit Branch Details');
+        $('#PlantHeader').text('Edit Plant Details');
         $('#SaveClient').text('Update');
         $('#SaveClient').addClass('btn-update');
         $('#fadeinpage').addClass('fadeoverlay');
-        $('#AddBranchCanvas .collapse').removeClass('show');
-        $('#collapse1').addClass('show');
-        $('#FormBranchContact .Branchcontact').remove('');
-        Common.removevalidation('FormBranch');
-        Common.removevalidation('FormBranchContact');
+        $('#AddPlantCanvas .collapse').removeClass('show');
+        $('#AddPlantCanvas #collapse1').addClass('show');
+        $('#FormPlantContact .Plantcontact').remove('');
+        Common.removevalidation('FormPlant');
+        Common.removevalidation('FormPlantContact');
 
         var data = JSON.parse(response.data);
         Common.bindData(data[0]);
-        $('#FormBranch #BranchCountry').val(data[0][0].BranchCountry);
-        $('#FormBranch #Email').val(data[0][0].BranchEmail);
-        $('#FormBranch #BranchName').val(data[0][0].BranchName);
+        $('#FormPlant #PlantCountry').val(data[0][0].PlantCountry);
+        $('#FormPlant #Email').val(data[0][0].PlantEmail);
+        $('#FormPlant #PlantName').val(data[0][0].PlantName);
 
-        if (data[1][0].BranchContactPersonMappingId != null && data[1][0].BranchContactPersonMappingId != "") {
+        if (data[1][0].PlantContactPersonMappingId != null && data[1][0].PlantContactPersonMappingId != "") {
 
             $.each(data[1], function (index, value) {
-                var rowadd = $('.Branchcontact').length;
+                var rowadd = $('.Plantcontact').length;
                 var DynamicLableNo = rowadd + 1;
                 let unique = Math.random().toString(36).substring(2);
                 var PrimaryCheck = value.IsPrimary == true ? 'checked' : '';
                 var htmlAppend =
                     `
-                   <div class="row Branchcontact">
-                     <input type="hidden" class="clientContactPersonId" id="ClientContactPersonId" name="ClientContactPersonId" data-id="${value.BranchContactPersonMappingId}" />
+                   <div class="row Plantcontact">
+                     <input type="hidden" class="clientContactPersonId" id="ClientContactPersonId" name="ClientContactPersonId" data-id="${value.PlantContactPersonMappingId}" />
                      <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
                         <label class="DynamicLable">Contact Person ${DynamicLableNo}</label>
                     </div>
@@ -713,7 +687,7 @@ function BranchNotNullSuccess(response) {
                  </div>
             `;
 
-                $('#FormBranchContact').append(htmlAppend);
+                $('#FormPlantContact').append(htmlAppend);
                 setPrimaryCheckboxEventListeners();
             });
         }
@@ -727,7 +701,7 @@ function BranchNotNullSuccess(response) {
         //        var Check = AssMappData.IsActive == true ? 'checked' : '';
         //        html = `
         //            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
-        //                <lable class="AssMappingMappingId d-none">${AssMappData.AssetBranchMappingId}</lable>
+        //                <lable class="AssMappingMappingId d-none">${AssMappData.AssetPlantMappingId}</lable>
         //                <input type="checkbox" data-id="${AssMappData.AssetId}" class="AssId" name="Assets" ${Check} id="product-${AssMappData.AssetId}">
         //                <label for="product-${AssMappData.AssetId}" class="checkbox-label">${AssMappData.AssetName}</label>
         //            </div>
@@ -744,12 +718,12 @@ function BranchNotNullSuccess(response) {
 function duplicateRow() {
 
     let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.Branchcontact').length
+    var rowadd = $('.Plantcontact').length
     var DynamicLableNo = rowadd + 1;
 
     if ((rowadd < 2)) {
         var htmlRow = `
-            <div class="row Branchcontact">
+            <div class="row Plantcontact">
             <input type="hidden" class="clientContactPersonId" id="ClientContactPersonId" name="ClientContactPersonId" data-id="" />
              <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
                 <label class="DynamicLable_1">Contact Person ${DynamicLableNo}</label>
@@ -802,7 +776,7 @@ function duplicateRow() {
             </div>
            `;
 
-        $('#FormBranchContact').append(htmlRow);
+        $('#FormPlantContact').append(htmlRow);
         setPrimaryCheckboxEventListeners();
         updateRemoveButtons();
     }
@@ -841,14 +815,14 @@ function setPrimaryCheckboxEventListeners() {
 }
 
 function updateRowLabels() {
-    $('.Branchcontact').each(function (index) {
+    $('.Plantcontact').each(function (index) {
         // Update the label text with the correct row number
         $(this).find('.DynamicLable_1').text('Contact Person ' + (index + 1));
     });
 }
 
 function updateRemoveButtons() {
-    var rows = $('.Branchcontact');
+    var rows = $('.Plantcontact');
     rows.each(function (index) {
         var removeButtonDiv = $(this).find('.thiswillshow_1');
         if (rows.length == 1) {
@@ -860,9 +834,9 @@ function updateRemoveButtons() {
 }
 
 function removeRow(button) {
-    var totalRows = $('.Branchcontact').length;
+    var totalRows = $('.Plantcontact').length;
     if (totalRows > 1) {
-        $(button).closest('.Branchcontact').remove();
+        $(button).closest('.Plantcontact').remove();
         updateRowLabels();
         updateRemoveButtons();
     }
@@ -934,10 +908,10 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
 }
 
 
-$(document).on("input", '#FormBranch #Email', function (event) {
+$(document).on("input", '#FormPlant #Email', function (event) {
     var inputElement = $(this);
-    if (Common.validateEmailwithErrorwithParent('FormBranch', 'Email')) {
-        $('#FormBranch #Email-error').remove();
+    if (Common.validateEmailwithErrorwithParent('FormPlant', 'Email')) {
+        $('#FormPlant #Email-error').remove();
         if (inputElement != "") {
             $(element).addClass('is-invalid error');
         }

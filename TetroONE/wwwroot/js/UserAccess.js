@@ -4,12 +4,12 @@ var IsFirst = true;
 $(document).ready(function () {
     /* var Listdata = parsedUserAccessList;*/
 
-    var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+    var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
     var category = "UserType";
     var search = null;
 
     var editData = {
-        FranchiseId: FranchiseMappingId,
+        PlantId: FranchiseMappingId,
         Value: 0,
         Category: category,
         Search: search
@@ -75,10 +75,10 @@ $(document).ready(function () {
         if (IsFirst) {
             $('#loader-pms').show();
             var thisVal = parseInt($(this).val());
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+            var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
             var category = $('#Category').val();
             var search = $('#tableFilter_User').val() || null;
-            var editData = { FranchiseId: FranchiseMappingId, Value: thisVal, Category: category, Search: search };
+            var editData = { PlantId: FranchiseMappingId, Value: thisVal, Category: category, Search: search };
             Common.ajaxCall("GET", "/UserAccess/GetUserAcces", editData, function (response) {
                 if (response && response.data) {
                     //localStorage.removeItem("UserAccessList");
@@ -170,10 +170,10 @@ function UpdateUseraccessUpdateSuccess(response) {
         $('#tableFilter_User').val('');
         CheckedValue = [];
         var thisVal = parseInt($("#Value").val());
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+        var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
         var category = $('#Category').val();
         var search = $('#tableFilter_User').val() || null;
-        var editData = { FranchiseId: FranchiseMappingId, Value: thisVal, Category: category, Search: search };
+        var editData = { PlantId: FranchiseMappingId, Value: thisVal, Category: category, Search: search };
         Common.ajaxCall("GET", "/UserAccess/GetUserAcces", editData, function (response) {
             if (response && response.data) {
                 localStorage.removeItem("UserAccessList");
