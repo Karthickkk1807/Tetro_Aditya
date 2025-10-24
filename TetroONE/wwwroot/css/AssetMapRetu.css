@@ -13,3 +13,9 @@
 #AssetMapRetuTableDynamic {
     margin-top: -12px;
 }
+.Date-SearchColumn {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-right: .5rem !important;
+}

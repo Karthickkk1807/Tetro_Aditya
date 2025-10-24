@@ -1,15 +1,14 @@
 ﻿$(document).ready(function () {
 
-    const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+    // Array of months
+    const months = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
 
+    // Month navigation (existing code)
     $('#decrement-month-btn2').click(function () {
         let currentText = $('#dateDisplay2').text().trim();
         let [currentMonth, currentYear] = currentText.split(" ");
         let monthIndex = months.indexOf(currentMonth);
-
         if (monthIndex === -1) return;
 
         monthIndex--;
@@ -17,16 +16,13 @@
             monthIndex = 11;
             currentYear = parseInt(currentYear) - 1;
         }
-
-        let newMonth = months[monthIndex];
-        $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
+        $('#dateDisplay2').text(`${months[monthIndex]} ${currentYear}`);
     });
 
     $('#increment-month-btn2').click(function () {
         let currentText = $('#dateDisplay2').text().trim();
         let [currentMonth, currentYear] = currentText.split(" ");
         let monthIndex = months.indexOf(currentMonth);
-
         if (monthIndex === -1) return;
 
         monthIndex++;
@@ -34,10 +30,14 @@
             monthIndex = 0;
             currentYear = parseInt(currentYear) + 1;
         }
-
-        let newMonth = months[monthIndex];
-        $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
+        $('#dateDisplay2').text(`${months[monthIndex]} ${currentYear}`);
     });
+
+    // Toggle From–To date range
+    $('#toggleCustomDate').click(function () {
+        $('#fromtodateCol').slideToggle(); // smoothly show/hide
+    });
+
 
     const qrData = [
         {

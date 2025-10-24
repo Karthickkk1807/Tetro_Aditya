@@ -18,46 +18,13 @@ $(document).ready(function () {
     let currentYear = currentDate.getFullYear();
 
     let displayedDate = new Date(currentYear, currentMonth);
-    updateMonthDisplay(displayedDate);
-    $('#increment-month-btn2').hide();
+    
 
-    $('#decrement-month-btn2').click(function () {
-        displayedDate.setMonth(displayedDate.getMonth() - 1);
-        updateMonthDisplay(displayedDate);
-        $('#increment-month-btn2').show();
-        $('#tableFilter').val('');
-
-        var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Inventory/GetTransfer", { TransferId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), FranchiseId: parseInt(FranchiseMappingId) }, GetTransferSuccess, null);
+    
+    $('#toggleCustomDate').click(function () {
+        $('#fromtodateCol').slideToggle(); // smoothly show/hide
     });
-
-    $('#increment-month-btn2').click(function () {
-        displayedDate.setMonth(displayedDate.getMonth() + 1);
-        updateMonthDisplay(displayedDate);
-
-        var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Inventory/GetTransfer", { TransferId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), FranchiseId: parseInt(FranchiseMappingId) }, GetTransferSuccess, null);
-    });
-
-    function updateMonthDisplay(date) {
-        let monthNames = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
-        let month = monthNames[date.getMonth()];
-        let year = date.getFullYear();
-        $('#dateDisplay2').text(month + " " + year);
-
-        let now = new Date();
-        let currentMonth = now.getMonth();
-        let currentYear = now.getFullYear();
-
-        if (date.getFullYear() > currentYear || (date.getFullYear() === currentYear && date.getMonth() >= currentMonth)) {
-            $('#increment-month-btn2').hide();
-        } else {
-            $('#increment-month-btn2').show();
-        }
-    }
+   
 
     var today = new Date().toISOString().split('T')[0];
     $('#FromDate, #ToDate').attr('max', today);
@@ -69,10 +36,6 @@ $(document).ready(function () {
             Common.ajaxCall("GET", "/Inventory/GetTransfer", { TransferId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString(), FranchiseId: parseInt(FranchiseMappingId) }, GetTransferSuccess, null);
         }
     });
-    $('#toggleCustomDate').click(function () {
-        $('#fromtodateCol').slideToggle(); // smoothly show/hide
-    });
-
 
     $('#BranchContent,#ToBranchContent').hide();
     $('#toggleIconBranch').removeClass('fa-chevron-up').addClass('fa-chevron-down');
@@ -100,9 +63,9 @@ $(document).ready(function () {
         $('#tableFilter').val('');
     });
 
-    var fnData = Common.getDateFilter('dateDisplay2');
-    Common.ajaxCall("GET", "/Inventory/GetTransfer", { TransferId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), FranchiseId: parseInt(FranchiseMappingId) }, GetTransferSuccess, null);
-
+    //var fnData = Common.getDateFilter('dateDisplay2');
+    //Common.ajaxCall("GET", "/Inventory/GetTransfer", { TransferId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), FranchiseId: parseInt(FranchiseMappingId) }, GetTransferSuccess, null);
+    GetTransferSuccess();
     Common.bindDropDownParent('TransferType', 'FormRightSideHeader', 'TransferType');
     Common.bindDropDownParent('FromAddressId', 'FormVendor', 'Plant');
     Common.bindDropDownParent('ToAddressId', 'FormShipping', 'Plant');
@@ -320,12 +283,12 @@ $(document).ready(function () {
             $('#TransferDate').val(formattedDate);
 
             /*if (EditTransferId == 0) {*/
-                var EditDataId = { ModuleName: "Transfer", ModuleId: EditTransferId, type: parseInt(thisval) };
+            var EditDataId = { ModuleName: "Transfer", ModuleId: EditTransferId, type: parseInt(thisval) };
 
-                Common.ajaxCall("GET", "/Inventory/GetTransferStatusDetails", EditDataId, function (response) {
-                    StatusSuccess(response);
-                    $('#TransferStatusId').val(1).trigger('change');
-                }, null);
+            Common.ajaxCall("GET", "/Inventory/GetTransferStatusDetails", EditDataId, function (response) {
+                StatusSuccess(response);
+                $('#TransferStatusId').val(1).trigger('change');
+            }, null);
             //}
         }
         else if (thisval === "2" || thisval === "3") {
@@ -885,12 +848,46 @@ function ajaxPromise(method, url, data) {
         Common.ajaxCall(method, url, data, resolve, reject);
     });
 }
+function GetTransferSuccess() {
+    // ✅ Hardcoded mock API response
+    const response = {
+        status: true,
+        data: JSON.stringify([
+            [
+                {
+                    "This Month": 1,
+                    "Total Request": 0,
+                    "Total OutWard": 0,
+                    "Total InWard": 0
+                }
+            ],
+            [
+                {
+                    "TransferId": 1,
+                    "TransferNo": "TRANS_112",
+                    "TransferDate": "04-10-2025",
+                    "TransferType": "Request",
+                    "FromPlant": "Unit1_Palladam",
+                    "ToPlant": "HO_Coimbatore",
+                    "NoOfProducts": 3,
+                    "Status": "Goods Inwarded",
+                    "Status_Color": "#6f42c1"
+                }
+            ]
+        ])
+    };
 
-function GetTransferSuccess(response) {
+    // ✅ Access rights for actions
+    const access = {
+        update: true,
+        delete: true
+    };
+
     if (response.status) {
         var data = JSON.parse(response.data);
-        var CounterBox = Object.keys(data[0][0]);
 
+        // ✅ Counter binding
+        var CounterBox = Object.keys(data[0][0]);
         $("#CounterTextBox1").text(CounterBox[0]);
         $("#CounterTextBox2").text(CounterBox[1]);
         $("#CounterTextBox3").text(CounterBox[2]);
@@ -901,18 +898,56 @@ function GetTransferSuccess(response) {
         $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
         $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
+        // ✅ Reset table container
         $('#TransferMainTableDynamic').empty();
-
         $('#TransferMainTableDynamic').html(`
             <div class="table-responsive">
                 <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="TransferTable"></table>
             </div>
         `);
 
-        var columns = Common.bindColumn(data[1], ['TransferId', 'Status_Color']);
+        // ✅ Define DataTable columns
+        var columns = [
+            { data: "TransferNo", title: "Transfer No" },
+            { data: "TransferDate", title: "Transfer Date" },
+            { data: "TransferType", title: "Transfer Type" },
+            { data: "FromPlant", title: "From Plant" },
+            { data: "ToPlant", title: "To Plant" },
+            { data: "NoOfProducts", title: "No Of Products" },
+            { data: "Status", title: "Status" }
+        ];
+
+        // ✅ Use your existing reusable table binder
         Common.bindTable('TransferTable', data[1], columns, -1, 'TransferId', '360px', true, access);
     }
 }
+//function GetTransferSuccess(response) {
+//    if (response.status) {
+//        var data = JSON.parse(response.data);
+//        var CounterBox = Object.keys(data[0][0]);
+
+//        $("#CounterTextBox1").text(CounterBox[0]);
+//        $("#CounterTextBox2").text(CounterBox[1]);
+//        $("#CounterTextBox3").text(CounterBox[2]);
+//        $("#CounterTextBox4").text(CounterBox[3]);
+
+//        $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
+//        $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
+//        $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
+//        $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
+
+//        $('#TransferMainTableDynamic').empty();
+
+//        $('#TransferMainTableDynamic').html(`
+//            <div class="table-responsive">
+//                <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="TransferTable"></table>
+//            </div>
+//        `);
+
+//        var columns = Common.bindColumn(data[1], ['TransferId', 'Status_Color']);
+//        Common.bindTable('TransferTable', data[1], columns, -1, 'TransferId', '360px', true, access);
+//    }
+//}
 
 async function GetTransferNotNullSuccess(response) {
     if (response.status) {
