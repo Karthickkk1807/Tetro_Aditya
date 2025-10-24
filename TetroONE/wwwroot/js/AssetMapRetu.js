@@ -39,6 +39,9 @@ $(document).ready(function () {
         let newMonth = months[monthIndex];
         $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
     });
+    $('#toggleCustomDate').click(function () {
+        $('#fromtodateCol').slideToggle(); // smoothly show/hide
+    });
 
     const assetMapRetuData = [
         {
@@ -148,7 +151,7 @@ $(document).ready(function () {
             $('#HideBulkInsertDiv').show();
             $('.AssetNoMappingDiv').hide();
             $('.HallDiv').hide();
-            $('.DepartmentDiv').hide();
+           // $('.DepartmentDiv').hide();
             $('.HideNoofWorkDeskDiv').hide();
             $('.DynamicButtonDiv').hide();
             $('#MainDynamicAssetMapping').empty();
@@ -191,21 +194,21 @@ $(document).ready(function () {
             $('.AssetNoMappingDiv').show();
             $('.HideNoofWorkDeskDiv').hide();
             $('.HallDiv').hide();
-            $('.DepartmentDiv').hide();
+           // $('.DepartmentDiv').hide();
 
         } else if ($thisval != null && $thisval == 1 && $thisval != "") {
             $('.FirstThMapping').show();
             $('.AssetNoMappingDiv').hide();
             $('.HideNoofWorkDeskDiv').show()
             $('.HallDiv').show();
-            $('.DepartmentDiv').show();
+            //$('.DepartmentDiv').show();
         }
         else {
             $('.FirstThMapping').show();
             $('.AssetNoMappingDiv').hide();
             $('.HideNoofWorkDeskDiv').hide();
             $('.HallDiv').hide();
-            $('.DepartmentDiv').hide();
+            //$('.DepartmentDiv').hide();
         }
     });
 
@@ -280,12 +283,12 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('change', '#DepartmentMapping', function () {
+    $(document).on('change', '#HallMapping', function () {
         var $this = $(this).val();
-        var $HallMapping = $('#HallMapping').val();
+       
         var $BranchMapping = $('#BranchMapping').val();
 
-        if ($this !== "" && $HallMapping !== "" && $BranchMapping !== "") {
+        if ($this !== "" && $BranchMapping !== "") {
             $('.HidingDropDown').show();
             $('#MainDynamicAssetMapping').empty();
             $('#NoofWorkDesk').val("");
@@ -293,14 +296,21 @@ $(document).ready(function () {
 
             const data = [
                 [
-                    { DepartmentDeskMappingId: 101, DeskNo: "WD-001" },
-                    { DepartmentDeskMappingId: 102, DeskNo: "WD-002" },
-                    { DepartmentDeskMappingId: 103, DeskNo: "WD-003" },
-                    { DepartmentDeskMappingId: 104, DeskNo: "WD-004" }
+                    { DepartmentDeskMappingId: 101, DepartmentName: "Production" },
+                    { DepartmentDeskMappingId: 102, DepartmentName: "Dyeing" },
+                    { DepartmentDeskMappingId: 103, DepartmentName: "Washing" },
+                    { DepartmentDeskMappingId: 104, DepartmentName: "Finishing" },
+                    { DepartmentDeskMappingId: 105, DepartmentName: "Quality Control" },
+                    { DepartmentDeskMappingId: 106, DepartmentName: "Maintenance" },
+                    { DepartmentDeskMappingId: 107, DepartmentName: "Packing" },
+                    { DepartmentDeskMappingId: 108, DepartmentName: "Stores" },
+                    { DepartmentDeskMappingId: 109, DepartmentName: "Lab & Testing" },
+                    { DepartmentDeskMappingId: 110, DepartmentName: "Admin" }
                 ]
             ];
 
-            if (data[0] && data[0].length > 0 && data[0][0].DeskNo != null) {
+
+            if (data[0] && data[0].length > 0 && data[0][0].DepartmentName != null) {
                 let numberAssetMapping = 0;
 
                 $.each(data[0], function (index, value) {
@@ -313,7 +323,12 @@ $(document).ready(function () {
                         { AssetId: 1, AssetNo: "AST-001" },
                         { AssetId: 2, AssetNo: "AST-002" },
                         { AssetId: 3, AssetNo: "AST-003" },
-                        { AssetId: 4, AssetNo: "AST-004" }
+                        { AssetId: 4, AssetNo: "AST-004" },
+                        { AssetId: 5, AssetNo: "AST-005" },
+                        { AssetId: 6, AssetNo: "AST-006" },
+                        { AssetId: 7, AssetNo: "AST-007" },
+                        { AssetId: 8, AssetNo: "AST-008" },
+                        { AssetId: 9, AssetNo: "AST-009" }
                     ]];
 
                     if (AssetNoAsset && AssetNoAsset[0].length > 0) {
@@ -326,9 +341,9 @@ $(document).ready(function () {
                     <tr class="DynamicAssetMapping">
                         <td>
                             <label class="d-none AssetMappingId"></label>
-                            <label class="d-none WorkDeskId">${value.DepartmentDeskMappingId}</label>
-                            <input type="text" id="WorkDeskNo${numberAssetMapping}" name="WorkDeskNo${numberAssetMapping}" 
-                                class="form-control WorkDeskNoMapping" value="${value.DeskNo}" placeholder="WorkDeskNo" disabled required>
+                            <label class="d-none DepartmentId">${value.DepartmentDeskMappingId}</label>
+                            <input type="text" id="DepartmentName${numberAssetMapping}" name="WorkDeskNo${numberAssetMapping}" 
+                                class="form-control WorkDeskNoMapping" value="${value.DepartmentName}" placeholder="WorkDeskNo" disabled required>
                         </td>
                         <td>
                             <select class="form-control AssetNoAsset" id="AssetNo${numberAssetMapping}" name="AssetNo${numberAssetMapping}" required>
@@ -402,7 +417,12 @@ $(document).ready(function () {
             { AssetId: 1, AssetNo: "AST-001" },
             { AssetId: 2, AssetNo: "AST-002" },
             { AssetId: 3, AssetNo: "AST-003" },
-            { AssetId: 4, AssetNo: "AST-004" }
+            { AssetId: 4, AssetNo: "AST-004" },
+            { AssetId: 5, AssetNo: "AST-005" },
+            { AssetId: 6, AssetNo: "AST-006" },
+            { AssetId: 7, AssetNo: "AST-007" },
+            { AssetId: 8, AssetNo: "AST-008" },
+            { AssetId: 9, AssetNo: "AST-009" }
         ]];
 
         let AssetNoAssetSelectOptions = "";
@@ -528,7 +548,7 @@ $(document).ready(function () {
             $('#TypeReturn').val('1').trigger('change');
             $('#ReturnHall').val('11').trigger('change');
             $('#ReturnDepartment').val('14').trigger('change');
-            $('#ReturnWorkDeskNo').val('107').trigger('change');
+            //$('#ReturnWorkDeskNo').val('107').trigger('change');
         }
     });
 
@@ -554,12 +574,12 @@ $(document).ready(function () {
 
         if ($thisVal != null && $thisVal == 2 && $thisVal != "") {
             $('#HiddingDivReturnHall').hide();
-            $('.HiddingDivReturnDepartment').hide();
+           $('.HiddingDivReturnDepartment').hide();
             $('.AssetNoReturnDiv').show();
         }
         else if ($thisVal != null && $thisVal == 1 && $thisVal != "") {
             $('#HiddingDivReturnHall').show();
-            $('.HiddingDivReturnDepartment').show();
+           $('.HiddingDivReturnDepartment').show();
             $('.AssetNoReturnDiv').hide();
         }
         else {
@@ -594,7 +614,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('change', '#ReturnWorkDeskNo', function () {
+    $(document).on('change', '#ReturnDepartment', function () {
         const data = [[
             {
                 AssetId: 1,
@@ -775,37 +795,72 @@ function bindAssetReturnRows(dataRetunAsset) {
     }
 }
 
-
 const AssetNoAssetMapRetu = [[
     {
         AssetId: 1,
         AssetNo: "AST-0001",
-        AssetName: "Office Desk",
-        Category: "Furniture",
-        SubCategory: "Work Desk"
+        AssetName: "Jet Dyeing Machine",
+        Category: "Machinery",
+        SubCategory: "Dyeing Equipment"
     },
     {
         AssetId: 2,
         AssetNo: "AST-0002",
-        AssetName: "Ergonomic Chair",
-        Category: "Furniture",
-        SubCategory: "Chair"
+        AssetName: "Hydro Extractor",
+        Category: "Machinery",
+        SubCategory: "Drying Equipment"
     },
     {
         AssetId: 3,
         AssetNo: "AST-0003",
-        AssetName: "Desktop Computer",
-        Category: "Electronics",
-        SubCategory: "Computer"
+        AssetName: "Stenter Machine",
+        Category: "Machinery",
+        SubCategory: "Finishing Equipment"
     },
     {
         AssetId: 4,
         AssetNo: "AST-0004",
-        AssetName: "Monitor",
-        Category: "Electronics",
-        SubCategory: "Display"
+        AssetName: "Soft Flow Machine",
+        Category: "Machinery",
+        SubCategory: "Dyeing Equipment"
+    },
+    {
+        AssetId: 5,
+        AssetNo: "AST-0005",
+        AssetName: "Color Mixing Tank",
+        Category: "Utility",
+        SubCategory: "Chemical Preparation"
+    },
+    {
+        AssetId: 6,
+        AssetNo: "AST-0006",
+        AssetName: "Air Compressor",
+        Category: "Utility",
+        SubCategory: "Power Supply"
+    },
+    {
+        AssetId: 7,
+        AssetNo: "AST-0007",
+        AssetName: "Boiler Unit",
+        Category: "Utility",
+        SubCategory: "Steam Generation"
+    },
+    {
+        AssetId: 8,
+        AssetNo: "AST-0008",
+        AssetName: "Fabric Inspection Machine",
+        Category: "Quality Control",
+        SubCategory: "Inspection Equipment"
+    },
+    {
+        AssetId: 9,
+        AssetNo: "AST-0009",
+        AssetName: "Tumble Dryer",
+        Category: "Machinery",
+        SubCategory: "Drying Equipment"
     }
 ]];
+
 
 function DynamicToAsset() {
     let numberAssetMapping = Math.random().toString(36).substring(2);

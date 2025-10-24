@@ -1,0 +1,190 @@
+﻿.table-bordered thead th {
+    border-bottom-width: 1px;
+}
+#reader {
+    /*  width: 260px; */
+    margin: 0 auto;
+    border-radius: 0px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.quickbillbtn-outline {
+    color: #1c3c5c;
+    background-color: #A3C1E0;
+    /* background-image: linear-gradient(to right, #c4c2ff, #7c78f7); */
+    background-repeat: no-repeat;
+    border-color: #5b7d9e;
+    font-size: 12px !important;
+    font-weight: 700;
+}
+#assetList {
+    margin-top: 16px;
+}
+
+#reader > video {
+    width: 304px !important;
+}
+
+.assetRow {
+    display: flex;
+    /* justify-content: space-between; */
+    padding: 1px 2px;
+    /*  background: #fff; */
+    margin-bottom: 8px;
+    /* border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05); */
+    font-size: 11px;
+}
+
+.badge {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.deskBtn {
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+
+#dynamicProduction .row > .col-2 {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+#dynamicProduction .row > .col-1 {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+#scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: red;
+    animation: scanMove 2s linear infinite;
+    z-index: 10;
+}
+
+/* 🔽 Scan line moves down then back up */
+@keyframes scanMove {
+    0% {
+        top: 0;
+    }
+
+    50% {
+        top: 95%;
+    }
+
+    100% {
+        top: 0;
+    }
+}
+
+#RgbCol .table td {
+    padding: .55rem;
+}
+
+#ManageStockTable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    height: 330px !important;
+    margin-top: 0px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+#RgbCol {
+    white-space: nowrap;
+    width: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.productionTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper {
+    max-height: 224px;
+    overflow-y: auto;
+    display: block;
+}
+
+.productionTable thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #a3c1df;
+}
+
+table th {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.Managetable table > thead > tr > th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.Managetable table > thead > tr > th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.Managetable tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.Managetable tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    /* color: white; */
+    font-weight: bold;
+    display: inline-block;
+    width: 44%;
+    text-align: center;
+}
+
+@media (max-width:460px){
+    #deskModal .modal-dialog {
+        max-width: none !important;
+    }
+}
+
+
+
+.detail-field {
+    display: table;
+    width: 100%;
+}
+
+    .detail-field .label {
+        display: table-cell;
+        width: 40%; /* adjust spacing */
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .detail-field .colon {
+        display: table-cell;
+        width: 10px; /* keeps colon aligned */
+        text-align: center;
+    }
+
+    .detail-field .value {
+        display: table-cell;
+        width: 60%;
+        padding-left: 5px;
+        white-space: nowrap;
+    }

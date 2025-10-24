@@ -818,11 +818,26 @@
                     render: function (data, type, row, meta) {
                         var editCondition = access.update;
                         var deleteCondition = access.delete;
-                        if (editCondition || deleteCondition) {
-                            return `
-                                 ${editCondition ? `<i class="btn-edit mx-1" data-id="${row[editcolumn]}" title="Edit"><img src="/assets/commonimages/edit.svg" /></i>` : ''} 
-                                ${deleteCondition ? ` <i class="btn-delete alert_delete mx-1"  data-id="${row[editcolumn]}" title="Delete"><img src="/assets/commonimages/delete.svg" /></i></div>` : ''}`;
+                        let html = "";
+                        if (tableid === "Audittable") {
+                            html += `<i class="btn-report mx-1 fas fa-file-alt text-primary" 
+            data-id="${row[editcolumn]}" 
+            title="Report" 
+            style="cursor:pointer; font-size:16px;">
+        </i>`;
                         }
+                        if (editCondition) {
+                            html += `<i class="btn-edit mx-1" data-id="${row[editcolumn]}" title="Edit">
+                            <img src="/assets/commonimages/edit.svg" />
+                         </i>`;
+                        }
+                        if (deleteCondition) {
+                            html += `<i class="btn-delete alert_delete mx-1" data-id="${row[editcolumn]}" title="Delete">
+                            <img src="/assets/commonimages/delete.svg" />
+                         </i>`;
+                        }
+
+                        return html;
                     }
                 }
             )

@@ -1,6 +1,6 @@
 ﻿var BranchMappingId = 0;
 var assetId = 0;
-var titleForHeaderProductTab = "";
+
 var tagValue = "";
 var bulkInsertData = [];
 var BulkDynamic = false;
@@ -335,43 +335,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('click', '.navbar-tab', function () {
-
-        titleForHeaderProductTab = $(this).text().trim();
-        $('.navbar-tab').removeClass('active');
-        $('#tableFilter').val('');
-
-        $('#BulkInsertErrorText').text('');
-        $('#BulkUploadDuplicateValueError').hide();
-
-        $(this).each(function () {
-            if ($(this).text().trim() === titleForHeaderProductTab) {
-                $(this).addClass('active');
-            }
-        });
-        if (titleForHeaderProductTab == "IT Assets") {
-            $('#AssetDynamic').empty('');
-            var html = `<div class="col-sm-12 p-0">
-                        <div class="table-responsive">
-                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AssetTable"></table>
-                        </div>
-                     </div>`;
-            $('#AssetDynamic').append(html);
-            //Common.ajaxCall("GET", "/Inventory/GetAsset", { BranchId: parseInt(BranchMappingId), AssetTypeId: parseInt(1), AssetId: null }, GetAssetSuccess, null);
-            GetAssetSuccess();
-        }
-        else if (titleForHeaderProductTab == "Non-IT Assets") {
-            $('#AssetDynamic').empty('');
-            var html = `<div class="col-sm-12 p-0">
-                        <div class="table-responsive">
-                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AssetTable"></table>
-                        </div>
-                     </div>`;
-            $('#AssetDynamic').append(html);
-            //Common.ajaxCall("GET", "/Inventory/GetAsset", { BranchId: parseInt(BranchMappingId), AssetTypeId: parseInt(2), AssetId: null }, GetAssetSuccess, null);
-            GetAssetSuccess();
-        }
-    });
+    
 
     $('#InsuranceExpiryDate').on('change', function () {
         const insuranceDateStr = $(this).val();
@@ -889,7 +853,7 @@ function InsertUpdateAssetSuccess(response) {
         Common.removevalidation('FormAcquisitionInfo');
         Common.removevalidation('FormTagInfo');
         Common.removevalidation('FormLocationInfo');
-        $('.titleForHeaderProductTab').removeClass('active');
+       
         $('.this').addClass('active');
         $('#AssetDynamic').empty('');
         var html = `<div class="col-sm-12 p-0">
