@@ -80,7 +80,7 @@ $(document).ready(async function () {
         }
     });
 
-    Common.bindDropDownParent('ToFranchiseId', 'FormManageStock', 'Franchise');
+    Common.bindDropDownParent('ToFranchiseId', 'FormManageStock', 'Plant');
     Common.bindDropDownParent('StoreInchangeId', 'FormManageStock', 'StoreIncharge');
 
     var UnitDropDownData = await Common.bindDropDownSync('ProductId_ByUnitPrimary_ByUnitSecondary');
@@ -127,8 +127,8 @@ $(document).ready(async function () {
         var today = new Date().toISOString().split('T')[0];
         $("#ManageStockDate").val(today);
         //$("#ManageStockDate").attr("max", today);
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-        $('#ToFranchiseId').val(FranchiseMappingId).trigger('change');
+        //var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+        $('#ToFranchiseId').val(null).trigger('change');
         HideShowColumns();
     });
 
@@ -176,42 +176,8 @@ $(document).ready(async function () {
             var endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
             Common.ajaxCall("GET", "/Inventory/GetManageStock", { FranchiseId: FranchiseMappingId, FromDate: startDate.toISOString(), ToDate: endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(2) }, ManageStockSuccess, null);
 
-        } else if (titleForHeaderProductTab == "Transit") {
-            $('#ManageStockDynamic').empty('');
-            var html = `<div class="col-sm-12 p-0">
-                            <div class="table-responsive">
-                                <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ManageStockTable">
-                                </table>
-                            </div>
-                     </div>`;
-            $('#ManageStockDynamic').append(html);
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-
-            //var fnData = Common.getDateFilter('dateDisplay2');
-            //Common.ajaxCall("GET", "/Inventory/GetManageStock", { FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) }, ManageStockSuccess, null);
-            var startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-            var endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            Common.ajaxCall("GET", "/Inventory/GetManageStock", { FranchiseId: FranchiseMappingId, FromDate: startDate.toISOString(), ToDate: endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) }, ManageStockSuccess, null);
-
-        }
-        else if (titleForHeaderProductTab == "Others") {
-            $('#ManageStockDynamic').empty('');
-            var html = `<div class="col-sm-12 p-0">
-                            <div class="table-responsive">
-                                <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ManageStockTable">
-                                </table>
-                            </div>
-                     </div>`;
-            $('#ManageStockDynamic').append(html);
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-
-            //var fnData = Common.getDateFilter('dateDisplay2');
-            //Common.ajaxCall("GET", "/Inventory/GetManageStock", { FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) }, ManageStockSuccess, null);
-            var startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-            var endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            Common.ajaxCall("GET", "/Inventory/GetManageStock", { FranchiseId: FranchiseMappingId, FromDate: startDate.toISOString(), ToDate: endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(4) }, ManageStockSuccess, null);
-
-        }
+        } 
+        
     });
 
     $('#ManageStockClose').click(function () {
@@ -578,37 +544,9 @@ $(document).ready(async function () {
         updateProductCounts();
     });
 
-    $('#Transit-TabBtn').click(function () {
-        TextTabNameFilter = "Transit Products";
-        $('#tableForPopFilter').val('').trigger('input');
-        $('#Finished-Tab').hide();
-        $('#Transit-Tab').show();
-        $('#Others-Tab').hide();
-        $('#RawMaterials-Tab').hide();
-        $('#RawNoOfProductsDiv').hide();
-        $('#FinishedNoOfProductsDiv').hide();
-        $('#OthersNoOfProductsDiv').hide();
-        $('#TransitNoOfProductsDiv').show();
+    
 
-        HideShowColumns();
-        updateProductCounts();
-    });
-
-    $('#Others-TabBtn').click(function () {
-        TextTabNameFilter = "Others Products";
-        $('#tableForPopFilter').val('').trigger('input');
-        $('#Finished-Tab').hide();
-        $('#Transit-Tab').hide();
-        $('#Others-Tab').show();
-        $('#RawMaterials-Tab').hide();
-        $('#RawNoOfProductsDiv').hide();
-        $('#FinishedNoOfProductsDiv').hide();
-        $('#TransitNoOfProductsDiv').hide();
-        $('#OthersNoOfProductsDiv').show();
-       
-        HideShowColumns();
-        updateProductCounts();
-    });
+   
 
     $(document).on('click', '#ManageStockTable .btn-delete', async function () {
         //var dateText = $(this).closest("tr").find("td:first").text().trim();

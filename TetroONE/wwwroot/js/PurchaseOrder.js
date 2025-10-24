@@ -508,9 +508,9 @@ $(document).on('click', '#AddPurchaseOrderBtn', function () {
     $('#RequestNo').empty().append('<option value="">--Select--</option>');
 
     Common.bindDropDown('Vendor', 'Vendor');
-    bindDropDownPO('AlternativeCompanyAddress', 'UserFranchiseMapping', function () {
+    bindDropDownPO('AlternativeCompanyAddress', 'Plant', function () {
         var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-        $('#AlternativeCompanyAddress').val(FranchiseMappingId).trigger('change');
+        $('#AlternativeCompanyAddress').val(null).trigger('change');
     });
 
     var EditDataId = { ModuleId: null, ModuleName: null };

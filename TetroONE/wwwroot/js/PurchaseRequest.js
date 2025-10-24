@@ -46,11 +46,11 @@ $(document).ready(function () {
     initializePage(FranchiseMappingId);
 
     Common.bindDropDown('Vendor', 'Vendor');
-    Common.bindDropDown('AlternativeCompanyAddress', 'Franchise');
+    //Common.bindDropDown('AlternativeCompanyAddress', 'Franchise');
+    //Common.bindDropDown('BillFrom', 'FranchiseBillFrom');
 
-    Common.bindDropDown('BillFrom', 'FranchiseBillFrom');
-
-
+    Common.bindDropDown('AlternativeCompanyAddress', 'Plant');
+    Common.bindDropDown('BillFrom', 'Plant');
     $('#Vendor,#AlternativeCompanyAddress').each(function () {
         $(this).select2({
             dropdownParent: $(this).parent()
@@ -255,14 +255,14 @@ $(document).on('click', '#AddPurchaseRequestBtn', function () {
 
     var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
     if (FranchiseMappingId != 0) {
-        $('#AlternativeCompanyAddress').val(FranchiseMappingId).trigger('change').prop('disabled', false);
+        $('#AlternativeCompanyAddress').val(null).trigger('change').prop('disabled', false);
     } else {
         $('#AlternativeCompanyAddress').prop('disabled', false).val($('#AlternativeCompanyAddress option:eq(1)').val()).trigger('change');
 
     }
      
     $('#BillFromAddress').val('');
-    $('#BillFrom').val(FranchiseMappingId).trigger('change');
+    $('#BillFrom').val(null).trigger('change');
     $('#PurchaseRequestNumber').prop('disabled', true);
     selectedProductIdsList = [];
     $('#ViewBankLable').hide();

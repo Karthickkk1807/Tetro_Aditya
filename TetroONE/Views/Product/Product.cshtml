@@ -366,13 +366,39 @@
             <div id="collapse6" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
                 <div id="Styleenterydetalis" class="card-body">
                     <form id="FormQVMappingData">
-                        <div class="d-flex justify-content-end dynamicButton" id="dynamicButtonDiv">
+                        @* <div class="d-flex justify-content-end dynamicButton" id="dynamicButtonDiv">
                             <button id="" class="btn AddStockBtn" type="button" onclick="DynamicRowOfQCMapping(this)">
                                 <i class="fas fa-plus" id="AddButton"></i>
                             </button>
                         </div>
                         <div class="mt-1" id="BindQVMappingData" style="max-height: 240px; overflow-y: auto;overflow-x: hidden;">
+                        </div> *@
+                        <div class="row">
+                            <!-- QC 1 -->
+                            <div class="col-md-6 col-sm-12 d-flex align-items-center mb-2">
+                                <input type="checkbox" id="QC1" name="QCMapping" value="QC1" class="mr-2" />
+                                <label for="QC1" class="mb-0">QC Checking</label>
+                            </div>
+
+                            <!-- QC 2 -->
+                            <div class="col-md-6 col-sm-12 d-flex align-items-center mb-2">
+                                <input type="checkbox" id="QC2" name="QCMapping" value="QC2" class="mr-2" />
+                                <label for="QC2" class="mb-0">QC Approval</label>
+                            </div>
+
+                            <!-- QC 3 -->
+                            <div class="col-md-6 col-sm-12 d-flex align-items-center mb-2">
+                                <input type="checkbox" id="QC3" name="QCMapping" value="QC3" class="mr-2" />
+                                <label for="QC3" class="mb-0">Final QC</label>
+                            </div>
+
+                            <!-- QC 4 -->
+                            <div class="col-md-6 col-sm-12 d-flex align-items-center mb-2">
+                                <input type="checkbox" id="QC4" name="QCMapping" value="QC4" class="mr-2" />
+                                <label for="QC4" class="mb-0">Packing QC</label>
+                            </div>
                         </div>
+
                     </form>
                 </div>
             </div>
