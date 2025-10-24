@@ -302,8 +302,7 @@
     $('#JobDynamic').append(html);
     bindTable('jobTable', jobData, columns, 9, 'JobName', '350px', true, { update: true, delete: true });
 });
-
-
+ 
 function DynamicPipeLines() {
     let numberIncr = Math.random().toString(36).substring(2);
 

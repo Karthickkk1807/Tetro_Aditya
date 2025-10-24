@@ -3,8 +3,8 @@
 namespace TetroONE.Controllers
 {
     public class QualityManagementController : Controller
-    {
-        public IActionResult IncomingQC()
+    { 
+        public IActionResult InWardQC()
         {
             return View();
         }
