@@ -859,10 +859,10 @@
                                                 @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
                                                 {
                                                     <li>
-                                                        <a asp-controller="QualityManagement" asp-action="IncomingQC">
+                                                        <a asp-controller="QualityManagement" asp-action="InWardQC">
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/quality_sidebar/incomingqc.svg" width="20" />
-                                                            </i> <span class="sub-item">Inward QC</span>
+                                                            </i> <span class="sub-item">InWard QC</span>
                                                         </a>
                                                     </li>
                                                 }
@@ -926,7 +926,7 @@
                                                 @if (access.Any(x => x.ToLower() == UserScreen.InwardOutWard.ToLower()))
                                                 {
                                                     <li>
-                                                        <a asp-controller="Productions" asp-action="InWardOutWard">
+                                                        <a asp-controller="Productions" asp-action="InWard">
                                                             <i>
                                                                 <img src="~/assets/sidebaricons/outward.svg" width="20" />
                                                             </i> <span class="sub-item">InWard</span>

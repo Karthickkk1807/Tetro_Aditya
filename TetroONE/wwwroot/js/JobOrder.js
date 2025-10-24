@@ -89,8 +89,7 @@
         $("#JobOrderCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
     });
-
-
+     
     $('.accordion-header').on('click', function () {
         var $offcanvas = $(this).closest('.offcanvas-container');
         var $accordion = $(this).closest('.accordion');

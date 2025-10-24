@@ -1,9 +1,10 @@
 ﻿@{
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.InwardOutWard, Context.Session);
 }
+
 <style>
 
-    #OutWardTable {
+    #InWardTable {
         width: 100% !important;
     }
 
@@ -15,7 +16,7 @@
     }
 
 </style>
-
+ 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
         <div class="row m-t-25">
@@ -99,7 +100,6 @@
     </div>
 </div>
 
-
 <div id="filter-Column" class="Date-SearchColumn">
     <div class="month-piker d-flex">
         <div class="dropdown">
@@ -156,7 +156,7 @@
                         if (access.Create)
                         {
                             <span class="pop">
-                                <a id="AddOutWard" title="Add OutWard">
+                                <a id="AddInWard" title="Add InWard">
                                     <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
                                 </a>
                             </span>
@@ -167,14 +167,16 @@
         </div>
     </div>
 </div>
- 
+
+
 <div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="OutWardTable"></table>
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="InWardTable"></table>
 </div>
- 
-<div id="OutWardCanvas" class="offcanvas-container">
+
+
+<div id="InWardCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
-        <h2 id="OutWardHeader">Add New OutWard</h2>
+        <h2 id="InWardHeader">Add New InWard</h2>
         <span id="CloseCanvas" class="close"
               style="font-size:30px;cursor:pointer;color:white;"
               title="Close">&times;</span>
@@ -188,7 +190,7 @@
                             <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
-                                        OutWard Info
+                                        InWard Info
                                     </strong>
                                     <i class="fas fa-angle-down text-white"></i>
                                 </p>
@@ -197,85 +199,77 @@
                     </div>
                     <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
                         <div id="Styleenterydetalis" class="card-body">
-                            <form id="FormOutWard">
+                            <form id="FormInWard">
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Outward No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: OUTW/NO/001" id="OutwardNo" name="OutwardNo" maxlength="50" required disabled />
+                                            <label>Inward No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: IN/NO/001" id="InwardNo" name="InwardNo" maxlength="50" required disabled />
                                         </div>
-                                    </div> 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Outward Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" id="OutwardDate" name="OutwardDate" required />
-                                        </div>
-                                    </div> 
+                                    </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Transaction Type<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">Sales</option>
-                                                <option value="2">Job Work Return</option>
-                                                <option value="3">Internal-Unit Transfer</option>
+                                                <option value="1">Purchase</option>
+                                                <option value="2">Job Work</option>
+                                                <option value="3">Internal Transfer</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>SalesOrder/JobOrder No<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="SalesOrderJobOrderNo" name="SalesOrderJobOrderNo" required>
+                                            <label>Vendor Name<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="VendorName" name="VendorName" required disabled>
+                                                <option value="">--Select--</option>
+                                                <option value="1">VAITHEESH</option>
+                                                <option value="2">RPKS & CO</option>
+                                                <option value="3">VENKATRAMAN</option>
+                                                <option value="4">JAYAM SCIENTIFIC	</option>
+                                                <option value="5">RM CHEMICAL</option>
+                                                <option value="6">AISWARYA WATERS</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Vendor Inv No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: VEN/NO/001" id="VendorInvNo" name="VendorInvNo" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>PurchaseOrder No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PurchaseOrderNo" name="PurchaseOrderNo" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">PO/NO/001</option>
+                                                <option value="2">PO/NO/002</option>
+                                                <option value="3">PO/NO/003</option>
+                                                <option value="4">PO/NO/004</option>
+                                                <option value="4">PO/NO/005</option>
+                                                <option value="4">PO/NO/006</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>SaleOrder No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required>
                                                 <option value="">--Select--</option>
                                                 <option value="1">SALE/NO/001</option>
                                                 <option value="2">SALE/NO/002</option>
                                                 <option value="3">SALE/NO/003</option>
                                                 <option value="4">SALE/NO/004</option>
-                                                <option value="4">SALE/NO/005</option>
-                                                <option value="4">SALE/NO/006</option>
-                                            </select>
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>DeliveryChallan No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: DC/NO/001" id="DeliveryChallanNo" name="DeliveryChallanNo" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Invoice No<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="InvoiceNo" name="InvoiceNo" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">INV/NO/001</option>
-                                                <option value="2">INV/NO/002</option>
-                                                <option value="3">INV/NO/003</option>
-                                                <option value="4">INV/NO/004</option>
-                                                <option value="4">INV/NO/005</option>
-                                                <option value="4">INV/NO/006</option>
+                                                <option value="5">SALE/NO/005</option>
+                                                <option value="5">SALE/NO/006</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>GatePass NO<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: GP-2025-00123" id="GatePassNO" name="GatePassNO" required />
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>DispatchFrom Location<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ReceivedBy" name="ReceivedBy">
-                                                <option value="">--Select--</option>
-                                                <option value="1">Warehouse</option>
-                                                <option value="2">Store</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Destination<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: Aditya Factory" id="Destination" name="Destination" required />
+                                            <label>Vendor Inv No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: VEN/NO/001" id="VendorInvNo" name="VendorInvNo" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -286,26 +280,14 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Driver Name<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: Arun" id="DriverName" name="DriverName" required />
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Driver Mobile No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 9876543210" id="DriverMobileNo" minlength="10" maxlength="10" name="DriverMobileNo" oninput="Common.allowOnlyNumberLength(this,10)" required />
+                                            <label>Received Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" placeholder="Ex: 23.9" id="ReceivedDate" name="ReceivedDate" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Outward Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" id="OutwardDate" name="OutwardDate" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Issued By<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="IssuedBy" name="IssuedBy">
+                                            <label>Received By<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ReceivedBy" name="ReceivedBy">
                                                 <option value="">--Select--</option>
                                                 <option value="1">RAGHURAMAN GOBINATHAN</option>
                                                 <option value="2">KARTHIKEYANI</option>
@@ -318,15 +300,13 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Approved By<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ApprovedBy" name="ApprovedBy">
+                                            <label>Store<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="StoreId" name="StoreId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
-                                                <option value="2">KARTHIKEYANI</option>
-                                                <option value="3">MITHRAN</option>
-                                                <option value="6">DEXY</option>
-                                                <option value="34">INDRASENAN</option>
-                                                <option value="109">KAVINESH RAJASEKAR</option>
+                                                <option value="2">Aditya Factory</option>
+                                                <option value="5">Adhithiya Fabric Dyeing</option>
+                                                <option value="6">Adhithiya Printing & Embellishment</option>
+                                                <option value="7">Adhithiya Quality Control & Testing</option>
                                             </select>
                                         </div>
                                     </div>
@@ -350,7 +330,7 @@
                             <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
-                                        Finished Fabric & Packaging Info
+                                        Fabric Info
                                     </strong>
                                     <i class="fas fa-angle-down text-white"></i>
                                 </p>
@@ -360,22 +340,60 @@
                     <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
                         <div id="Styleenterydetalis" class="card-body">
                             <form id="FormProcessing">
-                                <div class="row">
+                                <div class="row"> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Fabric Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="FabricType" name="FabricType" required>
+                                            <label>FabricCode<span id="Asterisk">*</span></label> 
+                                            <select class="form-control" id="FabricCodeId" name="FabricCodeId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">Woven</option>
-                                                <option value="2">Knitted</option>
-                                                <option value="3">Terry</option>
+                                                <option value="1">C100</option>
+                                                <option value="2">PC65/35</option>
+                                                <option value="3">R100</option>
+                                                <option value="4">N100</option>
+                                                <option value="5">P100</option>
                                             </select>
                                         </div>
                                     </div> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Shade Color<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: SkyBlue" id="ShadeColor" name="ShadeColor" required />
+                                            <label>Width<span id="Asterisk">*</span></label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                                <select class="form-control" id="WidthUnitId" name="WidthUnitId" required style="width: 38%;">
+                                                    <option value="">--Select--</option>
+                                                    <option value="1">Meter</option>
+                                                    <option value="2">Kg</option>
+                                                    <option value="3">Roll</option>
+                                                    <option value="4">MMeter</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>GSM<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Weight<span id="Asterisk">*</span></label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Weight" name="Weight" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                                <select class="form-control" id="WeightUnitId" name="WeightUnitId" required style="width: 38%;">
+                                                    <option value="">--Select--</option>
+                                                    <option value="1">Meter</option>
+                                                    <option value="2">Kg</option>
+                                                    <option value="3">Roll</option>
+                                                    <option value="4">MMeter</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Batch Reference<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: Aditya Factory" id="BatchReference" name="BatchReference" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -383,30 +401,7 @@
                                             <label>Lot/Batch No<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: LOT/BAT/001" id="LotBatchNo" name="LotBatchNo" maxlength="50" required disabled />
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Process Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProcessType" name="ProcessType" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Dyed</option>
-                                                <option value="2">Printed</option>
-                                                <option value="3">Finished</option>
-                                                <option value="4">Coated</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Finish Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="FinishType" name="FinishType" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Soft Finish</option>
-                                                <option value="2">Mercerized</option>
-                                                <option value="3">Sanforized</option> 
-                                            </select>
-                                        </div>
-                                    </div>
+                                    </div> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Roll Count<span id="Asterisk">*</span></label>
@@ -415,10 +410,10 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Quantity Dispatched<span id="Asterisk">*</span></label>
+                                            <label>Quantity Received<span id="Asterisk">*</span></label>
                                             <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                                <input type="text" class="form-control" placeholder="Ex: 40 M" id="QuantityDispatched" name="QuantityDispatched" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                                <select class="form-control" id="QuantityDispatchedUnitId" name="QuantityDispatchedUnitId" required style="width: 38%;">
+                                                <input type="text" class="form-control" placeholder="Ex: 40 M" id="QuantityReceived" name="QuantityReceived" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                                <select class="form-control" id="QuantityReceivedUnitId" name="QuantityReceivedUnitId" required style="width: 38%;">
                                                     <option value="">--Select--</option>
                                                     <option value="1">Meter</option>
                                                     <option value="2">Kg</option>
@@ -430,103 +425,19 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>QC Status<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="QCStatus" name="QCStatus" required>
+                                            <label>Inspection Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="InspectionStatusId" name="InspectionStatusId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">Approved</option>
-                                                <option value="2">Hold</option>
-                                                <option value="3">Rejected</option>
+                                                <option value="1">Pending</option>
+                                                <option value="2">Approved</option> 
+                                                <option value="3">Rejected</option> 
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Packing Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="PackingType" name="PackingType" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Bale</option>
-                                                <option value="2">Carton</option>
-                                                <option value="3">Loose</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>No Of Packages / Bales<span id="Asterisk">*</span></label>
-                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                                <input type="text" class="form-control" placeholder="Ex: 78 KG" id="NoOfPackagesBales" name="NoOfPackagesBales" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                                <select class="form-control" id="NoOfPackagesBalesUnitId" name="NoOfPackagesBalesUnitId" required style="width: 38%;">
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">Meter</option>
-                                                    <option value="2">Kg</option>
-                                                    <option value="3">Roll</option>
-                                                    <option value="4">MMeter</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Packing Slip No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: PACK/SLIP/001" id="PackingSlipNo" name="PackingSlipNo" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Packing Dimensions<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 60 × 40 × 30" id="PackingDimensions" name="PackingDimensions" maxlength="50" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Consignment Note No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: CON/NOTE/2345" id="ConsignmentNoteNo" name="ConsignmentNoteNo" required />
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Gross Weight (Kgs)<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 948 KGS" id="GrossWeight" name="GrossWeight" required />
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Net Weight (Kgs)<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 236 KGS" id="NetWeight" name="NetWeight" required />
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Width (Inch / CM)<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 765 KGS" id="WidthInch" name="WidthInch" required />
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>E-Way Bill No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 123456789013" id="EWayBillNo" name="EWayBillNo" required />
-                                        </div>
-                                    </div> 
                                     <div class="col-md-12 col-lg-12 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Remarks<span id="Asterisk">*</span></label>
                                             <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
-                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;"> 
-                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
-                                                <b>Click Here to Attach your files</b>
-                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
-                                            </label>
-                                            <div class="file-preview d-flex justify-content-center" id="preview">
-                                                <div class="attachrow">
-                                                    <div class="attachcolumn">
-                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
-                                                    </div>
-                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -534,7 +445,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
     </div>
 
@@ -542,16 +453,16 @@
         <div class="col-md-12 col-lg-12">
             <div class="form-group text-center">
                 <div class="card-action">
-                    <a class="btn btn-success m-r-20 text-white" id="SaveOutWard">Save</a>
+                    <a class="btn btn-success m-r-20 text-white" id="SaveInWard">Save</a>
                 </div>
 
             </div>
         </div>
     </div>
-</div>
+</div> 
 
 <script>
     var access = @Html.Raw(Json.Serialize(access));
 </script>
- 
-<script src="~/js/outward.js"></script>
+
+<script src="~/js/inward.js"></script>
