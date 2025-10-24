@@ -6,17 +6,17 @@
 
     #InWardQCTable {
         width: 100% !important;
+        margin-top: 12px !important;
     }
 
     .dataTables_scrollBody {
-        height: 330px !important;
+        height: 350px !important;
         margin-top: -18px !important;
         border-bottom: 1px solid #111;
         margin-bottom: 10px;
     }
 
 </style>
-
 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
@@ -33,7 +33,7 @@
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
                                     <div class="card-category" id="CounterTextBox1">Total</div>
-                                    <h4 class="card-title" id="CounterValBox1">0</h4>
+                                    <h4 class="card-title" id="CounterValBox1">28</h4>
                                 </div>
                             </div>
                         </div>
@@ -51,8 +51,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2">TotalInWard</div>
-                                    <h4 class="card-title" id="CounterValBox2">0</h4>
+                                    <div class="card-category" id="CounterTextBox2">QC Passed</div>
+                                    <h4 class="card-title" id="CounterValBox2">18</h4>
                                 </div>
                             </div>
                         </div>
@@ -70,8 +70,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3">TotalOutWard</div>
-                                    <h4 class="card-title" id="CounterValBox3">0</h4>
+                                    <div class="card-category" id="CounterTextBox3">QC Failed</div>
+                                    <h4 class="card-title" id="CounterValBox3">4</h4>
                                 </div>
                             </div>
                         </div>
@@ -89,8 +89,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox4">Refund</div>
-                                    <h4 class="card-title" id="CounterValBox4">0</h4>
+                                    <div class="card-category" id="CounterTextBox4">Yet To Approve</div>
+                                    <h4 class="card-title" id="CounterValBox4">6</h4>
                                 </div>
                             </div>
                         </div>
@@ -168,13 +168,13 @@
         </div>
     </div>
 </div>
-
-
-<div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="InWardQCTable"></table>
+ 
+<div id="MainGrid">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="InWardQCTable"></table>
+    </div>
 </div>
-
-
+ 
 <div id="InWardQCCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
         <h2 id="InWardQCHeader">Add New InWardQC</h2>
@@ -231,24 +231,33 @@
                         <input type="date" class="form-control" id="InwardDate" name="InwardDate" required disabled />
                     </div>
                 </div>
+
                 <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                     <div class="form-group">
-                        <label>Transaction Type</label>
-                        <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required disabled>
+                        <label>Transaction Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="TransactionId" name="TransactionId" required disabled>
                             <option value="">--Select--</option>
-                            <option value="1" selected>Purchase</option>
-                            <option value="2">Job Work</option>
-                            <option value="3">Internal Transfer</option>
+                            <option value="1">Purchase</option>
+                            <option value="2">Sale</option>
+                            <option value="3">Job Work</option>
+                            <option value="4">Transfer</option>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                     <div class="form-group">
-                        <label>Vendor Name</label>
-                        <select class="form-control" id="VendorName" name="VendorName" required disabled>
+                        <label id="TypeNo">Type No<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="AutoGenertedNo" name="AutoGenertedNo" required disabled>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="DivName">
+                    <div class="form-group">
+                        <label id="PersonNameLable">Name<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="PersonName" name="PersonName" required disabled>
                             <option value="">--Select--</option>
                             <option value="1">VAITHEESH</option>
-                            <option value="2" selected>RPKS & CO</option>
+                            <option value="2">RPKS & CO</option>
                             <option value="3">VENKATRAMAN</option>
                             <option value="4">JAYAM SCIENTIFIC	</option>
                             <option value="5">RM CHEMICAL</option>
@@ -258,76 +267,43 @@
                 </div>
                 <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                     <div class="form-group">
-                        <label>Vendor Inv No</label>
-                        <input type="text" class="form-control" placeholder="Ex: VEN/NO/001" id="VendorInvNo" name="VendorInvNo" required disabled />
+                        <label>Bill No<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: BILL/NO/001" id="BillNo" name="BillNo" required disabled />
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                     <div class="form-group">
-                        <label>PurchaseOrder No</label>
-                        <select class="form-control" id="PurchaseOrderNo" name="PurchaseOrderNo" required disabled>
+                        <label>Inward Quantity<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 40 M" id="InwardQuantity" name="InwardQuantity" required disabled oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Fabric Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="FabricType" name="FabricType" required disabled>
                             <option value="">--Select--</option>
-                            <option value="1">PO/NO/001</option>
-                            <option value="2">PO/NO/002</option>
-                            <option value="3">PO/NO/003</option>
-                            <option value="4">PO/NO/004</option>
-                            <option value="4">PO/NO/005</option>
-                            <option value="4">PO/NO/006</option>
+                            <option value="1">Woven</option>
+                            <option value="2">Knitted</option>
+                            <option value="3">Terry</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                     <div class="form-group">
-                        <label>SaleOrder No<span id="Asterisk">*</span></label>
-                        <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required>
-                            <option value="">--Select--</option>
-                            <option value="1">SALE/NO/001</option>
-                            <option value="2">SALE/NO/002</option>
-                            <option value="3">SALE/NO/003</option>
-                            <option value="4">SALE/NO/004</option>
-                            <option value="5">SALE/NO/005</option>
-                            <option value="5">SALE/NO/006</option>
-                        </select>
+                        <label>Dia<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="EX: 152 CM" id="Dia" name="Dia" />
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Vendor Inv No<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control" placeholder="Ex: VEN/NO/001" id="VendorInvNo" name="VendorInvNo" required />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>FabricCode<span id="Asterisk">*</span></label>
-                        <select class="form-control" id="FabricCodeId" name="FabricCodeId" required>
-                            <option value="">--Select--</option>
-                            <option value="1">C100</option>
-                            <option value="2">PC65/35</option>
-                            <option value="3">R100</option>
-                            <option value="4">N100</option>
-                            <option value="5">P100</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Width<span id="Asterisk">*</span></label>
-                        <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                            <select class="form-control" id="WidthUnitId" name="WidthUnitId" required style="width: 38%;">
-                                <option value="">--Select--</option>
-                                <option value="1">Meter</option>
-                                <option value="2">Kg</option>
-                                <option value="3">Roll</option>
-                                <option value="4">MMeter</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                     <div class="form-group">
                         <label>GSM<span id="Asterisk">*</span></label>
                         <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Roll Count<span id="Asterisk">*</span></label>
+                        <input type="number" class="form-control" placeholder="Ex: 100" id="RollCount" name="RollCount" required />
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -345,50 +321,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Batch Reference<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control" placeholder="Ex: Aditya Factory" id="BatchReference" name="BatchReference" required />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Lot/Batch No<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control" placeholder="Ex: LOT/BAT/001" id="LotBatchNo" name="LotBatchNo" maxlength="50" required disabled />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Roll Count<span id="Asterisk">*</span></label>
-                        <input type="number" class="form-control" placeholder="Ex: 100" id="RollCount" name="RollCount" required />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Quantity Received<span id="Asterisk">*</span></label>
-                        <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                            <input type="text" class="form-control" placeholder="Ex: 40 M" id="QuantityReceived" name="QuantityReceived" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                            <select class="form-control" id="QuantityReceivedUnitId" name="QuantityReceivedUnitId" required style="width: 38%;">
-                                <option value="">--Select--</option>
-                                <option value="1">Meter</option>
-                                <option value="2">Kg</option>
-                                <option value="3">Roll</option>
-                                <option value="4">MMeter</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Fabric Type<span id="Asterisk">*</span></label>
-                        <select class="form-control" id="FabricType" name="FabricType" required>
-                            <option value="">--Select--</option>
-                            <option value="1">Woven</option>
-                            <option value="2">Knitted</option>
-                            <option value="3">Terry</option> 
-                        </select>
-                    </div>
-                </div>
                 <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                     <div class="form-group">
                         <label>Visual Defects<span id="Asterisk">*</span></label>
@@ -397,30 +329,8 @@
                 </div>
                 <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                     <div class="form-group">
-                        <label>Shrinkage %</label>
+                        <label>Shrinkage %<span id="Asterisk">*</span></label>
                         <input type="text" class="form-control" placeholder="Ex: 2.4%" id="ShrinkagePercent" name="ShrinkagePercent" />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>GSM Check</label>
-                        <input type="text" class="form-control" placeholder="Ex: 180 GSM" id="GSMCheck" name="GSMCheck" />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Width Check</label>
-                        <input type="text" class="form-control" placeholder="EX: 152 CM" id="WidthCheck" name="WidthCheck" />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Shade Check<span id="Asterisk">*</span></label>
-                        <select class="form-control" id="ShadeCheckType" name="ShadeCheckType" required>
-                            <option value="">--Select--</option>
-                            <option value="1">Pass</option>
-                            <option value="2">Fail</option>
-                        </select>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -435,14 +345,24 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Shade<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ShadeType" name="ShadeType" required>
+                            <option value="">--Select--</option>
+                            <option value="1">Pass</option>
+                            <option value="2">Fail</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                     <div class="form-group">
                         <label>QC Status<span id="Asterisk">*</span></label>
                         <select class="form-control" id="QCStatus" name="QCStatus" required>
                             <option value="">--Select--</option>
                             <option value="1">Approved</option>
                             <option value="2">Hold</option>
-                            <option value="3">Rejected</option> 
+                            <option value="3">Rejected</option>
                         </select>
                     </div>
                 </div>
@@ -450,6 +370,22 @@
                     <div class="form-group">
                         <label>QC Remarks<span id="Asterisk">*</span></label>
                         <textarea class="form-control" id="QCRemarks" name="QCRemarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                    </div>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                    <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                        <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                            <b>Click Here to Attach your files</b>
+                            <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                        </label>
+                        <div class="file-preview d-flex justify-content-center" id="preview">
+                            <div class="attachrow">
+                                <div class="attachcolumn">
+                                    <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                </div>
+                                <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

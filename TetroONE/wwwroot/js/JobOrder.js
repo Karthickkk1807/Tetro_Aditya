@@ -1,13 +1,5 @@
 ﻿$(document).ready(function () {
-
-    $('#ProcessTypeId').select2({
-        dropdownParent: $('#FormFabric'),
-        width: '100%',
-        placeholder: '--Select ProcessType--'
-    }).on('select2:open', function () {
-        $('.select2-container').css('z-index', 1100);
-    }).trigger('change');
-
+     
     const months = [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -348,8 +340,7 @@ function CanvasOpenFirstShowingJobOrder() {
     $('#JobOrderCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
     $('html, body').animate({
         scrollTop: $('#JobOrderCanvas').offset().top
-    }, 'fast');
-    $('#ProcessTypeId').val(['']).trigger('change');
+    }, 'fast'); 
 }
 
 function FilledData() {
@@ -363,16 +354,14 @@ function FilledData() {
     $('#ExpDeliveryDate').val('2025-12-30');
     $('#ModeOfDispatchId').val('2');
     $('#OrderStatusId').val('3');
-    $('#FabricTypeId').val('2');
-    $('#ProcessTypeId').val(['2', '3']).trigger('change');
+    $('#FabricTypeId').val('2'); 
     $('#NoofRolls').val('85');
     $('#GSM').val('');
     $('#Weight').val('45 KG');
     $('#Width').val('67 MM');
     $('#Colour').val('#FFFFFF');
     $('#LotNo').val('SKJ123');
-    $('#BatchNo').val('15907');
-    $('#ProcessTypeId').val('2');
+    $('#BatchNo').val('15907'); 
     $('#ChemicalTreatment').prop('checked', true);
     $('#WeightUnitId').val('3');
     $('#WidthUnitId').val('4');

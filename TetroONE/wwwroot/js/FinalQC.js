@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     MainGridData();
+
     const months = [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -39,96 +40,38 @@
         $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
     });
 
-    $(document).on('change', '#InwardNo', function () {
-        var $thisVal = $(this).val();
-         
-        var inwardMap = {
-            1: { TransactionId: '1', AutoGenertedNo: '1', PersonName: '1', InwardDate: '2025-10-24' },
-            2: { TransactionId: '2', AutoGenertedNo: '2', PersonName: '2', InwardDate: '2025-10-23' },
-            3: { TransactionId: '3', AutoGenertedNo: '4', PersonName: '3', InwardDate: '2025-10-15' },
-            4: { TransactionId: '4', AutoGenertedNo: '5', PersonName: '4', InwardDate: '2025-10-18' },
-            5: { TransactionId: '2', AutoGenertedNo: '5', PersonName: '6', InwardDate: '2025-10-12' },
-            6: { TransactionId: '2', AutoGenertedNo: '5', PersonName: '6', InwardDate: '2025-10-12' }
-        };
-         
-        var data = inwardMap[$thisVal] || { TransactionId: '', AutoGenertedNo: '', PersonName: '', InwardDate: '' };
-         
-        $('#TransactionId').val(data.TransactionId).trigger('change');
-        $('#AutoGenertedNo').val(data.AutoGenertedNo).trigger('change');
-        $('#PersonName').val(data.PersonName).trigger('change');
-        $('#InwardDate').val(data.InwardDate);
-    });
-
-
-    $(document).on('change', '#TransactionId', function () {
-        var $thisVal = $(this).val();
-        var $autoNo = $('#AutoGenertedNo');
-        var $personNameLable = $('#PersonNameLable');
-        var $typeNo = $('#TypeNo');
-
-        $autoNo.empty().append($('<option>', { value: '', text: '--Select--' }));
-        $personNameLable.text('Name');
-        $typeNo.text('Type No');
-
-        $thisVal == 4 || $thisVal == '' ? $('#DivName').hide() : $('#DivName').show();
-
-        if (!$thisVal) return;
-
-        var dataMap = {
-            1: { prefix: 'PO/NO/', label: 'Vendor Name', typelable: 'PurchaseOrder No' },
-            2: { prefix: 'SALE/NO/', label: 'Client Name', typelable: 'SaleOrder No' },
-            3: { prefix: 'JOB/NO/', label: 'Client Name', typelable: 'JobOrder No' },
-            default: { prefix: 'TRANS/NO/', label: 'Client Name', typelable: 'Transfer No' }
-        };
-
-        var data = dataMap[$thisVal] || dataMap.default;
-
-        for (var i = 1; i <= 6; i++) {
-            $autoNo.append($('<option>', {
-                value: i,
-                text: data.prefix + ('00' + i).slice(-3)
-            }));
-        }
-
-        $personNameLable.text(data.label);
-        $typeNo.text(data.typelable);
-    });
-
-    $(document).on('click', '#AddInWardQC', function () {
+    $(document).on('click', '#AddFinalQC', function () {
         var windowWidth = $(window).width();
         if (windowWidth <= 600) {
-            $("#InWardQCCanvas").css("width", "95%");
+            $("#FinalQCCanvas").css("width", "95%");
         } else if (windowWidth <= 992) {
-            $("#InWardQCCanvas").css("width", "50%");
+            $("#FinalQCCanvas").css("width", "50%");
         } else {
-            $("#InWardQCCanvas").css("width", "39%");
+            $("#FinalQCCanvas").css("width", "39%");
         }
         $('#fadeinpage').addClass('fadeoverlay');
-        CanvasOpenFirstShowingJobOrder();
-        $("#FormProcessing")[0].reset();
-        $('#AutoGenertedNo').empty().append($('<option>', { value: '', text: '--Select--', }));
-        $('#DivName').hide(); 
-        $('#InWardQCHeader').text('InWard QC Details');
-        $('#SaveInWardQC').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
+        CanvasOpenFirstShowingFinalQC();
+        $('#FinalQCHeader').text('FinalQC Details');
+        $('#SaveFinalQC').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
     });
 
     $(document).on('click', '.btn-edit', function () {
         var windowWidth = $(window).width();
         if (windowWidth <= 600) {
-            $("#InWardQCCanvas").css("width", "95%");
+            $("#FinalQCCanvas").css("width", "95%");
         } else if (windowWidth <= 992) {
-            $("#InWardQCCanvas").css("width", "50%");
+            $("#FinalQCCanvas").css("width", "50%");
         } else {
-            $("#InWardQCCanvas").css("width", "39%");
+            $("#FinalQCCanvas").css("width", "39%");
         }
         $('#fadeinpage').addClass('fadeoverlay');
-        CanvasOpenFirstShowingJobOrder();
-        $('#InWardQCHeader').text('Edit InWard QC Details');
-        $('#SaveInWardQC').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
+        CanvasOpenFirstShowingFinalQC();
+        $('#FinalQCHeader').text('Edit FinalQC Details');
+        $('#SaveFinalQC').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
     });
 
     $(document).on('click', '#CloseCanvas', function () {
-        $("#InWardQCCanvas").css("width", "0%");
+        $("#FinalQCCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
     });
 
@@ -144,118 +87,117 @@
 
 });
 
-function CanvasOpenFirstShowingJobOrder() {
-    $('#InWardQCCanvas').addClass('show');
+function CanvasOpenFirstShowingFinalQC() {
+    $('#FinalQCCanvas').addClass('show');
     $('#collapse1').collapse('show');
     $('#collapse2, #collapse3, #collapse4, #collapse5').collapse('hide');
-    $('#InWardQCCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
+    $('#FinalQCCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
     $('html, body').animate({
-        scrollTop: $('#InWardQCCanvas').offset().top
-    }, 'fast'); 
+        scrollTop: $('#FinalQCCanvas').offset().top
+    }, 'fast');
 }
- 
+
 function MainGridData() {
 
-    const InwardQCData = [
+    const FinalQCData = [
         {
             Date: "02 Oct 2025",
-            InwardQCNo: "INW/QC/001",
-            InwardQuantity: 150,
-            InspectorName: "KAVINESH RAJASEKAR",
-            NoOfQCPassed: 140,
-            NoOfQCFailed: 10,
+            FinalQCNo: "FIN/QC/001",
+            ProcessType: "Dyed",
+            JobOrderNo: "JOB/NO/001",
+            InspectedBy: "KAVINESH RAJASEKAR",
+            ApprovedBy: "INDRASENAN",
             Status: "Approved",
             Status_Color: "#28a745"
         },
         {
             Date: "05 Oct 2025",
-            InwardQCNo: "INW/QC/002",
-            InwardQuantity: 180,
-            InspectorName: "INDRASENAN",
-            NoOfQCPassed: 175,
-            NoOfQCFailed: 5,
-            Status: "Draft",
+            FinalQCNo: "FIN/QC/002",
+            ProcessType: "Printed",
+            JobOrderNo: "JOB/NO/002",
+            InspectedBy: "DEXY",
+            ApprovedBy: "RAGHURAMAN",
+            Status: "Hold",
             Status_Color: "#ffc107"
         },
         {
             Date: "08 Oct 2025",
-            InwardQCNo: "INW/QC/003",
-            InwardQuantity: 160,
-            InspectorName: "DEXY",
-            NoOfQCPassed: 155,
-            NoOfQCFailed: 5,
+            FinalQCNo: "FIN/QC/003",
+            ProcessType: "Finished",
+            JobOrderNo: "JOB/NO/003",
+            InspectedBy: "MITHRAN",
+            ApprovedBy: "KARTHIKEYANI",
             Status: "Approved",
             Status_Color: "#28a745"
         },
         {
             Date: "11 Oct 2025",
-            InwardQCNo: "INW/QC/004",
-            InwardQuantity: 190,
-            InspectorName: "MITHRAN",
-            NoOfQCPassed: 160,
-            NoOfQCFailed: 30,
-            Status: "Authorized",
-            Status_Color: "#0000ff"
+            FinalQCNo: "FIN/QC/004",
+            ProcessType: "Coated",
+            JobOrderNo: "JOB/NO/004",
+            InspectedBy: "INDRASENAN",
+            ApprovedBy: "DEXY",
+            Status: "Rejected",
+            Status_Color: "#dc3545"
         },
         {
-            Date: "15 Oct 2025",
-            InwardQCNo: "INW/QC/005",
-            InwardQuantity: 210,
-            InspectorName: "KARTHIKEYANI",
-            NoOfQCPassed: 205,
-            NoOfQCFailed: 5,
+            Date: "14 Oct 2025",
+            FinalQCNo: "FIN/QC/005",
+            ProcessType: "Dyed",
+            JobOrderNo: "JOB/NO/005",
+            InspectedBy: "KARTHIKEYANI",
+            ApprovedBy: "MITHRAN",
+            Status: "Hold",
+            Status_Color: "#ffc107"
+        },
+        {
+            Date: "18 Oct 2025",
+            FinalQCNo: "FIN/QC/006",
+            ProcessType: "Printed",
+            JobOrderNo: "JOB/NO/006",
+            InspectedBy: "RAGHURAMAN",
+            ApprovedBy: "INDRASENAN",
             Status: "Approved",
             Status_Color: "#28a745"
         },
         {
-            Date: "18 Oct 2025",
-            InwardQCNo: "INW/QC/006",
-            InwardQuantity: 175,
-            InspectorName: "RAGHURAMAN",
-            NoOfQCPassed: 170,
-            NoOfQCFailed: 5,
-            Status: "Draft",
-            Status_Color: "#ffc107"
-        },
-        {
             Date: "21 Oct 2025",
-            InwardQCNo: "INW/QC/007",
-            InwardQuantity: 160,
-            InspectorName: "DEXY",
-            NoOfQCPassed: 120,
-            NoOfQCFailed: 40,
-            Status: "Authorized",
-            Status_Color: "#0000ff"
+            FinalQCNo: "FIN/QC/007",
+            ProcessType: "Finished",
+            JobOrderNo: "JOB/NO/007",
+            InspectedBy: "DEXY",
+            ApprovedBy: "KAVINESH RAJASEKAR",
+            Status: "Rejected",
+            Status_Color: "#dc3545"
         },
         {
             Date: "23 Oct 2025",
-            InwardQCNo: "INW/QC/008",
-            InwardQuantity: 200,
-            InspectorName: "INDRASENAN",
-            NoOfQCPassed: 198,
-            NoOfQCFailed: 2,
+            FinalQCNo: "FIN/QC/008",
+            ProcessType: "Coated",
+            JobOrderNo: "JOB/NO/008",
+            InspectedBy: "INDRASENAN",
+            ApprovedBy: "RAGHURAMAN",
             Status: "Approved",
             Status_Color: "#28a745"
         }
     ];
-
-    const inwardQCColumns = [
+     
+    const finalQCColumns = [
         { data: 'Date', name: 'Date', title: 'Date' },
-        { data: 'InwardQCNo', name: 'InwardQCNo', title: 'InwardQC No' },
-        { data: 'InwardQuantity', name: 'InwardQuantity', title: 'Inward Quantity' },
-        { data: 'InspectorName', name: 'InspectorName', title: 'Inspector By' },
-        { data: 'NoOfQCPassed', name: 'NoOfQCPassed', title: 'No Of QC Passed' },
-        { data: 'NoOfQCFailed', name: 'NoOfQCFailed', title: 'No Of QC Failed' },
+        { data: 'FinalQCNo', name: 'FinalQCNo', title: 'Final QC No' },
+        { data: 'ProcessType', name: 'ProcessType', title: 'Process Type' },
+        { data: 'JobOrderNo', name: 'JobOrderNo', title: 'JobOrder No' },
+        { data: 'InspectedBy', name: 'InspectedBy', title: 'Inspected By' },
+        { data: 'ApprovedBy', name: 'ApprovedBy', title: 'Approved By' },
         { data: 'Status', name: 'Status', title: 'Status' }
     ];
-
-
+     
     $('#MainGrid').empty('');
-    var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="InWardQCTable">
+    var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="FinalQCTable">
                 </table>
             `;
     $('#MainGrid').append(html);
-    bindTable('InWardQCTable', InwardQCData, inwardQCColumns, 7, 'Date', '350px', true, { update: true, delete: true });
+    bindTable('FinalQCTable', FinalQCData, finalQCColumns, 7, 'Date', '350px', true, { update: true, delete: true });
 }
 
 function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
