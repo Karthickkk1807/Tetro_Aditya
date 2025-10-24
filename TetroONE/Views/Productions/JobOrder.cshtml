@@ -1,5 +1,19 @@
-﻿
-<link href="~/css/saleorder.css" rel="stylesheet" />
+﻿ 
+<style>
+    .DynrowRemove {
+        background: none;
+        color: red;
+        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 12px;
+        border: 1px solid red;
+        width: 30px;
+        border-radius: 50%;
+        height: 30px;
+        padding: 4px;
+        margin-top: 18px;
+    }
+</style>
 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
@@ -400,35 +414,11 @@
                                         <fieldset class="expensefild1">
                                             <legend class="w-auto">
                                                 Chemical List
-                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical(this)" style="position: absolute; top: 0px; right: 26px;">
+                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical(this)" style="position: absolute; top: 0px; right: 40px;">
                                                     <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
                                                 </button>
                                             </legend>
-                                            <div class="row" id="ChemicalListRow">
-                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                                                    <div class="form-group">
-                                                        <label>Chemical Used<span id="Asterisk">*</span></label>
-                                                        <select class="form-control" id="ChemicalUsed" name="ChemicalUsed" required style="width: 38%;">
-                                                            <option value="">--Select--</option>
-                                                            <option value="1">Sodium Sulphate</option>
-                                                            <option value="2">CO2</option>
-                                                            <option value="3">Sulphate</option>
-                                                            <option value="4">H2O</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                                                    <div class="form-group">
-                                                        <label>GPL%<span id="Asterisk">*</span></label>
-                                                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL" name="GPL" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                                                    <div class="form-group">
-                                                        <label>Qty<span id="Asterisk">*</span></label>
-                                                        <input type="text" class="form-control" placeholder="Ex: 29" id="Qty" name="Qty" />
-                                                    </div>
-                                                </div>
+                                            <div id="ChemicalListRow">
                                             </div>
                                         </fieldset>
                                     </div>
@@ -437,29 +427,11 @@
                                         <fieldset class="expensefild1">
                                             <legend class="w-auto">
                                                 Dye List
-                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowDye(this)" style="position: absolute; top: 0px; right: 26px;">
+                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowDye(this)" style="position: absolute; top: 0px; right: 40px;">
                                                     <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
                                                 </button>
                                             </legend>
-                                            <div class="row" id="DyeListRow">
-                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                                                    <div class="form-group">
-                                                        <label>Dyes Used<span id="Asterisk">*</span></label>
-                                                        <input type="text" class="form-control" placeholder="Ex: Blue H2R" id="DyesUsed" name="DyesUsed" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                                                    <div class="form-group">
-                                                        <label>Volume%<span id="Asterisk">*</span></label>
-                                                        <input type="text" class="form-control" placeholder="Ex: 15.6" id="Volume" name="Volume" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                                                    <div class="form-group">
-                                                        <label>Qty<span id="Asterisk">*</span></label>
-                                                        <input type="text" class="form-control" placeholder="Ex: 17" id="DyeQty" name="DyeQty" />
-                                                    </div>
-                                                </div>
+                                            <div id="DyeListRow">
                                             </div>
                                         </fieldset>
                                     </div>
@@ -496,118 +468,6 @@
                                         </button>
                                     </legend>
                                     <div class="row" id="BatchListRow">
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Production Start Date</label>
-                                                <input type="date" class="form-control" id="ProductionStartDate" name="ProductionStartDate" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Production End Date</label>
-                                                <input type="date" class="form-control" id="ProductionEndDate" name="ProductionEndDate" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Loading Start Date</label>
-                                                <input type="date" class="form-control" id="LoadingStartDate" name="LoadingStartDate" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Loading Start Date</label>
-                                                <input type="date" class="form-control" id="LoadingEndDate" name="LoadingEndDate" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Operator Name</label>
-                                                <select class="form-control" id="OperatorName" name="OperatorName" required>
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">RAGHURAMAN GOBINATHAN</option>
-                                                    <option value="2">KARTHIKEYANI</option>
-                                                    <option value="3">MITHRAN</option>
-                                                    <option value="6">DEXY</option>
-                                                    <option value="34">INDRASENAN</option>
-                                                    <option value="109">KAVINESH RAJASEKAR</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Supervisor Name</label>
-                                                <select class="form-control" id="SupervisorName" name="SupervisorName" required>
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">RAGHURAMAN GOBINATHAN</option>
-                                                    <option value="2">KARTHIKEYANI</option>
-                                                    <option value="3">MITHRAN</option>
-                                                    <option value="6">DEXY</option>
-                                                    <option value="34">INDRASENAN</option>
-                                                    <option value="109">KAVINESH RAJASEKAR</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Shift</label>
-                                                <select class="form-control" id="Shift" name="Shift" required>
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">Morning Shift</option>
-                                                    <option value="2">Afternoon Shift</option>
-                                                    <option value="3">Evening Shift</option>
-                                                    <option value="4">Night Shift</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Output Lot No</label>
-                                                <input type="text" class="form-control" id="OutputLotNo" name="OutputLotNo" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Output Quantity</label>
-                                                <input type="text" class="form-control" id="OutputQuantity" name="OutputQuantity" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Rework Quantity</label>
-                                                <input type="text" class="form-control" id="ReworkQuantity" name="ReworkQuantity" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Wastage Quantity</label>
-                                                <input type="text" class="form-control" id="WastageQuantity" name="WastageQuantity" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Energy Consumption</label>
-                                                <input type="text" class="form-control" id="EnergyConsumption" name="EnergyConsumption" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Water Consumption</label>
-                                                <input type="text" class="form-control" id="WaterConsumption" name="WaterConsumption" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Chemical Cost</label>
-                                                <input type="text" class="form-control" id="ChemicalCost" name="ChemicalCost" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                            <div class="form-group">
-                                                <label>Labor Hours</label>
-                                                <input type="datetime" class="form-control" id="LaborHours" name="LaborHours" />
-                                            </div>
-                                        </div>
                                     </div>
                                 </fieldset>
                             </form>

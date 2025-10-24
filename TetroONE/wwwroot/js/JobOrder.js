@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-     
+
     $('#ProcessTypeId').select2({
         dropdownParent: $('#FormFabric'),
         width: '100%',
@@ -62,8 +62,8 @@
         $('#ChemicalListRow').empty();
         $('#DyeListRow').empty();
         $('#BatchListRow').empty();
-        duplicateRowDye();
         duplicateRowChemical();
+        duplicateRowDye();
         duplicateRowBatch();
         $('#JobOrderHeader').text('JobOrder Details');
         $('#SaveJobOrder').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
@@ -389,35 +389,51 @@ function UnFilledData() {
 
 function duplicateRowChemical() {
     let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.Clientcontact').length
-    var htmlRow = `
-            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Chemical Used<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: Sodium Sulphate" id="ChemicalUsed${numberIncr}" name="ChemicalUsed${numberIncr}" />
+    var rowadd = $('.RowOfChemical').length
+    if (rowadd < 3) {
+        var htmlRow = `
+            <div class="row RowOfChemical">
+                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Chemical Used<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ChemicalUsed${numberIncr}" name="ChemicalUsed${numberIncr}" required>
+                            <option value="">--Select--</option>
+                            <option value="1">Sodium Sulphate</option>
+                            <option value="2">CO2</option>
+                            <option value="3">Sulphate</option>
+                            <option value="4">H2O</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>GPL%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" />
+                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>GPL%<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 29" id="Qty${numberIncr}" name="Qty${numberIncr}" />
+                <div class="col-md-3 col-lg-2 col-sm-6 col-6 pr-0">
+                    <div class="form-group">
+                        <label>Qty<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" />
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-1 col-sm-3 col-3 thiswillshow">
+                    <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
+                        <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
+                    </div>
                 </div>
             </div>
            `;
-
+    }
     $('#ChemicalListRow').append(htmlRow);
-} 
+}
 
 function duplicateRowDye() {
     let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.Clientcontact').length
-    var htmlRow = `
+    var rowadd = $('.RowOfDye').length
+    if (rowadd < 3) {
+        var htmlRow = `
+        <div class="row RowOfDye">
             <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                 <div class="form-group">
                     <label>Dyes Used<span id="Asterisk">*</span></label>
@@ -429,17 +445,23 @@ function duplicateRowDye() {
                     <label>Volume%<span id="Asterisk">*</span></label>
                     <input type="text" class="form-control" placeholder="Ex: 15.6" id="Volume${numberIncr}" name="Volume${numberIncr} " />
                 </div>
-            </div>
-            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+            </div> 
+            <div class="col-md-3 col-lg-2 col-sm-6 col-6 pr-0">
                 <div class="form-group">
                     <label>Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 17" id="DyeQty${numberIncr}" name="DyeQty${numberIncr}" />
+                   <input type="text" class="form-control" placeholder="Ex: 17" id="DyeQty${numberIncr}" name="DyeQty${numberIncr}" />
                 </div>
             </div>
+            <div class="col-lg-2 col-md-1 col-sm-3 col-3 thiswillshow">
+                <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfDyeRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
            `;
-
+    }
     $('#DyeListRow').append(htmlRow);
-} 
+}
 
 function duplicateRowBatch() {
     let numberIncr = Math.random().toString(36).substring(2);
@@ -539,3 +561,17 @@ function duplicateRowBatch() {
 
     $('#BatchListRow').append(htmlRow);
 } 
+
+$(document).on('click', '.RowOfChemicalRemove', function () {
+    var totalRows = $('#ChemicalListRow .RowOfChemical').length; 
+    if (totalRows > 1) {
+        $(this).closest('.RowOfChemical').remove();
+    }
+});
+
+$(document).on('click', '.RowOfDyeRemove', function () {
+    var totalRows = $('#DyeListRow .RowOfDye').length;
+    if (totalRows > 1) {
+        $(this).closest('.RowOfDye').remove();
+    }
+});
