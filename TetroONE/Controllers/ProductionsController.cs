@@ -32,7 +32,7 @@ namespace TetroONE.Controllers
             return View();
         }
         [Route("InWard")]
-        public IActionResult InWardOutWard()
+        public IActionResult InWard()
         {
             return View();
         }
