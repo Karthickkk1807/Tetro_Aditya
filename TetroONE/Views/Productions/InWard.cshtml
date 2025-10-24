@@ -6,17 +6,18 @@
 
     #InWardTable {
         width: 100% !important;
+        margin-top: 14px !important;
     }
 
     .dataTables_scrollBody {
-        height: 330px !important;
+        height: 350px !important;
         margin-top: -18px !important;
         border-bottom: 1px solid #111;
         margin-bottom: 10px;
     }
 
 </style>
- 
+
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
         <div class="row m-t-25">
@@ -32,7 +33,7 @@
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
                                     <div class="card-category" id="CounterTextBox1">Total</div>
-                                    <h4 class="card-title" id="CounterValBox1">0</h4>
+                                    <h4 class="card-title" id="CounterValBox1">5 / 10</h4>
                                 </div>
                             </div>
                         </div>
@@ -50,8 +51,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2">TotalInWard</div>
-                                    <h4 class="card-title" id="CounterValBox2">0</h4>
+                                    <div class="card-category" id="CounterTextBox2">Purchase</div>
+                                    <h4 class="card-title" id="CounterValBox2">5 / 10,000 KGS</h4>
                                 </div>
                             </div>
                         </div>
@@ -69,8 +70,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3">TotalOutWard</div>
-                                    <h4 class="card-title" id="CounterValBox3">0</h4>
+                                    <div class="card-category" id="CounterTextBox3">Sale</div>
+                                    <h4 class="card-title" id="CounterValBox3">10 / 10,000 KGS</h4>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +90,7 @@
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
                                     <div class="card-category" id="CounterTextBox4">Refund</div>
-                                    <h4 class="card-title" id="CounterValBox4">0</h4>
+                                    <h4 class="card-title" id="CounterValBox4">3 / 2,000 KGS</h4>
                                 </div>
                             </div>
                         </div>
@@ -168,9 +169,10 @@
     </div>
 </div>
 
-
-<div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="InWardTable"></table>
+<div id="MainGrid">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="InWardTable"></table>
+    </div>
 </div>
 
 
@@ -209,19 +211,40 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
+                                            <label>Inward Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="InwardDate" name="InwardDate" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
                                             <label>Transaction Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required>
+                                            <select class="form-control" id="TransactionId" name="TransactionId" required>
                                                 <option value="">--Select--</option>
                                                 <option value="1">Purchase</option>
-                                                <option value="2">Job Work</option>
-                                                <option value="3">Internal Transfer</option>
+                                                <option value="2">Sale</option>
+                                                <option value="3">Job Work</option>
+                                                <option value="4">Transfer</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Vendor Name<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="VendorName" name="VendorName" required disabled>
+                                            <label id="TypeNo">Type No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="AutoGenertedNo" name="AutoGenertedNo" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">PO/NO/001</option>
+                                                <option value="2">PO/NO/002</option>
+                                                <option value="3">PO/NO/003</option>
+                                                <option value="4">PO/NO/004</option>
+                                                <option value="4">PO/NO/005</option>
+                                                <option value="4">PO/NO/006</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="DivName">
+                                        <div class="form-group">
+                                            <label id="PersonNameLable">Name<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PersonName" name="PersonName" required disabled>
                                                 <option value="">--Select--</option>
                                                 <option value="1">VAITHEESH</option>
                                                 <option value="2">RPKS & CO</option>
@@ -234,25 +257,11 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Vendor Inv No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: VEN/NO/001" id="VendorInvNo" name="VendorInvNo" required />
+                                            <label>Bill No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: BILL/NO/001" id="BillNo" name="BillNo" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>PurchaseOrder No<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="PurchaseOrderNo" name="PurchaseOrderNo" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">PO/NO/001</option>
-                                                <option value="2">PO/NO/002</option>
-                                                <option value="3">PO/NO/003</option>
-                                                <option value="4">PO/NO/004</option>
-                                                <option value="4">PO/NO/005</option>
-                                                <option value="4">PO/NO/006</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    @* <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>SaleOrder No<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required>
@@ -265,23 +274,17 @@
                                                 <option value="5">SALE/NO/006</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    </div> *@
+                                    @* <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Vendor Inv No<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: VEN/NO/001" id="VendorInvNo" name="VendorInvNo" required />
                                         </div>
-                                    </div>
+                                    </div> *@
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Vehicle No<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: TN36KS8055" id="VehicleNO" name="VehicleNO" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Received Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" placeholder="Ex: 23.9" id="ReceivedDate" name="ReceivedDate" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -300,13 +303,31 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Store<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="StoreId" name="StoreId" required>
+                                            <label>Received Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" placeholder="Ex: 23.9" id="ReceivedDate" name="ReceivedDate" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Inspection Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="InspectionStatusId" name="InspectionStatusId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="2">Aditya Factory</option>
-                                                <option value="5">Adhithiya Fabric Dyeing</option>
-                                                <option value="6">Adhithiya Printing & Embellishment</option>
-                                                <option value="7">Adhithiya Quality Control & Testing</option>
+                                                <option value="1">Pending</option>
+                                                <option value="2">Approved</option>
+                                                <option value="3">Rejected</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>InWard Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="InWardStatusId" name="InWardStatusId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Draft</option>
+                                                <option value="2">Approved</option>
+                                                <option value="3">Sent</option>
+                                                <option value="4">Accepted</option>
+                                                <option value="5">Cancelled</option>
                                             </select>
                                         </div>
                                     </div>
@@ -340,33 +361,22 @@
                     <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
                         <div id="Styleenterydetalis" class="card-body">
                             <form id="FormProcessing">
-                                <div class="row"> 
+                                <div class="row">
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>FabricCode<span id="Asterisk">*</span></label> 
-                                            <select class="form-control" id="FabricCodeId" name="FabricCodeId" required>
+                                            <label>Fabric Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="FabricType" name="FabricType" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">C100</option>
-                                                <option value="2">PC65/35</option>
-                                                <option value="3">R100</option>
-                                                <option value="4">N100</option>
-                                                <option value="5">P100</option>
+                                                <option value="1">Woven</option>
+                                                <option value="2">Knitted</option>
+                                                <option value="3">Terry</option>
                                             </select>
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Width<span id="Asterisk">*</span></label>
-                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                                <select class="form-control" id="WidthUnitId" name="WidthUnitId" required style="width: 38%;">
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">Meter</option>
-                                                    <option value="2">Kg</option>
-                                                    <option value="3">Roll</option>
-                                                    <option value="4">MMeter</option>
-                                                </select>
-                                            </div>
+                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -375,7 +385,7 @@
                                             <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    @*<div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Weight<span id="Asterisk">*</span></label>
                                             <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
@@ -390,7 +400,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Batch Reference<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: Aditya Factory" id="BatchReference" name="BatchReference" required />
@@ -401,13 +411,13 @@
                                             <label>Lot/Batch No<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: LOT/BAT/001" id="LotBatchNo" name="LotBatchNo" maxlength="50" required disabled />
                                         </div>
-                                    </div> 
+                                    </div>  
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Roll Count<span id="Asterisk">*</span></label>
                                             <input type="number" class="form-control" placeholder="Ex: 100" id="RollCount" name="RollCount" required />
                                         </div>
-                                    </div>
+                                    </div>*@
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Quantity Received<span id="Asterisk">*</span></label>
@@ -423,21 +433,26 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Inspection Status<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="InspectionStatusId" name="InspectionStatusId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Pending</option>
-                                                <option value="2">Approved</option> 
-                                                <option value="3">Rejected</option> 
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div class="col-md-12 col-lg-12 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Remarks<span id="Asterisk">*</span></label>
                                             <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                                                <b>Click Here to Attach your files</b>
+                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                                            </label>
+                                            <div class="file-preview d-flex justify-content-center" id="preview">
+                                                <div class="attachrow">
+                                                    <div class="attachcolumn">
+                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                    </div>
+                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -445,7 +460,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 
@@ -459,7 +474,7 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 
 <script>
     var access = @Html.Raw(Json.Serialize(access));
