@@ -1,66 +1,188 @@
-﻿
+﻿#dynamicProduction .row > .col-2 {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+#dynamicProduction .row > .col-1 {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+#RgbCol .table td {
+    padding: .55rem;
+}
+
+#ManageStockTable, #RepairHistorytable, #MappingHistorytable {
+    width: 100% !important;
+}
+
 .dataTables_scrollBody {
-    height: 330px !important;
-    margin-top: -18px !important;
+    /*height: 330px !important;*/
+    margin-top: 0px !important;
     border-bottom: 1px solid #111;
     margin-bottom: 10px;
 }
 
-#AssetManagementTable {
-    width: 100% !important;
+#RgbCol {
+    white-space: nowrap;
+    width: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
-table th:last-child {
-    text-align: center;
+.productionTable {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.btn-eye {
-    font-size: 18px !important;
-}
-
-#MoveableCanvas .scrolable-table-wrappe {
-    max-height: 491px;
+.table-wrapper {
+    max-height: 207px;
     overflow-y: auto;
     display: block;
 }
 
-#MoveableCanvas #MoveableAssetManagementDynamicTable {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+.productionTable thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #a3c1df;
 }
 
-    #MoveableCanvas #MoveableAssetManagementDynamicTable thead th {
-        position: sticky;
-        top: 0;
-        z-index: 5;
-        background: #cedeef;
-        text-align: center;
-        border: 1px solid #ccc;
-        padding: 8px;
-    }
-
-    #MoveableCanvas #MoveableAssetManagementDynamicTable tbody td {
-        border: 1px solid #ccc;
-        padding: 8px;
-        text-align: center;
-    }
-
-#MoveableCanvas .scrolable-table-wrappe::-webkit-scrollbar {
-    width: 10px;
+table th {
+    font-size: 12px;
+    font-weight: 800;
 }
 
-#MoveableCanvas .scrolable-table-wrappe::-webkit-scrollbar-thumb {
-    background-color: #7a6def;
+.Assettable table > thead > tr > th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.Assettable table > thead > tr > th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.Assettable tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.Assettable tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+
+.imageAppend {
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    /* padding: 16px;*/
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 123px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+    .imageAppend img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+    }
+
+.badge {
+    padding: 4px 10px;
     border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
 }
 
-/*.btn-eye {
+.in-service {
+    background-color: #28a745; /* Green */
+}
+
+.in-repair {
+    background-color: #ffc107; /* Amber/Yellow */
+}
+
+.needs-repair {
+    background-color: #dc3545; /* Red */
+}
+
+.out-of-service {
+    background-color: #6c757d; /* Gray */
+}
+
+#AssetTable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    /*height: 330px !important;*/
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+    max-height: unset !important;
+}
+
+.bulk-dropdown {
+    border: 1px solid #e0e2e7;
+    background: none !important;
+    color: #495057;
+    padding: 0px 10px 0px 10px !important;
+    font-size: 12px;
+    height: 38px !important;
+    margin-right: 10px;
+}
+
+#BulkAssetInsertForm .drop_box {
+    width: 300px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 3px dotted #a3a3a3;
+    border-radius: 5px;
+}
+
+#AssetBulkTable_length {
+    display: none !important;
+}
+
+.BulkHeaderText {
+    margin-bottom: 0px !important;
+    margin-top: -8px !important;
+}
+
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
     cursor: pointer;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    display: block;
+    height: 34px !important;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-    .btn-eye.animate-blink {
-        transform: scale(1.2);
-        opacity: 0.5;
-    }*/
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 32px !important;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 20px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 32px !important;
+}
+
+/*#AssetBulkTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+    max-height: 234px !important;
+}*/
+#AssetTable_length {
+    display: flex;
+    justify-content: end;
+    margin-top: 15px;
+}

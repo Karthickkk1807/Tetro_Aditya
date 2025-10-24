@@ -1,0 +1,729 @@
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.AssetManagement, Context.Session);
+}
+
+<link href="~/css/AssetManagement.css" rel="stylesheet" />
+<div class="row quick-db m-b-5">
+    <div class="col-lg-12">
+        <div class="row m-t-25">
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-green bubble-shadow-small">
+                                    <img src="~/assets/moduleusedtetroone/asset/returnicon_1.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-orange bubble-shadow-small">
+                                   <img src="~/assets/moduleusedtetroone/asset/returnicon_2.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-red bubble-shadow-small">
+                                    <img src="~/assets/moduleusedtetroone/asset/returnicon_3.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3 col-6">
+                <div class="card card-stats card-round quick-db-box">
+                    <div class="card-body ">
+                        <div class="row align-items-center">
+                            <div class="col-icon">
+                                <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
+                                    <img src="~/assets/moduleusedtetroone/asset/returnicon_4.svg" />
+                                </div>
+                            </div>
+                            <div class="col col-stats ml-3">
+                                <div class="numbers">
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="filter-Column" class="Date-SearchColumn justify-content-end">
+    <div class="row bulk-dropdownrow m-0">
+        <div class="btn-group bulk-grpdrop">
+            <button type="button" class="btn dropdown-toggle bulk-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0px 10px 0px 10px !important;">
+                <svg class="bulk-icon" width="16" height="16" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.1363 3.02051L12.1363 3.02052ZM12.3337 3.1181L20.0976 7.00006L12.3337 10.882L4.56978 7.00006L12.3337 3.1181ZM12.1363 10.9796C12.1361 10.9797 12.1361 10.9797 12.1364 10.9796ZM12.5311 10.9796C12.5313 10.9797 12.5313 10.9797 12.5311 10.9796ZM12.5311 3.02052L12.5311 3.02051ZM12.0571 1.0848C12.2399 1.05051 12.4275 1.05051 12.6103 1.0848C12.8268 1.12541 13.0198 1.22394 13.1131 1.27155C13.1227 1.27646 13.1313 1.28082 13.1387 1.28452L22.7809 6.10564C23.1197 6.27503 23.3337 6.62129 23.3337 7.00006C23.3337 7.37884 23.1197 7.7251 22.7809 7.89449L13.1387 12.7156C13.1313 12.7193 13.1227 12.7237 13.1131 12.7286C13.0198 12.7762 12.8268 12.8747 12.6103 12.9153C12.4275 12.9496 12.2399 12.9496 12.0571 12.9153C11.8407 12.8747 11.6476 12.7762 11.5543 12.7286C11.5447 12.7237 11.5361 12.7193 11.5287 12.7156L1.8865 7.89449C1.54772 7.7251 1.33372 7.37884 1.33372 7.00006C1.33372 6.62129 1.54772 6.27503 1.8865 6.10564L11.5287 1.28452C11.5361 1.28082 11.5447 1.27646 11.5543 1.27155C11.6476 1.22394 11.8407 1.12541 12.0571 1.0848ZM1.43929 11.5529C1.68628 11.0589 2.28695 10.8586 2.78093 11.1056L12.3337 15.882L21.8865 11.1056C22.3805 10.8586 22.9812 11.0589 23.2281 11.5529C23.4751 12.0468 23.2749 12.6475 22.7809 12.8945L13.1387 17.7156C13.1313 17.7193 13.1227 17.7237 13.1131 17.7286C13.0198 17.7762 12.8268 17.8747 12.6103 17.9153C12.4275 17.9496 12.2399 17.9496 12.0571 17.9153C11.8407 17.8747 11.6476 17.7762 11.5543 17.7286C11.5447 17.7237 11.5361 17.7193 11.5287 17.7156L1.8865 12.8945C1.39252 12.6475 1.1923 12.0468 1.43929 11.5529ZM12.1363 15.9796C12.1361 15.9797 12.1361 15.9797 12.1364 15.9796ZM12.5311 15.9796C12.5313 15.9797 12.5313 15.9797 12.5311 15.9796ZM1.43929 16.5529C1.68628 16.0589 2.28695 15.8586 2.78093 16.1056L12.3337 20.882L21.8865 16.1056C22.3805 15.8586 22.9812 16.0589 23.2281 16.5529C23.4751 17.0468 23.2749 17.6475 22.7809 17.8945L13.1387 22.7156C13.1313 22.7193 13.1227 22.7237 13.1131 22.7286C13.0198 22.7762 12.8268 22.8747 12.6103 22.9153C12.4275 22.9496 12.2399 22.9496 12.0571 22.9153C11.8407 22.8747 11.6476 22.7762 11.5543 22.7286C11.5447 22.7237 11.5361 22.7193 11.5287 22.7156L1.8865 17.8945C1.39252 17.6475 1.1923 17.0468 1.43929 16.5529Z" fill="#525A6A"></path>
+                </svg>
+                <b>Bulk Actions</b>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" id="DownloadSampleAssetBtn">
+                    <img src="~/assets/commonimages/exceliconbulk.png" style="width: 20px;" />
+                    Download Sample Excel
+                </a>
+                <a class="dropdown-item" id="BulkUploadBtn">
+                    <img src="~/assets/commonimages/uploadiconbulk.png" style="width: 20px;" />
+                    Bulk Upload Items
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <div class="ml-3 mr-3">
+            <label class="mb-0">
+                Show
+                <select class="customLengthDropdown custom-select custom-select-sm form-control d-inline-block ml-1"
+                        data-table="#AssetTable" style="width: 69px;">
+                    
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select> entries
+            </label>
+        </div>
+        <div class="searchbar">
+            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+            <button type="submit" class="searchbar__button">
+                <img src="~/assets/commonimages/search.svg" />
+            </button>
+        </div>
+
+        <div class="datapiker ml-2 mt-1" style="position: relative;">
+            <div class="add-imp-exp-btn">
+                <div class="exportsiconpop">
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="AddAsset" title="Add Asset">
+                                    <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul class="nav nav-tabs pl-2 mt-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab active this" id="ITAsset-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">IT Assets</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="Non-ITAsset-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Non-IT Assets</a>
+    </li>
+</ul>
+
+<div class="" id="AssetDynamic" style="margin-top:-12px;">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AssetTable"></table>
+    </div>
+</div>
+
+<div id="AssetCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="AssetHeader"></h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <div class="accordion" id="">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">
+                                Asset Info
+                            </strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapse1" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                <div id="Styleenterydetalis" class="card-body">
+                    <form id="FormAssetInfo">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Asset Id<span id="Asterisk">*</span> </label>
+                                    <input type="text" class="form-control" placeholder="EX: IGSASSET-01" id="AssetNo" name="AssetNo" required disabled maxlength="50">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Plant<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="BranchId" name="BranchId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Type<span id="Asterisk">*</span> </label>
+                                    <select class="form-control" id="AssetTypeId" name="AssetTypeId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Category<span id="Asterisk">*</span> </label>
+                                    <select class="form-control" id="AssetCategoryId" name="AssetCategoryId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>SubCategory<span id="Asterisk">*</span> </label>
+                                    <select class="form-control" id="AssetSubCategoryId" name="AssetSubCategoryId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Manufacturer<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="ManufacturerId" name="ManufacturerId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Model Number<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: Model Number" id="ModelNumber" name="ModelNumber" required oninput="Common.allowAllCharacters(this,30)">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Tag / Serial Number<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: Serial Number" id="TagSerialNumber" name="TagSerialNumber" required oninput="Common.allowAllCharacters(this,30)">
+                                </div>
+                            </div>
+                            <div class="col-lg-8 col-md-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Asset Name<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: Name" id="AssetName" name="AssetName" oninput="Common.allowAllCharacters(this,100)">
+                                    @* <input type="text" class="form-control" placeholder="Ex: Name" id="AssetName" name="AssetName" required oninput="Common.allowAllCharacters(this,20)" disabled> *@
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Status<span id="Asterisk">*</span> </label>
+                                    <select class="form-control" id="AssetStatusId" name="AssetStatusId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>License Key</label>
+                                    <input type="text" class="form-control" placeholder="Ex: W269N-WFGWX-YVC9B-4J6C9-T83GX" id="LicenseKey" name="LicenseKey" oninput="Common.allowAllCharacters(this,30)">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Maintenance Frequency</label>
+                                    <select class="form-control" id="AssetMaintenanceFrequencyId" name="AssetMaintenanceFrequencyId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Last Maintenance Date</label>
+                                    <input type="date" class="form-control" placeholder="" id="LastMaintenanceDate" name="LastMaintenanceDate">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Next Maintenance Date</label>
+                                    <input type="date" class="form-control" placeholder="" id="NextMaintenanceDate" name="NextMaintenanceDate">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Billing Type</label>
+                                    <select class="form-control" id="BillingTypeId" name="BillingTypeId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6" id="LastBilledDatediv">
+                                <div class="form-group">
+                                    <label>Last Billed Date</label>
+                                    <input type="date" class="form-control" id="LastBilledDate" name="LastBilledDate" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6" id="NextBillingDatediv">
+                                <div class="form-group">
+                                    <label>Next Billing Date</label>
+                                    <input type="date" class="form-control" id="NextBillingDate" name="NextBillingDate" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6" id="DivAssetValueHide">
+                                <div class="form-group">
+                                    <label>Asset Value</label>
+                                    <input type="text" class="form-control" placeholder="0.00" id="AssetValue" name="AssetValue" disabled>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Payment Type</label>
+                                    <select class="form-control" id="PaymentTypeId" name="PaymentTypeId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6" id="EmiColumn" style="display:none;">
+                                <div class="form-group">
+                                    <label>No Of EMI</label>
+                                    <select class="form-control" id="NoOfEMIId" name="NoOfEMIId">
+                                    </select>
+                                </div>
+                            </div>
+                             
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-12" id="Emifilesetdiv">
+                                <div id="NextBillingList" style="margin-top: 5px;"></div>
+
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea rows="3" type="text" class="form-control" placeholder="Description" id="Description" name="Description" oninput="Common.allowAllCharacters(this,180)"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion" id="">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne1" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">
+                                Acquisition Info
+                            </strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                <div id="Styleenterydetalis" class="card-body">
+                    <form id="FormAcquisitionInfo">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Vendor<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="VendorId" name="VendorId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>PO Number<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: PO_001" id="PONumber" name="PONumber" required oninput="Common.allowAllCharacters(this,15)">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>PO Date<span id="Asterisk">*</span></label>
+                                    <input type="date" class="form-control" id="PODate" name="PODate" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Invoice Number<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: INV_001" id="InVoiceNumber" name="InVoiceNumber" required oninput="Common.allowAllCharacters(this,15)">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Invoice Date<span id="Asterisk">*</span></label>
+                                    <input type="date" class="form-control" id="PurchaseDate" name="PurchaseDate" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Purchase Value<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: 1000" id="PurchaseValue" name="PurchaseValue" required oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,6)">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Depreciation Value</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" style="border-top-right-radius: 0px; border-bottom-right-radius: 0px;">%</span>
+                                        <input type="text" class="form-control" placeholder="Ex: 9.90" id="DepreciationValue" name="DepreciationValue" oninput="validateDepreciationValue(this,3)" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Asset LifeSpan</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="AssetLifeSpan" placeholder="Ex: 5" name="AssetLifeSpan" oninput="Common.allowOnlyNumberLength(this,3)">
+                                        <span class="input-group-text" style="border-top-left-radius: 0px; border-bottom-left-radius: 0px;">Month</span>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Ins Policy No</label>
+                                    <input type="text" class="form-control" placeholder="Ex: GHY789-12345-A1" id="InsurancePolicyNo" name="InsurancePolicyNo" oninput="Common.allowAllCharacters(this,15)">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Ins Coverage From Date</label>
+                                    <input type="date" class="form-control" id="InsCoverageFromDate" name="InsCoverageFromDate">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Ins Expiry Date</label>
+                                    <input type="date" class="form-control" id="InsuranceExpiryDate" name="InsuranceExpiryDate">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Warranty Start Date</label>
+                                    <input type="date" class="form-control" id="WarrantyStartDate" name="WarrantyStartDate">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                     <label for="WarrantyExpiryDate">
+        Warranty Expiry Date <span id="asterisk" style="color:red; display:none;">*</span>
+    </label>
+                                    <input type="date" class="form-control" id="WarrantyExpiryDate" name="WarrantyExpiryDate">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion" id="TagInfoHide">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseOne1" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">
+                                Tag Info
+                            </strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                <div id="Styleenterydetalis" class="card-body">
+                    <form id="FormTagInfo">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="padding-left: 0px;padding-right: 0px;">
+
+                                    <div class="form-group mt-2">
+                                    <label>Tag Type</label>
+                                    <select class="form-control" id="AssetTagTypeId" name="AssetTagTypeId" disabled>
+                                    </select>
+                                </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12" style="padding-left: 0px;padding-right: 0px;">
+                                     <div class="form-group">
+                                    <label>Generation Date</label>
+                                    <input type="date" class="form-control" id="GenerationDate" name="GenerationDate" disabled>
+                                </div>
+
+                                </div>
+                                
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-6 col-6" id="ImageSet">
+                                <div class="imageAppend"></div>
+                            </div>
+                            
+                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion" id="locationHide">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapseOne1" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">
+                                Location Info
+                            </strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                <div id="Styleenterydetalis" class="card-body">
+                    <form id="FormLocationInfo">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Current Branch </label>
+                                    @* <select class="form-control" id="BranchId" name="BranchId" disabled>
+                                    </select> *@
+                                    <input type="text" class="form-control" id="BranchId" name="BranchId" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Hall</label>
+                                    @* <select class="form-control" id="HallId" name="HallId" disabled>
+                                    </select> *@
+                                    <input type="text" class="form-control" id="HallId" name="HallId" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    @* <select class="form-control" id="DepartmentId" name="DepartmentId" disabled>
+                                    </select> *@
+                                    <input type="text" class="form-control" id="DepartmentId" name="DepartmentId" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Assigned To</label>
+                                    @* <select class="form-control" id="AssignedTo" name="AssignedTo" disabled>
+                                    </select> *@
+                                    <input type="text" class="form-control" id="AssignedTo" name="AssignedTo" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Assigned Date</label>
+                                    <input type="date" class="form-control" id="AssignedDate" name="AssignedDate" disabled>
+                                </div>
+                            </div>
+
+                            @* <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                <fieldset>
+                                    <legend class="w-auto">Location History</legend>
+                                    <div class="row" id="LocationHistory">
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Branch</label>
+                                                <input type="text" class="form-control" id="LocationBranch" name="LocationBranch" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Hall</label>
+                                                <input type="text" class="form-control" id="LocationHall" name="LocationHall" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Department</label>
+                                                <input type="text" class="form-control" id="LocationDepartment" name="LocationDepartment" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>Assigned To</label>
+                                                <input type="text" class="form-control" id="LocationAssigned" name="LocationAssigned" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>From Date</label>
+                                                <input type="date" class="form-control" id="LocationDate" name="LocationDate" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                            <div class="form-group">
+                                                <label>To Date</label>
+                                                <input type="date" class="form-control" id="LocationToDate" name="LocationToDate" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div> *@
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion" id="HideMappingHistory">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapseOn91" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">
+                                Mapping History Info
+                            </strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapse6" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                <div id="Styleenterydetalis" class="card-body">
+                    <div class="row">
+                        <div class="col-12" id="MappingHistoryInfo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion" id="HideRepairHistory">
+            <div class="accordion-header">
+                <h2 id="Styleentery" class="mb-0 Styleentery">
+                    <a data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapseOne1" class="">
+                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                            <strong class="text-white">
+                                Associated Asset Info
+                            </strong>
+                            <i class="fas fa-angle-down text-white"></i>
+                        </p>
+                    </a>
+                </h2>
+            </div>
+            <div id="collapse5" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                <div id="Styleenterydetalis" class="card-body">
+                    <div class="row">
+                        <div class="col-12" id="RepairHistoryInfo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveAsset">Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="BulkAssetInsertForm" data-backdrop="static" data-bs-keybord="false" style="z-index: 9999;">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" id="Addbulkborder">
+                <h4 class="modal-title" id="Addbulkitem">Add Bulk Items</h4>
+                <button type="button" id="BulkInsertAssetCloseBtn" class="close" data-dismiss="modal" fdprocessedid="acrbf5">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" id="headerbody">
+                <div class="row d-flex justify-content-center mt-0" id="Uploadbody">
+                    <div class="drop_box mb-3">
+                        <p class="BulkHeaderText">Files Supported: AssetInfoDetails.xlsx</p>
+                        <input type="file" hidden accept=".xlsx" id="AssetBulkdataInsertButton">
+                        <button class="btn" id="AssetchooseFileButton">Choose File</button>
+                        <p id="SelectedFileName" style="margin-bottom: -6px;color: #007BFF;"></p>
+                    </div>
+                </div>
+
+                <div id="SplitErroButtonBulk">
+                    <div class="d-flex justify-content-end">
+                        <button id="SplitErroButtonBulkId" style="margin-bottom: -3px;color: #2200ff;box-shadow: 3px 5px 10px 4px rgba(0, 0, 0, 0.2);text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);padding: 4px 8px;background-color: #fff;border-radius: 4px;border:white;">
+                            Show Errors
+                        </button>
+                    </div>
+                </div>
+
+                <div id="ErroButtonBulk">
+                    <div class="d-flex justify-content-end">
+                        <button id="ErroButtonBulkId" style="margin-bottom: -3px;color: #ff0000;box-shadow: 3px 5px 10px 4px rgba(0, 0, 0, 0.2);text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);padding: 4px 8px;background-color: #fff;border-radius: 4px;border:white;">
+                            Clear Errors
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-scroll" style="overflow:auto" id="DynamicBulkTable">
+                    <div class="table-responsive">
+                        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AssetBulkTable"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div style="color:red;text-align:center;display:none" id="BulkUploadDuplicateValueError">
+                <label style="color:red !important;font-size:103% !important" id="BulkInsertErrorText"> Red color column record is already added,try  to upload different value</label>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer d-flex justify-content-center py-1" id="buildInsertFooter">
+                <input type="button" class="btn btn-update NewButton" id="BulkInsertAssetUpdate" value="Upload" style="width:100px;color:white" />
+                <input type="button" class="btn btn-danger NewButton" id="BulkInsertAssetCancel" value="Cancel" style="width:100px;color:white;" />
+            </div>
+
+            <div id="error-message" style="color: red; display: none;"></div>
+        </div>
+    </div>
+</div>
+<!--------Bulk popup-->
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<!--BulkInsert info modal end-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script src="~/js/AssetManagement.js"></script>
