@@ -51,7 +51,7 @@ $(document).ready(function () {
 
     Common.bindDropDown('Vendor', 'Vendor');
     Common.bindDropDown('StateIdOFfCanvas', 'State');
-    Common.bindDropDown('AlternativeCompanyAddress', 'UserFranchiseMapping');
+    Common.bindDropDown('AlternativeCompanyAddress', 'Plant');
 
 
     Common.bindDropDown('ReturnReasonId', 'ReturnReason');
@@ -492,7 +492,7 @@ $(document).on('click', '#AddPurchaseReturn', function () {
 
     $('#PurchaseReturnModal').show();
     var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-    $('#AlternativeCompanyAddress').val(FranchiseMappingId).trigger('change');
+    $('#AlternativeCompanyAddress').val(null).trigger('change');
     var EditDataId = { ModuleId: null, ModuleName: null };
     Common.ajaxCall("GET", "/Common/GetBillFromDDDetails", EditDataId, function (response) {
         var id = "BillFrom";

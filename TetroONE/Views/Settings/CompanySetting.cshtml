@@ -121,17 +121,8 @@
                     </div>
                 </div>
             </div>
-           
-
-        </form>
-    </div>
-    <div class="col-12 d-flex justify-content-center mb-3 createbtn">
-        <input id="UpdateSetting" type="button" class="btn btn-update save m-r-20" value="Update">
-        <input id="AddAlternativeCompany" type="button" class="btn btn-primary save m-r-20" value="">
-    </div>
-</div>
-@if (companyId ==1)
-{
+           @if (companyId ==1)
+        {
     <div class="mt-3">
         @* table-responsive *@
 
@@ -144,6 +135,15 @@
         </fieldset>
     </div>
 }
+
+        </form>
+    </div>
+    <div class="col-12 d-flex justify-content-center mb-3 createbtn">
+        <input id="UpdateSetting" type="button" class="btn btn-update save m-r-20" value="Update">
+        <input id="AddAlternativeCompany" type="button" class="btn btn-primary save m-r-20" value="">
+    </div>
+</div>
+
 @if (companyId ==1)
 {
     <div class="mt-3">
@@ -162,9 +162,9 @@
     <fieldset class="expensefild1">
         <legend class="w-auto">
             Plant Info
-            <input id="AddBranchBtn" type="button" class="btn btn-primary Btn-add" value="Add Branch" style="position: absolute; right: 5%; margin-top: -7px;">
+            <input id="AddPlantBtn" type="button" class="btn btn-primary Btn-add" value="Add New" style="position: absolute; right: 5%; margin-top: -7px;">
         </legend>
-        <div class="row" id="GetBranchDetails">
+        <div class="row" id="GetPlantDetails">
         </div>
     </fieldset>
 </div>
@@ -213,14 +213,14 @@
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Branch Name</label>
-                                            <input type="text" id="BranchName" name="BranchName" class="form-control" placeholder="Ex: Main Branch" autocomplete="off" oninput="Common.allowOnlyTextLength(this, 25)" disabled>
+                                            <label>Plant Name</label>
+                                            <input type="text" id="BranchName" name="BranchName" class="form-control" placeholder="Ex: Main Plant" autocomplete="off" oninput="Common.allowOnlyTextLength(this, 25)" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Account Type</label>
-                                            <select class="form-select form-control" id="AccountType" autocomplete="off" name="AccountType">
+                                            <select class="form-select form-control" id="AccountType" autocomplete="off" name="AccountType" required>
                                                 <option value="">--Select--</option>
                                                 <option value="Current">Current</option>
                                                 <option value="Savings">Savings</option>
@@ -231,13 +231,13 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Account Name</label>
-                                            <input type="text" id="AccountName" name="AccountName" class="form-control" autocomplete="off" placeholder="Ex: Bank User Name" oninput="Common.allowOnlyTextLength(this, 50)">
+                                            <input type="text" id="AccountName" name="AccountName" class="form-control" autocomplete="off" placeholder="Ex: Bank User Name" oninput="Common.allowOnlyTextLength(this, 50)" required>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Account Number</label>
-                                            <input type="text" id="AccountNumber" name="AccountNumber" class="form-control" autocomplete="off" placeholder="Ex: 123456789012" oninput="Common.allowOnlyNumberLength(this,16)">
+                                            <input type="text" id="AccountNumber" name="AccountNumber" class="form-control" autocomplete="off" placeholder="Ex: 123456789012" oninput="Common.allowOnlyNumberLength(this,16)" required>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 branch">
@@ -272,9 +272,9 @@
 
 
 
-<div id="AddBranchCanvas" class="offcanvas-container">
+<div id="AddPlantCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
-        <h2 id="BranchHeader"></h2>
+        <h2 id="PlantHeader"></h2>
         <span id="CloseCanvas" class="close"
               style="font-size:30px;cursor:pointer;color:white;"
               title="Close">&times;</span>
@@ -284,68 +284,68 @@
         <div class="row">
             <div class="col-12">
                 <div class="accordion" id="styleAccordion">
-                    <div class="accordion-header">
+                   <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
                             <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
-                                        Branch Info
+                                        Plant Info
                                     </strong>
                                     <i class="fas fa-angle-down text-white"></i>
                                 </p>
                             </a>
                         </h2>
                     </div>
-                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
+                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
                         <div id="Styleenterydetalis" class="card-body">
-                            <form id="FormBranch">
+                            <form id="FormPlant">
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Branch Name<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: S.K.Jain and Sons." id="BranchName" name="BranchName" required maxlength="50" />
+                                            <label>Plant Name<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: S.K.Jain and Sons." id="PlantName" name="PlantName" required maxlength="50" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Address</label>
-                                            <input type="text" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="BranchAddress" name="BranchAddress" maxlength="500" />
+                                            <input type="text" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="PlantAddress" name="PlantAddress" maxlength="500" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>City<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: Chennai" id="BranchCity" name="BranchCity" required oninput="Common.allowOnlyTextLength(this,50)" />
+                                            <input type="text" class="form-control" placeholder="Ex: Chennai" id="PlantCity" name="PlantCity" required oninput="Common.allowOnlyTextLength(this,50)" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>State<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: TamilNadu" id="BranchState" name="BranchState" required oninput="Common.allowOnlyTextLength(this,50)" />
+                                            <input type="text" class="form-control" placeholder="Ex: TamilNadu" id="PlantState" name="PlantState" required oninput="Common.allowOnlyTextLength(this,50)" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Country</label>
-                                            <input type="text" class="form-control" placeholder="Ex: India" id="BranchCountry" name="BranchCountry" oninput="Common.allowOnlyTextLength(this,20)" />
+                                            <input type="text" class="form-control" placeholder="Ex: India" id="PlantCountry" name="PlantCountry" oninput="Common.allowOnlyTextLength(this,20)" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Zipcode</label>
-                                            <input type="text" class="form-control" placeholder="Ex: 600028" id="BranchZipCode" name="BranchZipCode" oninput="Common.allowOnlyNumberLength(this,6)" />
+                                            <input type="text" class="form-control" placeholder="Ex: 600028" id="PlantZipCode" name="PlantZipCode" oninput="Common.allowOnlyNumberLength(this,6)" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Contact No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex:9876543210" id="BranchContactNo" name="BranchContactNo" required oninput="Common.allowOnlyContactNoAlternativeLength(this,20)" />
+                                            <input type="text" class="form-control" placeholder="Ex:9876543210" id="PlantContactNo" name="PlantContactNo" required oninput="Common.allowOnlyContactNoAlternativeLength(this,20)" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Email</label>
-                                            <input type="text" class="form-control Email" placeholder="Ex: example@gmail.com" id="Email" name="Email" oninput="Common.allowEmailAndLength(this, 50)" />
+                                            <input type="text" class="form-control Email" placeholder="Ex: example@gmail.com" id="PlantEmail" name="PlantEmail" oninput="Common.allowEmailAndLength(this, 50)" />
                                         </div>
                                     </div>
                                 </div>
@@ -377,7 +377,7 @@
                                     <i class="fas fa-plus" id="AddButton"></i>
                                 </button>
                             </div>
-                            <form id="FormBranchContact">
+                            <form id="FormPlantContact">
                             </form>
                         </div>
                     </div>
@@ -390,7 +390,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="form-group text-center">
                 <div class="card-action">
-                    <a class="btn btn-success m-r-20 text-white" id="SaveBranch">Save</a>
+                    <a class="btn btn-success m-r-20 text-white" id="SavePlant">Save</a>
                 </div>
 
             </div>

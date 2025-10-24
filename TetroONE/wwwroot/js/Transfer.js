@@ -100,8 +100,8 @@ $(document).ready(function () {
     Common.ajaxCall("GET", "/Inventory/GetTransfer", { TransferId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), FranchiseId: parseInt(FranchiseMappingId) }, GetTransferSuccess, null);
 
     Common.bindDropDownParent('TransferType', 'FormRightSideHeader', 'TransferType');
-    Common.bindDropDownParent('FromAddressId', 'FormVendor', 'FromFranchise_Transfer');
-    Common.bindDropDownParent('ToAddressId', 'FormShipping', 'ToFranchise_Transfer');
+    Common.bindDropDownParent('FromAddressId', 'FormVendor', 'Plant');
+    Common.bindDropDownParent('ToAddressId', 'FormShipping', 'Plant');
     Common.bindDropDownParent('ModeOfTransferId', 'FormStatus', 'ModeOfTransport');
     $('#TransferStatusId').empty().append($('<option>', { value: '', text: '--Select--', }));
 

@@ -62,7 +62,7 @@ $(document).ready(function(){
 		franchiseId = localStorage.getItem("FranchiseId");
 	}
 
-	bindDropDown(1, 'UserFranchiseMappingId', 'UserFranchiseMapping', function () {
+	bindDropDown(1, 'UserFranchiseMappingId', 'Plant', function () {
 		if (franchiseId) {
 			$("#UserFranchiseMappingId").val(franchiseId);
 			localStorage.removeItem("FranchiseId");
@@ -516,12 +516,12 @@ function bindDropDown(FranchiseId, id, moduleName, callback) {
 
 				var data = JSON.parse(response.data);
 
-				if (data.length > 0 && data[0].length > 0 && data[0][0].FranchiseId) {
+				if (data.length > 0 && data[0].length > 0 && data[0][0].PlantId) {
 
 					localStorage.setItem('EditMode', 'true');
-					localStorage.setItem('FranchiseId', data[0][0].FranchiseId);
+					localStorage.setItem('FranchiseId', data[0][0].PlantId);
 				} else {
-					$('#UserFranchiseMappingId').append('<option value="0">No Franchise Mapped</option>');
+					$('#UserFranchiseMappingId').append('<option value="0">No Plant Mapped</option>');
 					localStorage.removeItem('EditMode');
 					localStorage.removeItem('FranchiseId');
 				}
