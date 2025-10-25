@@ -90,6 +90,20 @@
 
         $(target).collapse('toggle');
     });
+
+    $(document).on('change', '#SaleOrderNoId', function () {
+        var $thisVal = $(this).val();
+        if ($thisVal != '') {
+            $('#CustomerId').val('109');
+            $('#FabricType').val('2');
+            $('#ProcessType').val('3');
+            $('#GSM').val('250 GSM');
+            $('#Weight').val('45 KG');
+            $('#Color').val('Purple');
+        } else {
+            $('#CustomerId, #FabricType, #ProcessType, #GSM, #Weight, #Color').val(''); 
+        }
+    });
 });
 
 function CanvasOpenFirstShowingProduction() {
@@ -160,7 +174,7 @@ function MainGridData() {
             Customer: "H&M Group",
             FabricType: "Cotton",
             MachineType: "Jet Dyeing",
-            ApprovedBy: "",
+            ApprovedBy: "-",
             Status: "Draft",
             Status_Color: "#fd7e14" // Orange
         },
@@ -184,7 +198,7 @@ function MainGridData() {
             Customer: "Zara (Inditex)",
             FabricType: "Polyester",
             MachineType: "Pad-Dry",
-            ApprovedBy: "",
+            ApprovedBy: "-",
             Status: "Cancelled",
             Status_Color: "#dc3545" // Red
         },
@@ -208,7 +222,7 @@ function MainGridData() {
             Customer: "Raymond Ltd",
             FabricType: "Blended",
             MachineType: "Winch",
-            ApprovedBy: "",
+            ApprovedBy: "-",
             Status: "Draft",
             Status_Color: "#fd7e14"
         },
@@ -232,7 +246,7 @@ function MainGridData() {
             Customer: "RPKS & CO",
             FabricType: "Polyester",
             MachineType: "Jet Dyeing",
-            ApprovedBy: "",
+            ApprovedBy: "-",
             Status: "Cancelled",
             Status_Color: "#dc3545"
         },
@@ -256,7 +270,7 @@ function MainGridData() {
             Customer: "Pothys",
             FabricType: "Cotton",
             MachineType: "Jet Dyeing",
-            ApprovedBy: "",
+            ApprovedBy: "-",
             Status: "Draft",
             Status_Color: "#fd7e14"
         },
@@ -280,7 +294,7 @@ function MainGridData() {
             Customer: "Page Industries",
             FabricType: "Polyester",
             MachineType: "Winch",
-            ApprovedBy: "",
+            ApprovedBy: "-",
             Status: "Draft",
             Status_Color: "#fd7e14"
         }
