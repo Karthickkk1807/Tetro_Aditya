@@ -2,110 +2,19 @@
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.DeliveryPlan, Context.Session);
 }
 
-<link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
 <style>
 
     #DeliveryPlanTable {
         width: 100% !important;
+        margin-top: 10px !important;
     }
 
     .dataTables_scrollBody {
-        height: 330px !important;
+        height: 350px !important;
         margin-top: -18px !important;
         border-bottom: 1px solid #111;
         margin-bottom: 10px;
     }
-
-    .table-wrapper {
-        max-height: 226.5px;
-        overflow-y: auto;
-        display: block;
-    }
-
-    .DistributorRow {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        background: #a3c1df;
-    }
-
-    .DistributorRow tr {
-        background: #a3c1df;
-    }
-
-    .DynrowRemoveExpense, .DynrowRemoveDistributor {
-        background: none;
-        color: red;
-        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        font-size: 12px;
-        border: 1px solid red;
-        width: 30px;
-        border-radius: 50%;
-        height: 30px;
-        padding: 4px;
-        margin-top: 21px;
-    }
-
-        .DynrowRemoveExpense i, .DynrowRemoveDistributor i {
-            margin-left: 1px;
-        }
-
-        .DynrowRemoveExpense:hover, .DynrowRemoveDistributor:hover {
-            background-color: #aa1111aa;
-            color: white;
-            box-shadow: 0 3px 11px rgb(169 0 0 / 93%);
-        }
-
-    #DynamicExpenseRemoveDiv {
-        margin-top: 20px;
-    }
-
-    .TopBorder {
-        border-top: 2px dashed black;
-        margin-bottom: 3px;
-    }
-
-    .BottomBorder {
-        border-bottom: 2px dashed black;
-        margin-top: 3px;
-    }
-
-    .Amount {
-        display: block;
-        font-size: 15px;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    .AddStockBtn {
-        background: none;
-        color: green;
-        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        font-size: 13px;
-        border: 1px solid green;
-        width: 30px;
-        border-radius: 50%;
-        height: 30px;
-        padding: 4px;
-        margin-top: -6px;
-        margin-left: 13px;
-        margin-right: 10px;
-    }
-
-    .searchbar__inputManageStock {
-        height: 34px;
-        flex-grow: 1;
-        padding: 5px;
-        outline: none;
-        border: 1px solid rgba(56, 39, 180, 1);
-        border-radius: 5px 0 0 5px;
-        background: #F4FAF9;
-        transition: background 0.25s, box-shadow 0.25s;
-        width: 100%;
-    }
-
 </style>
 
 
@@ -123,8 +32,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox1"></div>
-                                    <h4 class="card-title" id="CounterValBox1"> </h4>
+                                    <div class="card-category" id="CounterTextBox1">Total DeliveryPlan (KG)</div>
+                                    <h4 class="card-title" id="CounterValBox1">23/65,800</h4>
                                 </div>
                             </div>
                         </div>
@@ -142,8 +51,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2"></div>
-                                    <h4 class="card-title" id="CounterValBox2"></h4>
+                                    <div class="card-category" id="CounterTextBox2">In-Process</div>
+                                    <h4 class="card-title" id="CounterValBox2">7/34,000</h4>
                                 </div>
                             </div>
                         </div>
@@ -161,8 +70,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3"></div>
-                                    <h4 class="card-title" id="CounterValBox3"></h4>
+                                    <div class="card-category" id="CounterTextBox3">Completed</div>
+                                    <h4 class="card-title" id="CounterValBox3">9/42,000</h4>
                                 </div>
                             </div>
                         </div>
@@ -180,8 +89,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox4"></div>
-                                    <h4 class="card-title" id="CounterValBox4"></h4>
+                                    <div class="card-category" id="CounterTextBox4">Delayed</div>
+                                    <h4 class="card-title" id="CounterValBox4">7/28,000</h4>
                                 </div>
                             </div>
                         </div>
@@ -227,8 +136,8 @@
                 <div class="date-carousel" id="datemonth">
                     <div class="date-nav">
                         <button class="nav-button" id="decrement-month-btn2">◄</button>
-                        <span class="month-year" id="dateDisplay2"></span>
-                        <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                        <span class="month-year" id="dateDisplay2">October 2025</span>
+                        <button class="nav-button" id="increment-month-btn2">►</button>
                     </div>
                 </div>
             </div>
@@ -261,149 +170,372 @@
     </div>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="DeliveryPlanTable">
-    </table>
+<div id="MainGrid">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="DeliveryPlanTable">
+        </table>
+    </div>
 </div>
 
-<div id="DeliveryPlanModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h2 id="ModalTitle"></h2>
-                <span class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
-            </div>
-
-            @* <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;"> *@
-            <div class="modal-body">
-                <form id="FormDeliveryPlan">
-                    <div class="row px-2 mb-2 align-items-center">
-                        <div class="col-lg-2 col-md-6 col-sm-4 col-4" id="DeliveryPlanDateDiv">
-                            <div class="form-group">
-                                <label>Date<span id="Asterisk">*</span></label>
-                                <input type="date" id="DeliveryPlanDate" name="DeliveryPlanDate" class="form-control" required>
-                            </div>
+<div id="DeliveryPlanCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="DeliveryPlanHeader">Add New DeliveryPlan</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion1">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        DeliveryPlan Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormDeliveryPlan">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>DeliveryPlan No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: DEL/PLAN/001" id="DeliveryPlanNo" name="DeliveryPlanNo" maxlength="50" required disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>DeliveryPlan Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="DeliveryPlanDate" name="DeliveryPlanDate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Priority<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PriorityId" name="PriorityId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Medium</option>
+                                                <option value="3">High</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Dispatch Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="DispatchDate" name="DispatchDate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Target Delivery<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="TargetDelivery" name="TargetDelivery" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Status<span id="Asterisk">*</span></label> 
+                                            <select class="form-control" id="Status" name="Status" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Planned</option>
+                                                <option value="2">In-Process</option>
+                                                <option value="3">Completed</option>
+                                                <option value="3">Partially Delivered</option>
+                                                <option value="3">Delayed</option>
+                                            </select> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Remarks<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                        <div class="col-lg-2 col-md-6 col-sm-4 col-4" id="ToFranchiseIdDiv">
-                            <div class="form-group">
-                                <label>Franchise<span id="Asterisk">*</span></label>
-                                <select class="form-control" id="ToFranchiseId" name="ToFranchiseId" required>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-4 col-4" id="RouteDiv">
-                            <div class="form-group">
-                                <label>Route<span id="Asterisk">*</span></label>
-                                <input class="form-control" id="Route" name="Route" placeholder="Ex: Coimbatore" oninput="Common.allowOnlyTextLength(this,50)" required />
-                            </div>
-                        </div>
-                    </div>
-
-                    <ul class="nav nav-tabs pl-2 mb-2" id="myTabInOut" role="tablist">
-                        <li class="nav-item submenu" role="presentation" style="z-index: 99999999;position: relative;">
-                            <a class="nav-link navbar-tab active" id="Distributor-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Distributor Mapping</a>
-                        </li>
-
-                        <li class="nav-item submenu" role="presentation" style="z-index: 99999999;position: relative;">
-                            <a class="nav-link navbar-tab" id="Expense-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Expense Mapping</a>
-                        </li>
-                        <li style="margin-left: auto;">
-                            <div class="searchbar">
-                                <input type="text" class="searchbar__inputManageStock" name="tableForPopFilter" id="tableForPopFilter" placeholder="Search">
-                                <button type="button" class="searchbar__button">
-                                    <img src="/assets/commonimages/search.svg">
-                                </button>
-                            </div>
-                            <button id="DyanmicRowAdd" class="btn AddStockBtn" type="button">
-                                <i class="fas fa-plus" id="AddButton"></i>
-                            </button>
-                        </li>
-                    </ul>
-
-                    <div class="tab-pane" id="Distributor-TabRecord" role="tabpanel" aria-labelledby="Distributor-TabBtn">
-                        <div class="table-wrapper mt--1">
-                            <table class="table table-bordered mb-0">
-                                <thead class="DistributorRow">
-                                    <tr>
-                                        <th>Distributor<span style="visibility: hidden;">11111111111</span></th>
-                                        <th>DeliveryTime</th>
-                                        <th>Product<span style="visibility: hidden;">1111111</span></th>
-                                        <th>Unit<span style="visibility: hidden;">11111111</span></th>
-                                        <th>POQuantity</th>
-                                        <th>Quantity</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dynamicDistributor">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="container-fluid" style="max-height: 95.5px;overflow-y: auto;display: block;overflow-x: hidden;">
-                        <div class="ExpenseDetails mt--1">
-                        </div>
-                    </div>
-                    <div class="row mt-2 mb-2" id="AmountMainDiv">
-                        <div class="col-7"></div>
-                        <div class="col-4">
-                            <div class="TopBorder"></div>
-                            <span class="Amount"></span>
-                            <div class="BottomBorder"></div>
-                        </div>
-                        <div class="col-1"></div>
-                    </div>
-                </form>
-            </div>
-            <div class="row d-flex justify-content-end mt--2" id="Distributor-RecordFooter">
-                <div class="" style="margin-right:-27px !important">
-                    <div class="form-group">
-                        <label>No Of Distributor</label>
-                        <input type="text" id="NoOfDistributor" name="NoOfDistributor" class="form-control" placeholder="Distributor" disabled style="width: 64%;">
-                    </div>
-                </div>
-                <div class="" style="margin-right: -44px !important;">
-                    <div class="form-group">
-                        <label>No Of Product</label>
-                        <input type="text" id="NoOfProducts" name="NoOfProducts" class="form-control" placeholder="Product" disabled style="width: 54%;">
-                    </div>
-                </div>
-                <div class="" style="margin-right: -44px !important;">
-                    <div class="form-group">
-                        <label>Total Qty_RGB</label>
-                        <input type="text" id="TotalBalanceRGB" name="TotalBalanceRGB" class="form-control" placeholder="RGB" disabled style="width: 54%;">
-                    </div>
-                </div>
-                <div class="" style="margin-right: -44px !important;">
-                    <div class="form-group">
-                        <label>Total Qty_PET</label>
-                        <input type="text" id="TotalBalancePET" name="TotalBalancePET" class="form-control" placeholder="PET" disabled style="width: 54%;">
                     </div>
                 </div>
             </div>
-            <div class="row d-flex justify-content-end mt--2" id="Expense-RecordFooter">
-                <div class="" style="margin-right: -24px !important;">
-                    <div class="form-group">
-                        <label>PerBottle Cost</label>
-                        <input type="text" id="PerBottleCost" name="PerBottleCost" class="form-control" placeholder="Cost" disabled style="width: 68%;">
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion2">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Order/Batch Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormOrderBatch">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="Type" name="Type">
+                                                <option value="">--Select--</option>
+                                                <option value="1">SaleOrder</option>
+                                                <option value="2">JobOrder</option>
+                                                <option value="3">Batch</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Order No<span id="Asterisk">*</span></label> 
+                                            <select class="form-control" id="OrderNo" name="OrderNo">
+                                                <option value="">--Select--</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Order Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="OrderTypeId" name="OrderTypeId" required disabled>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Dyeing</option>
+                                                <option value="2" selected>Printing</option>
+                                                <option value="3">Finishing</option>
+                                                <option value="4">Combination</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6 ProductType">
+                                        <div class="form-group">
+                                            <label>Product Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ProductTypeId" name="ProductTypeId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">T-Shirt</option>
+                                                <option value="2">Shirt</option>
+                                                <option value="3">Trousers</option>
+                                                <option value="4">Jeans</option>
+                                                <option value="5">Jacket</option>
+                                                <option value="6">Kurta</option>
+                                                <option value="7">Saree</option>
+                                                <option value="8" selected>Hoodie</option>
+                                            </select>
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Product Description<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="ProductDescription" name="ProductDescription" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Product Description"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Fabric Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="FabricType" name="FabricType" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Woven</option>
+                                                <option value="2">Knitted</option>
+                                                <option value="3">Terry</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Color<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: SkyBlue" id="Color" name="Color" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6 DesignType">
+                                        <div class="form-group">
+                                            <label>Design<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="DesignId" name="DesignId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Plain</option>
+                                                <option value="2">Printed</option>
+                                                <option value="3">Striped</option>
+                                                <option value="4" selected>Checked</option>
+                                                <option value="5">Floral</option>
+                                                <option value="6">Abstract</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>GSM<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Width<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required disabled oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Process Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ProcessType" name="ProcessType" required disabled>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Dyed</option>
+                                                <option value="2">Printed</option>
+                                                <option value="3">Finished</option>
+                                                <option value="4" selected>Coated</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Quantity Ordered<span id="Asterisk">*</span></label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="QuantityOrdered" name="QuantityOrdered" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                                <select class="form-control" id="QuantityOrderedUnitId" name="QuantityOrderedUnitId" required style="width: 38%;">
+                                                    <option value="">--Select--</option>
+                                                    <option value="1">Meters</option>
+                                                    <option value="2">Kg</option>
+                                                    <option value="3">Roll</option> 
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Quantity Scheduled<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="QuantityScheduled" name="QuantityScheduled" required disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Remarks<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
-                <div class="row">
-                    <div class="col-12">
-                        <input type="button" class="btn btn-primary" id="SaveDeliveryPlan" value="Save">
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion3">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseThree3">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Logistics / Dispatch Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion3">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormLogisticsDispatch">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Dispatch Mode<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="DispatchMode" name="DispatchMode">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Truck</option>
+                                                <option value="2">Courier</option>
+                                                <option value="2">Rail</option>
+                                                <option value="2">Sea</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Dispatch Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="DispatchDate" name="DispatchDate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Carrier / Transporter<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: TCI Express - +91 9955664433" id="CarrierTransporter" name="CarrierTransporter" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Vehicle / Shipment No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: TN36KS8055 - BLUE1234" id="VehicleShipmentNo" name="VehicleShipmentNo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Delivered Quantity<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="DeliveredQuantity" name="DeliveredQuantity" />
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Delivery Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="DeliveryStatus" name="DeliveryStatus">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Not Dispatched</option>
+                                                <option value="2">In-Transit</option>
+                                                <option value="3">Delivered</option>
+                                                <option value="4">Partially Delivered</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Remarks<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                                                <b>Click Here to Attach your files</b>
+                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                                            </label>
+                                            <div class="file-preview d-flex justify-content-center" id="preview">
+                                                <div class="attachrow">
+                                                    <div class="attachcolumn">
+                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                    </div>
+                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveDeliveryPlan">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     var access = @Html.Raw(Json.Serialize(access));
 </script>
 
 
-<script src="~/assets/js/mdtimepicker.js"></script>
 <script src="~/js/deliveryplan.js"></script>

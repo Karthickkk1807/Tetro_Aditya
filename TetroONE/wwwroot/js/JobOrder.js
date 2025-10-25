@@ -1,4 +1,14 @@
 ﻿$(document).ready(function () {
+
+    MainGrid();
+
+    $('#JobTypeId').select2({
+        dropdownParent: $('#FormJobOrder'),
+        width: '100%',
+        placeholder: '--Select JobType--'
+    }).on('select2:open', function () {
+        $('.select2-container').css('z-index', 1100);
+    }).trigger('change');
      
     const months = [
         "January", "February", "March", "April", "May", "June",
@@ -90,125 +100,198 @@
         $offcanvas.find('.collapse').not(target).collapse('hide');
 
         $(target).collapse('toggle');
-    });
+    }); 
+});
 
+function MainGrid() {
     const JobOrderData = [
         {
-            JobOrderName: "JOB_1 : Full Stack Developer",
-            JobCategory: "Full Stack Developer",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 Jan 2025",
-            ExpiryDate: "10 Mar 2025",
-            TotalHired: "16",
-            Status: "Approved",
-            Status_Color: "#28a745",
-            IsHot: false
-        },
-        {
-            JobOrderName: "JOB_2 : Software Engineer",
-            JobCategory: "Software Engineer",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "21 Jan 2025",
-            ExpiryDate: "10 Feb 2025",
-            TotalHired: "10",
-            Status: "Open",
-            Status_Color: "#007bff",
-            IsHot: false
-        },
-        {
-            JobOrderName: "JOB_3 : Cloud Engineer",
-            JobCategory: "Cloud Engineer",
-            JobPostType: "External",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 Feb 2025",
-            ExpiryDate: "10 Mar 2025",
-            TotalHired: "20",
+            Date: "02 Oct 2025",
+            JobOrderNo: "JOB/NO/001",
+            SaleOrderNo: "SO/NO/001",
+            Customer: "Classic Garments Pvt Ltd",
+            OrderType: "Domestic",
+            JobType: "Dyeing, Printing",
+            Qty: "1200 KGS",
+            Priority: "Normal",
+            NoOfBatches: 4,
+            PreProcess: "Singeing, Desizing",
+            PostProcess: "Soaping, Washing",
+            ExpectedClosingDate: "05 Nov 2025",
             Status: "Draft",
-            Status_Color: "#6c757d",
-            IsHot: false
+            Status_Color: "#95a5a6"
         },
         {
-            JobOrderName: "JOB_4 : Security Analyst",
-            JobCategory: "Security Analyst",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "01 Apr 2025",
-            ExpiryDate: "08 May 2025",
-            TotalHired: "19",
+            Date: "04 Oct 2025",
+            JobOrderNo: "JOB/NO/002",
+            SaleOrderNo: "SO/NO/002",
+            Customer: "StyleHub Textiles",
+            OrderType: "Export",
+            JobType: "Finishing, Printing",
+            Qty: "950 KGS",
+            Priority: "Medium",
+            NoOfBatches: 6,
+            PreProcess: "Bleaching",
+            PostProcess: "Drying & Conditioning, Finishing",
+            ExpectedClosingDate: "20 Oct 2025",
+            Status: "Approved",
+            Status_Color: "#79da79"
+        },
+        {
+            Date: "06 Oct 2025",
+            JobOrderNo: "JOB/NO/003",
+            SaleOrderNo: "SO/NO/003",
+            Customer: "Modern Wear Pvt Ltd",
+            OrderType: "Job Work",
+            JobType: "Finishing, Embossing",
+            Qty: "1400 KGS",
+            Priority: "Normal",
+            NoOfBatches: 7,
+            PreProcess: "Desizing, Scouring, Mercerizing",
+            PostProcess: "Washing, Finishing",
+            ExpectedClosingDate: "08 Nov 2025",
+            Status: "In-Production",
+            Status_Color: "Purple"
+        },
+        {
+            Date: "08 Oct 2025",
+            JobOrderNo: "JOB/NO/004",
+            SaleOrderNo: "SO/NO/004",
+            Customer: "Vogue Fashions",
+            OrderType: "Domestic",
+            JobType: "Washing, Embossing",
+            Qty: "800 KGS",
+            Priority: "High",
+            NoOfBatches: 5,
+            PreProcess: "Singeing, Bleaching",
+            PostProcess: "Soaping, Drying & Conditioning",
+            ExpectedClosingDate: "02 Nov 2025",
+            Status: "Final QC",
+            Status_Color: "Blue"
+        },
+        {
+            Date: "10 Oct 2025",
+            JobOrderNo: "JOB/NO/005",
+            SaleOrderNo: "SO/NO/005",
+            Customer: "Trendline Garments",
+            OrderType: "Export",
+            JobType: "Embossing, Printing",
+            Qty: "1800 KGS",
+            Priority: "Medium",
+            NoOfBatches: 8,
+            PreProcess: "Mercerizing",
+            PostProcess: "Washing, Neutralization",
+            ExpectedClosingDate: "10 Nov 2025",
+            Status: "Outwarded",
+            Status_Color: "#e9634e"
+        },
+        {
+            Date: "12 Oct 2025",
+            JobOrderNo: "JOB/NO/006",
+            SaleOrderNo: "SO/NO/006",
+            Customer: "NextGen Clothing",
+            OrderType: "Job Work",
+            JobType: "Dyeing, Washing",
+            Qty: "2100 KGS",
+            Priority: "Normal",
+            NoOfBatches: 3,
+            PreProcess: "Desizing, Scouring",
+            PostProcess: "Drying & Conditioning",
+            ExpectedClosingDate: "14 Nov 2025",
+            Status: "Delivered",
+            Status_Color: "Green"
+        },
+        {
+            Date: "14 Oct 2025",
+            JobOrderNo: "JOB/NO/007",
+            SaleOrderNo: "SO/NO/007",
+            Customer: "Royal Apparels",
+            OrderType: "Domestic",
+            JobType: "Export, Printing",
+            Qty: "1100 KGS",
+            Priority: "High",
+            NoOfBatches: 5,
+            PreProcess: "Singeing, Bleaching, Mercerizing",
+            PostProcess: "Washing, Finishing",
+            ExpectedClosingDate: "28 Oct 2025",
             Status: "Closed",
-            Status_Color: "#dc3545",
-            IsHot: false
+            Status_Color: "#492db9"
         },
         {
-            JobOrderName: "JOB_5 : Data Engineer",
-            JobCategory: "Data Engineer",
-            JobPostType: "External",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "05 Jun 2025",
-            ExpiryDate: "10 Aug 2025",
-            TotalHired: "12",
-            Status: "On-Hold",
-            Status_Color: "#ffc107",
-            IsHot: false
-        },
-        {
-            JobOrderName: "JOB_6 : IT Support Specialist",
-            JobCategory: "IT Support Specialist",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 July 2025",
-            ExpiryDate: "10 Sep 2025",
-            TotalHired: "38",
+            Date: "16 Oct 2025",
+            JobOrderNo: "JOB/NO/008",
+            SaleOrderNo: "SO/NO/008",
+            Customer: "Elite Fashions",
+            OrderType: "Export",
+            JobType: "Washing, Finishing",
+            Qty: "1550 KGS",
+            Priority: "Medium",
+            NoOfBatches: 6,
+            PreProcess: "Scouring, Bleaching",
+            PostProcess: "Neutralization, Drying & Conditioning",
+            ExpectedClosingDate: "15 Nov 2025",
             Status: "Approved",
-            Status_Color: "#28a745",
-            IsHot: false
+            Status_Color: "#79da79"
         },
         {
-            JobOrderName: "JOB_7 : Technical Project Manager",
-            JobCategory: "Technical Project Manager",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 Aug 2025",
-            ExpiryDate: "10 Oct 2025",
-            TotalHired: "43",
-            Status: "Open",
-            Status_Color: "#007bff",
-            IsHot: false
+            Date: "18 Oct 2025",
+            JobOrderNo: "JOB/NO/009",
+            SaleOrderNo: "SO/NO/009",
+            Customer: "Urban Threads",
+            OrderType: "Job Work",
+            JobType: "Dyeing, Washing",
+            Qty: "1250 KGS",
+            Priority: "High",
+            NoOfBatches: 4,
+            PreProcess: "Desizing",
+            PostProcess: "Soaping, Washing, Finishing",
+            ExpectedClosingDate: "25 Nov 2025",
+            Status: "In-Production",
+            Status_Color: "Purple"
         },
         {
-            JobOrderName: "JOB_8 : Network Engineer",
-            JobCategory: "Network Engineer",
-            JobPostType: "External",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 Oct 2025",
-            ExpiryDate: "10 Nov 2025",
-            TotalHired: "17",
-            Status: "Draft",
-            Status_Color: "#6c757d",
-            IsHot: false
+            Date: "20 Oct 2025",
+            JobOrderNo: "JOB/NO/010",
+            SaleOrderNo: "SO/NO/010",
+            Customer: "Prime Wear Industries",
+            OrderType: "Domestic",
+            JobType: "Dyeing, Washing",
+            Qty: "1650 KGS",
+            Priority: "Normal",
+            NoOfBatches: 8,
+            PreProcess: "Bleaching, Mercerizing",
+            PostProcess: "Neutralization, Drying & Conditioning",
+            ExpectedClosingDate: "02 Dec 2025",
+            Status: "Final QC",
+            Status_Color: "Blue"
         }
     ];
 
+     
     const columns = [
-        { data: 'JobOrderName', name: 'JobOrderName', title: 'JobOrderName' },
-        { data: 'JobCategory', name: 'JobCategory', title: 'Job Category' },
-        { data: 'JobPostType', name: 'JobPostType', title: 'Job Post Type' },
-        { data: 'HiringLocation', name: 'HiringLocation', title: 'Hiring Location' },
-        { data: 'OpeningDate', name: 'OpeningDate', title: 'Opening Date' },
-        { data: 'ExpiryDate', name: 'ExpiryDate', title: 'Expiry Date' },
-        { data: 'TotalHired', name: 'TotalHired', title: 'Total Hired' },
-        { data: 'Status', name: 'Status', title: 'Status' }
+        { data: 'Date', title: 'Date' },
+        { data: 'JobOrderNo', title: 'Job Order No' },
+        { data: 'SaleOrderNo', title: 'Sale Order No' },
+        { data: 'Customer', title: 'Customer' },
+        { data: 'OrderType', title: 'Order Type' },
+        { data: 'JobType', title: 'Job Type' },
+        { data: 'Qty', title: 'Qty' },
+        { data: 'Priority', title: 'Priority' },
+        { data: 'NoOfBatches', title: 'No Of Batches' },
+        { data: 'PreProcess', title: 'Pre-Process' },
+        { data: 'PostProcess', title: 'Post-Process' },
+        { data: 'ExpectedClosingDate', title: 'Expected Closing Date' },
+        { data: 'Status', title: 'Status' }
     ];
 
+
     $('#MainGrid').empty('');
-    var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="SaleOrderData">
+    var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="JobOrderData">
                 </table>
             `;
     $('#MainGrid').append(html);
-    //bindTable('JobOrderData', JobOrderData, columns, 8, 'JobOrderName', '350px', true, { update: true, delete: true });
-});
+    bindTable('JobOrderData', JobOrderData, columns, 13, 'Date', '360px', true, { update: true, delete: true });
+}
 
 function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
 
@@ -226,10 +309,10 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
     const StatusColumnIndex = columns.findIndex(col => col.data === 'Status');
     const LocationColumnIndex = columns.findIndex(col => col.data === 'HiringLocation');
     const SourcesColumnIndex = columns.findIndex(col => col.data === 'Sources');
+    const PriorityColumnIndex = columns.findIndex(col => col.data === 'Priority');
 
     const renderColumn = [];
 
-    // Status rendering with color badge
     if (StatusColumnIndex !== -1) {
         renderColumn.push({
             targets: StatusColumnIndex,
@@ -247,8 +330,33 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
             }
         });
     }
+     
+    if (PriorityColumnIndex !== -1) {
+        renderColumn.push({
+            targets: PriorityColumnIndex,
+            render: function (data, type, row) {
+                if (type === 'display') {
+                    let color = '';
+                    switch (data?.toLowerCase()) {
+                        case 'high':
+                            color = 'red';
+                            break;
+                        case 'medium':
+                            color = 'orange';
+                            break;
+                        case 'normal':
+                            color = 'green';
+                            break;
+                        default:
+                            color = 'black';
+                    }
+                    return `<span style="color:${color};font-weight:600;">${data}</span>`;
+                }
+                return data;
+            }
+        });
+    }
 
-    // Hiring Location with red dot if hot
     if (LocationColumnIndex !== -1) {
         renderColumn.push({
             targets: LocationColumnIndex,
@@ -262,7 +370,6 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
         });
     }
 
-    // Add action buttons column
     if (isAction && (access.update || access.delete)) {
         columns.push({
             data: "Action", name: "Action", title: "Action", orderable: false
@@ -324,7 +431,6 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
         table.search($(this).val()).draw();
     });
 
-    // Auto adjust columns after small delay
     setTimeout(function () {
         const table1 = $('#' + tableid).DataTable();
         if (window.Common && Common.autoAdjustColumns) {
