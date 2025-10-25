@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
 
+    MainGrid();
+
     $('#ProcessTypeId').select2({
         dropdownParent: $('#FormFabric'),
         width: '100%',
@@ -93,115 +95,131 @@
         $offcanvas.find('.collapse').not(target).collapse('hide');
 
         $(target).collapse('toggle');
-    });
+    }); 
+});
 
+function MainGrid() { 
     const SaleOrderData = [
         {
-            SaleOrderName: "JOB_1 : Full Stack Developer",
-            JobCategory: "Full Stack Developer",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 Jan 2025",
-            ExpiryDate: "10 Mar 2025",
-            TotalHired: "16", 
-            Status: "Approved",
-            Status_Color: "#28a745",
-            IsHot: false
-        },
-        {
-            SaleOrderName: "JOB_2 : Software Engineer",
-            JobCategory: "Software Engineer",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "21 Jan 2025",
-            ExpiryDate: "10 Feb 2025",
-            TotalHired: "10", 
-            Status: "Open",
-            Status_Color: "#007bff",
-            IsHot: false
-        },
-        {
-            SaleOrderName: "JOB_3 : Cloud Engineer",
-            JobCategory: "Cloud Engineer",
-            JobPostType: "External",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 Feb 2025",
-            ExpiryDate: "10 Mar 2025",
-            TotalHired: "20", 
+            Date: "02 Oct 2025",
+            SaleNo: "SO/NO/001",
+            OrderType: "Domestic",
+            Client: "Classic Garments",
+            FrabricType: "Cotton",
+            Qty: "1200 KGS",
+            ProcessType: "Dyeing, Printing",
             Status: "Draft",
-            Status_Color: "#6c757d",
-            IsHot: false
+            Status_Color: "#79da79"
         },
         {
-            SaleOrderName: "JOB_4 : Security Analyst",
-            JobCategory: "Security Analyst",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "01 Apr 2025",
-            ExpiryDate: "08 May 2025",
-            TotalHired: "19", 
+            Date: "04 Oct 2025",
+            SaleNo: "SO/NO/002",
+            OrderType: "Export",
+            Client: "StyleHub Textiles",
+            FrabricType: "Polyester",
+            Qty: "850 KGS",
+            ProcessType: "Printing, Bleaching",
+            Status: "Approved",
+            Status_Color: "Blue"
+        },
+        {
+            Date: "06 Oct 2025",
+            SaleNo: "SO/NO/003",
+            OrderType: "Job Work",
+            Client: "Modern Wear Pvt Ltd",
+            FrabricType: "Viscose",
+            Qty: "950 KGS",
+            ProcessType: "Dyeing, Finishing",
+            Status: "Goods Inwarded",
+            Status_Color: "green"
+        },
+        {
+            Date: "08 Oct 2025",
+            SaleNo: "SO/NO/004",
+            OrderType: "Domestic",
+            Client: "Fashion Makers",
+            FrabricType: "Cotton",
+            Qty: "600 KGS",
+            ProcessType: "Printing, Finishing",
+            Status: "Goods Inspected",
+            Status_Color: "Purple"
+        },
+        {
+            Date: "10 Oct 2025",
+            SaleNo: "SO/NO/005",
+            OrderType: "Export",
+            Client: "Vogue Fashions",
+            FrabricType: "Viscose",
+            Qty: "1800 KGS",
+            ProcessType: "Bleaching, Printing",
+            Status: "Job Order",
+            Status_Color: "#95a5a6"
+        },
+        {
+            Date: "12 Oct 2025",
+            SaleNo: "SO/NO/006",
+            OrderType: "Domestic",
+            Client: "NextGen Clothing",
+            FrabricType: "Cotton",
+            Qty: "2200 KGS",
+            ProcessType: "Dyeing, Finishing",
+            Status: "In-Production",
+            Status_Color: "Red"
+        },
+        {
+            Date: "15 Oct 2025",
+            SaleNo: "SO/NO/007",
+            OrderType: "Export",
+            Client: "Royal Apparels",
+            FrabricType: "Polyester",
+            Qty: "1000 KGS",
+            ProcessType: "Printing, Bleaching",
+            Status: "Final QC",
+            Status_Color: "gray"
+        },
+        {
+            Date: "17 Oct 2025",
+            SaleNo: "SO/NO/008",
+            OrderType: "Job Work",
+            Client: "Trendline Garments",
+            FrabricType: "Viscose",
+            Qty: "1300 KGS",
+            ProcessType: "Dyeing, Printing",
+            Status: "Outwarded",
+            Status_Color: "#708090"
+        },
+        {
+            Date: "20 Oct 2025",
+            SaleNo: "SO/NO/009",
+            OrderType: "Export",
+            Client: "Elite Fashions",
+            FrabricType: "Cotton",
+            Qty: "950 KGS",
+            ProcessType: "Finishing, Bleaching",
+            Status: "Delivered",
+            Status_Color: "Indigo"
+        },
+        {
+            Date: "23 Oct 2025",
+            SaleNo: "SO/NO/010",
+            OrderType: "Domestic",
+            Client: "Urban Threads",
+            FrabricType: "Polyester",
+            Qty: "1600 KGS",
+            ProcessType: "Printing, Finishing",
             Status: "Closed",
-            Status_Color: "#dc3545",
-            IsHot: false
-        },
-        {
-            SaleOrderName: "JOB_5 : Data Engineer",
-            JobCategory: "Data Engineer",
-            JobPostType: "External",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "05 Jun 2025",
-            ExpiryDate: "10 Aug 2025",
-            TotalHired: "12", 
-            Status: "On-Hold",
-            Status_Color: "#ffc107",
-            IsHot: false
-        },
-        {
-            SaleOrderName: "JOB_6 : IT Support Specialist",
-            JobCategory: "IT Support Specialist",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 July 2025",
-            ExpiryDate: "10 Sep 2025",
-            TotalHired: "38", 
-            Status: "Approved",
-            Status_Color: "#28a745",
-            IsHot: false
-        },
-        {
-            SaleOrderName: "JOB_7 : Technical Project Manager",
-            JobCategory: "Technical Project Manager",
-            JobPostType: "Internal",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 Aug 2025",
-            ExpiryDate: "10 Oct 2025",
-            TotalHired: "43", 
-            Status: "Open",
-            Status_Color: "#007bff",
-            IsHot: false
-        },
-        {
-            SaleOrderName: "JOB_8 : Network Engineer",
-            JobCategory: "Network Engineer",
-            JobPostType: "External",
-            HiringLocation: "India – HO_Coimbatore",
-            OpeningDate: "16 Oct 2025",
-            ExpiryDate: "10 Nov 2025",
-            TotalHired: "17", 
-            Status: "Draft",
-            Status_Color: "#6c757d",
-            IsHot: false
+            Status_Color: "#492db9"
         }
     ];
-
+     
     const columns = [
-        { data: 'SaleOrderName', name: 'SaleOrderName', title: 'SaleOrderName' },
-        { data: 'JobCategory', name: 'JobCategory', title: 'Job Category' },
-        { data: 'JobPostType', name: 'JobPostType', title: 'Job Post Type' },
-        { data: 'HiringLocation', name: 'HiringLocation', title: 'Hiring Location' },
-        { data: 'OpeningDate', name: 'OpeningDate', title: 'Opening Date' },
-        { data: 'ExpiryDate', name: 'ExpiryDate', title: 'Expiry Date' },
-        { data: 'TotalHired', name: 'TotalHired', title: 'Total Hired' },  
+        { data: 'Date', name: 'Date', title: 'Date' },
+        { data: 'SaleNo', name: 'Sale No', title: 'Sale Order No' },
+        { data: 'OrderType', name: 'OrderType', title: 'Order Type' },
+        { data: 'Client', name: 'Client', title: 'Client' },
+        { data: 'FrabricType', name: 'FrabricType', title: 'Fabric Type' },
+        { data: 'Qty', name: 'Qty', title: 'Qty' },
+        { data: 'ProcessType', name: 'ProcessType', title: 'Process Type' },
         { data: 'Status', name: 'Status', title: 'Status' }
     ];
 
@@ -210,9 +228,9 @@
                 </table>
             `;
     $('#MainGrid').append(html);
-    //bindTable('SaleOrderData', SaleOrderData, columns, 8, 'SaleOrderName', '350px', true, { update: true, delete: true });
-});
- 
+    bindTable('SaleOrderData', SaleOrderData, columns, 8, 'SaleOrderName', '350px', true, { update: true, delete: true });
+}
+
 function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
 
     if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
@@ -231,8 +249,7 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
     const SourcesColumnIndex = columns.findIndex(col => col.data === 'Sources');
 
     const renderColumn = [];
-
-    // Status rendering with color badge
+     
     if (StatusColumnIndex !== -1) {
         renderColumn.push({
             targets: StatusColumnIndex,
@@ -250,8 +267,7 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
             }
         });
     }
-
-    // Hiring Location with red dot if hot
+     
     if (LocationColumnIndex !== -1) {
         renderColumn.push({
             targets: LocationColumnIndex,
@@ -264,8 +280,7 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
             }
         });
     }
-     
-    // Add action buttons column
+      
     if (isAction && (access.update || access.delete)) {
         columns.push({
             data: "Action", name: "Action", title: "Action", orderable: false
@@ -326,8 +341,7 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
     $('#tableFilter').on('keyup', function () {
         table.search($(this).val()).draw();
     });
-
-    // Auto adjust columns after small delay
+     
     setTimeout(function () {
         const table1 = $('#' + tableid).DataTable();
         if (window.Common && Common.autoAdjustColumns) {

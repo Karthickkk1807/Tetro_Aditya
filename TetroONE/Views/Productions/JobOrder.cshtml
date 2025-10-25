@@ -13,6 +13,19 @@
         padding: 4px;
         margin-top: 18px;
     }
+
+    #JobOrderData {
+        width: 100% !important;
+        margin-top: 14px !important;
+    }
+
+    .dataTables_scrollBody {
+        height: 360px !important;
+        margin-top: -18px !important;
+        border-bottom: 1px solid #111;
+        margin-bottom: 10px;
+    }
+
 </style>
 
 <div class="row quick-db m-b-5">
@@ -29,8 +42,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox1"></div>
-                                    <h4 class="card-title" id="valCounterBox1"></h4>
+                                    <div class="card-category" id="lblCounterBox1">Total Job Order (KG)</div>
+                                    <h4 class="card-title" id="valCounterBox1">39/45,670</h4>
                                 </div>
                             </div>
                         </div>
@@ -48,8 +61,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox2"></div>
-                                    <h4 class="card-title" id="valCounterBox2"></h4>
+                                    <div class="card-category" id="lblCounterBox2">Yet To Approve (KG)</div>
+                                    <h4 class="card-title" id="valCounterBox2">14/27,590</h4>
                                 </div>
                             </div>
                         </div>
@@ -67,8 +80,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox3"></div>
-                                    <h4 class="card-title" id="valCounterBox3"></h4>
+                                    <div class="card-category" id="lblCounterBox3">In-Production (KG)</div>
+                                    <h4 class="card-title" id="valCounterBox3">17/32,800</h4>
                                 </div>
                             </div>
                         </div>
@@ -86,8 +99,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox4"></div>
-                                    <h4 class="card-title" id="valCounterBox4"></h4>
+                                    <div class="card-category" id="lblCounterBox4">Closed (KG)</div>
+                                    <h4 class="card-title" id="valCounterBox4">8/19,000</h4>
                                 </div>
                             </div>
                         </div>
@@ -249,9 +262,9 @@
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Job Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="JobTypeId" name="JobTypeId" required disabled>
+                                            <select class="form-control" id="JobTypeId" name="JobTypeId" multiple required disabled>
                                                 <option value="">--Select--</option>
-                                                <option value="1">Dyeing</option>
+                                                <option value="1" selected>Dyeing</option>
                                                 <option value="2">Printing</option>
                                                 <option value="3" selected>Finishing</option>
                                                 <option value="4">Washing</option>
@@ -265,8 +278,8 @@
                                             <select class="form-control" id="PriorityId" name="PriorityId" required>
                                                 <option value="">--Select--</option>
                                                 <option value="1">Normal</option>
-                                                <option value="2">Urgent</option>
-                                                <option value="3">Critical</option>
+                                                <option value="2">Medium</option>
+                                                <option value="3">High</option>
                                             </select>
                                         </div>
                                     </div>
@@ -275,11 +288,13 @@
                                             <label>Job Status<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="JobStatusId" name="JobStatusId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">Planned</option>
-                                                <option value="2">In Process</option>
-                                                <option value="3">Hold</option>
-                                                <option value="4">Completed</option>
-                                                <option value="5">Closed</option>
+                                                <option value="1">Draft</option>
+                                                <option value="2">Approved</option>
+                                                <option value="3">In-Production</option>
+                                                <option value="4">Final QC</option>
+                                                <option value="5">Outwarded</option>
+                                                <option value="6">Delivered</option>
+                                                <option value="7">Closed</option>
                                             </select>
                                         </div>
                                     </div>

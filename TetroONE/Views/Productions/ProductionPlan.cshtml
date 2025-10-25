@@ -1,58 +1,24 @@
 ﻿@{
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.ProductionPlan, Context.Session);
 }
+
+<link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
+
 <style>
-    #dynamicProduction .row > .col-2 {
-        padding-right: 8px;
-        padding-left: 8px;
-    }
-
-    #dynamicProduction .row > .col-1 {
-        padding-right: 8px;
-        padding-left: 8px;
-    }
-
-    .daterangepicker {
-        z-index: 111111;
-    }
-
-    #RgbCol .table td {
-        padding: .55rem;
-    }
-
     #ProductionPlanTable {
         width: 100% !important;
+        margin-top: 10px !important;
     }
 
     .dataTables_scrollBody {
-        height: 330px !important;
+        height: 350px !important;
         margin-top: -18px !important;
         border-bottom: 1px solid #111;
         margin-bottom: 10px;
     }
 
-    .productionTable {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table-wrapper {
-        max-height: 260px;
-        overflow-y: auto;
-        display: block;
-    }
-
-    .productionTable thead th {
-        position: sticky;
-        top: -1px;
-        z-index: 2;
-        background: #a3c1df;
-    }
-
-    .select2-selection--multiple {
-        max-height: 59px;
-        overflow-y: auto;
-        overflow-x: hidden;
+    .DynrowRemove {
+        margin-top: 17px !important;
     }
 
 </style>
@@ -72,8 +38,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox1"></div>
-                                    <h4 class="card-title" id="CounterValBox1"> </h4>
+                                    <div class="card-category" id="CounterTextBox1">Total ProductionPlan</div>
+                                    <h4 class="card-title" id="CounterValBox1">62</h4>
                                 </div>
                             </div>
                         </div>
@@ -91,8 +57,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2"></div>
-                                    <h4 class="card-title" id="CounterValBox2"></h4>
+                                    <div class="card-category" id="CounterTextBox2">Draft</div>
+                                    <h4 class="card-title" id="CounterValBox2">18</h4>
                                 </div>
                             </div>
                         </div>
@@ -110,8 +76,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3"></div>
-                                    <h4 class="card-title" id="CounterValBox3"></h4>
+                                    <div class="card-category" id="CounterTextBox3">Approved</div>
+                                    <h4 class="card-title" id="CounterValBox3">26</h4>
                                 </div>
                             </div>
                         </div>
@@ -129,8 +95,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox4"></div>
-                                    <h4 class="card-title" id="CounterValBox4"></h4>
+                                    <div class="card-category" id="CounterTextBox4">Cancelled</div>
+                                    <h4 class="card-title" id="CounterValBox4">18</h4>
                                 </div>
                             </div>
                         </div>
@@ -176,8 +142,8 @@
                 <div class="date-carousel" id="datemonth">
                     <div class="date-nav">
                         <button class="nav-button" id="decrement-month-btn2">◄</button>
-                        <span class="month-year" id="dateDisplay2"></span>
-                        <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                        <span class="month-year" id="dateDisplay2">October 2025</span>
+                        <button class="nav-button" id="increment-month-btn2">►</button>
                     </div>
                 </div>
             </div>
@@ -211,135 +177,228 @@
     </div>
 </div>
 
-
-
-<div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductionPlanTable">
-    </table>
+<div id="MainGrid">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductionPlanTable">
+        </table>
+    </div>
 </div>
 
-
-
-<div id="ProductionPlanModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h2 id="ModalTitle"></h2>
-                <span id="Modalclose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+<div id="ProductionPlanCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="ProductionPlanHeader">Add New ProductionPlan</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion1">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        ProductionPlan Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormProductionPlan">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>ProductionPlan No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: PRO/PLAN/001" id="ProductionPlanNo" name="ProductionPlanNo" maxlength="50" required disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>ProductionPlan Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="ProductionPlanDate" name="ProductionPlanDate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>JobOrder No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="JobOrderNo" name="JobOrderNo" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">JOB/NO/001</option>
+                                                <option value="2">JOB/NO/002</option>
+                                                <option value="3">JOB/NO/003</option>
+                                                <option value="4">JOB/NO/004</option>
+                                                <option value="5">JOB/NO/005</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Fabric Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="FabricTypeId" name="FabricTypeId" required disabled>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Cotton</option>
+                                                <option value="2" selected>Polyester</option>
+                                                <option value="3">Blend</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>GSM<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Width<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required disabled oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Process Route<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ProcessRouteId" name="ProcessRouteId" required disabled>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Pre-treatment</option>
+                                                <option value="2">Dyeing</option>
+                                                <option value="3">Printing</option>
+                                                <option value="4" selected>Finishing</option>
+                                                <option value="5">Packing</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Priority Level<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PrioritylevelId" name="PrioritylevelId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Medium</option>
+                                                <option value="3">High</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Planned By<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PlannedBy" name="PlannedBy">
+                                                <option value="">--Select--</option>
+                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
+                                                <option value="2">KARTHIKEYANI</option>
+                                                <option value="3">MITHRAN</option>
+                                                <option value="6">DEXY</option>
+                                                <option value="34">INDRASENAN</option>
+                                                <option value="109">KAVINESH RAJASEKAR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Approved By<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ApprovedBy" name="ApprovedBy">
+                                                <option value="">--Select--</option>
+                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
+                                                <option value="2">KARTHIKEYANI</option>
+                                                <option value="3">MITHRAN</option>
+                                                <option value="6">DEXY</option>
+                                                <option value="34">INDRASENAN</option>
+                                                <option value="109">KAVINESH RAJASEKAR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="Status" name="Status">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Draft</option>
+                                                <option value="2">Approved</option>
+                                                <option value="3">Cancelled</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Remarks<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            @* <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;"> *@
-            <div class="modal-body">
-                <form id="FormProductionPlan">
-                    <div class="row px-2 mb-2 align-items-center">
-                        <div class="col-lg-2 col-md-3 col-sm-6 col-6">
-                            <div class="form-group">
-                                <label>Date<span id="Asterisk">*</span></label>
-                                <input type="date" id="ProductionPlanDate" name="ProductionPlanDate" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-6 col-6">
-                            <div class="form-group">
-                                <label>Franchise<span id="Asterisk">*</span></label>
-                                <select class="form-control" id="ToFranchiseId" name="ToFranchiseId" required>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-12" id="dateRangeCol">
-                            <div class="form-group">
-                                <label>From Date - To Date</label>
-                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%;color: #a9a8a8;">
-                                    <i class="fa fa-calendar"></i>&nbsp;
-                                    <span>No Date</span>  <i class="fa fa-caret-down"></i>
-
-                                </div>
-                                <label id="reportrange-error" class="error" for="reportrange" style="display: none;">This field is required.</label>
-
-                            </div>
-
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-6 col-6">
-                            <div class="form-group">
-                                <label>PO No</label>
-                                <select class="form-control" id="POMultiSelectDropdown" name="POMultiSelectDropdown" multiple>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-6 col-6 mt-3">
-                            <div class="col-12">
-                                <input type="button" class="btn btn-primary" id="SubmitBtn" value="Submit">
-                            </div>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-4 mt-3">
-                            <div class="d-flex justify-content-end align-items-start">
-                                <button id="addProduction" class="btn AddStockBtn" type="button">
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion2">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Batch Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormBatch">
+                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowProductionPlan(this)" style="position: absolute; top: 56px; right: 30px;">
                                     <i class="fas fa-plus" id="AddButton"></i>
                                 </button>
-                            </div>
+                                <div id="DynamicBatchBinding">
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                                                <b>Click Here to Attach your files</b>
+                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                                            </label>
+                                            <div class="file-preview d-flex justify-content-center" id="preview">
+                                                <div class="attachrow">
+                                                    <div class="attachcolumn">
+                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                    </div>
+                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </div>
-
-                    <div id="RgbCol" class="mt-2">
-                        <div class="table-wrapper">
-                            <table class="table table-bordered productionTable mb-0">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th style="background: #a3c1df;">Type</th>
-                                        <th style="background: #a3c1df;">Product <span style="visibility:hidden;">1111111111111</span></th>
-                                        <th style="background: #a3c1df;">Unit <span style="visibility:hidden;">111111</span></th>
-                                        <th style="background: #a3c1df;">System Open Bal</th>
-                                        <th style="background: #a3c1df;">Manual Open Bal</th>
-                                        <th style="background: #a3c1df;">PO-Qty</th>
-                                        <th style="background: #a3c1df;">Empty Bottles</th>
-                                        <th style="background: #a3c1df;">Planned Qty</th>
-                                        <th style="background: #a3c1df;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dynamicProductionPlan">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-end mt-2">
-                        <div class="" style="margin-right: -44px !important;">
-                            <div class="form-group">
-                                <label>No Of Product</label>
-                                <input type="text" id="NoOfProducts" name="NoOfProducts" class="form-control" placeholder="Product" disabled style="width: 54%;">
-                            </div>
-                        </div>
-                        <div class="" style="margin-right: -44px !important;">
-                            <div class="form-group">
-                                <label>Total Qty_RGB</label>
-                                <input type="text" id="TotalBalanceRGB" name="TotalBalanceRGB" class="form-control" placeholder="RGB" disabled style="width: 54%;">
-                            </div>
-                        </div>
-                        <div class="" style="margin-right: -44px !important;">
-                            <div class="form-group">
-                                <label>Total Qty_PET</label>
-                                <input type="text" id="TotalBalancePET" name="TotalBalancePET" class="form-control" placeholder="PET" disabled style="width: 54%;">
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-
-            </div>
-            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
-                <div class="row">
-                    <div class="col-12">
-                        <input type="button" class="btn btn-primary" id="SaveProductionPlan" value="Save">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveProductionPlan">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     var access = @Html.Raw(Json.Serialize(access));
 </script>
-<script src="~/assets/js/daterangepicker.min.js"></script>
+
+<script src="~/assets/js/mdtimepicker.js"></script>
 <script src="~/js/productionplan.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 

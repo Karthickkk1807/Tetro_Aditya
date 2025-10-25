@@ -1,5 +1,5 @@
 ﻿<link href="~/css/saleorder.css" rel="stylesheet" />
-
+ 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
         <div class="row m-t-25">
@@ -14,8 +14,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox1"></div>
-                                    <h4 class="card-title" id="valCounterBox1"></h4>
+                                    <div class="card-category" id="lblCounterBox1">Total Order</div>
+                                    <h4 class="card-title" id="valCounterBox1">42/10,000 KGS</h4>
                                 </div>
                             </div>
                         </div>
@@ -33,8 +33,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox2"></div>
-                                    <h4 class="card-title" id="valCounterBox2"></h4>
+                                    <div class="card-category" id="lblCounterBox2">In-Production</div>
+                                    <h4 class="card-title" id="valCounterBox2">21/15,000 KGS</h4>
                                 </div>
                             </div>
                         </div>
@@ -52,8 +52,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox3"></div>
-                                    <h4 class="card-title" id="valCounterBox3"></h4>
+                                    <div class="card-category" id="lblCounterBox3">Outwarded</div>
+                                    <h4 class="card-title" id="valCounterBox3">12/16,000KGS</h4>
                                 </div>
                             </div>
                         </div>
@@ -71,8 +71,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox4"></div>
-                                    <h4 class="card-title" id="valCounterBox4"></h4>
+                                    <div class="card-category" id="lblCounterBox4">Cloesed</div>
+                                    <h4 class="card-title" id="valCounterBox4">9/8,500KGS</h4>
                                 </div>
                             </div>
                         </div>
@@ -259,10 +259,15 @@
                                             <select class="form-control" id="OrderStatusId" name="OrderStatusId" required>
                                                 <option value="">--Select--</option>
                                                 <option value="1">Draft</option>
-                                                <option value="2">Confirmed</option>
-                                                <option value="3">In Production</option>
-                                                <option value="4">Dispatched</option>
-                                                <option value="5">Closed</option>
+                                                <option value="2">Approved</option>
+                                                <option value="3">Goods Inwarded</option>
+                                                <option value="4">Goods Inspected</option>
+                                                <option value="5">Job Order</option>
+                                                <option value="6">In-Production</option>
+                                                <option value="7">Final QC</option>
+                                                <option value="8">Outwarded</option>
+                                                <option value="9">Delivered</option>
+                                                <option value="10">Closed</option>
                                             </select>
                                         </div>
                                     </div>
