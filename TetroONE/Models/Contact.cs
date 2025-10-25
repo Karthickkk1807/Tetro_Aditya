@@ -107,14 +107,6 @@ namespace TetroONE.Models
         public decimal? PerCrateCost { get; set; }
         public int? CurrentEligibility { get; set; }
 
-        //public DateTime? Visi_CollaboratedDate { get; set; }
-        //public DateTime? Visi_ExpiryDate { get; set; }
-        //public decimal? Visi_InvoiceAmount { get; set; }
-        //public decimal? Visi_NoOfQty { get; set; }
-        //public decimal? GivenVisiCooler { get; set; }
-        //public decimal? GoDown { get; set; }
-        //public decimal? Shops { get; set; }
-        //public decimal? Logistics { get; set; }
         public bool? IsActive { get; set; }
         public List<ContactPersonDetails> ClientContactPersonDetails { get; set; }
         public List<ClientProductMappingDetails> clientProductMappingDetails { get; set; }
@@ -122,21 +114,10 @@ namespace TetroONE.Models
         public List<FranchiseMappingDetails> franchiseMappingDetails { get; set; }
         public DataTable TVP_ContactFranchiseMappingDetails { get; set; }
         public DataTable TVP_AttachmentDetails { get; set; }
-        public List<DistributorVisicoolarDetails> DistributorVisicoolarDetails { get; set; }
-        public DataTable TVP_DistributorVisicoolarDetails { get; set; }
-        public DataTable TVP_VisicoolarAttachmentDetails { get; set; }
+    
     }
 
-    public class DistributorVisicoolarDetails
-    {
-        public int? DistributorVisicoolarId { get; set; }
-        public string? VisicoolarName { get; set; }
-        public DateTime? CollaboratedDate { get; set; }
-        public DateTime? ExpiryDate { get; set; }
-        public decimal? InvAmount { get; set; }
-        public int? RowNumber { get; set; }
-        public int? ClientId { get; set; }
-    }
+ 
 
     public class ClientProductMappingDetails
     {
@@ -226,4 +207,39 @@ namespace TetroONE.Models
         public List<ContactPersonDetails> ShopContactPersonDetails { get; set; }
         public DataTable TVP_ContactPersonDetails { get; set; }
     }
+
+
+
+    public class GetServiceEngr
+    {
+        public int LoginUserId { get; set; }
+        public int? BranchId { get; set; }
+        public int? ServiceEngrId { get; set; }
+    }
+
+    public class InsertUpdateServiceEngr
+    {
+        public int LoginUserId { get; set; }
+        public int? ServiceEngrId { get; set; }
+        public string? ServiceEngrNo { get; set; }
+        public int? ServiceEngrTypeId { get; set; }
+        public string? ServiceEngrName { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? Country { get; set; }
+        public string? ZipCode { get; set; }
+        public string? ContactNumber { get; set; }
+        public string? WhatsappNo { get; set; }
+        public string? Email { get; set; }
+        public string? GSTNumber { get; set; }
+        public string? Remarks { get; set; }
+        public bool? IsActive { get; set; }
+        public decimal? CurrentCreditLimit { get; set; }
+        public List<ContactPersonDetails> ContactPersonDetails { get; set; }
+        public DataTable TVP_ContactPersonDetails { get; set; }
+        
+        public DataTable TVP_ContactBranchMappingDetails { get; set; }
+    }
+
 }

@@ -8,6 +8,10 @@ namespace TetroONE.Controllers
         {
             return View();
         }
+        public IActionResult MaintenanceLog()
+        {
+            return View();
+        }
         public IActionResult Service()
         {
             return View();
