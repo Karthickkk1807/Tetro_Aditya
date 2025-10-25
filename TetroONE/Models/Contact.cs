@@ -71,7 +71,7 @@ namespace TetroONE.Models
     {
         public int LoginUserId { get; set; }
         public int? ClientId { get; set; }
-        public int? FranchiseId { get; set; }
+
         public int? ClientTypeId { get; set; }
     }
 

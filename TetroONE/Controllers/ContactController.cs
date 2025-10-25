@@ -142,13 +142,12 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetClient")]
-		public IActionResult GetClient(int FranchiseId ,int ClientTypeId)
+		public IActionResult GetClient(int ClientTypeId)
 		{
 			GetClient getClient = new GetClient()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 				ClientId = null,
-				FranchiseId = FranchiseId,
                 ClientTypeId = ClientTypeId
             };
 
@@ -158,13 +157,12 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetClientID")]
-		public IActionResult GetClientID(int ClientId, int FranchiseId)
+		public IActionResult GetClientID(int ClientId)
 		{
 			GetClient getClient = new GetClient()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 				ClientId = ClientId,
-				FranchiseId = FranchiseId,
 				ClientTypeId = null
 			};
 

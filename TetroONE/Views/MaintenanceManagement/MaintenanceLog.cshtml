@@ -185,22 +185,42 @@
 
                                         </div>
                                     </div>
-                                    <div id="PlanDetailsContainer" class="mt-4"></div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Downtime</label>
                                             <input type="text" class="form-control" placeholder="0" id="Downtime" name="Downtime" maxlength="50" />
                                         </div>
                                     </div>
+                                    <div id="PlanDetailsContainer" class="mt-0" style="padding:15px;"></div>
 
 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    
+
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-12 spareDiv" style="display: none;">
                                         <div class="form-group">
                                             <label>Spare Parts</label>
-                                            <input type="text" class="form-control" placeholder="" id="SpareParts" name="SpareParts"  maxlength="50" />
+                                            <select multiple class="form-control select2 SpareParts"
+                                                    id="SpareParts"
+                                                    name="SpareParts"
+                                                    data-select2-id="SpareParts"
+                                                    tabindex="-1" aria-hidden="true">
+                                                <option value="Wrench Heads">Wrench Heads</option>
+                                                <option value="Ratchet Handles">Ratchet Handles</option>
+                                                <option value="Socket Extensions">Socket Extensions</option>
+                                                <option value="Adapter Sets">Adapter Sets</option>
+
+                                                <!-- Screwdriver Kit Spare Parts -->
+                                                <option value="Phillips Bits">Phillips Bits</option>
+                                                <option value="Flathead Bits">Flathead Bits</option>
+                                                <option value="Torx Bits">Torx Bits</option>
+                                                <option value="Hex Bits">Hex Bits</option>
+                                                <option value="Bit Holders">Bit Holders</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 PlanNoDiv">
+                                    
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Technician<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="PlanTypeId" name="PlanTypeId" required>
