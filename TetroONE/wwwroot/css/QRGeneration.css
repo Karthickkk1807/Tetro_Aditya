@@ -16,3 +16,10 @@
     font-size: 12px !important;
     font-weight: 700;
 }
+
+.Date-SearchColumn {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-right: .5rem !important;
+}

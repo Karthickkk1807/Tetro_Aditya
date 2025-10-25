@@ -38,6 +38,10 @@
         let newMonth = months[monthIndex];
         $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
     });
+    $('#toggleCustomDate').click(function () {
+        $('#fromtodateCol').slideToggle(); // smoothly show/hide
+    });
+
 
     $(document).on('click', '#AddScrap', function () {
         $('#ScrapModal').show();
