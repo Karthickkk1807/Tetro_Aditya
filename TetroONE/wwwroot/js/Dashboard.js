@@ -278,20 +278,17 @@ function TotalActiveEmployees(data) {
                 ctx.save();
             }
         }]
-    });
-
-
+    }); 
 }
+
 function ProductionTrends(data) {
     const d = data[2];
-
 
     const labels = d.map(item => item.WeekLabel || item.Days || item.MonthLabel || item.YearLabel);
     const counts = d.map(item => item.ProductionCount || 0);
     const qtys = d.map(item => item.ProductionQty || 0);
 
     const ctx = document.getElementById('productionChart').getContext('2d');
-
 
     if (window.productionChartInstance) {
         window.productionChartInstance.destroy();
@@ -318,7 +315,7 @@ function ProductionTrends(data) {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: false  // ✅ Hides the legend
+                    display: false
                 },
                 tooltip: {
                     mode: 'index',
@@ -331,9 +328,7 @@ function ProductionTrends(data) {
                 }
             },
             scales: {
-                x: {
-                    grid: { display: false }
-                },
+                x: { grid: { display: false } },
                 y: {
                     beginAtZero: false,
                     min: 0,
@@ -347,7 +342,6 @@ function ProductionTrends(data) {
         }
     };
 
-
     window.productionChartInstance = new Chart(ctx, chartConfig);
 
     $('#trendTypeBtns button').off('click').on('click', function () {
@@ -360,6 +354,89 @@ function ProductionTrends(data) {
         productionChartInstance.update();
     });
 }
+
+
+
+
+
+//function ProductionTrends(data) {
+//    const d = data[2];
+
+
+//    const labels = d.map(item => item.WeekLabel || item.Days || item.MonthLabel || item.YearLabel);
+//    const counts = d.map(item => item.ProductionCount || 0);
+//    const qtys = d.map(item => item.ProductionQty || 0);
+
+//    const ctx = document.getElementById('productionChart').getContext('2d');
+
+
+//    if (window.productionChartInstance) {
+//        window.productionChartInstance.destroy();
+//    }
+
+//    const chartConfig = {
+//        type: 'line',
+//        data: {
+//            labels: labels,
+//            datasets: [
+//                {
+//                    label: '',
+//                    data: counts,
+//                    borderColor: '#4f46e5',
+//                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+//                    borderWidth: 2,
+//                    tension: 0.3,
+//                    fill: true
+//                }
+//            ]
+//        },
+//        options: {
+//            responsive: true,
+//            maintainAspectRatio: false,
+//            plugins: {
+//                legend: {
+//                    display: false  // ✅ Hides the legend
+//                },
+//                tooltip: {
+//                    mode: 'index',
+//                    intersect: false,
+//                    callbacks: {
+//                        label: function (context) {
+//                            return context.dataset.label + ': ' + context.parsed.y.toLocaleString() + ' bottles';
+//                        }
+//                    }
+//                }
+//            },
+//            scales: {
+//                x: {
+//                    grid: { display: false }
+//                },
+//                y: {
+//                    beginAtZero: false,
+//                    min: 0,
+//                    ticks: {
+//                        callback: function (value) {
+//                            return value.toLocaleString();
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    };
+
+
+//    window.productionChartInstance = new Chart(ctx, chartConfig);
+
+//    $('#trendTypeBtns button').off('click').on('click', function () {
+//        const type = $(this).data('type');
+
+//        $('#trendTypeBtns button').removeClass('active');
+//        $(this).addClass('active');
+
+//        productionChartInstance.data.datasets[0].data = type === 'qty' ? qtys : counts;
+//        productionChartInstance.update();
+//    });
+//}
 
 function FlavorChart(data) {
     const d = data[3] || [];

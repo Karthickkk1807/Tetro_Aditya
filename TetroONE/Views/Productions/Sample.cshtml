@@ -1,163 +1,21 @@
 ﻿@{
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Sample, Context.Session);
 }
-<style>
-    #dynamicProduction .row > .col-2 {
-        padding-right: 8px;
-        padding-left: 8px;
-    }
+<link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
 
-    #dynamicProduction .row > .col-1 {
-        padding-right: 8px;
-        padding-left: 8px;
-    }
-    .Comments{
-        height: 35px !important;
-    }
-    #RgbCol .table td {
-        padding: .55rem;
-    }
+<style>
 
     #SampleTable {
         width: 100% !important;
+        margin-top: 10px !important;
     }
 
     .dataTables_scrollBody {
-        height: 330px !important;
+        height: 350px !important;
         margin-top: -18px !important;
         border-bottom: 1px solid #111;
         margin-bottom: 10px;
     }
-
-    .productionTable {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table-wrapper {
-        max-height: 310px !important; /* 257px */
-        overflow-y: auto;
-        display: block;
-    }
-
-    .productionTable thead th {
-        position: sticky;
-        top: -1px;
-        z-index: 2;
-        background: #a3c1df;
-    }
-
-    .AddStockBtn1 {
-        background: none;
-        color: green;
-        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        font-size: 13px;
-        border: 1px solid green;
-        width: 30px;
-        border-radius: 50%;
-        height: 30px;
-        padding: 4px;
-        margin-right: 5px;
-        margin-top: 1px;
-    }
-
-        .AddStockBtn1:hover {
-            background-color: #11aa22;
-            color: white;
-            box-shadow: 0 3px 11px rgb(58 169 0 / 93%);
-        }
-
-    .DynrowRemove {
-        background: none !important;
-        color: red;
-        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        font-size: 12px;
-        border: 1px solid red;
-        width: 33px;
-        border-radius: 50%;
-        height: 33px;
-        padding: 4px;
-        margin-top: 0px;
-    }
-
-        .DynrowRemove i {
-            margin-left: 1px;
-            color: red;
-        }
-
-        .DynrowRemove:hover i {
-            color: white !important;
-        }
-
-    .DynrowRemoveQC {
-        background: none !important;
-        color: red;
-        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        font-size: 12px;
-        border: 1px solid red;
-        width: 33px;
-        border-radius: 50%;
-        height: 33px;
-        padding: 4px;
-        margin-top: 0px;
-    }
-
-        .DynrowRemoveQC i {
-            margin-left: 1px;
-            color: red;
-        }
-
-        .DynrowRemoveQC:hover i {
-            color: white !important;
-        }
-
-    #ProductionModal .card-stats .col-stats {
-        justify-content: center !important;
-        display: flex !important;
-        padding-left: 15px !important;
-        padding-top: 27px !important;
-    }
-
-    #ProductionModal .quick-db-box .col-icon {
-        position: relative;
-        top: -27px !important;
-        left: 29px !important;
-        height: 32px;
-    }
-
-    #ProductionModal .card-round {
-        height: 60px;
-    }
-
-    .searchbar__inputManageStock {
-        height: 34px;
-        flex-grow: 1;
-        padding: 5px;
-        outline: none;
-        border: 1px solid rgba(56, 39, 180, 1);
-        border-radius: 5px 0 0 5px;
-        background: #F4FAF9;
-        transition: background 0.25s, box-shadow 0.25s;
-        width: 100%;
-    }
-
-    .ExistFiles, .DynamicExistselectedFiles {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 3px;
-    }
-
-        .ExistFiles li {
-            list-style-type: none;
-        }
-
-    .DynamicExistselectedFiles li {
-            list-style-type: none;
-        }
 </style>
 
 <div class="row quick-db m-b-5">
@@ -174,8 +32,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox1"></div>
-                                    <h4 class="card-title" id="CounterValBox1"> </h4>
+                                    <div class="card-category" id="CounterTextBox1">Total Sample</div>
+                                    <h4 class="card-title" id="CounterValBox1">37</h4>
                                 </div>
                             </div>
                         </div>
@@ -193,8 +51,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2"></div>
-                                    <h4 class="card-title" id="CounterValBox2"></h4>
+                                    <div class="card-category" id="CounterTextBox2">Draft</div>
+                                    <h4 class="card-title" id="CounterValBox2">10</h4>
                                 </div>
                             </div>
                         </div>
@@ -212,8 +70,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3"></div>
-                                    <h4 class="card-title" id="CounterValBox3"></h4>
+                                    <div class="card-category" id="CounterTextBox3">Approved</div>
+                                    <h4 class="card-title" id="CounterValBox3">21</h4>
                                 </div>
                             </div>
                         </div>
@@ -231,8 +89,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox4"></div>
-                                    <h4 class="card-title" id="CounterValBox4"></h4>
+                                    <div class="card-category" id="CounterTextBox4">Cancelled</div>
+                                    <h4 class="card-title" id="CounterValBox4">6</h4>
                                 </div>
                             </div>
                         </div>
@@ -278,8 +136,8 @@
                 <div class="date-carousel" id="datemonth">
                     <div class="date-nav">
                         <button class="nav-button" id="decrement-month-btn2">◄</button>
-                        <span class="month-year" id="dateDisplay2"></span>
-                        <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
+                        <span class="month-year" id="dateDisplay2">October 2025</span>
+                        <button class="nav-button" id="increment-month-btn2">►</button>
                     </div>
                 </div>
             </div>
@@ -300,7 +158,7 @@
                         if (access.Create)
                         {
                             <span class="pop">
-                                <a id="AddProduction" title="Add Sample">
+                                <a id="AddSample" title="Add Sample">
                                     <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
                                 </a>
                             </span>
@@ -311,119 +169,378 @@
         </div>
     </div>
 </div>
-
-
-
-<div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="SampleTable">
-    </table>
+ 
+<div id="MainGrid">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="SampleTable">
+        </table>
+    </div>
 </div>
 
-<div id="ProductionModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h2 id="ProductionModalTitle">Production Info</h2>
-                <span id="ProductionClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
-            </div>
 
-            <div class="modal-body" style="max-height: 77vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
-               
-
-                <form id="FormSample">
-                    <div class="row px-2 mb-2 align-items-center mt--2">
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                            <div class="form-group">
-                                <label>Date<span id="Asterisk">*</span></label>
-                                <input type="date" id="SampleDate" name="SampleDate" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                            <div class="form-group">
-                                <label>Franchise<span id="Asterisk">*</span></label>
-                                <select class="form-control" id="FranchiseId" name="FranchiseId" required disabled>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-4">
-                            <div class="form-group">
-                                <label>Incharge<span id="Asterisk">*</span></label>
-                                <select class="form-control" id="Incharge" name="Incharge" required>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-12 col-sm-12 col-6 d-flex justify-content-end mt-3">
-                            <div class="searchbar">
-                                <input type="text" class="searchbar__inputManageStock" name="tableForPopFilter" id="tableForPopFilter" placeholder="Search">
-                                <button type="button" class="searchbar__button">
-                                    <img src="/assets/commonimages/search.svg">
-                                </button>
-                            </div>
-                            <div class="d-flex justify-content-center align-items-start ml-3">
-                                <button id="addProduction" class="btn AddStockBtn" type="button">
-                                    <i class="fas fa-plus" id="AddButton"></i>
-                                </button>
-                            </div>
+<div id="SampleCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="SampleHeader">Add New Sample</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion1">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Sample Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormSample">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Sample No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: SAM/NO/001" id="SampleNo" name="SampleNo" maxlength="50" required disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Sample Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="SampleDate" name="SampleDate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Sample Name<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: Text Sample Name" id="SampleName" name="SampleName" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>SaleOrder No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">SALE/NO/001</option>
+                                                <option value="2">SALE/NO/002</option>
+                                                <option value="3">SALE/NO/003</option>
+                                                <option value="4">SALE/NO/004</option>
+                                                <option value="5">SALE/NO/005</option>
+                                                <option value="5">SALE/NO/006</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Customer<span id="Asterisk">*</span></label>
+                                            <select class="form-control ProcessStage" id="CustomerId" name="CustomerId">
+                                                <option value="">--Select--</option>
+                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
+                                                <option value="2">KARTHIKEYANI</option>
+                                                <option value="3">MITHRAN</option>
+                                                <option value="6">DEXY</option>
+                                                <option value="34">INDRASENAN</option>
+                                                <option value="109">KAVINESH RAJASEKAR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Fabric Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="FabricType" name="FabricType" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Cotton</option>
+                                                <option value="2">Polyester</option>
+                                                <option value="3">Blended</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Process Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ProcessType" name="ProcessType" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Dyed</option>
+                                                <option value="2">Printed</option>
+                                                <option value="3">Finished</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>GSM<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Weight<span id="Asterisk">*</span></label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Weight" name="Weight" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                                <select class="form-control" id="WeightUnitId" name="WeightUnitId" required style="width: 38%;">
+                                                    <option value="">--Select--</option>
+                                                    <option value="1">Meter</option>
+                                                    <option value="2">Kg</option>
+                                                    <option value="3">Roll</option>
+                                                    <option value="4">MMeter</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Color<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: SkyBlue" id="Color" name="Color" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Priority<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PriorityId" name="PriorityId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Normal</option>
+                                                <option value="2">Medium</option>
+                                                <option value="3">High</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Prepared By<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" name="PreparedBy" value="PreparedBy" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Approved By<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ApprovedBy" name="ApprovedBy">
+                                                <option value="">--Select--</option>
+                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
+                                                <option value="2">KARTHIKEYANI</option>
+                                                <option value="3">MITHRAN</option>
+                                                <option value="6">DEXY</option>
+                                                <option value="34">INDRASENAN</option>
+                                                <option value="109">KAVINESH RAJASEKAR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="Status" name="Status">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Draft</option>
+                                                <option value="2">Approved</option>
+                                                <option value="3">Cancelled</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-
-                    <div id="RgbCol" class="mt-2">
-                        <div class="table-wrapper">
-                            <table class="table table-bordered productionTable mb-0">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th style="background: #a3c1df;">Product <span style="visibility:hidden;">1111111111111111111</span></th>
-                                        <th style="background: #a3c1df;">Flavour <span style="visibility:hidden;">11111</span></th>
-                                        <th style="background: #a3c1df;">Unit <span style="visibility:hidden;">11111</span></th>
-                                        
-                                        <th style="background: #a3c1df;">Qty</th>
-                                        <th style="background: #a3c1df;">Comments<span style="visibility:hidden;">11111111111111111111111111111111111111111111</span></th>
-                                    
-                                        <th style="background: #a3c1df;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dynamicProduction">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </form>
-                <div class="row d-flex justify-content-end">
-                    <div class="" style="margin-right: -44px !important;">
-                        <div class="form-group">
-                            <label>No Of Product</label>
-                            <input type="text" id="NoOfProducts" name="NoOfProducts" class="form-control" placeholder="0" style="width: 54%;" disabled>
-                        </div>
-                    </div>
-                    <div class="" style="margin-right: -44px !important;">
-                        <div class="form-group">
-                            <label>Total Qty</label>
-                            <input type="text" id="TotalBalanceRGB" name="TotalBalanceRGB" class="form-control" placeholder="0" style="width: 54%;" disabled>
-                        </div>
-                    </div>
-                    
                 </div>
-
             </div>
-            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
-                <div class="row">
-                    <div class="col-12">
-                        <input type="button" class="btn btn-primary" id="SaveProduction" value="Save">
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion2">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Recipe & Parameter Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormRecipeParameter">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Machine Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="MachineType" name="MachineType">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Jet Dyeing</option>
+                                                <option value="2">Winch</option>
+                                                <option value="3">Pad-Dry</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Batch Size<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control BatchSize" placeholder="Ex: 200 KG" id="BatchSize" name="BatchSize" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Bath Ratio<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 1:10" id="BathRatio" name="BathRatio" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Temperature<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 12.76" id="Temperature" name="Temperature" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Time<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control mydatetimepicker" placeholder="Ex: Time" id="Time" name="Time" required style="background: #ffffff;" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>pH Value<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 6.8" id="pHLevel" name="pHLevel" />
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                                        <fieldset class="expensefild1">
+                                            <legend class="w-auto">
+                                                Chemical List
+                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical(this)" style="position: absolute; top: 0px; right: 40px;">
+                                                    <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                                                </button>
+                                            </legend>
+                                            <div id="ChemicalListRow">
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Special Instructions<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="SpecialInstructions" name="SpecialInstructions" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Special Instructions Querys"></textarea>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordion3">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseThree3">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Testing & QC Results Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion3">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormTestingResults">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Shade Matching<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ShadeMatching" name="ShadeMatching">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Pass / Fail</option>
+                                                <option value="2">Visual / Spectrophotometer</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>pH Value<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 6.8" id="pHLevel" name="pHLevel" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Color Fastness (Washing)<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 6.8" id="ColorFastnessWashing" name="ColorFastnessWashing" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Color Fastness (Rubbing)<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 7.9" id="ColorFastnessRubbing" name="ColorFastnessRubbing" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Color Fastness (Light)<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 8.0" id="ColorFastnessLight" name="ColorFastnessLight" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Dimensional Stability<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 8" id="DimensionalStability" name="DimensionalStability" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Hand Feel Appearance<span id="Asterisk">*</span></label> 
+                                            <select class="form-control" id="HandFeelAppearance" name="HandFeelAppearance">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Text Soft</option>
+                                                <option value="2">Stiff</option>
+                                                <option value="3">Smooth</option>
+                                                <option value="4">Rough</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Remarks<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                                                <b>Click Here to Attach your files</b>
+                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                                            </label>
+                                            <div class="file-preview d-flex justify-content-center" id="preview">
+                                                <div class="attachrow">
+                                                    <div class="attachcolumn">
+                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                    </div>
+                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="ProductionDynamicAttachmentModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
-    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h2 id=""> Production QC Mapping Attachment Info</h2>
-                <span id="ProductionDynamicAttachmentModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
-            </div>
-            <div class="modal-body DynamicAttachmentBind" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveSample">Save</a>
+                </div>
+
             </div>
         </div>
     </div>
@@ -435,11 +552,5 @@
 </script>
 
 
-<script src="~/js/Sample.js"></script>
-
-
-@* <div class="set-container">
-    <input type="checkbox" id="pf897" data-productqcmapid="897">
-    <label for="pf897">TASTE</label>
-    <input class="form-control" type="text" placeholder="0.00" fdprocessedid="t1uwt">
-</div> *@
+<script src="~/assets/js/mdtimepicker.js"></script>
+<script src="~/js/Sample.js"></script> 

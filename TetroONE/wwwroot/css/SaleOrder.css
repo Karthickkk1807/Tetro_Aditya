@@ -5,3 +5,15 @@
     left: 33px;
     white-space: pre-line !important;
 }
+
+#SaleOrderData {
+    width: 100% !important;
+    margin-top: 14px !important;
+}
+
+.dataTables_scrollBody {
+    height: 350px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
