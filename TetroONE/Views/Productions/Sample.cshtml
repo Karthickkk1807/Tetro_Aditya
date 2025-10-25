@@ -169,7 +169,7 @@
         </div>
     </div>
 </div>
- 
+
 <div id="MainGrid">
     <div class="table-responsive">
         <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="SampleTable">
@@ -240,7 +240,7 @@
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Customer<span id="Asterisk">*</span></label>
-                                            <select class="form-control ProcessStage" id="CustomerId" name="CustomerId">
+                                            <select class="form-control ProcessStage" id="CustomerId" name="CustomerId" disabled>
                                                 <option value="">--Select--</option>
                                                 <option value="1">RAGHURAMAN GOBINATHAN</option>
                                                 <option value="2">KARTHIKEYANI</option>
@@ -254,7 +254,7 @@
                                     <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Fabric Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="FabricType" name="FabricType" required>
+                                            <select class="form-control" id="FabricType" name="FabricType" required disabled>
                                                 <option value="">--Select--</option>
                                                 <option value="1">Cotton</option>
                                                 <option value="2">Polyester</option>
@@ -265,39 +265,30 @@
                                     <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Process Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProcessType" name="ProcessType" required>
+                                            <select class="form-control" id="ProcessType" name="ProcessType" required disabled>
                                                 <option value="">--Select--</option>
                                                 <option value="1">Dyed</option>
                                                 <option value="2">Printed</option>
-                                                <option value="3">Finished</option> 
+                                                <option value="3">Finished</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>GSM<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required />
+                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required disabled />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Weight<span id="Asterisk">*</span></label>
-                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Weight" name="Weight" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                                <select class="form-control" id="WeightUnitId" name="WeightUnitId" required style="width: 38%;">
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">Meter</option>
-                                                    <option value="2">Kg</option>
-                                                    <option value="3">Roll</option>
-                                                    <option value="4">MMeter</option>
-                                                </select>
-                                            </div>
+                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Weight" name="Weight" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" disabled />
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Color<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: SkyBlue" id="Color" name="Color" required />
+                                            <input type="text" class="form-control" placeholder="Ex: SkyBlue" id="Color" name="Color" required disabled />
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-lg-3 col-sm-6 col-6">
@@ -311,13 +302,13 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Prepared By<span id="Asterisk">*</span></label>
                                             <input type="date" class="form-control" name="PreparedBy" value="PreparedBy" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Approved By<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="ApprovedBy" name="ApprovedBy">
@@ -331,14 +322,14 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Status<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="Status" name="Status">
                                                 <option value="">--Select--</option>
                                                 <option value="1">Draft</option>
                                                 <option value="2">Approved</option>
-                                                <option value="3">Cancelled</option> 
+                                                <option value="3">Cancelled</option>
                                             </select>
                                         </div>
                                     </div>
@@ -374,7 +365,7 @@
                                                 <option value="">--Select--</option>
                                                 <option value="1">Jet Dyeing</option>
                                                 <option value="2">Winch</option>
-                                                <option value="3">Pad-Dry</option> 
+                                                <option value="3">Pad-Dry</option>
                                             </select>
                                         </div>
                                     </div>
@@ -407,7 +398,7 @@
                                             <label>pH Value<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: 6.8" id="pHLevel" name="pHLevel" />
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div class="col-md-12 col-lg-12 col-sm-12 col-6">
                                         <fieldset class="expensefild1">
                                             <legend class="w-auto">
@@ -425,7 +416,7 @@
                                             <label>Special Instructions<span id="Asterisk">*</span></label>
                                             <textarea class="form-control" id="SpecialInstructions" name="SpecialInstructions" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Special Instructions Querys"></textarea>
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -451,20 +442,26 @@
                         <div id="Styleenterydetalis" class="card-body">
                             <form id="FormTestingResults">
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Shade Matching<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="ShadeMatching" name="ShadeMatching">
                                                 <option value="">--Select--</option>
-                                                <option value="1">Pass / Fail</option>
-                                                <option value="2">Visual / Spectrophotometer</option> 
+                                                <option value="1">Pass</option>
+                                                <option value="2">Fail</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>pH Value<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: 6.8" id="pHLevel" name="pHLevel" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Dimensional Stability<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 8" id="DimensionalStability" name="DimensionalStability" />
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
@@ -485,15 +482,9 @@
                                             <input type="text" class="form-control" placeholder="Ex: 8.0" id="ColorFastnessLight" name="ColorFastnessLight" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Dimensional Stability<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 8" id="DimensionalStability" name="DimensionalStability" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Hand Feel Appearance<span id="Asterisk">*</span></label> 
+                                            <label>Hand Feel Appearance<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="HandFeelAppearance" name="HandFeelAppearance">
                                                 <option value="">--Select--</option>
                                                 <option value="1">Text Soft</option>
@@ -503,7 +494,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                                    <div class="col-md-8 col-lg-8 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Remarks<span id="Asterisk">*</span></label>
                                             <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>

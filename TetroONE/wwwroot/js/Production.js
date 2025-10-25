@@ -110,6 +110,7 @@ function MainGridData() {
         {
             Date: "01 Oct 2025",
             ProductionNo: "PRO/NO/001",
+            Batch: "BATCH/NO/001",
             Shift: shifts[0],
             ProcessStage: processStages[0],
             MachineNo: "Machine 1",
@@ -125,6 +126,7 @@ function MainGridData() {
         {
             Date: "03 Oct 2025",
             ProductionNo: "PRO/NO/002",
+            Batch: "BATCH/NO/002",
             Shift: shifts[1],
             ProcessStage: processStages[1],
             MachineNo: "Machine 2",
@@ -140,6 +142,7 @@ function MainGridData() {
         {
             Date: "05 Oct 2025",
             ProductionNo: "PRO/NO/003",
+            Batch: "BATCH/NO/003",
             Shift: shifts[2],
             ProcessStage: processStages[2],
             MachineNo: "Machine 3",
@@ -155,6 +158,7 @@ function MainGridData() {
         {
             Date: "07 Oct 2025",
             ProductionNo: "PRO/NO/004",
+            Batch: "BATCH/NO/004",
             Shift: shifts[3],
             ProcessStage: processStages[0],
             MachineNo: "Machine 4",
@@ -170,6 +174,7 @@ function MainGridData() {
         {
             Date: "10 Oct 2025",
             ProductionNo: "PRO/NO/005",
+            Batch: "BATCH/NO/005",
             Shift: shifts[0],
             ProcessStage: processStages[1],
             MachineNo: "Machine 5",
@@ -185,6 +190,7 @@ function MainGridData() {
         {
             Date: "12 Oct 2025",
             ProductionNo: "PRO/NO/006",
+            Batch: "BATCH/NO/006",
             Shift: shifts[1],
             ProcessStage: processStages[2],
             MachineNo: "Machine 6",
@@ -200,6 +206,7 @@ function MainGridData() {
         {
             Date: "14 Oct 2025",
             ProductionNo: "PRO/NO/007",
+            Batch: "BATCH/NO/007",
             Shift: shifts[2],
             ProcessStage: processStages[0],
             MachineNo: "Machine 7",
@@ -215,6 +222,7 @@ function MainGridData() {
         {
             Date: "16 Oct 2025",
             ProductionNo: "PRO/NO/008",
+            Batch: "BATCH/NO/008",
             Shift: shifts[3],
             ProcessStage: processStages[1],
             MachineNo: "Machine 8",
@@ -230,6 +238,7 @@ function MainGridData() {
         {
             Date: "18 Oct 2025",
             ProductionNo: "PRO/NO/009",
+            Batch: "BATCH/NO/009",
             Shift: shifts[0],
             ProcessStage: processStages[2],
             MachineNo: "Machine 9",
@@ -243,11 +252,11 @@ function MainGridData() {
             Status_Color: "#dc3545"
         }
     ];
-
      
     const productionColumns = [
         { data: 'Date', name: 'Date', title: 'Date' },
         { data: 'ProductionNo', name: 'ProductionNo', title: 'Production No' },
+        { data: 'Batch', name: 'Batch', title: 'Batch No' },
         { data: 'Shift', name: 'Shift', title: 'Shift' },
         { data: 'ProcessStage', name: 'ProcessStage', title: 'Process Stage' },
         { data: 'MachineNo', name: 'MachineNo', title: 'Machine No' },
@@ -265,7 +274,7 @@ function MainGridData() {
                 </table>
             `;
     $('#MainGrid').append(html);
-    bindTable('ProductionPlanTable', ProductionData, productionColumns, 12, 'Date', '350px', true, { update: true, delete: true });
+    bindTable('ProductionPlanTable', ProductionData, productionColumns, 13, 'Date', '350px', true, { update: true, delete: true });
 }
 
 function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {

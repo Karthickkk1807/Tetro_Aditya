@@ -53,7 +53,7 @@
         $('#fadeinpage').addClass('fadeoverlay');
         CanvasOpenFirstShowingProductionPlan();
         $('.BatchDynamic').remove();
-        duplicateRowProductionPlan(); 
+        duplicateRowProductionPlan();
         $("#FormProductionPlan")[0].reset();
         $('#ProductionPlanHeader').text('ProductionPlan Details');
         $('#SaveProductionPlan').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
@@ -80,7 +80,7 @@
         $("#ProductionPlanCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
     });
-     
+
     $('.accordion-header').on('click', function () {
         var $offcanvas = $(this).closest('.offcanvas-container');
         var $accordion = $(this).closest('.accordion');
@@ -97,148 +97,154 @@ function duplicateRowProductionPlan() {
     let unique = Math.random().toString(36).substring(2);
     var rowadd = $('.BatchDynamic').length;
     var DynamicLableNo = rowadd + 1;
-
-    var html = `
-        <div class="row BatchDynamic">
-            <div class="col-lg-7 col-md-7 col-sm-7 col-7 mt-2 d-flex flex-column mb-2">
-                <label class="DynamicLable">Batch No ${DynamicLableNo}</label>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Batch No<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control BatchNo" placeholder="Ex: BATCH/001" id="BatchNo${unique}" name="BatchNo${unique}" maxlength="50" required disabled />
+    if (rowadd < 3) {
+        var html = `
+            <div class="row BatchDynamic">
+                <div class="col-lg-7 col-md-7 col-sm-7 col-7 mt-2 d-flex flex-column mb-2">
+                    <label class="DynamicLable">Batch No ${DynamicLableNo}</label>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Batch No<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control BatchNo" placeholder="Ex: BATCH/001" id="BatchNo${unique}" name="BatchNo${unique}" maxlength="50" required disabled />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Date<span id="Asterisk">*</span></label>
+                        <input type="date" class="form-control Date" id="Date${unique}" name="Date${unique}" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Fabric Type<span id="Asterisk">*</span></label>
+                        <select class="form-control FabricTypeId" id="FabricTypeId${unique}" name="FabricTypeId${unique}" required>
+                            <option value="">--Select--</option>
+                            <option value="1">Cotton</option>
+                            <option value="2" selected>Polyester</option>
+                            <option value="3">Blend</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>GSM<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control GSM1" placeholder="Ex: 200 GSM" id="GSM${unique}" name="GSM${unique}" required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Lot No<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control LotNo" placeholder="Ex: SKJ123" id="LotNo${unique}" name="LotNo${unique}" required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Shade<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control ShadeColor" placeholder="Ex: SkyBlue" id="ShadeColor${unique}" name="ShadeColor${unique}" required />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Batch Size<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control BatchSize" placeholder="Ex: 200 KG" id="BatchSize${unique}" name="BatchSize${unique}" required />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Recipe No<span id="Asterisk">*</span></label> 
+                        <select class="form-control RecipeNo" id="RecipeNo${unique}" name="RecipeNo${unique}" required>
+                            <option value="">--Select--</option>
+                            <option value="1">REC/NO/001</option>
+                            <option value="2">REC/NO/002</option>
+                            <option value="3">REC/NO/003</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Process Stage<span id="Asterisk">*</span></label>
+                        <select class="form-control ProcessStage" id="ProcessStage${unique}" name="ProcessStage${unique}">
+                            <option value="">--Select--</option>
+                            <option value="1">Pre-treatment</option>
+                            <option value="2">Dyeing</option>
+                            <option value="3">Finishing</option>
+                            <option value="4">Packing</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Machine<span id="Asterisk">*</span></label>
+                        <select class="form-control MachineType" id="MachineType${unique}" name="MachineType${unique}">
+                            <option value="">--Select--</option>
+                            <option value="1">Jet</option>
+                            <option value="2">Jigger</option>
+                            <option value="3">Rotary</option>
+                            <option value="4">Stenter</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Start Time<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control mydatetimepicker StartTime" id="StartTime${unique}" name="StartTime${unique}" placeholder="Start Time" style="background-color: #ffffff;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>End Time<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control mydatetimepicker EndTime" id="EndTime${unique}" name="EndTime${unique}" placeholder="End Time" style="background-color: #ffffff;" readonly>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Output<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control Output" id="Output${unique}" name="Output${unique}" placeholder="Ex: 340 KG">
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Status<span id="Asterisk">*</span></label>
+                        <select class="form-control StatusType" id="StatusType${unique}" name="StatusType${unique}">
+                            <option value="">--Select--</option>
+                            <option value="1">Planned</option>
+                            <option value="2">In-Progress</option>
+                            <option value="3">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Operator<span id="Asterisk">*</span></label>
+                        <select class="form-control Operator" id="Operator${unique}" name="Operator${unique}">
+                            <option value="">--Select--</option>
+                            <option value="1">RAGHURAMAN GOBINATHAN</option>
+                            <option value="2">KARTHIKEYANI</option>
+                            <option value="3">MITHRAN</option>
+                            <option value="6">DEXY</option>
+                            <option value="34">INDRASENAN</option>
+                            <option value="109">KAVINESH RAJASEKAR</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-10 col-lg-10 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Remarks<span id="Asterisk">*</span></label>
+                        <textarea class="form-control Remarks" id="Remarks${unique}" name="Remarks${unique}" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-1 col-sm-3 col-3 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'}"> 
+                    <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
+                        <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Date<span id="Asterisk">*</span></label>
-                    <input type="date" class="form-control Date" id="Date${unique}" name="Date${unique}" />
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Fabric Type<span id="Asterisk">*</span></label>
-                    <select class="form-control FabricTypeId" id="FabricTypeId${unique}" name="FabricTypeId${unique}" required>
-                        <option value="">--Select--</option>
-                        <option value="1">Cotton</option>
-                        <option value="2" selected>Polyester</option>
-                        <option value="3">Blend</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>GSM<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control GSM" placeholder="Ex: 200 GSM" id="GSM${unique}" name="GSM${unique}" required />
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Lot No<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control LotNo" placeholder="Ex: SKJ123" id="LotNo${unique}" name="LotNo${unique}" required />
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Shade<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control ShadeColor" placeholder="Ex: SkyBlue" id="ShadeColor${unique}" name="ShadeColor${unique}" required />
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Batch Size<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control BatchSize" placeholder="Ex: 200 KG" id="BatchSize${unique}" name="BatchSize${unique}" required />
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Recipe No<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control RecipeNo" placeholder="Ex: " id="RecipeNo${unique}" name="RecipeNo${unique}" required />
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Operator<span id="Asterisk">*</span></label>
-                    <select class="form-control Operator" id="Operator${unique}" name="Operator${unique}">
-                        <option value="">--Select--</option>
-                        <option value="1">RAGHURAMAN GOBINATHAN</option>
-                        <option value="2">KARTHIKEYANI</option>
-                        <option value="3">MITHRAN</option>
-                        <option value="6">DEXY</option>
-                        <option value="34">INDRASENAN</option>
-                        <option value="109">KAVINESH RAJASEKAR</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Process Stage<span id="Asterisk">*</span></label>
-                    <select class="form-control ProcessStage" id="ProcessStage${unique}" name="ProcessStage${unique}">
-                        <option value="">--Select--</option>
-                        <option value="1">Pre-treatment</option>
-                        <option value="2">Dyeing</option>
-                        <option value="3">Finishing</option>
-                        <option value="4">Packing</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Start Time<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control mydatetimepicker StartTime" id="StartTime${unique}" name="StartTime${unique}" placeholder="Start Time" style="background-color: #ffffff;" readonly>
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>End Time<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control mydatetimepicker EndTime" id="EndTime${unique}" name="EndTime${unique}" placeholder="End Time" style="background-color: #ffffff;" readonly>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Output<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control Output" id="Output${unique}" name="Output${unique}" placeholder="Ex: ">
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Machine<span id="Asterisk">*</span></label>
-                    <select class="form-control MachineType" id="MachineType${unique}" name="MachineType${unique}">
-                        <option value="">--Select--</option>
-                        <option value="1">Jet</option>
-                        <option value="2">Jigger</option>
-                        <option value="3">Rotary</option>
-                        <option value="4">Stenter</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Status<span id="Asterisk">*</span></label>
-                    <select class="form-control StatusType" id="StatusType${unique}" name="StatusType${unique}">
-                        <option value="">--Select--</option>
-                        <option value="1">Planned</option>
-                        <option value="2">In-Progress</option>
-                        <option value="3">Completed</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-10 col-lg-10 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Remarks<span id="Asterisk">*</span></label>
-                    <textarea class="form-control Remarks" id="Remarks${unique}" name="Remarks${unique}" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-1 col-sm-3 col-3 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'}"> 
-                <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
-                    <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </div>
-        </div>
         `;
-    $('#DynamicBatchBinding').append(html);
-    $('.mydatetimepicker').mdtimepicker();
-    updateRemoveButtons();
+        $('#DynamicBatchBinding').append(html);
+        $('.mydatetimepicker').mdtimepicker();
+        updateRemoveButtons();
+    }
 }
 
 function updateRowLabels() {
@@ -402,7 +408,7 @@ function MainGridData() {
         { data: 'PlannedBy', name: 'PlannedBy', title: 'Planned By' },
         { data: 'ApprovedBy', name: 'ApprovedBy', title: 'Approved By' },
         { data: 'Status', name: 'Status', title: 'Status' }
-    ]; 
+    ];
 
     $('#MainGrid').empty('');
     var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="ProductionPlanTable">

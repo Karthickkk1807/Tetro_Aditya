@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    MainGridData(); 
+    MainGridData();
 
     const months = [
         "January", "February", "March", "April", "May", "June",
@@ -51,9 +51,11 @@
         }
         $('#fadeinpage').addClass('fadeoverlay');
         $("#FormDeliveryPlan")[0].reset();
+        $('.BatchDynamic').remove();
+        duplicateRowDeliveyPlan();
         $('#DeliveryPlanHeader').text('DeliveryPlan Details');
         $('#SaveDeliveryPlan').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
-        CanvasOpenFirstShowingProduction();
+        CanvasOpenFirstShowingDeliveryPlan();
     });
 
     $(document).on('click', '.btn-edit', function () {
@@ -68,7 +70,9 @@
         $('#fadeinpage').addClass('fadeoverlay');
         $('#DeliveryPlanHeader').text('Edit DeliveryPlan Details');
         $('#SaveDeliveryPlan').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
-        CanvasOpenFirstShowingProduction();
+        $('.BatchDynamic').remove();
+        duplicateRowDeliveyPlan();
+        CanvasOpenFirstShowingDeliveryPlan();
     });
 
     $(document).on('click', '#CloseCanvas', function () {
@@ -88,16 +92,16 @@
 
     $(document).on('change', '#Type', function () {
         var $thisVal = $(this).val();
-        var $autoNo = $('#OrderNo'); 
-        $autoNo.empty().append($('<option>', { value: '', text: '--Select--' })); 
+        var $autoNo = $('#OrderNo');
+        $autoNo.empty().append($('<option>', { value: '', text: '--Select--' }));
 
-        if (!$thisVal) return; 
+        if (!$thisVal) return;
 
         var dataMap = {
             1: { prefix: 'SALE/NO/' },
             2: { prefix: 'JOB/NO/' },
             default: { prefix: 'BATCH/NO/' }
-        }; 
+        };
         var data = dataMap[$thisVal] || dataMap.default;
 
         for (var i = 1; i <= 6; i++) {
@@ -105,9 +109,192 @@
                 value: i,
                 text: data.prefix + ('00' + i).slice(-3)
             }));
-        } 
+        }
     });
 });
+
+function duplicateRowDeliveyPlan() {
+    let unique = Math.random().toString(36).substring(2);
+    var rowadd = $('.BatchDynamic').length;
+    var DynamicLableNo = rowadd + 1;
+    if (rowadd < 3) {
+        var html = `
+            <div class="row BatchDynamic">
+                <div class="col-lg-7 col-md-7 col-sm-7 col-7 mt-2 d-flex flex-column mb-2">
+                    <label class="DynamicLable">Batch No ${DynamicLableNo}</label>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="Type${unique}" name="Type${unique}">
+                            <option value="">--Select--</option>
+                            <option value="1">SaleOrder</option>
+                            <option value="2">JobOrder</option>
+                            <option value="3">Batch</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Order No<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="OrderNo${unique}" name="OrderNo${unique}">
+                            <option value="">--Select--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Order Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="OrderTypeId${unique}" name="OrderTypeId${unique}" required disabled>
+                            <option value="">--Select--</option>
+                            <option value="1">Dyeing</option>
+                            <option value="2" selected>Printing</option>
+                            <option value="3">Finishing</option>
+                            <option value="4">Combination</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Product Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ProductTypeId${unique}" name="ProductTypeId${unique}" required disabled>
+                            <option value="">--Select--</option>
+                            <option value="1">T-Shirt</option>
+                            <option value="2">Shirt</option>
+                            <option value="3">Trousers</option>
+                            <option value="4">Jeans</option>
+                            <option value="5">Jacket</option>
+                            <option value="6">Kurta</option>
+                            <option value="7">Saree</option>
+                            <option value="8" selected>Hoodie</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Product Description<span id="Asterisk">*</span></label>
+                        <textarea class="form-control" id="ProductDescription${unique}" name="ProductDescription${unique}" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Product Description" disabled></textarea>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Fabric Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="FabricType${unique}" name="FabricType${unique}" required disabled>
+                            <option value="">--Select--</option>
+                            <option value="1">Woven</option>
+                            <option value="2">Knitted</option>
+                            <option value="3">Terry</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Color<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: SkyBlue" id="Color${unique}" name="Color${unique}" required disabled />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6 DesignType">
+                    <div class="form-group">
+                        <label>Design<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="DesignId${unique}" name="DesignId${unique}" required disabled>
+                            <option value="">--Select--</option>
+                            <option value="1">Plain</option>
+                            <option value="2">Printed</option>
+                            <option value="3">Striped</option>
+                            <option value="4" selected>Checked</option>
+                            <option value="5">Floral</option>
+                            <option value="6">Abstract</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Process Type<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ProcessType${unique}" name="ProcessType${unique}" required disabled>
+                            <option value="">--Select--</option>
+                            <option value="1">Dyed</option>
+                            <option value="2">Printed</option>
+                            <option value="3">Finished</option>
+                            <option value="4" selected>Coated</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>GSM<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM${unique}" name="GSM${unique}" required disabled />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Width<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width${unique}" name="Width${unique}" required disabled oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Quantity Ordered<span id="Asterisk">*</span></label>
+                        <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="QuantityOrdered${unique}" name="QuantityOrdered${unique}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                            <select class="form-control" id="QuantityOrderedUnitId${unique}" name="QuantityOrderedUnitId${unique}" required style="width: 38%;">
+                                <option value="">--Select--</option>
+                                <option value="1">Meters</option>
+                                <option value="2">Kg</option>
+                                <option value="3">Roll</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Qty Scheduled<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 30 KG" id="QuantityScheduled${unique}" name="QuantityScheduled${unique}" required />
+                    </div>
+                </div>
+                <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Remarks<span id="Asterisk">*</span></label>
+                        <textarea class="form-control" id="Remarks${unique}" name="Remarks${unique}" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-3 col-3 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'}"> 
+                    <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
+                        <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+        `;
+        $('#DynamicOrderBatchBinding').append(html);
+        updateRemoveButtons();
+    }
+}
+
+function updateRowLabels() {
+    $('.BatchDynamic').each(function (index) {
+        $(this).find('.DynamicLable').text('Batch No ' + (index + 1));
+    });
+}
+
+function updateRemoveButtons() {
+    var rows = $('.BatchDynamic');
+    rows.each(function (index) {
+        var removeButtonDiv = $(this).find('.thiswillshow');
+        if (rows.length == 1) {
+            removeButtonDiv.css('display', 'none');
+        } else {
+            removeButtonDiv.css('display', 'block');
+        }
+    });
+}
+
+function removeRow(button) {
+    var totalRows = $('.BatchDynamic').length;
+    if (totalRows > 1) {
+        $(button).closest('.BatchDynamic').remove();
+        updateRowLabels();
+        updateRemoveButtons();
+    }
+}
 
 function CanvasOpenFirstShowingDeliveryPlan() {
     $('#DeliveryPlanCanvas').addClass('show');
@@ -249,7 +436,7 @@ function MainGridData() {
             Status_Color: "#007bff"
         }
     ];
-     
+
     const inwardColumns = [
         { data: 'Date', name: 'Date', title: 'Date' },
         { data: 'DeliveryPlanNo', name: 'DeliveryPlanNo', title: 'DeliveryPlan No' },
@@ -260,7 +447,7 @@ function MainGridData() {
         { data: 'TargetDelivery', name: 'TargetDelivery', title: 'Target Delivery' },
         { data: 'QtyScheduled', name: 'QtyScheduled', title: 'Qty Scheduled' },
         { data: 'DispatchMode', name: 'DispatchMode', title: 'Dispatch Mode' },
-        { data: 'DeliveryQty', name: 'DeliveryQty', title: 'Delivery Qty' }, 
+        { data: 'DeliveryQty', name: 'DeliveryQty', title: 'Delivery Qty' },
         { data: 'Status', name: 'Status', title: 'Status' }
     ];
 

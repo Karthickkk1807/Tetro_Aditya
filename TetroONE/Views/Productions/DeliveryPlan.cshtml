@@ -17,7 +17,6 @@
     }
 </style>
 
-
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
         <div class="row m-t-25">
@@ -51,7 +50,7 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2">In-Process</div>
+                                    <div class="card-category" id="CounterTextBox2">Yet To Approved</div>
                                     <h4 class="card-title" id="CounterValBox2">7/34,000</h4>
                                 </div>
                             </div>
@@ -70,7 +69,7 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3">Completed</div>
+                                    <div class="card-category" id="CounterTextBox3">In-Transit</div>
                                     <h4 class="card-title" id="CounterValBox3">9/42,000</h4>
                                 </div>
                             </div>
@@ -89,7 +88,7 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox4">Delayed</div>
+                                    <div class="card-category" id="CounterTextBox4">Delivered</div>
                                     <h4 class="card-title" id="CounterValBox4">7/28,000</h4>
                                 </div>
                             </div>
@@ -241,7 +240,7 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Status<span id="Asterisk">*</span></label> 
+                                            <label>Status<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="Status" name="Status" required>
                                                 <option value="">--Select--</option>
                                                 <option value="1">Planned</option>
@@ -249,7 +248,7 @@
                                                 <option value="3">Completed</option>
                                                 <option value="3">Partially Delivered</option>
                                                 <option value="3">Delayed</option>
-                                            </select> 
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-sm-6 col-6">
@@ -282,141 +281,11 @@
                     <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
                         <div id="Styleenterydetalis" class="card-body">
                             <form id="FormOrderBatch">
-                                <div class="row">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="Type" name="Type">
-                                                <option value="">--Select--</option>
-                                                <option value="1">SaleOrder</option>
-                                                <option value="2">JobOrder</option>
-                                                <option value="3">Batch</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Order No<span id="Asterisk">*</span></label> 
-                                            <select class="form-control" id="OrderNo" name="OrderNo">
-                                                <option value="">--Select--</option> 
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Order Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="OrderTypeId" name="OrderTypeId" required disabled>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Dyeing</option>
-                                                <option value="2" selected>Printing</option>
-                                                <option value="3">Finishing</option>
-                                                <option value="4">Combination</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6 ProductType">
-                                        <div class="form-group">
-                                            <label>Product Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProductTypeId" name="ProductTypeId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">T-Shirt</option>
-                                                <option value="2">Shirt</option>
-                                                <option value="3">Trousers</option>
-                                                <option value="4">Jeans</option>
-                                                <option value="5">Jacket</option>
-                                                <option value="6">Kurta</option>
-                                                <option value="7">Saree</option>
-                                                <option value="8" selected>Hoodie</option>
-                                            </select>
-                                        </div>
-                                    </div> 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Product Description<span id="Asterisk">*</span></label>
-                                            <textarea class="form-control" id="ProductDescription" name="ProductDescription" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Product Description"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Fabric Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="FabricType" name="FabricType" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Woven</option>
-                                                <option value="2">Knitted</option>
-                                                <option value="3">Terry</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Color<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: SkyBlue" id="Color" name="Color" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6 DesignType">
-                                        <div class="form-group">
-                                            <label>Design<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="DesignId" name="DesignId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Plain</option>
-                                                <option value="2">Printed</option>
-                                                <option value="3">Striped</option>
-                                                <option value="4" selected>Checked</option>
-                                                <option value="5">Floral</option>
-                                                <option value="6">Abstract</option> 
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>GSM<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required disabled/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Width<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required disabled oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Process Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProcessType" name="ProcessType" required disabled>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Dyed</option>
-                                                <option value="2">Printed</option>
-                                                <option value="3">Finished</option>
-                                                <option value="4" selected>Coated</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Quantity Ordered<span id="Asterisk">*</span></label>
-                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="QuantityOrdered" name="QuantityOrdered" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                                <select class="form-control" id="QuantityOrderedUnitId" name="QuantityOrderedUnitId" required style="width: 38%;">
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">Meters</option>
-                                                    <option value="2">Kg</option>
-                                                    <option value="3">Roll</option> 
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Quantity Scheduled<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="QuantityScheduled" name="QuantityScheduled" required disabled />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Remarks<span id="Asterisk">*</span></label>
-                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
-                                        </div>
-                                    </div> 
+                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowDeliveyPlan(this)" style="position: absolute; top: 56px; right: 37px;" fdprocessedid="x2h1k">
+                                    <i class="fas fa-plus" id="AddButton"></i>
+                                </button>
+                                <div id="DynamicOrderBatchBinding">
+                                    
                                 </div>
                             </form>
                         </div>
@@ -466,19 +335,19 @@
                                             <input type="text" class="form-control" placeholder="Ex: TCI Express - +91 9955664433" id="CarrierTransporter" name="CarrierTransporter" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    @* <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Vehicle / Shipment No<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: TN36KS8055 - BLUE1234" id="VehicleShipmentNo" name="VehicleShipmentNo" />
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    </div> *@
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Delivered Quantity<span id="Asterisk">*</span></label>
+                                            <label>Delivered Qty<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="DeliveredQuantity" name="DeliveredQuantity" />
                                         </div>
-                                    </div> 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6 pl-0">
                                         <div class="form-group">
                                             <label>Delivery Status<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="DeliveryStatus" name="DeliveryStatus">
