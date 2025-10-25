@@ -7,6 +7,9 @@ var NameDropdown = [];
 $(document).ready(function () {
 
     Common.bindDropDownParent('TickectingTypeId', 'TicketingInfoForm', 'TickectingType');
+    Common.bindDropDownParent('ExternalTypeId', 'TicketingInfoForm', 'ExternalType');
+    Common.bindDropDownParent('VendorId', 'TicketingInfoForm', 'Vendor');
+    Common.bindDropDownParent('ClientId', 'TicketingInfoForm', 'Client');
     Common.bindDropDownParent('ModuleTypeId', 'TicketingInfoForm', 'TicketModuleType');
     Common.bindDropDownParent('AssignedToId', 'TicketingInfoForm', 'AssignedTo');
     Common.bindDropDownParent('TicketStatusId', 'TicketingInfoForm', 'TicketStatus');
@@ -151,8 +154,8 @@ $(document).ready(function () {
         Common.removevalidation('TicketingInfoForm');
         Common.removevalidation('FormFollowUpInfo');
         $("#TicketingHeader").text('Add Manual Ticketing Details');
-        $('#TickectingTypeId').val('2');
-        $('#TickectingTypeId').prop('disabled', true);
+        $('#TickectingTypeId').val('1').trigger('change');
+        $('#TickectingTypeId').prop('disabled', false);
         $('#selectedFiles,#ExistselectedFiles').empty('');
         const today = new Date().toISOString().split('T')[0];
         $("#TicketDate").val(today);
@@ -204,7 +207,36 @@ $(document).ready(function () {
         var EditDataId = { TicketId: parseInt(ticketId), FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
         Common.ajaxCall("GET", "/Ticketing/GetTicketing", EditDataId, GetNotNullTicketSuccess, null);
     });
+    
+    $(document).on('change', '#TickectingTypeId', function () {
+        var TypeId =parseInt($(this).val());
+        if (TypeId == 1) {
+            $('.ExternalTypeDiv,.VendorDiv,.ClientDiv').hide();
+            $('.AssignedToDiv').show();
+        } else if (TypeId == 2) {
 
+            $('.ExternalTypeDiv').show();
+            $('..VendorDiv,.ClientDiv').hide();
+            $('.AssignedToDiv').hide();
+            
+        }
+    });
+
+
+    $(document).on('change', '#ExternalTypeId', function () {
+        $('.AssignedToDiv').hide();
+        var ExternalTypeId = parseInt($('#ExternalTypeId').val());
+        if (ExternalTypeId == 1) {
+            $('.VendorDiv').show();
+            $('.ClientDiv').hide();
+        } else if (ExternalTypeId == 2) {
+            $('.VendorDiv').hide();
+            $('.ClientDiv').show();
+        } else {
+            $('.VendorDiv').hide();
+            $('.ClientDiv').hide();
+        }
+    });
     $(document).on('click', '#CloseTicketing', function () {
         $("#TicketingCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');

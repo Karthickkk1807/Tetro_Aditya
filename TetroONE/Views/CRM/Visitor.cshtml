@@ -3,7 +3,7 @@
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Enquiry, Context.Session);
 }
 
-<link href="~/css/enquiry.css" rel="stylesheet" />
+<link href="~/css/visitors.css" rel="stylesheet" />
 <link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
 
 <div class="row quick-db m-b-5">
@@ -146,7 +146,7 @@
                         if (access.Create)
                         {
                             <span class="pop">
-                                <a id="customBtn_enquiryTable" title="Add Enquiry">
+                                <a id="customBtn_VisitorTable" title="Add Visitor">
                                     <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
                                 </a>
                             </span>
@@ -159,32 +159,32 @@
 </div>
 
 
-<div class="" id="EnquiryGridDynamic">
+<div class="" id="VisitorGridDynamic">
     <div class="table-responsive">
-        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="enquiryTable"></table>
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="VisitorTable"></table>
     </div>
 </div>
 
 
 <!--dynamic test-->
 <!---->
-<div class="offcanvas-container" id="InsertEnquiryDetails">
+<div class="offcanvas-container" id="InsertVisitorDetails">
     <!-- Off-Canvas Header -->
     <div class="offcanvas-header off-canvas-content d-flex align-items-center justify-content-between">
-        <h2 class="ms-auto" id="EnquiryPopupHeader">Add Enquiry Info</h2>
+        <h2 class="ms-auto" id="VisitorPopupHeader">Add Visitor</h2>
         <span id="CloseCanvas" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
     </div>
     <!-- Off-Canvas Body -->
     <div class="offcanvas-body">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12">    
                 <div class="accordion" id="styleAccordionluf3ws29vt">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
                             <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
-                                        Enquiry Info
+                                        Visitor Info
                                     </strong>
                                     <i class="fas fa-angle-down text-white"></i>
                                 </p>
@@ -193,31 +193,31 @@
                     </div>
                     <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
                         <div id="Styleenterydetalis" class="card-body">
-                            <form id="InsertEnquiryForm" class="EnquiryInsert">
+                            <form id="InsertVisitorForm" class="VisitorInsert">
                                 <div class="row">
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Enquiry No</label>
-                                            <input type="text" class="form-control" id="EnquiryNo" name="EnquiryNo" autocomplete="off" placeholder="Enquiry No" disabled>
+                                            <label>Visitor No</label>
+                                            <input type="text" class="form-control" id="VisitorNo" name="VisitorNo" autocomplete="off" placeholder="Visitor No" disabled>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Enquiry Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control EnquiryMediumId" id="EnquiryTypeId" autocomplete="off" name="EnquiryTypeId" required>
+                                            <label>Visitor Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control VisitorMediumId" id="VisitorTypeId" autocomplete="off" name="VisitorTypeId" required>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Date<span id="Asterisk">*</span></label>
-                                            <input type="date" id="EnquiryDate" name="EnquiryDate" class="form-control" autocomplete="off" required placeholder="Select the Date">
+                                            <input type="date" id="VisitorDate" name="VisitorDate" class="form-control" autocomplete="off" required placeholder="Select the Date">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label> Person Name<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" id="EnquiryPersonName" name="EnquiryPersonName" autocomplete="off" placeholder="Person Name" oninput="Common.allowOnlyTextLengthwithwhitespace(this,25)" required>
+                                            <input type="text" class="form-control" id="VisitorPersonName" name="VisitorPersonName" autocomplete="off" placeholder="Person Name" oninput="Common.allowOnlyTextLengthwithwhitespace(this,25)" required>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
@@ -231,7 +231,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Email</label>
-                                            <input type="text" class="form-control" id="EnquiryEmail" name="EnquiryEmail" autocomplete="off" placeholder="Ex: example@gmail.com" oninput="Common.allowEmailAndLength(this, 50)">
+                                            <input type="text" class="form-control" id="VisitorEmail" name="VisitorEmail" autocomplete="off" placeholder="Ex: example@gmail.com" oninput="Common.allowEmailAndLength(this, 50)">
                                         </div>
                                     </div>
                                 </div>
@@ -257,19 +257,19 @@
                                         <div class="" id="LookForwardHoleDivHide">
                                             <!-- Follow Up -->
                                             <div class="form-check d-flex align-items-center mt-2 maxdevicecolumns">
-                                                <input class="form-check-input isLookUpenq me-2" type="checkbox" id="EnquiryIsLookUp" name="EnquiryIsLookUp" value="Follow up">
-                                                <label class="form-check-label me-2  newlabelFollowupto" for="EnquiryIsLookUp"><b>Follow Up</b></label>
+                                                <input class="form-check-input isLookUpenq me-2" type="checkbox" id="VisitorIsLookUp" name="VisitorIsLookUp" value="Follow up">
+                                                <label class="form-check-label me-2  newlabelFollowupto" for="VisitorIsLookUp"><b>Follow Up</b></label>
                                                 <div class="form-group isLookUpenqdate d-none">
-                                                    <input type="date" class="form-control isLookUp_enq" id="EnquiryLookUpDate" name="EnquiryLookUpDate" required="">
+                                                    <input type="date" class="form-control isLookUp_enq" id="VisitorLookUpDate" name="VisitorLookUpDate" required="">
                                                 </div>
                                             </div>
 
                                             <!-- Assign To -->
                                             <div class="form-check d-flex align-items-center maxdevicecolumns">
-                                                <input class="form-check-input IsForwardOptionEnquiry me-2" type="checkbox" id="EnquiryIsForwardOption" name="EnquiryIsForwardOption">
-                                                <label class="form-check-label me-2  newlabelassignto" for="EnquiryIsForwardOption"><b>Assign To</b></label>
+                                                <input class="form-check-input IsForwardOptionVisitor me-2" type="checkbox" id="VisitorIsForwardOption" name="VisitorIsForwardOption">
+                                                <label class="form-check-label me-2  newlabelassignto" for="VisitorIsForwardOption"><b>Assign To</b></label>
                                                 <div class="form-group forward-option d-none">
-                                                    <select class="form-control ForwardOption_Enquiry" id="ForwardEmpId" name="ForwardEmpId" required>
+                                                    <select class="form-control ForwardOption_Visitor" id="ForwardEmpId" name="ForwardEmpId" required>
                                                         <option value="">-- Select--</option>
                                                     </select>
                                                 </div>
@@ -341,10 +341,10 @@
                                         </div>
 
                                     </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12" id="HideEnquiryStatus">
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12" id="HideVisitorStatus">
                                         <div class="form-group">
-                                            <label>Enquiry Status<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="EnquiryStatusId" name="EnquiryStatusId" required>
+                                            <label>Visitor Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="VisitorStatusId" name="VisitorStatusId" required>
                                                 <option value="">-- Select--</option>
                                             </select>
                                         </div>
@@ -363,7 +363,7 @@
                             <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseOne1" class="">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
-                                        Enquiry Followup Info
+                                        Visitor Followup Info
                                     </strong>
                                     <i class="fas fa-angle-down text-white"></i>
                                 </p>
@@ -382,7 +382,7 @@
                                 <form id="DynamicFollowupDetails" class="w-100">
                                     <div class="row" id="followupinfo">
                                         <div class="col-12">
-                                            <div id="duplicaterow" class="Enquiryfild"></div>
+                                            <div id="duplicaterow" class="Visitorfild"></div>
                                         </div>
                                     </div>
                                 </form>
@@ -416,7 +416,7 @@
 
     $(document).ready(function () {
         $(document).on('click', '#CloseEnquire', function () {
-            $("#InsertEnquiryDetails").css("width", "0%");
+            $("#InsertVisitorDetails").css("width", "0%");
             $('.content-overlay').fadeOut();
             $('#fadeinpage').removeClass('fadeoverlay');
         });
@@ -425,10 +425,10 @@
 </script>
 
 
-<script src="~/js/enquiry.js"></script>
+<script src="~/js/visitors.js"></script>
 <script src="~/assets/js/mdtimepicker.js"></script>
 <script>
-    document.getElementById('EnquiryIsLookUp').addEventListener('change', function () {
+    document.getElementById('VisitorIsLookUp').addEventListener('change', function () {
         const datePicker = document.querySelector('.isLookUpenqdate');
         if (this.checked) {
             datePicker.style.display = 'block';
@@ -440,7 +440,7 @@
     });
 </script>
 <script>
-    document.getElementById('EnquiryIsForwardOption').addEventListener('change', function () {
+    document.getElementById('VisitorIsForwardOption').addEventListener('change', function () {
         const selectDropdown = document.querySelector('.forward-option');
         if (this.checked) {
             selectDropdown.style.display = 'block';
@@ -454,12 +454,12 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Follow Up Checkbox
-        document.getElementById("EnquiryIsLookUp").addEventListener("change", function () {
+        document.getElementById("VisitorIsLookUp").addEventListener("change", function () {
             document.querySelector(".isLookUpenqdate").classList.toggle("d-none", !this.checked);
         });
 
         // Assign To Checkbox
-        document.getElementById("EnquiryIsForwardOption").addEventListener("change", function () {
+        document.getElementById("VisitorIsForwardOption").addEventListener("change", function () {
             document.querySelector(".forward-option").classList.toggle("d-none", !this.checked);
         });
     });

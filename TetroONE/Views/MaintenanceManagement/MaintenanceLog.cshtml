@@ -2,7 +2,7 @@
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Vendor, Context.Session);
 }
 
-<link href="~/css/MaintenancePlanning.css" rel="stylesheet" />
+<link href="~/css/MaintenanceLog.css" rel="stylesheet" />
 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
@@ -104,7 +104,7 @@
                     if (access.Create)
                     {
                         <span class="pop">
-                            <a id="AddMaintenancePlan" title="Add MaintenancePlan">
+                            <a id="AddMaintenanceLog" title="Add MaintenanceLog">
                                 <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
                             </a>
                         </span>
@@ -117,12 +117,12 @@
 
 
 <div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="MaintenancePlanTable"></table>
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="MaintenanceLogTable"></table>
 </div>
 
-<div id="MaintenancePlanCanvas" class="offcanvas-container">
+<div id="MaintenanceLogCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
-        <h2 id="MaintenancePlanHeader">Add New MaintenancePlan</h2>
+        <h2 id="MaintenanceLogHeader">Add New MaintenanceLog</h2>
         <span id="CloseCanvas" class="close"
               style="font-size:30px;cursor:pointer;color:white;"
               title="Close">&times;</span>
@@ -146,82 +146,70 @@
                     </div>
                     <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
                         <div id="Styleenterydetalis" class="card-body">
-                            <form id="FormMaintenancePlan">
+                            <form id="FormMaintenanceLog">
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>MaintenancePlan No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="MP/2025-0001" id="MaintenancePlanNo" name="MaintenancePlanNo" required maxlength="50" disabled/>
+                                            <label>MaintenanceLog No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="MP/2025-0001" id="MaintenanceLogNo" name="MaintenanceLogNo" required maxlength="50" disabled />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="MaintenancePlandate" name="MaintenancePlandate" maxlength="500" required />
+                                            <label>MaintenanceDate<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="MaintenanceLogdate" name="MaintenanceLogdate" maxlength="500" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Department / Section<span id="Asterisk">*</span></label>
+                                            <label>Maintanence Plan Type<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="DepartmentId" name="DepartmentId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">Dyeing</option>
-                                                <option value="2">Printing</option>
+                                                <option value="1">Planned</option>
+                                                <option value="2">Adhoc</option>
                                             </select>
 
                                         </div>
                                     </div>
-                                    
 
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 PlanNoDiv" style="display: none;">
                                         <div class="form-group">
-                                            <label>PlanType<span id="Asterisk">*</span></label>
+                                            <label>PlanNo<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="PlanTypeId" name="PlanTypeId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">Preventive</option>
-                                                <option value="2">Predictive</option>
-                                                <option value="3">Corrective</option>
+                                                <option value="1">MP-001</option>
+                                                <option value="2">MP-002</option>
+                                                <option value="3">MP-003</option>
                                             </select>
 
                                         </div>
                                     </div>
-
+                                    <div id="PlanDetailsContainer" class="mt-4"></div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Frequency<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="FrequencyId" name="FrequencyId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Daily</option>
-                                                <option value="2">Weekly</option>
-                                                <option value="3">Monthly</option>
-                                                <option value="4">Quarterly</option>
-                                                <option value="5">Yearly</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Plan StartDate<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="PlanStartDate" name="PlanStartDate" maxlength="500" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Plan EndDate</label>
-                                            <input type="date" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="PlanEndDate" name="PlanEndDate" maxlength="500" />
+                                            <label>Downtime</label>
+                                            <input type="text" class="form-control" placeholder="0" id="Downtime" name="Downtime" maxlength="50" />
                                         </div>
                                     </div>
 
 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Priority</label>
-                                            <select class="form-control" id="PriorityId" name="PriorityId">
-                                                <option value="">--Select--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="2">High</option>
-                                                <option value="3">Critical</option>
+                                            <label>Spare Parts</label>
+                                            <input type="text" class="form-control" placeholder="" id="SpareParts" name="SpareParts"  maxlength="50" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 PlanNoDiv">
+                                        <div class="form-group">
+                                            <label>Technician<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PlanTypeId" name="PlanTypeId" required>
+                                                <option value="">--Select Technician--</option>
+                                                <option value="1">Arun Kumar</option>
+                                                <option value="2">Vijay Raj</option>
+                                                <option value="3">Suresh Babu</option>
+                                                <option value="4">Manikandan</option>
+                                                <option value="5">Karthikeyan</option>
                                             </select>
 
                                         </div>
@@ -231,8 +219,8 @@
                                             <label>Status<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="StatusId" name="StatusId" required>
                                                 <option value="">--Select--</option>
-                                                <option value="1">Planned</option>
-                                                <option value="2">In Progress</option>
+                                                <option value="1">Completed</option>
+                                                <option value="2">Partially Completed</option>
                                                 <option value="3">Completed</option>
                                                 <option value="4">Delayed</option>
                                             </select>
@@ -247,23 +235,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
-                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
-                                            <!-- Add a custom button for choosing files -->
-                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
-                                                <b>Click Here to Attach your files</b>
-                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
-                                            </label>
-                                            <div class="file-preview d-flex justify-content-center" id="preview">
-                                                <div class="attachrow">
-                                                    <div class="attachcolumn">
-                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
-                                                    </div>
-                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                 </div>
                             </form>
@@ -272,8 +243,8 @@
                 </div>
             </div>
 
-            
-            <div class="col-12">
+
+            @* <div class="col-12">
                 <div class="accordion" id="styleAccordionluf3ws29vt">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
@@ -301,9 +272,9 @@
                     </div>
                 </div>
             </div>
+ *@
 
-
-            <div class="col-12">
+            @* <div class="col-12">
                 <div class="accordion" id="styleAccordionluf3ws29vt">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
@@ -330,7 +301,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
 
 
@@ -353,4 +324,4 @@
 <script>
     var access = @Html.Raw(Json.Serialize(access));
 </script>
-<script src="~/js/MaintenancePlanning.js"></script>
+<script src="~/js/MaintenanceLog.js"></script>

@@ -471,6 +471,16 @@
                                                         </a>
                                                     }
                                                 </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Distributor.ToLower()))
+                                                    {
+                                                        <a asp-controller="Contact" asp-action="ServiceENGR">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/contact_sidebar/contactsicon 1.svg" width="20" />
+                                                            </i> <span class="sub-item">Service Engr</span>
+                                                        </a>
+                                                    }
+                                                </li>
                                                 @*<li>
                                                     @if (access.Any(x => x.ToLower() == UserScreen.Franchise.ToLower()))
                                                     {
@@ -968,17 +978,8 @@
                                         <div class="collapse" id="MaintenanceManagement-list">
                                             <ul class="nav nav-collapse">
 
-                                                <li>
-                                                    @if (access.Any(x => x.ToLower() == UserScreen.Payslip.ToLower()))
-                                                    {
-                                                        <a href="javascript:void(0);" style="cursor: default; pointer-events: none;">
-                                                            <i>
-                                                                <img src="~/assets/moduleusedtetroone/sidenav/maintenance_sidebar/maintenanceplan.svg" width="20" />
-                                                            </i><span class="sub-item">Maintenance Plan</span>
-                                                        </a>
-                                                    }
-                                                </li>
-                                                @*@if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                               
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
                                                 {
                                                     <li>
                                                         <a asp-controller="MaintenanceManagement" asp-action="MaintenancePlanning">
@@ -987,7 +988,17 @@
                                                             </i> <span class="sub-item">Maintenance Plan</span>
                                                         </a>
                                                     </li>
-                                                }*@
+                                                }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="MaintenanceManagement" asp-action="MaintenanceLog">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/maintenance_sidebar/maintenanceplan.svg" width="20" />
+                                                            </i> <span class="sub-item">Maintenance Log</span>
+                                                        </a>
+                                                    </li>
+                                                }
                                                 @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
                                                 {
                                                     <li>

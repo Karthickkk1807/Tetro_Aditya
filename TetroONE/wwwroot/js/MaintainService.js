@@ -10,7 +10,7 @@
         let currentText = $('#dateDisplay2').text().trim();
         let [currentMonth, currentYear] = currentText.split(" ");
         let monthIndex = months.indexOf(currentMonth);
-
+        l
         if (monthIndex === -1) return;
 
         monthIndex--;
@@ -349,7 +349,7 @@
         var thisval = $(this).val();
         $('.ProductTableRow').remove(); 
         if (thisval === "1") {   
-            $('#ServiceEngrId').prop('disabled', true);
+            $('#ServiceEngrId').prop('disabled', false);
             $('#AssetNametabelhead').text('1111111111111');
             $('#ServiceTypeDiv').show();
             $('#TableHeadInwardManufacturer,#TableHeadInwardSubCategory,#TableHeadInwardStatus,#InwardTableFooter1,#InwardTableFooter2,#InwardTableFooter3,#TableHeadOutwardAssetValue,#TableHeadOutwardExpiryDate').show();
@@ -374,7 +374,7 @@
             $('#ServiceTypeDiv').hide();
             $('#AddItemButtonRow').show(); 
             $('#AssetNametabelhead').text('11111111111111111111111111111111111');
-            $('#ServiceEngrId').prop('disabled', true);
+            $('#ServiceEngrId').prop('disabled', false);
             $('#TypeId').val('');
             $('#TableHeadInwardManufacturer,#TableHeadInwardSubCategory,#TableHeadInwardStatus,#InwardTableFooter1,#InwardTableFooter2,#InwardTableFooter3,#TableHeadOutwardAssetValue,#TableHeadOutwardExpiryDate').hide();
             $('#TableHeadOutwardCategory,#TableHeadOutwardAssetType').show();
@@ -393,7 +393,7 @@
         }
         else { 
             $('#ServiceTypeDiv').hide();
-            $('#ServiceEngrId').prop('disabled', true);
+            $('#ServiceEngrId').prop('disabled', false);
             $('#WarrentyTypeDiv').hide();
             $('#AddItemButtonRow').show(); 
             $('#TypeId').val('');
@@ -417,7 +417,7 @@
             $('#ToStateId').text(''); 
             $('#ServiceEngrId').prop('disabled', false);  
         } else {
-            $('#ServiceEngrId').prop('disabled', true); 
+            $('#ServiceEngrId').prop('disabled', false); 
             $('#ToAddress').text('');
             $('#ToCity').text('');
             $('#ToContactNumber').text(''); 

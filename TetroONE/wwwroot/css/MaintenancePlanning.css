@@ -1,0 +1,71 @@
+﻿.mrselect {
+    height: 32px;
+    border-color: #e6e6e6;
+}
+
+.AddStockBtn:hover {
+    background-color: #1A2A;
+    color: white;
+    box-shadow: 0 3px 11px rgb(58 169 0 / 93%);
+}
+
+.checkbox-label {
+    filter: blur(1px); /* Initially blur the text */
+    transition: filter 0.3s ease-in-out;
+}
+
+input[type="checkbox"]:hover + .checkbox-label,
+input[type="checkbox"]:checked + .checkbox-label {
+    filter: blur(0); /* Remove blur on hover or when checked */
+}
+
+#MaintenancePlanTable {
+    width: 100% !important;
+}
+
+#Managetable {
+    width: 500px;
+}
+
+.dataTables_scrollBody {
+    height: 330px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+#MaintenancePlanProductList {
+    height: 168px !important;
+    overflow-y: scroll !important;
+}
+.file-preview {
+    text-align: center;
+    height: 4rem !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+fieldset {
+    border: 2px solid #111112 !important;
+    padding: 5px 15px 5px 15px;
+    border-radius: .25rem;
+    margin-bottom: 0.5rem;
+    /* box-shadow: 0 0 10px rgb(105 119 255 / 30%); */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+legend {
+    box-sizing: border-box;
+    color: inherit;
+    display: table;
+    width: fit-content;
+    background-color: #fefefe !important;
+    max-width: 100%;
+    padding: 5px !important;
+    white-space: normal;
+    border-radius: 5px;
+    color: #121212 !important;
+    font-size: 13px !important;
+    font-weight: 700;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0px;
+}
