@@ -712,16 +712,10 @@ function addTaskRow() {
 
 
             <div class="row">
-            <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                            <label>Materials / Spare Parts Required</label>
-                            <input type="text" class="form-control Materials" id="Materials${numberIncr}" 
-                                placeholder="e.g. Lubricants, filters" />
-                        </div>
-                    </div>
+           
 
        
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-12 col-sm-12">
                         <div class="form-group">
                             <label>Safety Instructions</label>
                             <input type="text" class="form-control SafetyInstructions" id="SafetyInstructions${numberIncr}" 

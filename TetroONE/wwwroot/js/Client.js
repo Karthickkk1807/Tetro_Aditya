@@ -10,7 +10,7 @@ $(document).ready(function () {
     //titleForHeaderProductTab = "Distributor";
     var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
-    Common.ajaxCall("GET", "/Contact/GetClient", { FranchiseId: FranchiseMappingId, ClientTypeId: parseInt(1) }, ClientSuccess, null);
+    Common.ajaxCall("GET", "/Contact/GetClient", { ClientTypeId: parseInt(1) }, ClientSuccess, null);
     Common.bindDropDownParent('StateId', 'FormClient', 'State');
     Common.bindDropDownParent('ShopStateId', 'FormShop', 'State');
     Common.bindDropDownParent('ShopTypeId', 'FormShop', 'ShopType');
@@ -273,7 +273,7 @@ $(document).ready(function () {
                         </div>`;
                         $('#ClientGridDynamic').append(html);
                         var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-                        var PasseingData = { FranchiseId: franchiseId, ClientTypeId: parseInt(1) }
+                        var PasseingData = { ClientTypeId: parseInt(1) }
                         Common.ajaxCall("GET", "/Contact/GetClient", PasseingData, ClientSuccess, null);
                     }
                     else {
@@ -381,10 +381,10 @@ function ReloadSuccess(response) {
         var franchiseId = parseInt($('#UserFranchiseMappingId').val());
         var PasseingData = {};
         if (titleForHeaderProductTab == "DirectClient") {
-            PasseingData = { FranchiseId: franchiseId, ClientTypeId: parseInt(2) }
+            PasseingData = { ClientTypeId: parseInt(2) }
         }
         else if (titleForHeaderProductTab == "Distributor") {
-            PasseingData = { FranchiseId: franchiseId, ClientTypeId: parseInt(1) }
+            PasseingData = { ClientTypeId: parseInt(1) }
         }
         Common.ajaxCall("GET", "/Contact/GetClient", PasseingData, ClientSuccess, null);
     } else {
@@ -441,12 +441,12 @@ $(document).on('click', '#AddClient', function () {
 
     var franchiseId = parseInt($('#UserFranchiseMappingId').val());
     var EditDataId = { ModuleName: 'Distributor', FranchiseId: franchiseId };
-    Common.ajaxCall("GET", "/Common/GetAutoGenerate", EditDataId, function (response) {
-        if (response.status) {
-            var data = JSON.parse(response.data);
-            $('#ClientNo').val(data[0][0].ClientNo);
-        };
-    });
+    //Common.ajaxCall("GET", "/Common/GetAutoGenerate", EditDataId, function (response) {
+    //    if (response.status) {
+    //        var data = JSON.parse(response.data);
+    //        $('#ClientNo').val(data[0][0].ClientNo);
+    //    };
+    //});
 
     $('#ClientCanvas .collapse').removeClass('show');
     $('#collapse1').addClass('show');

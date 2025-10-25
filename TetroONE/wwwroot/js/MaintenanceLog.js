@@ -13,16 +13,23 @@ $(document).ready(function () {
 
     $('#IsActiveHide').hide();
 
-
+    $('#SpareParts').select2({
+        dropdownParent: $('#FormMaintenanceLog'),
+        width: '100%',
+        placeholder: '-- Select spare Parts --'
+    }).trigger('change');
     $('#DepartmentId').on('change', function () {
         var selectedValue = $(this).val();
 
         if (selectedValue === "1") {
            
-            $('.PlanNoDiv').show();
+            $('.PlanNoDiv,#PlanDetailsContainer').show();
+            $('.spareDiv').hide();
+            $('#PlanDetailsContainer').hide();
+            
         } else {
-         
-            $('.PlanNoDiv').hide();
+            $('.spareDiv').show();
+            $('.PlanNoDiv,#PlanDetailsContainer').hide();
             $('#PlanTypeId').val(''); 
         }
     });
@@ -32,10 +39,14 @@ $(document).ready(function () {
     $('#PlanTypeId').on('change', function () {
         const planId = $(this).val();
         $('#PlanDetailsContainer').empty();
+        if (!planId) {
+            $('#PlanDetailsContainer').hide();
+            return;
+        } else {
+            $('#PlanDetailsContainer').show();
+        }
 
-        if (!planId) return;
-
-        // Mock Data for demo
+        // Mock Data
         const planData = {
             1: {
                 StartDate: '2025-10-01',
@@ -58,7 +69,10 @@ $(document).ready(function () {
                     Technician: 'Ravi Kumar',
                     EstTime: '2',
                     Tools: ['Wrench Set', 'Grease Gun'],
-                    Materials: 'Lubricants',
+                    MaterialsTable: [
+                        { Material: 'Bearing', Quantity: '4' },
+                        { Material: 'Oil Filter', Quantity: '2' }
+                    ],
                     Safety: 'Use PPE, disconnect power',
                     Status: 'Planned',
                     Remarks: 'Regular check-up'
@@ -85,7 +99,10 @@ $(document).ready(function () {
                     Technician: 'Arun Raj',
                     EstTime: '4',
                     Tools: ['Screwdriver Kit', 'Safety Gloves'],
-                    Materials: 'Heating coil, screws',
+                    MaterialsTable: [
+                        { Material: 'Heating Coil', Quantity: '1' },
+                        { Material: 'Screws', Quantity: '10' }
+                    ],
                     Safety: 'Handle with insulated gloves',
                     Status: 'In Progress',
                     Remarks: 'Spare part delayed'
@@ -112,7 +129,10 @@ $(document).ready(function () {
                     Technician: 'Karthick R',
                     EstTime: '3',
                     Tools: ['Multimeter', 'Torque Wrench'],
-                    Materials: 'Valve kit',
+                    MaterialsTable: [
+                        { Material: 'Valve Kit', Quantity: '3' },
+                        { Material: 'Sealant', Quantity: '1' }
+                    ],
                     Safety: 'Release pressure before service',
                     Status: 'Planned',
                     Remarks: 'Monitor pressure after replacement'
@@ -123,59 +143,117 @@ $(document).ready(function () {
         const data = planData[planId];
         if (!data) return;
 
-        // Build full HTML dynamically
+        // Build materials table rows
+        let materialRows = '';
+        data.Task.MaterialsTable.forEach(m => {
+            materialRows += `
+                <tr>
+                    <td>
+                        <select class="form-control MaterialDropdown">
+                            <option value="">Select Material</option>
+                            <option ${m.Material === 'Bearing' ? 'selected' : ''}>Bearing</option>
+                            <option ${m.Material === 'Belt' ? 'selected' : ''}>Belt</option>
+                            <option ${m.Material === 'Gear' ? 'selected' : ''}>Gear</option>
+                            <option ${m.Material === 'Oil Filter' ? 'selected' : ''}>Oil Filter</option>
+                            <option ${m.Material === 'Coolant' ? 'selected' : ''}>Coolant</option>
+                            <option ${m.Material === 'Heating Coil' ? 'selected' : ''}>Heating Coil</option>
+                            <option ${m.Material === 'Screws' ? 'selected' : ''}>Screws</option>
+                            <option ${m.Material === 'Valve Kit' ? 'selected' : ''}>Valve Kit</option>
+                            <option ${m.Material === 'Sealant' ? 'selected' : ''}>Sealant</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control QuantityInput" value="${m.Quantity}" /></td>
+                    <td class="text-center">
+                        <button id="RemoveButton" class="btn DynrowRemove " type="button" onclick="removeSpareRow(this)" style="margin-top:1px;" fdprocessedid="gnznj6"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>`;
+        });
+
         let html = `
-            <!-- ===== Fieldset 1: Plan Details ===== -->
-            <fieldset class="p-3 mb-3">
-                <legend class="w-auto px-2 fs-6 fw-semibold">Plan Details</legend>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>Plan Start Date</label>
-                        <input type="date" class="form-control" value="${data.StartDate}" disabled>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Plan End Date</label>
-                        <input type="date" class="form-control" value="${data.EndDate}" disabled>
-                    </div>
-                    <div class="col-md-6 mt-3">
-                        <label>Priority</label>
-                        <input type="text" class="form-control" value="${data.Priority}" disabled>
-                    </div>
-                </div>
-            </fieldset>
+        
+       
+           
+            <div class="row mb-2">
+                <div class="col-md-4"><label>Plan Start Date</label><input type="date" class="form-control" value="${data.StartDate}" disabled></div>
+                <div class="col-md-4"><label>Plan End Date</label><input type="date" class="form-control" value="${data.EndDate}" disabled></div>
+                <div class="col-md-4"><label>Priority</label><input type="text" class="form-control" value="${data.Priority}" disabled></div>
+            </div>
+      
 
-            <!-- ===== Fieldset 2: Machine / Equipment Info ===== -->
-            <fieldset class="p-3 mb-3">
-                <legend class="w-auto px-2 fs-6 fw-semibold">Machine / Equipment Info</legend>
-                <div class="row">
-                    <div class="col-md-6"><label>Machine Type</label><input class="form-control" value="${data.Machine.Type}" disabled></div>
-                    <div class="col-md-6"><label>Machine Name</label><input class="form-control" value="${data.Machine.Name}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Manufacturer</label><input class="form-control" value="${data.Machine.Manufacturer}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Model</label><input class="form-control" value="${data.Machine.Model}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Serial No.</label><input class="form-control" value="${data.Machine.SerialNo}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Installation Date</label><input type="date" class="form-control" value="${data.Machine.InstallDate}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Last Maintenance Date</label><input type="date" class="form-control" value="${data.Machine.LastMaint}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Next Scheduled Date</label><input type="date" class="form-control" value="${data.Machine.NextSched}" disabled></div>
-                </div>
-            </fieldset>
+        <!-- Machine / Equipment Info -->
+        <fieldset class="p-3 mb-3">
+            <legend class="w-auto px-2 fs-6 fw-semibold">Machine / Equipment Info</legend>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                 <label class="DynamicLable fw-bold">Machine 1</label>
+                    
+              </div>
+            <div class="row">
+                <div class="col-md-6"><label>Machine Type</label><input class="form-control" value="${data.Machine.Type}" disabled></div>
+                <div class="col-md-6"><label>Machine Name</label><input class="form-control" value="${data.Machine.Name}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Manufacturer</label><input class="form-control" value="${data.Machine.Manufacturer}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Model</label><input class="form-control" value="${data.Machine.Model}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Serial No.</label><input class="form-control" value="${data.Machine.SerialNo}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Installation Date</label><input type="date" class="form-control" value="${data.Machine.InstallDate}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Last Maintenance Date</label><input type="date" class="form-control" value="${data.Machine.LastMaint}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Next Scheduled Date</label><input type="date" class="form-control" value="${data.Machine.NextSched}" disabled></div>
+            </div>
+        </fieldset>
 
-            <!-- ===== Fieldset 3: Task / Activity Details ===== -->
-            <fieldset class=" p-3 mb-3">
-                <legend class="w-auto px-2 fs-6 fw-semibold">Task / Activity Details</legend>
-                <div class="row">
-                    <div class="col-md-6"><label>Task No</label><input class="form-control" value="${data.Task.No}" disabled></div>
-                    <div class="col-md-6"><label>Task Description</label><input class="form-control" value="${data.Task.Desc}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Task Type</label><input class="form-control" value="${data.Task.Type}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Technician</label><input class="form-control" value="${data.Task.Technician}" disabled></div>
-                    <div class="col-md-4 mt-3"><label>Estimated Time (hrs)</label><input class="form-control" value="${data.Task.EstTime}" disabled></div>
-                    <div class="col-md-12 mt-3"><label>Tools Required</label><input class="form-control" value="${data.Task.Tools.join(', ')}" disabled></div>
-                    <div class="col-md-6 mt-3"><label>Materials / Spare Parts Required</label><input class="form-control" value="${data.Task.Materials}" disabled></div>
-                    <div class="col-md-6 mt-3"><label>Safety Instructions</label><input class="form-control" value="${data.Task.Safety}" disabled></div>
-                    <div class="col-md-6 mt-3"><label>Status</label><input class="form-control" value="${data.Task.Status}" disabled></div>
-                    <div class="col-md-6 mt-3"><label>Remarks</label><input class="form-control" value="${data.Task.Remarks}" disabled></div>
+        <!-- Task / Activity Details -->
+        <fieldset class=" p-3 mb-3">
+            <legend class="w-auto px-2 fs-6 fw-semibold">Task / Activity Details</legend>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                 <label class="DynamicLable fw-bold">Task 1</label>
+                    
+              </div>
+            <div class="row">
+                <div class="col-md-6"><label>Task No</label><input class="form-control" value="${data.Task.No}" disabled></div>
+                <div class="col-md-6"><label>Task Description</label><input class="form-control" value="${data.Task.Desc}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Task Type</label><input class="form-control" value="${data.Task.Type}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Technician</label><input class="form-control" value="${data.Task.Technician}" disabled></div>
+                <div class="col-md-4 mt-3"><label>Estimated Time (hrs)</label><input class="form-control" value="${data.Task.EstTime}" disabled></div>
+                <div class="col-md-12 mt-3"><label>Tools Required</label><input class="form-control" value="${data.Task.Tools.join(', ')}" disabled></div>
+
+                <!-- Materials Table -->
+                <div class="col-md-12 mt-3">
+                    <fieldset class="p-3">
+                        <legend class="w-auto px-2 fs-6 fw-semibold">Materials / Spare Parts</legend>
+                        <div class="d-flex justify-content-end align-items-start mb-2" style="margin-top: -15px;">
+                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateSpareRow(this)">
+                                    <i class="fas fa-plus" id="AddButton"></i>
+                                </button>
+                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle" id="MaterialsTable">
+                                <thead style="background-color:#E3C8F3;">
+                                    <tr><th>Material / Spare Part</th><th>Quantity</th><th>Action</th></tr>
+                                </thead>
+                                <tbody id="MaterialsBody">${materialRows}</tbody>
+                            </table>
+                        </div>
+                    </fieldset>
                 </div>
-            </fieldset>
-            `;
+
+                <div class="col-md-6 mt-3"><label>Safety Instructions</label><input class="form-control" value="${data.Task.Safety}" disabled></div>
+                <div class="col-md-6 mt-3"><label>Status</label><input class="form-control" value="${data.Task.Status}" disabled></div>
+                <div class="col-md-12 mt-3"><label>Remarks</label><input class="form-control" value="${data.Task.Remarks}" disabled></div>
+
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                    <div class="form-group">
+                        <label>Task Complete Date<span id="Asterisk">*</span></label>
+                        <input type="date" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="" name="" maxlength="500" required />
+                    </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                <div class="form-group">
+                    <label>Querys</label>
+                     <textarea class="form-control" id="" autocomplete="off" name="Remark" rows="1" maxlength="250" placeholder=""></textarea>
+                     </div>
+                 </div>
+
+            </div>
+        </fieldset>
+        `;
 
         $('#PlanDetailsContainer').html(html);
     });
@@ -249,6 +327,43 @@ $(document).ready(function () {
         }
     });
 });
+function duplicateSpareRow(btn) {
+    // Find the table body
+    const tbody = $(btn).closest('fieldset').find('#MaterialsBody');
+
+    // Create new row HTML
+    const newRow = `
+        <tr>
+            <td>
+                <select class="form-control MaterialDropdown">
+                    <option value="">Select Material</option>
+                    <option value="Bearing">Bearing</option>
+                    <option value="Belt">Belt</option>
+                    <option value="Gear">Gear</option>
+                    <option value="Oil Filter">Oil Filter</option>
+                    <option value="Coolant">Coolant</option>
+                    <option value="Heating Coil">Heating Coil</option>
+                    <option value="Screws">Screws</option>
+                    <option value="Valve Kit">Valve Kit</option>
+                    <option value="Sealant">Sealant</option>
+                </select>
+            </td>
+            <td><input type="text" class="form-control QuantityInput" value="1" /></td>
+            <td class="text-center">
+                <button type="button" class="btn DynrowRemove" onclick="removeSpareRow(this)">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+        </tr>
+    `;
+
+    // Append new row to tbody
+    tbody.append(newRow);
+}
+function removeSpareRow(btn) {
+    // Remove the row containing this button
+    $(btn).closest('tr').remove();
+}
 
 //function MaintenanceLogSuccess(response) {
 //    if (response.status) {
