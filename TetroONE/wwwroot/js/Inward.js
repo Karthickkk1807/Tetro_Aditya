@@ -56,7 +56,130 @@
         $("#FormInWard")[0].reset();
         $('#InWardHeader').text('InWard Details');
         $('#SaveInWard').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
+        duplicateFabricRow();
     });
+    $(document).on('click', '.AddStockBtn', function () {
+       
+        duplicateFabricRow();
+    });
+    $(document).on('click', '.DynrowRemove', function () {
+       
+        removeFabricRow(this);
+    });
+
+
+
+    function duplicateFabricRow() {     
+        let numberIncr = Math.random().toString(36).substring(2);
+        let rowCount = $('.FabricEntry').length;
+        let labelNo = rowCount + 1;
+
+        let html = `
+    <div class="FabricEntry p-1 mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <label class="DynamicLabel fw-bold">Fabric ${labelNo}</label>
+            <button type="button" class="btn DynrowRemove">
+                <i class="fas fa-trash-alt"></i>
+            </button>   
+        </div>
+
+       <div class="row">
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Fabric Type<span id="Asterisk">*</span></label>
+                    <select class="form-control FabricType" id="FabricType${numberIncr}" required onchange="onFabricTypeChange(this)">
+                        <option value="">--Select--</option>
+                        <option value="1">Woven</option>
+                        <option value="2">Knitted</option>
+                        <option value="3">Terry</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Dia<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control Dia" id="Dia${numberIncr}" placeholder="Ex: 30 KG" required disabled/>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>GSM<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control GSM" id="GSM${numberIncr}" placeholder="Ex: 200 GSM" required disabled/>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Quantity Received<span id="Asterisk">*</span></label>
+                    <div class="input-group" style="flex-wrap: nowrap;">
+                        <input type="text" class="form-control QuantityReceived" id="QuantityReceived${numberIncr}" placeholder="Ex: 40 M" required/>
+                        <select class="form-control QuantityReceivedUnitId" id="QuantityReceivedUnitId${numberIncr}" required style="width: 38%;">
+                            <option value="">--Select--</option>
+                            <option value="1">Meter</option>
+                            <option value="2">Kg</option>
+                            <option value="3">Roll</option>
+                            <option value="4">MMeter</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>No Of Rolls<span id="Asterisk">*</span></label>
+                    <input type="number" class="form-control RollCount" id="RollCount${numberIncr}" placeholder="Ex: 100" required/>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-12 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea class="form-control Remarks" id="Remarks${numberIncr}" rows="1" placeholder="Ex: Queries"></textarea>
+                </div>
+            </div>
+     </div>
+    </div>`;
+
+        $('#FormProcessing').append(html);
+        updateFabricLabels();
+        updateFabricRemoveButtons();
+    }
+
+    function removeFabricRow(button) {
+        var total = $('.FabricEntry').length;
+        if (total > 1) {
+            $(button).closest('.FabricEntry').remove();
+            updateFabricLabels();
+            updateFabricRemoveButtons();
+        }
+    }
+
+    function updateFabricLabels() {
+        $('.FabricEntry').each(function (i) {
+            $(this).find('.DynamicLabel').text('Fabric ' + (i + 1));
+        });
+    }
+
+    function updateFabricRemoveButtons() {
+        let rows = $('.FabricEntry');
+        rows.each(function () {
+            let removeBtn = $(this).find('.DynrowRemove');
+            if (rows.length === 1) removeBtn.hide();
+            else removeBtn.show();
+        });
+    }
+
+
+    function onFabricTypeChange(selectElem) {
+        const parent = $(selectElem).closest('.FabricEntry');
+        parent.find('.Dia, .GSM').prop('disabled', false);
+    }
+
+
+
+
 
     $(document).on('click', '.btn-edit', function () {
         var windowWidth = $(window).width();

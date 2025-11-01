@@ -392,88 +392,14 @@
                     </div>
                     <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
                         <div id="Styleenterydetalis" class="card-body">
+
+                             <div class="d-flex justify-content-end align-items-start">
+                                <button id="" class="btn AddStockBtn" type="button">
+                                    <i class="fas fa-plus" id="AddButton"></i>
+                                </button>
+                            </div>
                             <form id="FormProcessing">
-                                <div class="row">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Fabric Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="FabricType" name="FabricType" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Woven</option>
-                                                <option value="2">Knitted</option>
-                                                <option value="3">Terry</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Dia<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Dia" name="Dia" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" disabled/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>GSM<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required disabled/>
-                                        </div>
-                                    </div>
-                                    @*<div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Weight<span id="Asterisk">*</span></label>
-                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Weight" name="Weight" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                                <select class="form-control" id="WeightUnitId" name="WeightUnitId" required style="width: 38%;">
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">Meter</option>
-                                                    <option value="2">Kg</option>
-                                                    <option value="3">Roll</option>
-                                                    <option value="4">MMeter</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Batch Reference<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: Aditya Factory" id="BatchReference" name="BatchReference" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Lot/Batch No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: LOT/BAT/001" id="LotBatchNo" name="LotBatchNo" maxlength="50" required disabled />
-                                        </div>
-                                    </div>  
-                                   *@
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Quantity Received<span id="Asterisk">*</span></label>
-                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                                <input type="text" class="form-control" placeholder="Ex: 40 M" id="QuantityReceived" name="QuantityReceived" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                                <select class="form-control" id="QuantityReceivedUnitId" name="QuantityReceivedUnitId" required style="width: 38%;">
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">Meter</option>
-                                                    <option value="2">Kg</option>
-                                                    <option value="3">Roll</option>
-                                                    <option value="4">MMeter</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>No Of Rolls<span id="Asterisk">*</span></label>
-                                            <input type="number" class="form-control" placeholder="Ex: 100" id="RollCount" name="RollCount" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Remarks<span id="Asterisk">*</span></label>
-                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
+                                
                             </form>
                         </div>
                     </div>
