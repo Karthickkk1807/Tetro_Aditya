@@ -95,7 +95,8 @@
         var dataMap = {
             1: { prefix: 'PO/NO/', label: 'Vendor Name', typelable: 'PurchaseOrder No' },
             2: { prefix: 'SALE/NO/', label: 'Client Name', typelable: 'SaleOrder No' },
-            3: { prefix: 'JOB/NO/', label: 'Client Name', typelable: 'JobOrder No' },
+            3: { prefix: 'DC/NO/', label: 'Client Name', typelable: 'DC No' },
+            4: { prefix: 'JOB/NO/', label: 'Client Name', typelable: 'JobOrder No' },
             default: { prefix: 'TRANS/NO/', label: 'Client Name', typelable: 'Transfer No' }
         };
 

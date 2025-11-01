@@ -222,8 +222,9 @@
                                                 <option value="">--Select--</option>
                                                 <option value="1">Purchase</option>
                                                 <option value="2">Sale</option>
-                                                <option value="3">Job Work</option>
-                                                <option value="4">Transfer</option>
+                                                <option value="3">DC</option>
+                                                <option value="4">Job Work</option>
+                                                <option value="5">Transfer</option>
                                             </select>
                                         </div>
                                     </div>
@@ -307,7 +308,21 @@
                                             <input type="date" class="form-control" placeholder="Ex: 23.9" id="ReceivedDate" name="ReceivedDate" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Stored Location<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="StoredLocationId" name="StoredLocationId" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Location A</option>
+                                                <option value="2">Location B</option>
+                                                <option value="3">Location C</option>
+                                                <option value="4">Location D</option>
+                                                <option value="5">Location E</option>
+                                                <option value="6">Location F</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Inspection Status<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="InspectionStatusId" name="InspectionStatusId" required>
@@ -318,7 +333,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>InWard Status<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="InWardStatusId" name="InWardStatusId" required>
@@ -335,6 +350,23 @@
                                         <div class="form-group">
                                             <label>Remarks<span id="Asterisk">*</span></label>
                                             <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                                                <b>Click Here to Attach your files</b>
+                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                                            </label>
+                                            <div class="file-preview d-flex justify-content-center" id="preview">
+                                                <div class="attachrow">
+                                                    <div class="attachcolumn">
+                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                    </div>
+                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -375,14 +407,14 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Width<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                                            <label>Dia<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Dia" name="Dia" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" disabled/>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>GSM<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required />
+                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required disabled/>
                                         </div>
                                     </div>
                                     @*<div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -412,12 +444,7 @@
                                             <input type="text" class="form-control" placeholder="Ex: LOT/BAT/001" id="LotBatchNo" name="LotBatchNo" maxlength="50" required disabled />
                                         </div>
                                     </div>  
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Roll Count<span id="Asterisk">*</span></label>
-                                            <input type="number" class="form-control" placeholder="Ex: 100" id="RollCount" name="RollCount" required />
-                                        </div>
-                                    </div>*@
+                                   *@
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Quantity Received<span id="Asterisk">*</span></label>
@@ -433,28 +460,19 @@
                                             </div>
                                         </div>
                                     </div>
+                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>No Of Rolls<span id="Asterisk">*</span></label>
+                                            <input type="number" class="form-control" placeholder="Ex: 100" id="RollCount" name="RollCount" required />
+                                        </div>
+                                    </div>
                                     <div class="col-md-12 col-lg-12 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Remarks<span id="Asterisk">*</span></label>
                                             <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
-                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
-                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
-                                                <b>Click Here to Attach your files</b>
-                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
-                                            </label>
-                                            <div class="file-preview d-flex justify-content-center" id="preview">
-                                                <div class="attachrow">
-                                                    <div class="attachcolumn">
-                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
-                                                    </div>
-                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </form>
                         </div>
