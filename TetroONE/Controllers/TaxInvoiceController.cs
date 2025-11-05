@@ -22,8 +22,8 @@ namespace TetroONE.Controllers
 			return View(SaleId);
 		}
 
-        [Route("Estimate")]
-        public IActionResult Estimate()
+        [Route("Quotation")]
+        public IActionResult Quotation()
 		{
 			return View();
 		}

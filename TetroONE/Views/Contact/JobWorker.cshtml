@@ -1,8 +1,10 @@
-﻿@{
-    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.MaintenanceLog, Context.Session);
+﻿@using TetroONE.Models;
+@using TetroONE;
+@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.JobWorkers, Context.Session);
 }
 
-<link href="~/css/MaintenanceLog.css" rel="stylesheet" />
+<link href="~/css/jobworker.css" rel="stylesheet" />
 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
@@ -13,7 +15,7 @@
                         <div class="row align-items-center">
                             <div class="col-icon">
                                 <div class="icon-big text-center icon-db-green bubble-shadow-small">
-                                    <img src="~/assets/moduleimages/contact/vendoricon_1.svg" />
+                                    <img src="~/assets/moduleimages/contact/distributoricon_1.svg" />
                                 </div>
                             </div>
                             <div class="col col-stats ml-3">
@@ -32,7 +34,7 @@
                         <div class="row align-items-center">
                             <div class="col-icon">
                                 <div class="icon-big text-center icon-db-orange bubble-shadow-small">
-                                    <img src="~/assets/moduleimages/contact/vendoricon_2.svg" />
+                                    <img src="~/assets/moduleimages/contact/distributoricon_2.svg" />
                                 </div>
                             </div>
                             <div class="col col-stats ml-3">
@@ -51,7 +53,7 @@
                         <div class="row align-items-center">
                             <div class="col-icon">
                                 <div class="icon-big text-center icon-db-red bubble-shadow-small">
-                                    <img src="~/assets/moduleimages/contact/vendoricon_3.svg" />
+                                    <img src="~/assets/moduleimages/contact/distributoricon_3.svg" />
                                 </div>
                             </div>
                             <div class="col col-stats ml-3">
@@ -70,7 +72,7 @@
                         <div class="row align-items-center">
                             <div class="col-icon">
                                 <div class="icon-big text-center icon-db-blue  bubble-shadow-small">
-                                    <img src="~/assets/moduleimages/contact/vendoricon_4.svg" />
+                                    <img src="~/assets/moduleimages/contact/distributoricon_4.svg" />
                                 </div>
                             </div>
                             <div class="col col-stats ml-3">
@@ -88,15 +90,13 @@
 </div>
 
 
-
-<div class="row justify-content-end mr-2">
+<div class="row justify-content-end mr-2"> 
     <div class="searchbar">
         <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
         <button type="submit" class="searchbar__button">
             <img src="~/assets/commonimages/search.svg" />
         </button>
     </div>
-
     <div class="datapiker ml-2 mt-1" style="position: relative;">
         <div class="add-imp-exp-btn">
             <div class="exportsiconpop">
@@ -104,7 +104,7 @@
                     if (access.Create)
                     {
                         <span class="pop">
-                            <a id="AddMaintenanceLog" title="Add MaintenanceLog">
+                            <a id="AddJobWorker" title="Add Job Worker">
                                 <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
                             </a>
                         </span>
@@ -115,29 +115,27 @@
     </div>
 </div>
 
-
 <div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="MaintenanceLogTable"></table>
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive table-bordered" id="ServiceEngrTable"></table>
 </div>
 
-<div id="MaintenanceLogCanvas" class="offcanvas-container">
+<div id="JobWorkerCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
-        <h2 id="MaintenanceLogHeader">Add New MaintenanceLog</h2>
+        <h2 id="JobWorkerHeader">Add New JobWorker</h2>
         <span id="CloseCanvas" class="close"
               style="font-size:30px;cursor:pointer;color:white;"
               title="Close">&times;</span>
     </div>
-
     <div class="offcanvas-body">
         <div class="row">
             <div class="col-12">
-                <div class="accordion" id="styleAccordionluf3ws29vt">
+                <div class="accordion" id="">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
                             <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
-                                        Maintenance Plan Info
+                                        Job Worker Info
                                     </strong>
                                     <i class="fas fa-angle-down text-white"></i>
                                 </p>
@@ -146,116 +144,68 @@
                     </div>
                     <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
                         <div id="Styleenterydetalis" class="card-body">
-                            <form id="FormMaintenanceLog">
+                            <form id="FormJobWorker">
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>MaintenanceLog No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="MP/2025-0001" id="MaintenanceLogNo" name="MaintenanceLogNo" required maxlength="50" disabled />
+                                            <label>JobWorker Id<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: JOB/WORKER/001" id="JobWorkerNo" name="JobWorkerNo" required disabled />
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Address</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="Address" name="Address" maxlength="500" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>MaintenanceDate<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" placeholder="Ex: 101, Ashoka Nagar" id="MaintenanceLogdate" name="MaintenanceLogdate" maxlength="500" required />
+                                            <label>City<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: Chennai" id="City" name="City" required oninput="Common.allowOnlyTextLength(this,50)" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Maintanence Plan Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="DepartmentId" name="DepartmentId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Planned</option>
-                                                <option value="2">Adhoc</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 PlanNoDiv" style="display: none;">
-                                        <div class="form-group">
-                                            <label>PlanNo<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="PlanTypeId" name="PlanTypeId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">MP-001</option>
-                                                <option value="2">MP-002</option>
-                                                <option value="3">MP-003</option>
-                                            </select>
-
+                                            <label>State</label>
+                                            <select class="form-control" id="StateId" name="StateId"></select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Downtime</label>
-                                            <input type="text" class="form-control" placeholder="0" id="Downtime" name="Downtime" maxlength="50" />
+                                            <label>Country</label>
+                                            <input type="text" class="form-control" placeholder="Ex: India" id="Country" name="Country" oninput="Common.allowOnlyTextLength(this,20)" required />
                                         </div>
-                                    </div>
-                                    <div id="PlanDetailsContainer" class="mt-0" style="padding:15px;"></div>
-
-
-                                    
-
-                                    <div class="col-md-12 col-lg-12 col-sm-12 col-12 spareDiv" style="display: none;">
-                                        <div class="form-group">
-                                            <label>Spare Parts</label>
-                                            <select multiple class="form-control select2 SpareParts"
-                                                    id="SpareParts"
-                                                    name="SpareParts"
-                                                    data-select2-id="SpareParts"
-                                                    tabindex="-1" aria-hidden="true">
-                                                <option value="Wrench Heads">Wrench Heads</option>
-                                                <option value="Ratchet Handles">Ratchet Handles</option>
-                                                <option value="Socket Extensions">Socket Extensions</option>
-                                                <option value="Adapter Sets">Adapter Sets</option>
-
-                                                <!-- Screwdriver Kit Spare Parts -->
-                                                <option value="Phillips Bits">Phillips Bits</option>
-                                                <option value="Flathead Bits">Flathead Bits</option>
-                                                <option value="Torx Bits">Torx Bits</option>
-                                                <option value="Hex Bits">Hex Bits</option>
-                                                <option value="Bit Holders">Bit Holders</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    
-
+                                    </div> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Technician<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="PlanTypeId" name="PlanTypeId" required>
-                                                <option value="">--Select Technician--</option>
-                                                <option value="1">Arun Kumar</option>
-                                                <option value="2">Vijay Raj</option>
-                                                <option value="3">Suresh Babu</option>
-                                                <option value="4">Manikandan</option>
-                                                <option value="5">Karthikeyan</option>
-                                            </select>
-
+                                            <label>Zipcode</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 600028" id="ZipCode" name="ZipCode" oninput="Common.allowOnlyNumberLength(this,6)" />
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Status<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="StatusId" name="StatusId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Completed</option>
-                                                <option value="2">Partially Completed</option>
-                                                <option value="3">Completed</option>
-                                                <option value="4">Delayed</option>
-                                            </select>
-
+                                            <label>Contact No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex:9876543210" id="ContactNumber" name="ContactNumber" minlength="6" oninput="Common.allowOnlyContactNoAlternativeLength(this,20)" required />
                                         </div>
-                                    </div>
-
+                                    </div>  
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input type="text" class="form-control" placeholder="Ex: example@gmail.com" id="Email" name="Email" oninput="Common.allowEmailAndLength(this, 50)" />
+                                        </div>
+                                    </div>   
+                                    <div class="col-md-12 col-lg-12 col-sm-3 col-6" style="margin-top: 12px;text-align: center;" id="IsActiveHide">
+                                        <div class="form-group">
+                                            <input type="checkbox" id="IsActive" name="IsActive">
+                                            <label for="IsActive"> Is Active </label>
+                                        </div>
+                                    </div> 
                                     <div class="col-md-12 col-lg-12 col-sm-12 col-12">
                                         <div class="form-group">
                                             <label>Remarks</label>
-                                            <textarea class="form-control" id="Remark" autocomplete="off" name="Remark" rows="1" maxlength="250" placeholder="Remarks"></textarea>
+                                            <textarea class="form-control" id="Remarks" autocomplete="off" name="Remarks" rows="3" maxlength="500" placeholder="Remarks"></textarea>
                                         </div>
-                                    </div>
-
-
+                                    </div> 
                                 </div>
                             </form>
                         </div>
@@ -263,22 +213,21 @@
                 </div>
             </div>
 
-
-            @* <div class="col-12">
-                <div class="accordion" id="styleAccordionluf3ws29vt">
+            <div class="col-12">
+                <div class="accordion" id="">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne1" class="">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
-                                        Equipment / Machine Info
+                                        Contact Person Info
                                     </strong>
                                     <i class="fas fa-angle-down text-white"></i>
                                 </p>
                             </a>
                         </h2>
                     </div>
-                    <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
                         <div id="Styleenterydetalis" class="card-body">
 
                             <div class="d-flex justify-content-end align-items-start">
@@ -286,62 +235,28 @@
                                     <i class="fas fa-plus" id="AddButton"></i>
                                 </button>
                             </div>
-                            <form id="FormEquipmentMachineInfo">
+                            <form id="FormContactJobWorker">
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
- *@
-
-            @* <div class="col-12">
-                <div class="accordion" id="styleAccordionluf3ws29vt">
-                    <div class="accordion-header">
-                        <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapseOne1" class="">
-                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                                    <strong class="text-white">
-                                        Maintenance Task / Activity Details
-                                    </strong>
-                                    <i class="fas fa-angle-down text-white"></i>
-                                </p>
-                            </a>
-                        </h2>
-                    </div>
-                    <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
-                        <div id="Styleenterydetalis" class="card-body">
-
-                            <div class="d-flex justify-content-end align-items-start">
-                                <button id="" class="btn AddStockBtn" type="button" onclick="addTaskRow(this)">
-                                    <i class="fas fa-plus" id="AddButton"></i>
-                                </button>
-                            </div>
-                            <form id="FormMaintenanceTaskInfo">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> *@
-
-
-
+             
         </div>
     </div>
-
     <div class="offcanvas-footer">
         <div class="col-md-12 col-lg-12">
             <div class="form-group text-center">
                 <div class="card-action">
-                    <a class="btn btn-success m-r-20 text-white" id="SaveClient">Save</a>
-                </div>
-
+                    <a class="btn btn-success m-r-20 text-white" id="SaveJobWorker">Save</a>
+                </div> 
             </div>
         </div>
     </div>
 </div>
 
-
 <script>
     var access = @Html.Raw(Json.Serialize(access));
 </script>
-<script src="~/js/MaintenanceLog.js"></script>
+
+<script src="~/js/jobworker.js"></script>

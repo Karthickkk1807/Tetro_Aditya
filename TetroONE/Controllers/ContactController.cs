@@ -34,15 +34,15 @@ namespace TetroONE.Controllers
 		{
 			return View();
 		}
-
-		[Route("Franchise")]
-		public IActionResult Franchise()
+		 
+		[Route("ServiceEngr")]
+		public IActionResult ServiceEngr()
 		{
 			return View();
 		}
 
-        [Route("ServiceEngr")]
-        public IActionResult ServiceENGR()
+        [Route("JobWorker")]
+        public IActionResult JobWorker()
         {
             return View();
         }
@@ -50,14 +50,14 @@ namespace TetroONE.Controllers
         //===============================================================================================Vendor==========================================================================================================
         [HttpGet]
 		[Route("GetVendor")]
-		public IActionResult GetVendor(int FranchiseId)
+		public IActionResult GetVendor(int PlantId)
 		{
 			GetVendor getVendor = new GetVendor()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 				VendorId = null,
-				FranchiseId = FranchiseId
-			};
+                PlantId = PlantId
+            };
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetVendorDetails]", getVendor);
 			return Json(response);
@@ -65,14 +65,14 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetVendorID")]
-		public IActionResult GetVendorID(int VendorId, int FranchiseId)
+		public IActionResult GetVendorID(int VendorId, int PlantId)
 		{
 			GetVendor getVendor = new GetVendor()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 				VendorId = VendorId,
-				FranchiseId = FranchiseId
-			};
+                PlantId = PlantId
+            };
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetVendorDetails]", getVendor);
 			return Json(response);
@@ -87,23 +87,19 @@ namespace TetroONE.Controllers
 
 			DataTable ProductMappingDetails = new DataTable();
 			ProductMappingDetails = GenericTetroONE.ToDataTable(request.vendorProductMappingDetails);
-
-			DataTable FranchiseMappingDetails = new DataTable();
-			FranchiseMappingDetails = GenericTetroONE.ToDataTable(request.franchiseMappingDetails);
-
+			 
 			request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
 			request.TVP_ContactPersonDetails = VendorContactData;
 			request.TVP_VendorProductMappingDetails = ProductMappingDetails;
-			request.TVP_ContactFranchiseMappingDetails = FranchiseMappingDetails;
 
 			if (request.VendorId != null && request.VendorId != 0)
 			{
-				string[] Exclude = { "contactPersonDetails", "vendorProductMappingDetails", "franchiseMappingDetails" };
+				string[] Exclude = { "contactPersonDetails", "vendorProductMappingDetails" };
 				response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateVendorDetails]", request, Exclude);
 			}
 			else
 			{
-				string[] Exclude = { "contactPersonDetails", "vendorProductMappingDetails", "franchiseMappingDetails", "VendorId", "IsActive" };
+				string[] Exclude = { "contactPersonDetails", "vendorProductMappingDetails", "VendorId", "IsActive" };
 				response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertVendorDetails]", request, Exclude);
 			}
 
@@ -257,10 +253,7 @@ namespace TetroONE.Controllers
 
             List<ContactPersonDetails>? staticData = JsonConvert.DeserializeObject<List<ContactPersonDetails>?>(Request.Form["ClientContactPersonDetails"]);
 			DataTable ClientContactPersonDetails = GenericTetroONE.ToDataTable(staticData);
-
-			List<FranchiseMappingDetails>? FranchiseData = JsonConvert.DeserializeObject<List<FranchiseMappingDetails>?>(Request.Form["FranchiseStaticData"]);
-			DataTable FranchiseStaticData = GenericTetroONE.ToDataTable(FranchiseData);
-
+			 
             List<ClientProductMappingDetails>? ClientProductMappingDetails = JsonConvert.DeserializeObject<List<ClientProductMappingDetails>?>(Request.Form["ClientProductMappingDetails"]);
             DataTable ClientProductStaticDetails = GenericTetroONE.ToDataTable(ClientProductMappingDetails);
 
@@ -307,8 +300,7 @@ namespace TetroONE.Controllers
 
                  
                     command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails);
-					command.Parameters.AddWithValue("@TVP_ClientProductMappingDetails", ClientProductStaticDetails);
-					command.Parameters.AddWithValue("@TVP_ContactFranchiseMappingDetails", FranchiseStaticData);
+					command.Parameters.AddWithValue("@TVP_ClientProductMappingDetails", ClientProductStaticDetails); 
 					command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
                     command.Parameters.AddWithValue("@TVP_VisicoolarAttachmentDetails", dtattachmentDynamic);
 
@@ -763,71 +755,69 @@ namespace TetroONE.Controllers
             catch (Exception ex)
             {
                 isuploaded = false;
-            }
-
+            } 
             return isuploaded;
         }
+		
+        //===============================================================================================ServiceEngr=====================================================================================
+
+		 
+        //[HttpGet]
+        //[Route("GetServiceEngr")]
+        //public IActionResult GetServiceEngr(int BranchId, int ServiceEngrId)
+        //{
+        //    GetServiceEngr getVendor = new GetServiceEngr()
+        //    {
+        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //        BranchId = BranchId,
+        //        ServiceEngrId = ServiceEngrId != 0 ? ServiceEngrId : null,
+        //    };
+
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetServiceEngrDetails]", getVendor);
+        //    return Json(response);
+        //}
+
+        //[HttpPost]
+        //[Route("InsertUpdateServiceEngr")]
+        //public IActionResult InsertUpdateServiceEngr([FromBody] InsertUpdateServiceEngr request)
+        //{
+        //    DataTable ContactPersonDetails = new DataTable();
+        //    ContactPersonDetails = GenericTetroONE.ToDataTable(request.ContactPersonDetails);
 
 
 
+        //    request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+        //    request.TVP_ContactPersonDetails = ContactPersonDetails;
 
 
-        [HttpGet]
-        [Route("GetServiceEngr")]
-        public IActionResult GetServiceEngr(int BranchId, int ServiceEngrId)
-        {
-            GetServiceEngr getVendor = new GetServiceEngr()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                BranchId = BranchId,
-                ServiceEngrId = ServiceEngrId != 0 ? ServiceEngrId : null,
-            };
+        //    if (request.ServiceEngrId != null && request.ServiceEngrId != 0)
+        //    {
+        //        string[] Exclude = { "ContactPersonDetails", "ContactBranchMappingDetails" };
+        //        response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateServiceEngrDetails]", request, Exclude);
+        //    }
+        //    else
+        //    {
+        //        string[] Exclude = { "ContactPersonDetails", "ContactBranchMappingDetails", "ServiceEngrId", "IsActive" };
+        //        response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertServiceEngrDetails]", request, Exclude);
+        //    }
 
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetServiceEngrDetails]", getVendor);
-            return Json(response);
-        }
+        //    return Json(response);
+        //}
 
-        [HttpPost]
-        [Route("InsertUpdateServiceEngr")]
-        public IActionResult InsertUpdateServiceEngr([FromBody] InsertUpdateServiceEngr request)
-        {
-            DataTable ContactPersonDetails = new DataTable();
-            ContactPersonDetails = GenericTetroONE.ToDataTable(request.ContactPersonDetails);
+        //public class DeleteServiceEngrClass { public int LoginUserId { get; set; } public int? ServiceEngrId { get; set; } }
+        //[HttpGet]
+        //[Route("DeleteServiceEngr")]
+        //public IActionResult DeleteServiceEngr(int ServiceEngrId)
+        //{
+        //    DeleteServiceEngrClass getDelete = new DeleteServiceEngrClass()
+        //    {
+        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //        ServiceEngrId = ServiceEngrId
+        //    };
 
-           
-
-            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            request.TVP_ContactPersonDetails = ContactPersonDetails;
-          
-
-            if (request.ServiceEngrId != null && request.ServiceEngrId != 0)
-            {
-                string[] Exclude = { "ContactPersonDetails", "ContactBranchMappingDetails" };
-                response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateServiceEngrDetails]", request, Exclude);
-            }
-            else
-            {
-                string[] Exclude = { "ContactPersonDetails", "ContactBranchMappingDetails", "ServiceEngrId", "IsActive" };
-                response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertServiceEngrDetails]", request, Exclude);
-            }
-
-            return Json(response);
-        }
-
-        public class DeleteServiceEngrClass { public int LoginUserId { get; set; } public int? ServiceEngrId { get; set; } }
-        [HttpGet]
-        [Route("DeleteServiceEngr")]
-        public IActionResult DeleteServiceEngr(int ServiceEngrId)
-        {
-            DeleteServiceEngrClass getDelete = new DeleteServiceEngrClass()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                ServiceEngrId = ServiceEngrId
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteServiceEngrDetails]", getDelete);
-            return Json(response);
-        }
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteServiceEngrDetails]", getDelete);
+        //    return Json(response);
+        //}
 
 
 

@@ -6,7 +6,7 @@ namespace TetroONE.Models
     {
         public int LoginUserId { get; set; }
         public int? VendorId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
     }
 
     public class InsertUpdareVendorDetails
@@ -16,7 +16,7 @@ namespace TetroONE.Models
         public string VendorName { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }
-        public int StateId { get; set; }
+        public int State { get; set; }
         public string? Country { get; set; }
         public string? ZipCode { get; set; }
         public string ContactNumber { get; set; }
@@ -34,20 +34,10 @@ namespace TetroONE.Models
         public decimal? CurrentCreditLimit { get; set; }
         public List<ContactPersonDetails> contactPersonDetails { get; set; }
         public DataTable TVP_ContactPersonDetails { get; set; }
-        public List<FranchiseMappingDetails> franchiseMappingDetails { get; set; }
-        public DataTable TVP_ContactFranchiseMappingDetails { get; set; }
         public List<VendorProductMappingDetails> vendorProductMappingDetails { get; set; }
         public DataTable TVP_VendorProductMappingDetails { get; set; }
     }
-
-    public class FranchiseMappingDetails
-    {
-        public int? ContactFranchiseMappingId { get; set; }
-        public int? ContactId { get; set; }
-        public int? FranchiseId { get; set; }
-        public bool IsSelected { get; set; }
-    }
-
+     
     public class ContactPersonDetails
     {
         public int? ContactPersonId { get; set; }
@@ -110,15 +100,11 @@ namespace TetroONE.Models
         public bool? IsActive { get; set; }
         public List<ContactPersonDetails> ClientContactPersonDetails { get; set; }
         public List<ClientProductMappingDetails> clientProductMappingDetails { get; set; }
-        public DataTable TVP_ContactPersonDetails { get; set; }
-        public List<FranchiseMappingDetails> franchiseMappingDetails { get; set; }
-        public DataTable TVP_ContactFranchiseMappingDetails { get; set; }
+        public DataTable TVP_ContactPersonDetails { get; set; } 
         public DataTable TVP_AttachmentDetails { get; set; }
     
     }
-
- 
-
+     
     public class ClientProductMappingDetails
     {
         public int? ClientProductMappingId { get; set; }

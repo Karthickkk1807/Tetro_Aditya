@@ -44,17 +44,17 @@ namespace TetroONE.Models
         public int UserTypeId { get; set; }
         public int UserGroupId { get; set; }
         public int? ContactId { get; set; }
-        public List<UserFranchiseMappingDetails> userFranchiseMappingDetails { get; set; }
-        public DataTable TVP_UserFranchiseMappingDetails { get; set; }
+        public List<UserPlantMappingDetails> UserPlantMappingDetails { get; set; }
+        public DataTable TVP_UserPlantMappingDetails { get; set; }
         public List<UserDepartmentMappingDetails> userDepartmentMappingDetails { get; set; }
         public DataTable TVP_UserDepartmentMappingDetails { get; set; }
     }
 
-	public class UserFranchiseMappingDetails
+	public class UserPlantMappingDetails
     {
-        public int? UserfranchiseMappingId { get; set; }
+        public int? UserPlantMappingId { get; set; }
         public int? UserId { get; set; }
-        public int? franchiseId { get; set; }
+        public int? PlantId { get; set; }
         public bool? IsActive { get; set; }
     }
 
@@ -80,13 +80,13 @@ namespace TetroONE.Models
         public int UserTypeId { get; set; }
         public int UserGroupId { get; set; }
         public int? ContactId { get; set; }
-        public List<UserFranchiseMappingDetails> userFranchiseMappingDetails { get; set; }
-        public DataTable TVP_UserFranchiseMappingDetails { get; set; }
+        public List<UserPlantMappingDetails> UserPlantMappingDetails { get; set; }
+        public DataTable TVP_UserPlantMappingDetails { get; set; }
         public List<UserDepartmentMappingDetails> userDepartmentMappingDetails { get; set; }
         public DataTable TVP_UserDepartmentMappingDetails { get; set; }
     }
 
-	public class GetFranchise1 { 
+	public class GetPlant { 
 		public int LoginUserId { get; set; }
 	}
 }

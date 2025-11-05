@@ -25,8 +25,7 @@ namespace TetroONE.Models
         public string ContactNumber { get; set; }
         public string Email { get; set; }
         public string Website { get; set; }
-        public string GSTNumber { get; set; }
-       
+        public string GSTNumber { get; set; } 
         public string ExistingImage { get; set; }
         public string Signature { get; set; }
         public string SignatureExistingImage { get; set; }

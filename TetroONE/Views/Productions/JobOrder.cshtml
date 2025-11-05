@@ -1,4 +1,7 @@
-﻿ 
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.JobOrder, Context.Session);
+}
+
 <style>
     .DynrowRemove {
         background: none;
@@ -164,11 +167,16 @@
         <div class="datapiker ml-2 mt-1" style="position: relative;">
             <div class="add-imp-exp-btn">
                 <div class="exportsiconpop">
-                    <span class="pop">
-                        <a id="customBtn_JobOrderData" title="Add JobOrder">
-                            <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
-                        </a>
-                    </span>
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="customBtn_JobOrderData" title="Add JobOrder">
+                                    <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -608,6 +616,11 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
 
 <script>
     $(document).ready(function() {

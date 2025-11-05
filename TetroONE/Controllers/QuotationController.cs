@@ -10,9 +10,9 @@ namespace TetroONE.Controllers
 {
 	[Authorize]
 	[Route("Estimate")]
-	public class EstimateController : BaseController
+	public class QuotationController : BaseController
 	{
-		public EstimateController(IConfiguration configuration) : base(configuration)
+		public QuotationController(IConfiguration configuration) : base(configuration)
 		{
 
 		}

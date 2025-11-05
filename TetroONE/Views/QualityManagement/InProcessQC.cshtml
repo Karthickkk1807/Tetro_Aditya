@@ -1,1 +1,7 @@
-﻿ 
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.InProcessQC, Context.Session);
+}
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>

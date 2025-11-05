@@ -1,5 +1,5 @@
 ﻿@{
-    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Payment, Context.Session);
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.GLPayment, Context.Session);
 }
 
 <link href="~/css/payment.css" rel="stylesheet" />
@@ -159,11 +159,7 @@
 
 <ul class="nav nav-tabs pl-2 mt-2" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <a class="nav-link navbar-tab titleForHeaderProductTab active this" id="PaymentRequest-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Payment Request</a>
-    </li>
-
-    <li class="nav-item" role="presentation">
-        <a class="nav-link navbar-tab titleForHeaderProductTab" id="AccountsPayable-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Accounts Payable</a>
+        <a class="nav-link navbar-tab titleForHeaderProductTab active this" id="AccountsPayable-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Accounts Payable</a>
     </li>
 
     <li class="nav-item" role="presentation">

@@ -4,9 +4,8 @@ $(document).ready(function () {
 
     var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
-    Common.ajaxCall("GET", "/Contact/GetVendor", { FranchiseId: FranchiseMappingId }, VendorSuccess, null);
-    Common.bindDropDownParent('StateId', 'FormVendor', 'State');
-    //$('#FormFranchiseData #BindFranchiseData').empty();
+    Common.ajaxCall("GET", "/Contact/GetVendor", { PlantId: FranchiseMappingId }, VendorSuccess, null);
+    Common.bindDropDownParent('StateId', 'FormVendor', 'State'); 
     $('#IsActiveHide').hide();
 
     setPrimaryCheckboxEventListeners();
@@ -89,30 +88,9 @@ $(document).ready(function () {
             });
 
             objvalue.vendorProductMappingDetails = ProductList;
-
-
-            //var FranchiseList = [];
-            //var ClosestDivProductList = $('#FormFranchiseData #BindFranchiseData input[type="checkbox"]:checked');
-
-            //$.each(ClosestDivProductList, function (index, element) {
-            //    var ContactFranchiseMappingId = $(element).siblings('.ProductMappingId').text();
-            //    var moduleId = vendorId;
-            //    var franchiseId = $(element).data('id');
-            //    var IsActive = $(element).prop('checked');
-
-            //    FranchiseList.push({
-            //        ContactFranchiseMappingId: parseInt(ContactFranchiseMappingId) || null,
-            //        ContactId: parseInt(moduleId) || null,
-            //        FranchiseId: franchiseId,
-            //        IsSelected: IsActive,
-            //    });
-            //});
-
-            //objvalue.franchiseMappingDetails = FranchiseList;
-
-
+             
             objvalue.VendorId = parseInt(vendorId) || null;
-            objvalue.StateId = parseInt($('#StateId').val()) || null;
+            objvalue.State = parseInt($('#StateId').val()) || null;
             Common.ajaxCall("POST", "/Contact/InsertUpdareVendorDetails", JSON.stringify(objvalue), VendorInsertUpdateSuccess, null);
         }
     });
@@ -139,13 +117,12 @@ function VendorSuccess(response) {
 }
 
 function VendorInsertUpdateSuccess(response) {
-    if (response.status) {
-       // $('#FormFranchiseData #BindFranchiseData').empty();
+    if (response.status) { 
         Common.successMsg(response.message);
         $("#VendorCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
         var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-        Common.ajaxCall("GET", "/Contact/GetVendor", { FranchiseId: franchiseId }, VendorSuccess, null);
+        Common.ajaxCall("GET", "/Contact/GetVendor", { PlantId: franchiseId }, VendorSuccess, null);
     }
     else {
         Common.errorMsg(response.message);
@@ -205,46 +182,16 @@ $(document).on('click', '#AddVendor', function () {
     $('#IsActiveHide').hide();
     $('#SaveClient').text('Save').addClass('btn-success').removeClass('btn-update');
     $("input[name='products']").prop("checked", false);
-    $('#loader-pms').hide();
-    //$('#FormFranchiseData #BindFranchiseData').empty('');
+    $('#loader-pms').hide(); 
 
     $('#TransactionsHide').hide();
 
     Common.ajaxCall("GET", "/Contact/GetProductListVendor", { ModuleName: "Vendor" }, ProductListSuccess, null);
-
-    //Common.ajaxCall("GET", "/Myprofile/GetFranchise", null, FranchiseSuccess, null);
-
+     
     $('#VendorCanvas.collapse').removeClass('show');
     $('#collapse1').addClass('show');
 });
-
-//function FranchiseSuccess(response) {
-//    if (response.status) {
-//        var data = JSON.parse(response.data);
-//        var htmlDynamicProduct = "";
-//        if (data[0][0].FranchiseId != null && data[0][0].FranchiseId != "") {
-//            $.each(data[0], function (index, franchiseData) {
-//                var FranchiseId = franchiseData.FranchiseId;
-//                var FranchiseName = franchiseData.FranchiseName;
-//                var IsActiveCheck = franchiseData.IsActive == true ? 'checked' : '';
-
-//                htmlDynamicProduct += `
-//                 <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
-//                    <lable class="FranchiseMappingId d-none"></lable>
-//                    <input type="checkbox" data-id="${FranchiseId}" name="product${FranchiseId}" ${IsActiveCheck} id="product${FranchiseId}">
-//                    <label for="product${FranchiseId}" class="checkbox-label">${FranchiseName}</label>
-//                </div>
-//            `;
-//            });
-//            $('#FormFranchiseData #BindFranchiseData').append(htmlDynamicProduct);
-//        }
-//        else {
-//            $('#FormFranchiseData #BindFranchiseData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-//        }
-//        $('#FormVendor #StateId').val('32');
-//    }
-//}
-
+  
 $(document).on('click', '.btn-edit', function () {
     $('#loader-pms').show();
     var windowWidth = $(window).width();
@@ -261,12 +208,11 @@ $(document).on('click', '.btn-edit', function () {
     Common.removeMessage('FormVendorContact');
     $('#fadeinpage').addClass('fadeoverlay');
     $("#VendorHeader").text('Edit Vendor Details');
-    $('#SaveClient').text('Update').addClass('btn-update').removeClass('btn-success');
-    //$('#FormFranchiseData #BindFranchiseData').empty();
+    $('#SaveClient').text('Update').addClass('btn-update').removeClass('btn-success'); 
     $('#IsActiveHide').show();
     vendorId = $(this).data('id');
     var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-    Common.ajaxCall("GET", "/Contact/GetVendorID", { VendorId: vendorId, FranchiseId: franchiseId }, editSuccess, null);
+    Common.ajaxCall("GET", "/Contact/GetVendorID", { VendorId: vendorId, PlantId: franchiseId }, editSuccess, null);
 
     $('#VendorCanvas.collapse').removeClass('show');
     $('#collapse1').addClass('show');
@@ -381,29 +327,7 @@ function editSuccess(response) {
             $('#FormVendorContact').append(htmlAppend);
             setPrimaryCheckboxEventListeners();
         });
-
-        //var htmlDynamicProduct = "";
-        //if (data[3][0].FranchiseId != null && data[3][0].FranchiseId != "") {
-        //    $.each(data[3], function (index, franchiseData) {
-        //        var FranchiseMappingId = franchiseData.VendorFranchiseMappingId;
-        //        var FranchiseId = franchiseData.FranchiseId;
-        //        var FranchiseName = franchiseData.FranchiseName;
-        //        var IsActiveCheck = franchiseData.IsSelected == true ? 'checked' : '';
-
-        //        htmlDynamicProduct += `
-        //         <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
-        //            <lable class="FranchiseMappingId d-none">${FranchiseMappingId}</lable>
-        //            <input type="checkbox" data-id="${FranchiseId}" name="products" ${IsActiveCheck} id="product-${FranchiseId}">
-        //            <label for="product-${FranchiseId}" class="checkbox-label">${FranchiseName}</label>
-        //        </div>
-        //    `;
-        //    });
-        //    $('#FormFranchiseData #BindFranchiseData').append(htmlDynamicProduct);
-        //}
-        //else {
-        //    $('#FormFranchiseData #BindFranchiseData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        //}
-
+         
         $('#TransactionsHide').show();
 
         $('#TransactionsInfo').empty('');
@@ -640,15 +564,10 @@ function setPrimaryCheckboxEventListeners() {
 
 function validateFormAccordions(accordionSelector, errorMessageDefault = 'This field is required') {
     var isFormValid = true;
-    var foundInvalidAccordion = false;
+    var firstInvalidAccordion = null;
 
     $(accordionSelector).each(function () {
-        if (foundInvalidAccordion) {
-            return false;
-        }
-
         var currentAccordion = $(this);
-        var headerText = currentAccordion.find('.accordion-header strong').text().trim();
         var requiredFields = currentAccordion.find('input[required], select[required], textarea[required]');
         var isCurrentValid = true;
 
@@ -663,12 +582,10 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
             if (!value) {
                 isInvalid = true;
                 errorMessage = errorMessageDefault;
-            }
-            else if (minLength && value.length < parseInt(minLength)) {
+            } else if (minLength && value.length < parseInt(minLength)) {
                 isInvalid = true;
                 errorMessage = `Please enter at least ${minLength} characters.`;
-            }
-            else if (maxLength && value.length > parseInt(maxLength)) {
+            } else if (maxLength && value.length > parseInt(maxLength)) {
                 isInvalid = true;
                 errorMessage = `Please enter no more than ${maxLength} characters.`;
             }
@@ -679,42 +596,29 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
                 input.after('<div class="invalid-feedback">' + errorMessage + '</div>');
 
                 isCurrentValid = false;
+                isFormValid = false;
+
+                if (!firstInvalidAccordion) {
+                    firstInvalidAccordion = currentAccordion;
+                }
             } else {
                 input.removeClass('is-invalid error');
                 input.nextAll('.invalid-feedback, .error').remove();
             }
         });
 
-        //if (headerText === "Franchise Mapping Info") {
-        //    var checkboxes = currentAccordion.find('input[type="checkbox"]');
-        //    var anyChecked = checkboxes.is(':checked');
-
-        //    if (!anyChecked) {
-        //        isCurrentValid = false;
-
-        //        if (!currentAccordion.find('.checkbox-error').length) {
-        //            currentAccordion.find('#BindFranchiseData').append(
-        //                '<div class="invalid-feedback checkbox-error d-flex justify-content-center">Please select at least one franchise</div>'
-        //            );
-        //        }
-        //    } else {
-        //        currentAccordion.find('.checkbox-error').remove();
-        //    }
-        //}
-
-        if (!isCurrentValid) {
-            isFormValid = false;
-            foundInvalidAccordion = true;
-            currentAccordion.find('.collapse').collapse('show');
-            currentAccordion[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
-            $(accordionSelector).not(currentAccordion).find('.collapse').collapse('hide');
-        } else {
+        if (isCurrentValid) {
             currentAccordion.find('.collapse').collapse('hide');
         }
     });
 
+    if (firstInvalidAccordion) {
+        firstInvalidAccordion.find('.collapse').collapse('show');
+    }
+
     return isFormValid;
 }
+
 
 $(document).on("input", '#FormVendor #Email', function (event) {
     var inputElement = $(this);

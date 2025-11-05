@@ -1,5 +1,5 @@
 ﻿@{
-    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Payslip, Context.Session);
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.PayRoll, Context.Session);
 
     bool isAdmin = false, isEmployee = false;
     if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))

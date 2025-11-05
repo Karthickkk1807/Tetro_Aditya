@@ -29,7 +29,6 @@ namespace TetroONE.Controllers
         [Route("GetUserAcces")]
         public IActionResult GetUserAcces(int PlantId, int Value, string Category, string? Search)
         {
-
             GetUserAcces getUserAcces = new GetUserAcces()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
@@ -42,8 +41,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetUserAccessDetails]", getUserAcces);
             return Json(response);
         }
-
-
+        
         [HttpGet]
         [Route("GetReportValueUserAcces")]
         public IActionResult GetReportValueUserAcces(string ModuleName)

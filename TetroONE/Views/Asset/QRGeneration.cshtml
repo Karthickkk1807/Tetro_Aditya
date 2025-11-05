@@ -1,4 +1,8 @@
-﻿<link href="~/css/qrgeneration.css" rel="stylesheet" />
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.QRGeneration, Context.Session);
+}
+
+<link href="~/css/qrgeneration.css" rel="stylesheet" />
 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
@@ -84,8 +88,8 @@
 </div>
 
 <div id="filter-Column" class="Date-SearchColumn">
-     <div class="month-piker d-flex">
-      
+    <div class="month-piker d-flex">
+
         <div class="ftdate">
             <div class="row" id="fromtodateCol" style="display:none; margin-left:10px;">
                 <div class="col-6" id="frmDate">
@@ -102,11 +106,11 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
     <div class="d-flex justify-content-end">
-        
-         <button class="btn Bulk-Action" id="toggleCustomDate" type="button" title="Select Date Range">
+
+        <button class="btn Bulk-Action" id="toggleCustomDate" type="button" title="Select Date Range">
             <i class="fa fa-calendar" aria-hidden="true"></i>
         </button>
         <div class="searchbar">
@@ -119,12 +123,16 @@
         <div class="datapiker ml-2 mt-1" style="position: relative;">
             <div class="add-imp-exp-btn">
                 <div class="exportsiconpop">
-
-                    <span class="pop">
-                        <a id="AddQRGeneration" title="Add QR Generation">
-                            <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
-                        </a>
-                    </span>
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="AddQRGeneration" title="Add QR Generation">
+                                    <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        } 
+                    }
                 </div>
             </div>
         </div>
@@ -217,7 +225,7 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Sub Category<span id="Asterisk">*</span></label> 
+                        <label>Sub Category<span id="Asterisk">*</span></label>
                         <select class="form-control" id="SubCategory" name="SubCategory" required>
                             <option value="" style="font-weight: 400;">-- Select --</option>
                             <option value="1">Computer &amp; Peripherals</option>
@@ -339,10 +347,8 @@
                         <label id="closeLabelPrintConfig" style="cursor: pointer;color: #007bff !important;font-weight: 600;font-size: 13px !important;">✖ Close Configuration</label>
                     </div>
                 </div>
-            </div>
-
-        </form>
-
+            </div> 
+        </form> 
     </div>
 
     <div class="offcanvas-footer">
@@ -362,5 +368,8 @@
     </div>
 </div>
 
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
 
 <script src="~/js/qrgeneration.js"></script>

@@ -4,12 +4,12 @@ var IsFirst = true;
 $(document).ready(function () {
     /* var Listdata = parsedUserAccessList;*/
 
-    var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
+    var PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
     var category = "UserType";
     var search = null;
 
     var editData = {
-        PlantId: FranchiseMappingId,
+        PlantId: PlantMappingId,
         Value: 0,
         Category: category,
         Search: search

@@ -547,7 +547,6 @@ namespace TetroONE
             return response;
         }
 
-
         public static List<string> GetUserViewAccessSession(string page, ISession session)
         {
             List<string> access = new List<string>();
@@ -566,7 +565,6 @@ namespace TetroONE
             }
             return access;
         }
-
 
         public static DataTable ToDataTable<T>(List<T> items)
         {

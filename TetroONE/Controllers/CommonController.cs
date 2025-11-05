@@ -412,50 +412,5 @@ namespace TetroONE.Controllers
 			response = GenericTetroONE.GetData(_connectionString, "USP_GetNotificationDetails", Get);
 			return Json(response);
 		}
-
-        [HttpGet]
-        public IActionResult SetUserAccess()
-        {
-            _employeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-            DataSet ds = new DataSet();
-
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("[dbo].[USP_UserLogin_New]", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.AddWithValue("@LoginUserId", Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value));
-
-                    command.Parameters.Add("@Status", SqlDbType.Int).Direction = ParameterDirection.Output;
-                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    adapter.Fill(ds);
-
-                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
-                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
-
-                    if (response.Status && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                    {
-                        DataTable dt = ds.Tables[0];
-                       /// response.Message = Enum.GetName(typeof(UserRole), Convert.ToInt32(dt.Rows[0]["UserGroupId"]));
-
-                        SetAccess(dt);
-                    }
-                }
-            }
-            return Json(response);
-        }
-
-
-        private void SetAccess(DataTable dt)
-        {
-            List<UserAccess> access = GenericTetroONE.ConvertDataTableToList<UserAccess>(dt);
-            string json = JsonConvert.SerializeObject(access);
-            HttpContext.Session.SetString("UserAccess", json);
-        }
     }
 }

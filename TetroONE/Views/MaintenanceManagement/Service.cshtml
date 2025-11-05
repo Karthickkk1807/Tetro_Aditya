@@ -1,4 +1,7 @@
-﻿<link href="~/css/maintainservice.css" rel="stylesheet" />
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Service, Context.Session);
+}
+<link href="~/css/maintainservice.css" rel="stylesheet" />
 
 
 <div class="row quick-db m-b-5">
@@ -138,11 +141,16 @@
         <div class="datapiker ml-2 mt-1" style="position: relative;">
             <div class="add-imp-exp-btn">
                 <div class="exportsiconpop">
-                    <span class="pop">
-                        <a id="AddService" title="Add Service">
-                            <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
-                        </a>
-                    </span>
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="AddService" title="Add Service">
+                                    <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -557,7 +565,7 @@
         </div>
     </div>
 </div>
- 
+
 <div id="ProductModal" class="modal" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-xxl">
         <div class="modal-content">
@@ -619,5 +627,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
 
 <script src="~/js/maintainservice.js"></script>
