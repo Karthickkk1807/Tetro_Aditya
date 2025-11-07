@@ -5,10 +5,9 @@ namespace TetroONE.Models
 {
     public class GetProduct
     {
-        public int LoginUserId { get; set; }
-        public int? ProductTypeId { get; set; }
+        public int LoginUserId { get; set; } 
         public int? ProductId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
     }
     public class GetManPower
     {
@@ -23,45 +22,29 @@ namespace TetroONE.Models
         public int ProductTypeId { get; set; }
         public string ProductName { get; set; }
         public int ProductCategoryId { get; set; }
-        public int ProductSubCategoryId { get; set; }
-        public int? ProductFlavourId { get; set; }
+        public int ProductSubCategoryId { get; set; } 
         public string? ProductDescription { get; set; }
         public int PrimaryUnitId { get; set; }
         public int SecondaryUnitId { get; set; }
-        public decimal SecondaryUnitValue { get; set; }
+        public decimal ConvertionValue { get; set; }
+        public decimal PrimaryPrice { get; set; }
+        public decimal SecondaryPrice { get; set; }
+        public decimal ReOrderLevel { get; set; }
         public decimal? CGST { get; set; }
         public decimal? SGST { get; set; }
         public decimal? IGST { get; set; }
         public decimal? CESS { get; set; }
-        public List<ProductFranchiseMapping> productFranchiseMapping { get; set; }
-        public DataTable TVP_ProductFranchiseMappingDetails { get; set; }
-        public List<ProductProductionStagesMapping> productProductionStagesMapping { get; set; }
-        public DataTable TVP_ProductProductionStagesMappingDetails { get; set; }
-        public List<ProductRawMaterialMapping> productRawMaterialMapping { get; set; }
-        public DataTable TVP_ProductRawMaterialMappingDetails_1 { get; set; }
-        public List<ProductQCMappingDetails> productQCMappingDetails { get; set; }
-        public DataTable TVP_ProductQCMappingDetails { get; set; }
+        public List<ProductPlantMappingDetails> ProductPlantMappingDetails { get; set; }
+        public DataTable TVP_ProductPlantMappingDetails { get; set; } 
     }
-
-    public class ProductQCMappingDetails
+    
+    public class ProductPlantMappingDetails
     {
-        public int? ProductQCMappingId { get; set; }
+        public int? ProductPlantMappingId { get; set; }
         public int? ProductId { get; set; }
-        public string? QCName { get; set; }
-        public decimal? Value { get; set; }
-        public bool? IsActive { get; set; }
-    }
-
-    public class ProductFranchiseMapping
-    {
-        public int? ProductFranchiseMappingId { get; set; }
-        public int? ProductId { get; set; }
-        public int? FranchiseId { get; set; }
-        public decimal? PrimaryPrice { get; set; }
-        public decimal? SecondaryPrice { get; set; }
+        public int? PlantId { get; set; }
         public decimal? OpeningStock { get; set; }
-        public int? StockInHand { get; set; }
-        public decimal? ReOrderlevel { get; set; }
+        public decimal? StockInHand { get; set; } 
     }
 
     public class ProductProductionStagesMapping

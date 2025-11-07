@@ -14,22 +14,20 @@ $(document).ready(async function () {
 
     titleForHeaderProductTab = "Raw Material";
 
-    var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
+    var PlantMappingId = parseInt(localStorage.getItem('PlantId'));
     var productTypeId = 1;
-    Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: productTypeId, PlantId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
+    Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId) }, ProductSuccess, null);
     Common.bindDropDownParent('PrimaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('SecondaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('ProductTypeId', 'ProductInfoForm', 'ProductType');
     Common.bindDropDownParent('ProductCategoryId', 'ProductInfoForm', 'ProductCategory');
     Common.bindDropDownParent('ProductFlavourId', 'ProductInfoForm', 'ProductFlavour');
-    $('#FormProductProcessData #BindProductProcessData').empty('');
-    $('#FormRawMaterialInfoData #BindRawMaterialInfoData').empty('');
-    $('#ProcessBtnhide').hide();
+    $('#ProcessBtnhide').show();
 
-    //var UnitDropDownData = await Common.bindDropDownSync('Unit');
-    //UnitDropDown = JSON.parse(UnitDropDownData);
+    var UnitDropDownData = await Common.bindDropDownSync('Unit');
+    UnitDropDown = JSON.parse(UnitDropDownData);
 
-    Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", { MasterInfoId: parseInt(FranchiseMappingId), ModuleName: 'FranchiseProduct' }, function (response) {
+    Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", { MasterInfoId: parseInt(PlantMappingId), ModuleName: 'FranchiseProduct' }, function (response) {
         if (response.status) {
             var data = JSON.parse(response.data);
             ProductDropDown = [data[0]];
@@ -47,11 +45,8 @@ $(document).ready(async function () {
             TranistProductDropDown = [data[0]];
         }
     }, null);
-    //var ProductDropDownData = await Common.bindDropDownSync('ProductName');
-    //ProductDropDown = JSON.parse(ProductDropDownData);
 
-
-    $("#FormProductFranchiseData").validate({
+    $("#FormProductPlantData").validate({
         errorPlacement: function (error, element) {
             if (element.hasClass("select2-hidden-accessible")) {
                 error.insertAfter(element.next(".select2-container"));
@@ -97,26 +92,15 @@ $(document).ready(async function () {
         Common.removevalidation('ProductInfoForm');
         $('#SecondaryUnitSymbol').text('Unit')
         $('#PrimaryUnitSymbol').text('1 Unit =');
+        $('#ProductTypeId').val('1');
         $('.ProductFlavors').hide();
         $('#ProductProcessHide').hide();
         $('#RawMaterialInfoHide').hide();
-        $('#FormProductProcessData #BindProductProcessData').empty('');
-        $('#FormRawMaterialInfoData #BindRawMaterialInfoData').empty('');
-        $('#FormQVMappingData #BindQVMappingData').empty('');
         $('.ProductDescription').removeClass('col-lg-12 col-md-12 col-sm-12 col-12').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
         Common.bindDropDown('PlantName', 'Franchise');
-        $('#BindProductDyanimcData .ProductFranchiseInfo').remove();
-
-        Common.ajaxCall("GET", "/Product/GetProductProcess", { ModuleName: "ProductionStages" }, GetProductProcessSuccess, null);
-        Common.ajaxCall("GET", "/Product/GetProductProcess", { ModuleName: null }, GetRawMaterialSuccess, null);
-
+        $('#BindPlantDyanimcData .PlantDetailsMappingInfo').remove();
+         
         dyanmicRow();
-        $('#FormQVMappingData #BindQVMappingData').append(`
-            <div class="col-12 d-flex justify-content-center NoRecordFoundDiv">
-                <img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">
-                No records found
-            </div>
-        `);
         $('#loader-pms').hide();
         $('#ProductInfoForm #ProductSubCategoryId').empty().append('<option value="">-- Select --</option>');
         $('#ProductCanvas .collapse').removeClass('show');
@@ -141,16 +125,16 @@ $(document).ready(async function () {
 
     $(document).on('click', '#SaveProduct', async function () {
         var ValidOfProduct = $("#ProductInfoForm").valid();
-        var ValidOfProduct1 = $("#FormProductFranchiseData").valid();
+        var ValidOfProduct1 = $("#FormProductPlantData").valid();
         var isFormValid = validateFormAccordions('.accordion');
 
         if (!ValidOfProduct) {
-            $('#SecondaryUnitValue-error').insertAfter('#ember325');
+            $('#ConvertionValue-error').insertAfter('#ember325');
             return false;
         }
 
         if (!isFormValid || !ValidOfProduct || !ValidOfProduct1 || !validateQCNames()) {
-            return false; // Prevent saving if any validation fails
+            return false;
         }
         var DataProduct = JSON.parse(JSON.stringify(jQuery('#ProductInfoForm').serializeArray()));
 
@@ -162,100 +146,36 @@ $(document).ready(async function () {
         objvalue.ProductId = parseInt(productId) || null;
         objvalue.ProductTypeId = Common.parseInputValue('ProductTypeId') || null;
         objvalue.ProductCategoryId = Common.parseInputValue('ProductCategoryId') || null;
-        objvalue.ProductSubCategoryId = Common.parseInputValue('ProductSubCategoryId') || null;
-        objvalue.ProductFlavourId = Common.parseInputValue('ProductFlavourId') || null;
+        objvalue.ProductSubCategoryId = Common.parseInputValue('ProductSubCategoryId') || null; 
         objvalue.PrimaryUnitId = Common.parseInputValue('PrimaryUnitId') || null;
         objvalue.SecondaryUnitId = Common.parseInputValue('SecondaryUnitId') || null;
-        objvalue.SecondaryUnitValue = Common.parseFloatInputValue('SecondaryUnitValue') || null;
+        objvalue.ConvertionValue = Common.parseFloatInputValue('ConvertionValue') || null;
+        objvalue.PrimaryPrice = Common.parseFloatInputValue('PrimaryPrice') || null;
+        objvalue.SecondaryPrice = Common.parseFloatInputValue('SecondaryPrice') || null;
+        objvalue.ReOrderLevel = Common.parseFloatInputValue('ReOrderLevel') || null;
         objvalue.CGST = Common.parseFloatInputValue('CGST') || null;
         objvalue.SGST = Common.parseFloatInputValue('SGST') || null;
         objvalue.IGST = Common.parseFloatInputValue('IGST') || null;
         objvalue.CESS = Common.parseFloatInputValue('CESS') || null;
 
-
-        var FranchiseData = [];
-        var ClosestDiv = $('#BindProductDyanimcData .ProductFranchiseInfo');
+        var PlantData = [];
+        var ClosestDiv = $('#BindPlantDyanimcData .PlantDetailsMappingInfo');
         $.each(ClosestDiv, function (index, values) {
-            var ProductFranchiseMappingId = $(values).find('.productFranchiseMappingId').val();
+            var ProductPlantMappingId = $(values).find('.productPlantMappingId').val();
             var ProductId = parseInt(productId) || null;
-            var PlantId = $(values).find('.PlantName').val();
-            var PrimaryPrice = $(values).find('.PrimaryPrice').val();
-            var SecondaryPrice = $(values).find('.SecondaryPrice').val();
+            var PlantId = $(values).find('.PlantName').val(); 
             var OpeningStock = $(values).find('.OpeningStock').val();
             var StockInHand = $(values).find('.StockInHand').val();
-            var ReOrderlevel = $(values).find('.ReOrderlevel').val();
-            FranchiseData.push({
-                ProductFranchiseMappingId: parseInt(ProductFranchiseMappingId) || null,
+            PlantData.push({
+                ProductPlantMappingId: parseInt(ProductPlantMappingId) || null,
                 ProductId: ProductId,
                 PlantId: parseInt(PlantId) || null,
-                PrimaryPrice: parseFloat(PrimaryPrice),
-                SecondaryPrice: parseFloat(SecondaryPrice),
                 OpeningStock: parseFloat(OpeningStock),
                 StockInHand: parseInt(StockInHand),
-                ReOrderlevel: parseFloat(ReOrderlevel)
             });
         });
 
-        objvalue.productFranchiseMapping = FranchiseData;
-
-
-        var ProductProcessList = [];
-        var ClosestDivProductList = $('#FormProductProcessData #BindProductProcessData input[type="checkbox"]:checked');
-
-        $.each(ClosestDivProductList, function (index, element) {
-            var productProductionStagesMappingId = $(element).siblings('.ProductProcessMappingId').text();
-            var productId = productId;
-            var productionStagesId = $(element).data('id');
-            var IsActive = $(element).prop('checked');
-
-            ProductProcessList.push({
-                ProductProductionStagesMappingId: parseInt(productProductionStagesMappingId) || null,
-                ProductId: parseInt(productId) || null,
-                ProductionStagesId: productionStagesId,
-                IsSelected: IsActive,
-            });
-        });
-
-        objvalue.productProductionStagesMapping = ProductProcessList;
-
-        var RawMaterialList = [];
-        var ClosestDivProductList = $('#FormRawMaterialInfoData #BindRawMaterialInfoData input[type="checkbox"]:checked');
-
-        $.each(ClosestDivProductList, function (index, element) {
-            var productRawMaterialMappingId = $(element).siblings('.RawMaterialMappingId').text();
-            var productId = productId;
-            var rawMaterialId = $(element).data('id');
-            var IsActive = $(element).prop('checked');
-
-            RawMaterialList.push({
-                ProductRawMaterialMappingId: parseInt(productRawMaterialMappingId) || null,
-                ProductId: parseInt(productId) || null,
-                RawMaterialId: rawMaterialId,
-                IsSelected: IsActive,
-            });
-        });
-
-        objvalue.productRawMaterialMapping = RawMaterialList;
-
-        var ProductQCMappingList = [];
-        var ClosestDivQCList = $('#FormQVMappingData .BindQVMappingRow');
-
-        $.each(ClosestDivQCList, function (index, element) {
-            var productQCMappingId = $(element).find('.QCMappingDetailsMappingId').text();
-            var qCName = $(element).find('.QCName').val();
-            var value = $(element).find('.Value').val();
-            var isActive = $(element).find('.IsActive').prop('checked');
-
-            ProductQCMappingList.push({
-                ProductQCMappingId: parseInt(productQCMappingId) || null,
-                ProductId: parseInt(productId) || null,
-                QCName: qCName,
-                Value: parseFloat(value) || 0,
-                IsActive: isActive,
-            });
-        });
-
-        objvalue.productQCMappingDetails = ProductQCMappingList;
+        objvalue.ProductPlantMappingDetails = PlantData;
 
         $('#loader-pms').hide();
         try {
@@ -297,25 +217,20 @@ $(document).ready(async function () {
                         </div>
                      </div>`;
             $('#ProductDynamic').append(html);
-            var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
+            var PlantMappingId = parseInt(localStorage.getItem('PlantId'));
             //$('.QcMappingHide').show();
-            $('#ProcessBtnhide').hide();
-            Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: 1, PlantId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
-        }
-        else if (titleForHeaderProductTab == "Finished Product") {
-            $('#ProductDynamic').empty('');
-            var html = `<div class="col-sm-12 p-0">
-                        <div class="table-responsive">
-                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductTable"></table>
-                        </div>
-                     </div>`;
-            $('#ProductDynamic').append(html);
             $('#ProcessBtnhide').show();
-            /*$('.QcMappingHide').hide();*/
-            var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
-            Common.ajaxCall("GET", "/Product/GetProduct", { ProductTypeId: 2, PlantId: parseInt(FranchiseMappingId) }, ProductSuccess, null);
-        } 
-       
+            $('#AddProduct').show();
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId) }, ProductSuccess, null);
+        }
+        else if (titleForHeaderProductTab == "Un-Processed") {
+            $('#ProcessBtnhide').hide();
+            $('#AddProduct').hide();
+        }
+        else if (titleForHeaderProductTab == "Processed") {
+            $('#ProcessBtnhide').hide();
+            $('#AddProduct').hide();
+        }
     });
 
     $(document).on('click', '.btn-edit', function () {
@@ -331,12 +246,10 @@ $(document).ready(async function () {
         $('#fadeinpage').addClass('fadeoverlay');
         $('#ProductHeader').text('Edit Product Details');
         $('#SaveProduct').text('Update').addClass('btn-update').removeClass('btn-success');
-        $('#BindProductDyanimcData .ProductFranchiseInfo').remove();
-        $('#FormProductProcessData #BindProductProcessData').empty('');
-        $('#FormRawMaterialInfoData #BindRawMaterialInfoData').empty('');
+        $('#BindPlantDyanimcData .PlantDetailsMappingInfo').remove();
         productId = $(this).data('id');
-        var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-        Common.ajaxCall("GET", "/Product/GetProductId", { ProductId: productId, PlantId: franchiseId }, EditProductSuccess, null);
+        var plantId = parseInt($('#UserFranchiseMappingId').val());
+        Common.ajaxCall("GET", "/Product/GetProductId", { ProductId: productId, PlantId: plantId }, EditProductSuccess, null);
 
         $('#ProductCanvas .collapse').removeClass('show');
         $('#ProductCanvas #collapse1').addClass('show');
@@ -346,12 +259,12 @@ $(document).ready(async function () {
         $("#ProductCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
         $('#ProductHeader').text('');
-        $('#BindProductDyanimcData .ProductFranchiseInfo').remove();
+        $('#BindPlantDyanimcData .PlantDetailsMappingInfo').remove();
     });
 
     $(document).on('input', '.OpeningStock', function () {
         var OpeningStockVal = $(this).val();
-        $(this).closest('.ProductFranchiseInfo').find('.StockInHand').val(OpeningStockVal);
+        $(this).closest('.PlantDetailsMappingInfo').find('.StockInHand').val(OpeningStockVal);
     });
 
     $(document).on('click', '#PrimaryUnitId', function () {
@@ -370,21 +283,19 @@ $(document).ready(async function () {
             $('#SecondaryUnitSymbol').text(`Unit`);
         else {
             var data = $('#SecondaryUnitId option:selected').text();
-            //$('#SecondaryUnitSymbol').text(`(${data}) Unit`);
             $('#SecondaryUnitSymbol').text(`(${data})`);
         }
     });
 
     $(document).on('input', '.PrimaryPrice', function () {
-        var thisval = parseFloat($(this).closest('.ProductFranchiseInfo').find('.PrimaryPrice').val());
-        var Unitval = parseFloat($('#SecondaryUnitValue').val());
+        var thisval = $(this).val();
+        var Unitval = parseFloat($('#ConvertionValue').val());
         if (!isNaN(thisval) && !isNaN(Unitval) && Unitval !== 0) {
             var DividedVal = thisval / Unitval;
             var totalval = parseFloat(DividedVal).toFixed(2);
-
-            $(this).closest('.ProductFranchiseInfo').find('.SecondaryPrice').val(totalval);
+            $('#SecondaryPrice').val(totalval);
         } else {
-            $(this).closest('.ProductFranchiseInfo').find('.SecondaryPrice').val('');
+            $('#SecondaryPrice').val('');
         }
     });
 
@@ -959,6 +870,10 @@ $(document).ready(async function () {
         //$row.find(".TotalRawMaterials").val(filledCount);
         $row.find(".TotalRawMaterialsQty").val(filledCount);
     });
+
+    $(document).on('input', '#ConvertionValue', function () {
+        $('.PrimaryPrice').val('').trigger('input');
+    })
 });
 
 function ProductSuccess(response) {
@@ -983,15 +898,20 @@ function ProductSuccess(response) {
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/rawproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/rawproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/rawproducticon_4.svg');
-        } else if (activeTabText.includes("Finished Product")) {
+            var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
+            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', true, access);
+        } else if (activeTabText.includes("Un-Processed")) {
+            $('#CounterImage1').prop('src', '/assets/moduleimages/inventory/fgproducticon_1.svg');
+            $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
+            $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
+            $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
+        } else if (activeTabText.includes("Processed")) {
             $('#CounterImage1').prop('src', '/assets/moduleimages/inventory/fgproducticon_1.svg');
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
         }
 
-        var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
-        bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', true, access);
         $('#loader-pms').hide();
     }
 }
@@ -1002,11 +922,7 @@ function ProductInsertUpdateSuccess(response) {
         $("#ProductCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
         productId = 0;
-        $('#FormProductProcessData #BindProductProcessData').empty('');
-        $('#FormRawMaterialInfoData #BindRawMaterialInfoData').empty('');
 
-        //$('.titleForHeaderProductTab').removeClass('active');
-        //$('.this').addClass('active');
         $('#ProductDynamic').empty('');
         var html = `<div class="col-sm-12 p-0">
                         <div class="table-responsive">
@@ -1015,20 +931,18 @@ function ProductInsertUpdateSuccess(response) {
                      </div>`;
         $('#ProductDynamic').append(html);
         $('#ProcessBtnhide').hide();
-        var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
+        var PlantMappingId = parseInt(localStorage.getItem('PlantId'));
 
         var PassingData = {};
         if (titleForHeaderProductTab == "Raw Material") {
-            PassingData = { ProductTypeId: 1, PlantId: parseInt(FranchiseMappingId) }
-            $('#ProcessBtnhide').hide();
-            //$('.QcMappingHide').show();
-        } else if (titleForHeaderProductTab == "Finished Product") {
-            PassingData = { ProductTypeId: 2, PlantId: parseInt(FranchiseMappingId) }
+            PassingData = { PlantId: parseInt(PlantMappingId) }
             $('#ProcessBtnhide').show();
-            //$('.QcMappingHide').hide();
-        } 
-
-        Common.ajaxCall("GET", "/Product/GetProduct", PassingData, ProductSuccess, null);
+            Common.ajaxCall("GET", "/Product/GetProduct", PassingData, ProductSuccess, null);
+        } else if (titleForHeaderProductTab == "Un-Processed") {
+            $('#ProcessBtnhide').hide();
+        } else if (titleForHeaderProductTab == "Processed") {
+            $('#ProcessBtnhide').hide();
+        }
     }
     else {
         Common.errorMsg(response.message);
@@ -1048,18 +962,15 @@ function EditProductSuccess(response) {
         var PrimaryText = data[0][0].PrimaryUnitName;
         var SecondaryText = data[0][0].SecondaryUnitName;
 
-        //var extractedText = PrimaryText.split('(')[1].split(')')[0];
         $('#PrimaryUnitSymbol').text(`1 (${PrimaryText}) =`);
-        //var SliptData = SecondaryText.split('(')[1].split(')')[0];
-        //$('#SecondaryUnitSymbol').text(`(${SecondaryText}) Unit`);
         $('#SecondaryUnitSymbol').text(`(${SecondaryText})`);
 
-        $('#BindProductDyanimcData .ProductFranchiseInfo').empty('');
+        $('#BindPlantDyanimcData .PlantDetailsMappingInfo').empty('');
 
         $.each(data[1], function (index, value) {
 
             let numberIncr = Math.random().toString(36).substring(2);
-            var rowadd = $('.ProductFranchiseInfo').length
+            var rowadd = $('.PlantDetailsMappingInfo').length
             var DynamicLableNo = rowadd + 1;
 
             var PlantSelectOptions = "";
@@ -1073,10 +984,10 @@ function EditProductSuccess(response) {
 
             var dynamicHTML = `
 
-                <div class="row ProductFranchiseInfo">
+                <div class="row PlantDetailsMappingInfo">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
                             <label class="DynamicLable">Plant Info ${DynamicLableNo}</label>
-                            <label class="productFranchiseMappingId d-none">${value.ProductFranchiseMappingId}</label>
+                            <label class="productPlantMappingId d-none">${value.ProductPlantMappingId}</label>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-6 col-6 ProductCategory">
 	        			<div class="form-group">
@@ -1090,7 +1001,7 @@ function EditProductSuccess(response) {
 	                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
 	                	<div class="form-group">
 	                		<label>Opening Stock<span id="Asterisk">*</span></label>
-	                		<input type="text" class="form-control OpeningStock" id="OpeningStock${numberIncr}" name="OpeningStock${numberIncr}" placeholder="Opening Stock" value="${value.OpeningStock}" autocomplete="off" onclick="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required>
+	                		<input type="text" class="form-control OpeningStock" id="OpeningStock${numberIncr}" name="OpeningStock${numberIncr}" placeholder="Opening Stock" value="${value.OpeningStock}" autocomplete="off" onclick="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required disabled>
 	                	</div>
 	                </div>
 	                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
@@ -1108,7 +1019,7 @@ function EditProductSuccess(response) {
                  </div>
             `;
 
-            $('#FormProductFranchiseData #BindProductDyanimcData').append(dynamicHTML);
+            $('#FormProductPlantData #BindPlantDyanimcData').append(dynamicHTML);
             $('.PlantName').each(function () {
                 $(this).select2({
                     dropdownParent: $(this).parent()
@@ -1116,94 +1027,6 @@ function EditProductSuccess(response) {
             });
         });
 
-        var htmlDynamicProductionStages = "";
-        if (data[2][0].ProductionStagesId != null && data[2][0].ProductionStagesId != "") {
-            $.each(data[2], function (index, ProductionStagesData) {
-                var ProductProductionStagesMappingId = ProductionStagesData.ProductProductionStagesMappingId;
-                var ProductionStagesId = ProductionStagesData.ProductionStagesId;
-                var ProductionStagesName = ProductionStagesData.ProductionStagesName;
-                var IsActiveCheck = ProductionStagesData.IsSelected == true ? 'checked' : '';
-
-                htmlDynamicProductionStages += `
-                <div class="col-md-6 col-lg-6 col-sm-6 col-4 mt-2">
-                    <lable class="ProductProcessMappingId d-none">${ProductProductionStagesMappingId}</lable>
-                    <input type="checkbox" data-id="${ProductionStagesId}" name="products" ${IsActiveCheck} id="product-${ProductionStagesId}">
-                    <label for="product-${ProductionStagesId}" class="checkbox-label">${ProductionStagesName}</label>
-                </div>
-            `;
-            });
-            $('#FormProductProcessData #BindProductProcessData').append(htmlDynamicProductionStages);
-        }
-        else {
-            $('#FormProductProcessData #BindProductProcessData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        }
-
-        var htmlDynamicProduct = "";
-        if (data[3][0].RawMaterialId != null && data[3][0].RawMaterialId != "") {
-            $.each(data[3], function (index, ProductRawMaterialMappingData) {
-                var ProductRawMaterialMappingId = ProductRawMaterialMappingData.ProductRawMaterialMappingId;
-                var RawMaterialId = ProductRawMaterialMappingData.RawMaterialId;
-                var RawMaterialName = ProductRawMaterialMappingData.RawMaterialName;
-                var IsActiveCheck = ProductRawMaterialMappingData.IsSelected == true ? 'checked' : '';
-
-                htmlDynamicProduct += `
-                <div class="col-md-6 col-lg-6 col-sm-6 col-4 mt-2">
-                    <lable class="RawMaterialMappingId d-none">${ProductRawMaterialMappingId}</lable>
-                    <input type="checkbox" data-id="${RawMaterialId}" name="products" ${IsActiveCheck} id="product-${RawMaterialId}">
-                    <label for="product-${RawMaterialId}" class="checkbox-label">${RawMaterialName}</label>
-                </div>
-            `;
-            });
-            $('#FormRawMaterialInfoData #BindRawMaterialInfoData').append(htmlDynamicProduct);
-        }
-        else {
-            $('#FormRawMaterialInfoData #BindRawMaterialInfoData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        }
-
-        $('#FormQVMappingData #BindQVMappingData').empty('');
-        $.each(data[4], function (index, value) {
-            if (data[4][0].ProductQCMappingId != null && data[4][0].ProductQCMappingId != "") {
-
-                let numberIncr = Math.random().toString(36).substring(2);
-                var rowadd = $('.BindQVMappingRow').length
-                var DynamicLableNo = rowadd + 1;
-                var IsActiveCheck = value.IsActive == true ? 'checked' : '';
-                var dynamicHTML = `
-                <div class="row BindQVMappingRow">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-none flex-column mb-2">
-                        <label class="QCMappingDetailsMappingId d-none">${value.ProductQCMappingId}</label>
-                    </div>
-                    <div class="col-lg-4 col-md-3 col-sm-4 col-6">
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" class="form-control QCName" id="Name${numberIncr}" name="Name${numberIncr}" value="${value.QCName || ''}" placeholder="Ex : ABC" autocomplete="off" oninput="Common.allowOnlyTextLength(this,50)" required>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-4 col-6">
-                        <div class="form-group">
-                            <label>Value</label>
-                            <input type="text" class="form-control Value" id="Value${numberIncr}" name="Value${numberIncr}" value="${value.Value || ''}" placeholder="Ex : 0.00" autocomplete="off" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)">
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-3 col-sm-3 col-6" style="margin-top: 30px;">
-                        <div class="form-group d-flex">
-                            <label for="IsActive${numberIncr}"> Is Active </label>
-                            <input type="checkbox" id="IsActive${numberIncr}" ${IsActiveCheck} name="IsActive${numberIncr}" class="IsActive ml-1">
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-2 thisRemoveshow">
-                        <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
-                            <button id="RemoveButton" class="btn DynrowRemove QCDynrowRemove" type="button" onclick="removeQCRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
-                </div>
-            `;
-                $('#FormQVMappingData #BindQVMappingData').append(dynamicHTML);
-            } else
-                $('#FormQVMappingData #BindQVMappingData').append(`<div class="col-12 d-flex justify-content-center NoRecordFoundDiv"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found
-            </div>
-        `);
-        });
         if (data[0][0].productSubCategoryId) {
 
             Common.ajaxCall("Post", "/Common/GetDropDownNotNull", JSON.stringify({ MasterInfoId: data[0][0].ProductCategoryId, ModuleName: "ProductSubCategory" }), function (response) {
@@ -1212,21 +1035,21 @@ function EditProductSuccess(response) {
                     Common.bindParentDropDownSuccessForChosen(response.data, "ProductSubCategoryId", "ProductInfoForm");
                     $('#ProductSubCategoryId').val(data[0][0].productSubCategoryId).trigger('change')
                 }
-            },null);
+            }, null);
         }
         else {
             $('#ProductInfoForm #ProductSubCategoryId').empty().append('<option value="">-- Select --</option>');
         }
-        
+
     }
     updateRemoveButtons();
-   
+
     $('#loader-pms').hide();
 }
 
 function dyanmicRow() {
     let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.ProductFranchiseInfo').length
+    var rowadd = $('.PlantDetailsMappingInfo').length
     var DynamicLableNo = rowadd + 1;
 
     var PlantSelectOptions = "";
@@ -1241,14 +1064,13 @@ function dyanmicRow() {
         var numberOfOptions = PlantDropdown[0].length;
         var DropDownVal = parseInt(numberOfOptions);
     }
-    //Ensure that Initial and DropDownVal are both numbers
     if (typeof Initial === 'number' && typeof DropDownVal === 'number' && rowadd < DropDownVal) {
         var dynamicHTML =
             `
-            <div class="row ProductFranchiseInfo">
+            <div class="row PlantDetailsMappingInfo">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
                         <label class="DynamicLable">Plant Info ${DynamicLableNo}</label>
-                        <label class="productFranchiseMappingId d-none"></label>
+                        <label class="productPlantMappingId d-none"></label>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-6 ProductCategory">
 	    			<div class="form-group">
@@ -1280,7 +1102,7 @@ function dyanmicRow() {
              </div>
         `;
     }
-    $('#FormProductFranchiseData #BindProductDyanimcData').append(dynamicHTML);
+    $('#FormProductPlantData #BindPlantDyanimcData').append(dynamicHTML);
     $('.PlantName').each(function () {
         $(this).select2({
             dropdownParent: $(this).parent()
@@ -1291,14 +1113,13 @@ function dyanmicRow() {
 }
 
 function updateRowLabels() {
-    $('.ProductFranchiseInfo').each(function (index) {
-        // Update the label text with the correct row number
-        $(this).find('.DynamicLable').text('Franchise Info ' + (index + 1));
+    $('.PlantDetailsMappingInfo').each(function (index) {
+        $(this).find('.DynamicLable').text('Plant Info ' + (index + 1));
     });
 }
 
 function updateRemoveButtons() {
-    var rows = $('.ProductFranchiseInfo');
+    var rows = $('.PlantDetailsMappingInfo');
     rows.each(function (index) {
         var removeButtonDiv = $(this).find('.thiswillshow');
         if (rows.length == 1) {
@@ -1310,101 +1131,11 @@ function updateRemoveButtons() {
 }
 
 function removeRow(button) {
-    var totalRows = $('.ProductFranchiseInfo').length;
+    var totalRows = $('.PlantDetailsMappingInfo').length;
     if (totalRows > 1) {
-        $(button).closest('.ProductFranchiseInfo').remove();
+        $(button).closest('.PlantDetailsMappingInfo').remove();
         updateRowLabels();
         updateRemoveButtons();
-    }
-}
-
-function DynamicRowOfQCMapping() {
-    let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.BindQVMappingRow').length
-
-    if ($('.NoRecordFoundDiv').length > 0) {
-        $('.NoRecordFoundDiv').remove();
-    }
-    var DynamicLableNo = rowadd + 1;
-    if ((rowadd < 10)) {
-        var dynamicHTML = `
-            <div class="row BindQVMappingRow">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-none flex-column mb-2">
-                    <label class="QCMappingDetailsMappingId d-none"></label>
-                </div>
-                <div class="col-lg-4 col-md-3 col-sm-4 col-6">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control QCName" id="Name${numberIncr}" name="Name${numberIncr}" placeholder="Ex : ABC" autocomplete="off" oninput="Common.allowOnlyTextLength(this,50)">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-4 col-6">
-                    <div class="form-group">
-                        <label>Value</label>
-                        <input type="text" class="form-control Value" id="Value${numberIncr}" name="Value${numberIncr}" placeholder="Ex : 0.00" autocomplete="off" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)">
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-3 col-6" style="margin-top: 30px;">
-                    <div class="form-group d-flex">
-                        <label for="IsActive${numberIncr}"> Is Active </label>
-                        <input type="checkbox" id="IsActive${numberIncr}" name="IsActive${numberIncr}" class="IsActive ml-1">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3 col-2 thisRemoveshow">
-                    <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
-                        <button id="RemoveButton" class="btn DynrowRemove QCDynrowRemove" type="button" onclick="removeQCRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                </div>
-            </div>
-        `;
-        $('#FormQVMappingData #BindQVMappingData').append(dynamicHTML);
-        //updateQCRemoveButtons();
-    }
-}
-
-//function updateQCRowLabels() {
-//    $('.BindQVMappingRow').each(function (index) {
-//        // Update the label text with the correct row number
-//        $(this).find('.DynamicLable').text('QC Info ' + (index + 1));
-//    });
-//}
-
-//function updateQCRemoveButtons() {
-//    var rows = $('.BindQVMappingRow');
-//    rows.each(function (index) {
-//        var removeButtonDiv = $(this).find('.thisRemoveshow');
-//        if (rows.length == 1) {
-//            removeButtonDiv.css('display', 'none');
-//        } else {
-//            removeButtonDiv.css('display', 'block');
-//        }
-//    });
-//}
-
-//function removeQCRow(button) {
-//    var totalRows = $('.BindQVMappingRow').length;
-//    $(button).closest('.BindQVMappingRow').remove();
-//    if (totalRows > 1) {
-//        $('#FormQVMappingData #BindQVMappingData').append('<div class="col-12 d-flex justify-content-center NoRecordFoundDiv"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-//        //updateQCRowLabels();
-//        //updateQCRemoveButtons();
-//    }
-//}
-
-function removeQCRow(button) {
-    $(button).closest('.BindQVMappingRow').remove();
-
-    var remainingRows = $('.BindQVMappingRow').length;
-
-    if (remainingRows === 0) {
-        $('#FormQVMappingData #BindQVMappingData').append(`
-            <div class="col-12 d-flex justify-content-center NoRecordFoundDiv">
-                <img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">
-                No records found
-            </div>
-        `);
-        //updateQCRowLabels();
-        //updateQCRemoveButtons();
     }
 }
 
@@ -1427,56 +1158,6 @@ $('.accordion-header').on('click', function () {
     $offcanvas.find('.collapse').not(target).collapse('hide');
     $(target).collapse('toggle');
 });
-
-function GetRawMaterialSuccess(response) {
-    if (response.status) {
-        var data = JSON.parse(response.data);
-        var htmlDynamicProduct = "";
-        if (data[0][0].ProductId != null && data[0][0].ProductId != "") {
-            $.each(data[0], function (index, ProductData) {
-                var ProductId = ProductData.ProductId;
-                var ProductName = ProductData.ProductName;
-
-                htmlDynamicProduct += `
-                 <div class="col-md-6 col-lg-6 col-sm-6 col-4 mt-2">
-                    <lable class="RawMaterialMappingId d-none"></lable>
-                    <input type="checkbox" data-id="${ProductId}" name="products" id="product-${ProductId}">
-                    <label for="product-${ProductId}" class="checkbox-label">${ProductName}</label>
-                </div>
-            `;
-            });
-            $('#FormRawMaterialInfoData #BindRawMaterialInfoData').append(htmlDynamicProduct);
-        }
-        else {
-            $('#FormRawMaterialInfoData #BindRawMaterialInfoData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        }
-    }
-}
-
-
-function GetProductProcessSuccess(response) {
-    if (response.status) {
-        var data = JSON.parse(response.data);
-        var htmlDynamicProduct = "";
-        if (data[0][0].ProductionStagesId != null && data[0][0].ProductionStagesId != "") {
-            $.each(data[0], function (index, ProductionStagesData) {
-                var ProductionStagesId = ProductionStagesData.ProductionStagesId;
-                var ProductionStagesName = ProductionStagesData.ProductionStagesName;
-                htmlDynamicProduct += `
-                 <div class="col-md-6 col-lg-6 col-sm-6 col-4 mt-2">
-                    <lable class="ProductProcessMappingId d-none"></lable>
-                    <input type="checkbox" data-id="${ProductionStagesId}" name="products" id="product-${ProductionStagesId}">
-                    <label for="product-${ProductionStagesId}" class="checkbox-label">${ProductionStagesName}</label>
-                </div>
-            `;
-            });
-            $('#FormProductProcessData #BindProductProcessData').append(htmlDynamicProduct);
-        }
-        else {
-            $('#FormProductProcessData #BindProductProcessData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        }
-    }
-}
 
 $('#tableFilter_RawMaterial').on('keyup', function () {
     var searchText = $(this).val().toLowerCase().trim();
@@ -1555,26 +1236,7 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
                 $input.next('.invalid-feedback').remove();
             }
         });
-
-        //// Special case: Franchise checkboxes
-        //if (headerText === 'Franchise Info') {
-        //    const $checkboxes = $accordion.find('input[type="checkbox"]');
-        //    const anyChecked = $checkboxes.is(':checked');
-        //    if (!anyChecked) {
-        //        isFormValid = isCurrentValid = false;
-        //        if (!$accordion.find('.checkbox-error').length) {
-        //            $accordion.find('#BindProductDyanimcData').append(
-        //                `<div class="invalid-feedback checkbox-error d-flex justify-content-center mt-2">
-        //                    Please select at least one franchise
-        //                </div>`
-        //            );
-        //        }
-        //        if (!firstInvalidAccordion) firstInvalidAccordion = $accordion;
-        //    } else {
-        //        $accordion.find('.checkbox-error').remove();
-        //    }
-        //}
-
+         
         if (isCurrentValid) {
             $accordion.find('.collapse').collapse('hide');
         }

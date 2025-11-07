@@ -116,7 +116,7 @@
 </div>
 
 <div class="table-responsive">
-    <table class="table table-rounded dataTable data-table table-striped tableResponsive table-bordered" id="ServiceEngrTable"></table>
+    <table class="table table-rounded dataTable data-table table-striped tableResponsive table-bordered" id="JobWorkerTable"></table>
 </div>
 
 <div id="JobWorkerCanvas" class="offcanvas-container">
@@ -146,12 +146,18 @@
                         <div id="Styleenterydetalis" class="card-body">
                             <form id="FormJobWorker">
                                 <div class="row">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    @* <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>JobWorker Id<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: JOB/WORKER/001" id="JobWorkerNo" name="JobWorkerNo" required disabled />
                                         </div>
-                                    </div> 
+                                    </div>  *@
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>JobWorker Name<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: ABC Name" id="JobWorkerName" name="JobWorkerName" maxlength="500" />
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Address</label>
@@ -167,7 +173,7 @@
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>State</label>
-                                            <select class="form-control" id="StateId" name="StateId"></select>
+                                            <select class="form-control" id="State" name="State"></select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -185,7 +191,7 @@
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Contact No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex:9876543210" id="ContactNumber" name="ContactNumber" minlength="6" oninput="Common.allowOnlyContactNoAlternativeLength(this,20)" required />
+                                            <input type="text" class="form-control" placeholder="Ex:9876543210" id="ContactNumber" name="ContactNumber" minlength="6" oninput="Common.allowOnlyNumberLength(this,10)" required />
                                         </div>
                                     </div>  
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
@@ -193,8 +199,14 @@
                                             <label>Email</label>
                                             <input type="text" class="form-control" placeholder="Ex: example@gmail.com" id="Email" name="Email" oninput="Common.allowEmailAndLength(this, 50)" />
                                         </div>
-                                    </div>   
-                                    <div class="col-md-12 col-lg-12 col-sm-3 col-6" style="margin-top: 12px;text-align: center;" id="IsActiveHide">
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2" id="GSTNone">
+                                        <div class="form-group">
+                                            <label>GST Number</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 27AAACB1234C1Z5" id="GSTNumber" name="GSTNumber" oninput="Common.allowGSTNumber(this, 15)" />
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-6 col-lg-6 col-sm-3 col-6" style="margin-top: 33px;text-align: center;" id="IsActiveHide">
                                         <div class="form-group">
                                             <input type="checkbox" id="IsActive" name="IsActive">
                                             <label for="IsActive"> Is Active </label>
@@ -203,9 +215,96 @@
                                     <div class="col-md-12 col-lg-12 col-sm-12 col-12">
                                         <div class="form-group">
                                             <label>Remarks</label>
-                                            <textarea class="form-control" id="Remarks" autocomplete="off" name="Remarks" rows="3" maxlength="500" placeholder="Remarks"></textarea>
+                                            <textarea class="form-control" id="Remark" autocomplete="off" name="Remark" rows="3" maxlength="500" placeholder="Remarks"></textarea>
                                         </div>
                                     </div> 
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                                            <!-- Add a custom button for choosing files -->
+                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                                                <b>Click Here to Attach your files</b>
+                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                                            </label>
+                                            <div class="file-preview d-flex justify-content-center" id="preview">
+                                                <div class="attachrow">
+                                                    <div class="attachcolumn">
+                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                    </div>
+                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="styleAccordionluf3ws29vt">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Bank Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FormJobWorkersBank">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>IFSC Code</label>
+                                            <input type="text" class="form-control" placeholder="Ex: SBIN0001234" id="IFSCCode" name="IFSCCode" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Bank Name</label>
+                                            <input type="text" class="form-control" placeholder="Ex: State Bank of India" id="BankName" name="BankName" oninput="Common.allowOnlyTextLength(this, 25)" disabled />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Branch Name</label>
+                                            <input type="text" class="form-control" placeholder="Ex: Main Branch" id="BranchName" name="BranchName" oninput="Common.allowOnlyTextLength(this, 25)" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Account Type</label>
+                                            <select class="form-control" id="AccountType" name="AccountType">
+                                                <option value="">--Select--</option>
+                                                <option value="Current">Current</option>
+                                                <option value="Savings">Savings</option>
+                                                <option value="CashCredit">Cash Credit</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Account Name</label>
+                                            <input type="text" class="form-control" placeholder="Ex: S.K.Jain and Sons." id="AccountName" name="AccountName" oninput="Common.allowOnlyTextLength(this, 25)" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                        <div class="form-group">
+                                            <label>Account Number</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 123456789012" id="AccountNumber" name="AccountNumber" oninput="Common.allowOnlyNumberLength(this,20)" />
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -217,7 +316,7 @@
                 <div class="accordion" id="">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseThree3" class="">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
                                         Contact Person Info
@@ -227,7 +326,7 @@
                             </a>
                         </h2>
                     </div>
-                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion3" style="">
                         <div id="Styleenterydetalis" class="card-body">
 
                             <div class="d-flex justify-content-end align-items-start">

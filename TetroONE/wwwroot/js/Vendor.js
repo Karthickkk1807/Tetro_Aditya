@@ -1,16 +1,19 @@
 ﻿let selectedItems = [];
 var vendorId = 0;
+var deletedFiles = [];
+var existFiles = [];
+var formDataMultiple = new FormData();
+
 $(document).ready(function () {
 
     var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
-    Common.ajaxCall("GET", "/Contact/GetVendor", { PlantId: FranchiseMappingId }, VendorSuccess, null);
-    Common.bindDropDownParent('StateId', 'FormVendor', 'State'); 
+    Common.ajaxCall("GET", "/Contact/GetVendor", { }, VendorSuccess, null);
+    Common.bindDropDownParent('State', 'FormVendor', 'State'); 
     $('#IsActiveHide').hide();
 
     setPrimaryCheckboxEventListeners();
-    $(document).on('click', '#SaveClient', function (e) {
-
+    $(document).on('click', '#SaveVendor', function (e) {
         if (!Common.validateEmailwithErrorwithParent('FormVendor', 'Email')) {
             return false;
         }
@@ -38,6 +41,8 @@ $(document).ready(function () {
             var DataUpdate1 = JSON.parse(JSON.stringify(jQuery('#FormVendor').serializeArray()));
             var DataUpdate2 = JSON.parse(JSON.stringify(jQuery('#FormVendorBank').serializeArray()));
 
+            getExistFiles();
+
             var DataUpdate = DataUpdate1.concat(DataUpdate2);
 
             var objvalue = {};
@@ -50,6 +55,9 @@ $(document).ready(function () {
             objvalue.BranchName = $('#BranchName').val();
             objvalue.MaxCreditLimit = Common.parseFloatInputValue('MaxCreditLimit') || null;
             objvalue.CurrentCreditLimit = Common.parseFloatInputValue('CurrentCreditLimit') || null;
+
+            objvalue.VendorId = vendorId > 0 ? vendorId : null;
+            objvalue.State = parseInt($('#State').val()) || null;
 
             var ContactPerson = [];
             var ClosestDiv = $('#FormVendorContact .Vendorcontact');
@@ -88,10 +96,36 @@ $(document).ready(function () {
             });
 
             objvalue.vendorProductMappingDetails = ProductList;
-             
-            objvalue.VendorId = parseInt(vendorId) || null;
-            objvalue.State = parseInt($('#StateId').val()) || null;
-            Common.ajaxCall("POST", "/Contact/InsertUpdareVendorDetails", JSON.stringify(objvalue), VendorInsertUpdateSuccess, null);
+
+            formDataMultiple.append("VendorData", JSON.stringify(objvalue));
+            formDataMultiple.append("VendorContactPersonDetails", JSON.stringify(ContactPerson));
+            formDataMultiple.append("VendorProductMappingDetails", JSON.stringify(ProductList));
+            formDataMultiple.append("Exist", JSON.stringify(existFiles));
+            formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
+            $.ajax({
+                type: "POST",
+                url: "/Contact/InsertUpdateVendorDetails",
+                data: formDataMultiple,
+                contentType: false,
+                processData: false,
+
+                success: function (response) {
+                    if (response.status) {
+                        formDataMultiple = new FormData();
+                        Common.successMsg(response.message);
+                        $("#VendorCanvas").css("width", "0%");
+                        $('#fadeinpage').removeClass('fadeoverlay');
+                        Common.ajaxCall("GET", "/Contact/GetVendor", {}, VendorSuccess, null);
+                    }
+                    else {
+                        formDataMultiple = new FormData();
+                        Common.errorMsg(response.message);
+                    }
+                },
+                error: function (response) {
+                    Common.errorMsg(response.message);
+                }
+            });
         }
     });
 });
@@ -122,7 +156,7 @@ function VendorInsertUpdateSuccess(response) {
         $("#VendorCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
         var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-        Common.ajaxCall("GET", "/Contact/GetVendor", { PlantId: franchiseId }, VendorSuccess, null);
+        Common.ajaxCall("GET", "/Contact/GetVendor", { }, VendorSuccess, null);
     }
     else {
         Common.errorMsg(response.message);
@@ -175,12 +209,15 @@ $(document).on('click', '#AddVendor', function () {
     Common.removeMessage('FormVendorContact');
     $('#FormVendorContact').empty('');
     duplicateRow();
+
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
     $("#FormVendor,#FormVendorBank select").val("").trigger("change");
-    $('#FormVendor #StateId').val('32');
+    $('#FormVendor #State').val('32');
     $('#Country').val('India');
     $('#AccountType').val('Current');
     $('#IsActiveHide').hide();
-    $('#SaveClient').text('Save').addClass('btn-success').removeClass('btn-update');
+    $('#SaveVendor').text('Save').addClass('btn-success').removeClass('btn-update');
     $("input[name='products']").prop("checked", false);
     $('#loader-pms').hide(); 
 
@@ -208,11 +245,11 @@ $(document).on('click', '.btn-edit', function () {
     Common.removeMessage('FormVendorContact');
     $('#fadeinpage').addClass('fadeoverlay');
     $("#VendorHeader").text('Edit Vendor Details');
-    $('#SaveClient').text('Update').addClass('btn-update').removeClass('btn-success'); 
+    $('#SaveVendor').text('Update').addClass('btn-update').removeClass('btn-success'); 
     $('#IsActiveHide').show();
     vendorId = $(this).data('id');
     var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-    Common.ajaxCall("GET", "/Contact/GetVendorID", { VendorId: vendorId, PlantId: franchiseId }, editSuccess, null);
+    Common.ajaxCall("GET", "/Contact/GetVendorID", { VendorId: vendorId }, editSuccess, null);
 
     $('#VendorCanvas.collapse').removeClass('show');
     $('#collapse1').addClass('show');
@@ -234,6 +271,8 @@ function editSuccess(response) {
         Common.bindData(data[1]);
         $('#Email').val(data[0][0].Email);
         $('#ContactNumber').val(data[0][0].ContactNumber);
+
+        $('#State').val(data[0][0].StateId);
 
         var htmlDynamicProduct = '';
 
@@ -327,7 +366,34 @@ function editSuccess(response) {
             $('#FormVendorContact').append(htmlAppend);
             setPrimaryCheckboxEventListeners();
         });
-         
+
+        $('#ExistselectedFiles, #selectedFiles').empty("");
+        var ulElement = $('#ExistselectedFiles');
+        $.each(data[4], function (index, file) {
+            if (file.AttachmentId != null) {
+                var truncatedFileName = file.AttachmentFileName.length > 10 ? file.AttachmentFileName.substring(0, 10) + '...' : file.AttachmentFileName;
+                var liElement = $('<li>');
+                var spanElement = $('<span>').text(truncatedFileName);
+                var downloadLink = $('<a>').addClass('download-link')
+                    .attr('href', file.AttachmentFilePath)
+                    .attr('download', file.AttachmentFileName)
+                    .html('<i class="fas fa-download"></i>');
+
+                var deleteButton = $('<a>').attr({
+                    'src': file.AttachmentFilePath,
+                    'AttachmentId': file.AttachmentId,
+                    'ModuleRefId': file.ModuleRefId,
+                    'id': 'deletefile'
+                }).addClass('delete-buttonattach').html('<i class="fas fa-trash"></i>');
+
+                liElement.append(spanElement);
+                liElement.append(downloadLink);
+                liElement.append(deleteButton);
+                ulElement.append(liElement);
+            }
+        });
+
+
         $('#TransactionsHide').show();
 
         $('#TransactionsInfo').empty('');
@@ -561,6 +627,106 @@ function setPrimaryCheckboxEventListeners() {
         } 
     });
 }
+
+
+$(document).on('click', '#deletefile', function () {
+    var listItem = $(this).closest('li');
+    var fileText = listItem.find('span').text();
+    var attachmentid = parseInt($(this).attr('attachmentid'));
+    var src = $(this).attr('src');
+    var moduleRefId = $(this).attr('ModuleRefId');
+    deletedFiles.push({
+        AttachmentId: attachmentid,
+        ModuleName: "Vendor",
+        ModuleRefId: parseInt(moduleRefId),
+        AttachmentFileName: fileText,
+        AttachmentFilePath: src
+    });
+    $(listItem).remove();
+});
+
+function getExistFiles() {
+
+    var existitem = $('#ExistselectedFiles li');
+    $.each(existitem, function (index, value) {
+
+        var fileText = $(value).find('span').text();
+        var attachmentid = parseInt($(value).find('.delete-buttonattach').attr('attachmentid'));
+        var src = $(value).find('.delete-buttonattach').attr('src');
+        var moduleRefId = $(value).find('.delete-buttonattach').attr('ModuleRefId');
+        existFiles.push({
+            AttachmentId: attachmentid,
+            ModuleName: "Vendor",
+            ModuleRefId: parseInt(moduleRefId),
+            AttachmentFileName: fileText,
+            AttachmentFilePath: src
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const selectedFiles = document.getElementById('selectedFiles');
+    selectedFiles.innerHTML = '';
+    fileInput.addEventListener('change', (e) => {
+
+        const files = e.target.files;
+        for (var i = 0; i < files.length; i++) {
+            formDataMultiple.append('files[]', files[i]);
+        }
+
+        if (files.length > 0) {
+            preview.style.display = 'block';
+
+
+            for (const file of files) {
+                const fileItem = document.createElement('li');
+                const fileName = document.createElement('span');
+                const downloadButton = document.createElement('button');
+                const deleteButton = document.createElement('button');
+                downloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                downloadButton.className = 'download-button';
+                deleteButton.className = 'delete-button';
+
+                downloadButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const blob = new Blob([file]);
+                    const blobURL = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobURL;
+                    a.download = file.name;
+                    a.click();
+                    URL.revokeObjectURL(blobURL);
+                });
+
+                deleteButton.addEventListener('click', () => {
+                    var itemName = $(fileItem).find('span').text();
+                    var newFormData = new FormData();
+                    $.each(formDataMultiple.getAll('files[]'), function (index, value) {
+                        if (value.name !== itemName) {
+                            newFormData.append('files[]', value);
+                        }
+                    });
+                    formDataMultiple = newFormData;
+
+                    fileItem.remove();
+                });
+
+                fileName.textContent = file.name.length > 10 ? file.name.substring(0, 11) + '...' : file.name;
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(downloadButton);
+                fileItem.appendChild(deleteButton);
+                selectedFiles.appendChild(fileItem);
+            }
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+});
+
 
 function validateFormAccordions(accordionSelector, errorMessageDefault = 'This field is required') {
     var isFormValid = true;

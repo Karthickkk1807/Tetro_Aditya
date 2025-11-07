@@ -9,13 +9,12 @@
     box-shadow: 0 3px 11px rgb(58 169 0 / 93%);
 }
 
-
-#ServiceEngrTable, #Managetable {
+#JobWorkerTable{
     width: 100% !important;
 }
 
 .dataTables_scrollBody {
-    /*height: 330px !important;*/
+    height: 330px !important;
     margin-top: -18px !important;
     border-bottom: 1px solid #111;
     margin-bottom: 10px;
@@ -158,25 +157,12 @@
     .new-card-button:hover {
         background-color: #0056b3;
     }*/
-
-.btn-Shop {
-    position: relative;
-    font-size: 15px;
-    top: 2.5px;
-    right: 9px;
-    color: #bf3ad6db;
-}
-
-#signatureUpload {
-    width: 100%;
-    height: 100%;
-}
-
+ 
 .table-bordered td, .table-bordered th {
     border: 0px solid #dee2e6 !important;
 }
 
-#ServiceEngrTable_length {
+#JobWorkerTable_length {
     display: flex;
     justify-content: end;
     margin-top: 15px;

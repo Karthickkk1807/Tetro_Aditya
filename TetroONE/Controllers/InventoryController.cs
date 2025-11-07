@@ -57,16 +57,15 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetMasterInfoDetails]", request);
             return Json(response);
         }
-
-
+         
         [HttpGet]
         [Route("GetManageStock")]
-        public IActionResult GetManageStock(int FranchiseId, DateTime? FromDate, DateTime? ToDate, int? ManageStockId, int ProductTypeId)
+        public IActionResult GetManageStock(int PlantId, DateTime? FromDate, DateTime? ToDate, int? ManageStockId, int ProductTypeId)
         {
             GetManageStock request = new GetManageStock()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                FranchiseId = FranchiseId,
+                PlantId = PlantId,
                 ProductTypeId = ProductTypeId,
                 ManageStockId = ManageStockId,
                 FromDate = FromDate.HasValue ? FromDate.Value.AddDays(1) : (DateTime?)null,
@@ -76,59 +75,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetManageStockDetails]", request);
             return Json(response);
         }
-
-        [HttpGet]
-        [Route("GetMaterialsData")]
-        public IActionResult GetMaterialsData(int FranchiseId)
-        {
-            GetMaterialsData request = new GetMaterialsData()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                FranchiseId = FranchiseId,
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetProductDetails_FranchiseId]", request);
-            return Json(response);
-        }
-
-        [HttpPost]
-        [Route("InsertUpdateManageStock")]
-        public IActionResult InsertUpdateManageStock([FromBody] InsertUpdateManageStock request)
-        {
-            DataTable productionProductMappingData = new DataTable();
-            productionProductMappingData = GenericTetroONE.ToDataTable(request.manageStockProductMappingDetails);
-
-            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            request.ManageStockDate = request.ManageStockDate.AddDays(1);
-            request.TVP_ManageStockProductMappingDetails = productionProductMappingData;
-
-            if (request.ManageStockId != 0 && request.ManageStockId != null)
-            {
-                string[] Exclude = { "manageStockProductMappingDetails" };
-                response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateManageStockDetails]", request, Exclude);
-            }
-            else
-            {
-                string[] Exclude = { "ManageStockId", "manageStockProductMappingDetails" };
-                response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertManageStockDetails]", request, Exclude);
-            }
-            return Json(response);
-        }
-
-        [HttpGet]
-        [Route("DeleteManageStock")]
-        public IActionResult DeleteManageStock(int ManageStockId)
-        {
-            DeleteManageStock request = new DeleteManageStock()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                ManageStockId = ManageStockId,
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteManageStockDetails]", request);
-            return Json(response);
-        }
-
+         
         [HttpGet]
         [Route("GetOutWardPo")]
         public IActionResult GetOutWardPo(int FranchiseId, int DistributorId)
