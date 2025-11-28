@@ -1,5 +1,5 @@
 ﻿@{
-    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.PurchaseBill, Context.Session);
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.PurchaseInvoice, Context.Session);
 }
 
 <link href="~/css/purchaseinvoice.css" rel="stylesheet" />
@@ -18,8 +18,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox1"></div>
-                                    <h4 class="card-title" id="valCounterBox1"></h4>
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
                                 </div>
                             </div>
                         </div>
@@ -37,8 +37,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox2"></div>
-                                    <h4 class="card-title" id="valCounterBox2"></h4>
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
                                 </div>
                             </div>
                         </div>
@@ -56,8 +56,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox3"></div>
-                                    <h4 class="card-title" id="valCounterBox3"></h4>
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
                                 </div>
                             </div>
                         </div>
@@ -75,8 +75,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox4"></div>
-                                    <h4 class="card-title" id="valCounterBox4"></h4>
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
                                 </div>
                             </div>
                         </div>
@@ -156,10 +156,13 @@
 </div>
 
 
-<div class="table-responsive">
-    <table class="table   table-head-bg-primary basic-datatables table-hover tableResponsive" style="max-height:200px" id="PurchasebillData">
-    </table>
+<div id="PurchaseBillMainTableDynamic">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" style="max-height:200px" id="PurchaseBillTable">
+        </table>
+    </div>
 </div>
+
 
 <div id="PurchaseInvoiceModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-xxl">
@@ -176,336 +179,10 @@
                         <div class="horizontal-timeline">
                             <div class="timeline-progress-line-fill"></div>
                             <div class="timeline-progress-line"></div>
-
-
                         </div>
                     </fieldset>
                 </div>
-                <div class="px-3">
-                    <div class="row DynPageRow-Div">
-                        <!--AddVendorAddressColumn-->
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="AddVendorlableColumn">
-                            <div class="row BilAddHead">
-                                <div class="d-flex justify-content-start p-2">
-                                    <h2 class="mb-0">Bill To Address</h2>
-                                </div>
-                            </div>
-                            <div class="row" style="height: 23vh; display: flex; align-items: center; justify-content: center;">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center" style="padding-right: 20px;position:relative;padding-left: 20px;align-items: center;">
-                                    <div class="dashed-border">
-                                        <label class="company-sign" id="AddVendorLable"> + Add Vendor </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--BillFromColumn-->
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-12" id="BillFromColumn" style="position: relative; display: none;">
-                            <form id="FormBillFrom" novalidate="novalidate">
-
-                                <div class="row BillFrom-info-container mt-2">
-                                    <div class="info-row" style="margin-right:15px; width:unset;">
-                                        <div class="info-label-Purchase" style="margin-top:10px;width: 75px;font-size: 15px; font-weight: 700; white-space: nowrap;">Bill From<span id="Asterisk">*</span></div>
-                                        <div class="info-colon"></div>
-                                        <div class="">
-                                            <div class="form-group mb-0 mr-2">
-                                                <select class="form-control" id="BillFrom" name="BillFrom" required>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="info-row" style="margin-right:15px; width:unset;">
-                                        <div class="info-value">
-                                            <a id="BillFromName" name="BillFromName"></a>
-                                        </div>
-                                    </div>
-                                    <div class="info-row" style="margin-right:15px; width:unset;">
-                                        <div class="info-value">
-                                            <a id="BillFromAddress" name="BillFromAddress"></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </form>
-                            @*  <div class="row mt-3">
-                            <div class="col-12">
-                            <div class="info-container" id="">
-                            <div id="BillFromDiv" class="info-row">
-                            <div class="info-value">
-                            <a id="BillFromName" name="BillFromName"></a>
-                            </div>
-                            </div>
-                            <div id="BillFromAddressDiv" class="info-row">
-                            <div class="info-value">
-                            <a id="BillFromAddress" name="BillFromAddress"></a>
-                            </div>
-                            </div>
-
-                            <div id="BillFromCountryDiv" class="info-row d-none">
-                            <div class="info-value">
-                            <a id="BillFromCountry" name="BillFromCountry"></a>
-                            </div>
-                            </div>
-
-                            <div id="BillFromStateNameDiv" class="info-row d-none">
-                            <div class="info-value">
-                            <a id="BillFromStateName" name="BillFromStateName"></a>
-                            </div>
-                            <label id="StateCodeId" name="StateCodeId" style="display:none"></label>
-                            </div>
-
-                            <div id="BillFromCityDiv" class="info-row">
-                            <div class="info-value">
-                            <a id="BillFromCity" name="BillFromCity"></a>
-                            </div>
-                            </div>
-
-                            <div id="BillFromEmailDiv" class="info-row d-none">
-                            <div class="info-value">
-                            <a id="VendorEmail" name="VendorEmail"></a>
-                            </div>
-                            </div>
-
-                            <div id="BillFromContactNumberDiv" class="info-row">
-                            <div class="info-value">
-                            <a id="BillFromContactNumber" name="BillFromContactNumber"></a>
-                            </div>
-                            </div>
-
-                            <div id="BillFromGSTNumberDiv" class="info-row">
-                            <div class="info-value">
-                            <a id="BillFromGSTNumber" name="BillFromGSTNumber"></a>
-                            </div>
-                            </div>
-
-                            </div>
-                            </div>
-                            </div> *@
-                        </div>
-
-                        <!--VendorColumn-->
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="VendorColumn" style="position: relative; display: none;">
-                            <form id="FormVendor" novalidate="novalidate">
-                                <div class="row BilAddHead px-1">
-                                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 mt-3 px-1">
-                                        <div class="d-flex">
-                                            <h2 class="mb-0">Bill To<span id="Asterisk">*</span></h2>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1 overraphide" id="">
-                                        <div class="form-group mb-0 vendorerror">
-                                            <select class="form-control" id="Vendor" required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </form>
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <div class="info-container" id="">
-                                        @* <div id="VendorNameDiv" class="info-row">
-                                        <div class="info-label-Purchase">Name</div>
-                                        <div class="info-colon">:</div>
-                                        <div class="info-value">
-                                        <a id="VendorName" name="VendorName"></a>
-                                        </div>
-                                        <label id="StoreIdVal" name="StoreIdVal" style="display:none">tesstt</label>
-                                        </div> *@
-                                        <div id="VendorAddressDiv" class="info-row">
-                                            <div class="info-label-Purchase">Address</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="VendorAddress" name="VendorAddress"></a>
-                                            </div>
-                                        </div>
-                                        <div id="VendorCityDiv" class="info-row">
-                                            <div class="info-label-Purchase">City</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="VendorCity" name="VendorCity"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="VendorEmailDiv" class="info-row d-none">
-                                            <div class="info-label-Purchase">Email</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="VendorEmail" name="VendorEmail"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="VendorContactNumberDiv" class="info-row">
-                                            <div class="info-label-Purchase">Mobile Number</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="VendorContactNumber" name="VendorContactNumber"></a>
-                                            </div>
-                                        </div>
-                                        <div id="VendorStateNameDiv" class="info-row ">
-                                            <div class="info-label-Purchase">Place Of Supply</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="VendorStateName" name="VendorStateName"></a>
-                                            </div>
-                                            <label id="StateCodeId" name="StateCodeId" style="display:none">tesstt</label>
-                                        </div>
-
-                                        <div id="VendorCountryDiv" class="info-row d-none">
-                                            <div class="info-label-Purchase">Country</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="VendorCountry" name="VendorCountry"></a>
-                                            </div>
-                                        </div>
-                                        <div id="VendorGSTNumberDiv" class="info-row">
-                                            <div class="info-label-Purchase">GST Number</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="VendorGSTNumber" name="VendorGSTNumber"></a>
-                                            </div>
-                                        </div>
-                                        <div id="VendorNameDiv" class="info-row d-none">
-                                            <div class="info-label-Purchase">StateIdGet</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StateIdGet" name="StateIdGet"></a>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            @* <div class="purchase-edit">
-                            <a title="Edit Billing Address" flow="left" class="purchaseedit-icon" id="EditBillingAddress">
-                            <i class="fas fa-pencil-alt"></i>
-                            </a>
-                            </div> *@
-                        </div>
-
-                        <!--ShippingColumn-->
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="ShippingColumn" style="position: relative; display: none;">
-                            <form id="FormShipping" novalidate="novalidate">
-                                <div class="row BilAddHead">
-                                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 mt-3 px-1">
-                                        <div class="d-flex">
-                                            <h2 class="mb-0">Ship To<span id="Asterisk">*</span></h2>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1" id="">
-                                        <div class="form-group mb-0 AlternativeCompanyError">
-                                            <select class="form-control" id="AlternativeCompanyAddress" name="AlternativeCompanyAddress" required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <div class="info-container" id="">
-                                        <label id="WareHouseStoreId" name="WareHouseStoreId" style="display:none">tesstt</label>
-
-                                        @* <div id="StoreNameDiv" class="info-row">
-                                        <div class="info-label-Purchase">Name</div>
-                                        <div class="info-colon">:</div>
-                                        <div class="info-value">
-                                        <a id="StoreName" name="StoreName"></a>
-                                        </div>
-                                        </div> *@
-
-                                        <div id="StoreAddressDiv" class="info-row">
-                                            <div class="info-label-Purchase">Address</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StoreAddress" name="StoreAddress"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="StoreCityDiv" class="info-row">
-                                            <div class="info-label-Purchase">City</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StoreCity" name="StoreCity"></a>
-                                            </div>
-                                        </div>
-                                        <div id="StoreContactNumberDiv" class="info-row">
-                                            <div class="info-label-Purchase">Mobile Number</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StoreContactNumber" name="StoreContactNumber"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="StateNameDiv" class="info-row">
-                                            <div class="info-label-Purchase">State</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StateName" name="StateName"></a>
-                                            </div>
-                                        </div>
-
-
-
-                                        <div class="info-row d-none">
-                                            <div class="info-label-Purchase">StateId</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StateId" name="StateId"></a>
-                                            </div>
-                                        </div>
-
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--POColumn-->
-                        <div class="col-lg-2 col-md-6 col-sm-6 col-12" id="POColumn">
-                            <form id="FormRightSideHeader">
-                                <div class="row mt-2">
-                                    <div class="col-lg-4 col-md-6 col-6" id="PurchaseInvoiceNumberDiv">
-                                        <div class="form-group">
-                                            <label>PI No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" required id="InvoiceNo" name="InvoiceNo" placeholder="PI No" autocomplete="off" disabled="" fdprocessedid="eb1wt7">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-6" id="PurchaseInvoiceDateDiv">
-                                        <div class="form-group">
-                                            <label>PI Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" id="InvoiceDate" name="InvoiceDate" required="">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-6" id="PurchaseOrderNoDiv">
-                                        <div class="form-group">
-                                            <label>Purchase Order No</label>
-                                            <select class="form-control" id="PurchaseOrderNo" name="PurchaseOrderNo">
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-6 d-none" id="PurchaseOrderDateDiv">
-                                        <div class="form-group">
-                                            <label>PO Date</label>
-                                            <input type="date" class="form-control" id="PurchaseOrderDate" name="PurchaseOrderDate">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-6" id="OriginalInvoiceNoDiv">
-                                        <div class="form-group">
-                                            <label>Original Invoice No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" id="InvoiceNoOriginal" maxlength="16" name="InvoiceNoOriginal" placeholder="Original Invoice No" autocomplete="off" fdprocessedid="eb1wt7" required>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                <div class="px-3" id="POTopHeadbind">
                 </div>
                 <!--Dynmic table-->
                 <div class="px-3">
@@ -546,11 +223,11 @@
 
                                             <tr id="SubtotalRow" style="background-color: #e4edf5;">
                                                 <td colspan="4"><div class="summary-label"><a>Sub Total</a></div></td>
-                                                <td style="padding: 4px;" id="subtotalTotalDiv"> <input type="text" id="SubTotalTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td style="padding: 4px;" id="CGSTTotalDiv"> <input type="text" id="CGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td style="padding: 4px;" id="SGSTTotalDiv"> <input type="text" id="SGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td style="padding: 4px;" id="IGSTTotalDiv"> <input type="text" id="IGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td style="padding: 4px;" id="CESSTotalDiv"> <input type="text" id="CESSTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="subtotalTotalDiv"> <input type="text" id="SubTotalTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="CGSTTotalDiv"> <input type="text" id="CGSTTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="SGSTTotalDiv"> <input type="text" id="SGSTTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="IGSTTotalDiv"> <input type="text" id="IGSTTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="CESSTotalDiv"> <input type="text" id="CESSTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
 
                                                 <td colspan="3"><input type="text" id="Subtotal" disabled class="form-control" placeholder="0.00" style="width: 165px;background: #fbfbfb !important;"></td>
                                             </tr>
@@ -565,8 +242,6 @@
                 <!--Dynmic lable & check box-->
                 <div class="px-3">
                     <div class="row DynmicTableRow DynmicqcRow justify-content-center">
-                        
-                        
                     </div>
                 </div>
                 <!--Dynmic lable & check box-->
@@ -644,60 +319,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-                                @* <!--Add Bank Details-->
-                                <div class="col-12">
-                                <input class="AdddiscountLable px-0" id="ViewBankLable" type="button" value="+ View Bank Details">
-                                </div>
-
-                                <div id="AddBankDetails" class="col-12">
-                                <div class="addterms-Attchbg mb-2 mt-2">
-                                <div class="info-container mb-2" id="">
-                                <div class="info-row">
-                                <div class="info-label-Purchase">Account Name</div>
-                                <div class="info-colon">:</div>
-                                <div class="info-value"><a id="AccountName" name="AccountName"></a></div>
-                                </div>
-                                <div class="info-row">
-                                <div class="info-label-Purchase">Bank Name</div>
-                                <div class="info-colon">:</div>
-                                <div class="info-value"><a id="BankName" name="BankName"></a></div>
-                                </div>
-                                <div class="info-row">
-                                <div class="info-label-Purchase">Branch Name</div>
-                                <div class="info-colon">:</div>
-                                <div class="info-value"><a id="BranchName" name="BranchName"></a></div>
-                                </div>
-                                <div class="info-row">
-                                <div class="info-label-Purchase">Account No</div>
-                                <div class="info-colon">:</div>
-                                <div class="info-value"><a id="AccountNo" name="AccountNo"></a></div>
-                                </div>
-                                <div class="info-row">
-                                <div class="info-label-Purchase">Account Type</div>
-                                <div class="info-colon">:</div>
-                                <div class="info-value"><a id="AccountType" name="AccountType"></a></div>
-                                </div>
-                                <div class="info-row">
-                                <div class="info-label-Purchase">IFSC Code</div>
-                                <div class="info-colon">:</div>
-                                <div class="info-value"><a id="IFSCCode" name="IFSCCode"></a></div>
-                                </div>
-                                <div class="info-row">
-                                <div class="info-label-Purchase">UPI ID</div>
-                                <div class="info-colon">:</div>
-                                <div class="info-value"><a id="UPIID" name="UPIID"></a></div>
-                                </div>
-                                </div>
-                                <input class="AdddiscountLable px-0 mb-2" id="HideBankLable" type="button" value="✖ Hide Bank Details">
-                                </div>
-                                </div>
-                                <div class="purchase-Bank-edit">
-                                <a title="Edit Bank Details" flow="left" class="purchaseBankedit-icon" id="BankEdit">
-                                <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                </div> *@
                             </div>
                         </div>
 
@@ -744,18 +365,6 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            @* <div class="col-lg-2 col-md-6 col-sm-6 col-6" id="InvoiceNoDiv d-none">
-                                            <div class="form-group">
-                                            <label>Days</label>
-                                            <input type="text" class="form-control" id="PaidFromDays" name="PaidFromDays" placeholder="Days" oninput="Common.allowOnlyNumberLength(this,6)" autocomplete="off" maxlength="3" required="">
-                                            </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-6 col-sm-6 col-6" id="InvoiceNoDiv d-none">
-                                            <div class="form-group">
-                                            <label>Due Date</label>
-                                            <input type="date" class="form-control" id="PaidFromDueDate" name="PaidFromDueDate" autocomplete="off" required="">
-                                            </div>
-                                            </div> *@
                                             <div class="col-12">
                                                 <div class="row justify-content-end ">
                                                     <div class="d-none col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6 mt-2" style="align-content:center;align-items:center">

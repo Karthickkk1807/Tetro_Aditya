@@ -1,0 +1,141 @@
+﻿@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="~/assets/moduleusedtetroone/tetroone_loadedicon.svg" type="image/x-icon" />
+
+    <title>TetroOne_Adhithiya</title>
+
+    <link href="~/assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/login.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="~/assets/css/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/css/productionqrcode.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="fadeinpage" class=""></div>
+    <div class="toast-backdrop" id="toastBackdrop"></div>
+
+    <div id="ProductionQRCodeModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+        <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header d-flex align-items-center justify-content-between">
+                    <h2 class="m-0" style="font-size: larger;">
+                        Production Log Details
+                    </h2>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                    <form id="FormProductionQRCode">
+                        <div class="row p-2">
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Batch<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: BATCH/NO/001" id="BatchNo" name="BatchNo" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>
+                                        Batch Date<span id="Asterisk">*</span>
+                                    </label>
+                                    <input type="date" class="form-control" id="BatchDate" name="BatchDate" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-sm-3 col-3">
+                                <div class="form-group">
+                                    <label>TotalWeight<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: 290 KG" id="TotalWeight" name="TotalWeight" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-sm-3 col-3">
+                                <div class="form-group">
+                                    <label>Colour<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: #FFFFFF" id="Colour" name="Colour" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Machine<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: JET-1" id="Machine" name="Machine" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Process<span id="Asterisk">*</span></label>
+                                    <select class="form-control ProcessStage" id="Process" name="Process">
+                                        <option value="">--Select--</option>
+                                        <option value="1">Reversing</option>
+                                        <option value="2">Stitching</option>
+                                        <option value="3">Softflow</option>
+                                        <option value="4">Stentering</option>
+                                        <option value="5">Dryer</option>
+                                        <option value="6">Compacting</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                <div class="form-group">
+                                    <label>Quantity<span id="Asterisk">*</span></label>
+                                    <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="Quantity" name="Quantity" required />
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <textarea class="form-control" id="Remark" autocomplete="off" name="Remark" rows="1" maxlength="500" placeholder="Ex: Any Querys"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                    <div class="row">
+                        <div class="col-12">
+                            <a class="btn m-r-20 text-white" id="SaveProductionQRCode" style="background: #35d8dd;"><span style="color: black;">🖫</span> Started</a>
+                            <a class="btn m-r-20 text-white" id="SaveProductionQRCode" style="background: #254ae6;"><span style="color: black;">✓</span> Completed</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ThankYouContant" style=" height: 100vh; align-items: center; display: none; ">
+        <div class="card" style="width: 28%;margin: auto;">
+            <div class="card-body">
+                <h5 class="card-title d-flex justify-content-center" style="font-size: 28px;font-weight: 700;">Thank you!</h5>
+                <p class="card-text" style="white-space: nowrap;font-size: 17px;">Your response has been saved successfully.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/assets/js/jquery.3.2.1.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+
+    <script src="~/assets/js/jquery-ui.min.js"></script>
+    <script src="~/assets/js/jquery.scrollbar.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+    <script src="~/assets/js/webfont.min.js"></script>
+    <script src="~/assets/js/datepicker.js"></script>
+    <script src="~/assets/js/datepicker.en.js"></script>
+    <script src="~/assets/js/jquery.datatables.min.js"></script>
+    <script src="~/assets/js/datatables.fixedcolumns.min.js"></script>
+    <script src="~/assets/js/datatables.bootstrap4.min.js"></script>
+    <script src="~/assets/js/moment.min.js"></script>
+    <script src="~/assets/js/front.js"></script>
+    <script src="~/assets/js/select2.min.js"></script>
+    <script src="~/assets/js/active.js"></script>
+    <script src="~/assets/js/jquery.validate.js"></script>
+    <script src="~/assets/js/sweetalert2.min.js"></script>
+    <script src="~/js/common.js"></script>
+    <script src="~/js/landing.js"></script>
+    <script src="~/js/productionqrcode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+</body>
+</html>

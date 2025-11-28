@@ -74,8 +74,6 @@
                     if (ReturnMessage.status == true) {
                         //window.location.href = "/Dashboard";
                         window.location.href = "/NewDashboard";
-
-                        
                     } else {
                         $('#validation-error').html(ReturnMessage.message).show();
                     }

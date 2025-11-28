@@ -42,8 +42,7 @@ namespace TetroONE.Controllers
 
                             command.Parameters.Add("@Status", SqlDbType.Int).Direction = ParameterDirection.Output;
                             command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-
-
+                             
                             SqlDataAdapter adapter = new SqlDataAdapter(command);
                             adapter.Fill(dst);
                             int status = (int)command.Parameters["@Status"].Value;

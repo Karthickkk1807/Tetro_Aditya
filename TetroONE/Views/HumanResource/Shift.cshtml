@@ -1,4 +1,9 @@
-﻿<link href="~/css/shift.css" rel="stylesheet" />
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Shift, Context.Session);
+}
+
+
+<link href="~/css/shift.css" rel="stylesheet" />
 
 <div id="filter-Column" class="Date-SearchColumn">
     <div class="month-piker d-flex">
@@ -48,9 +53,14 @@
                         <i class="btn-edit mx-1" data-id="69" title="Edit Shift">
                             <img src="/assets/commonimages/edit.svg" style="width: 26px; margin-top: -10px; box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);">
                         </i>
-                        <a id="AddShift" title="Add Shift">
-                            <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
-                        </a>
+                        @{
+                            if (access.Create)
+                            {
+                                <a id="AddShift" title="Add Shift">
+                                    <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            }
+                        }
                     </span>
                 </div>
             </div>
@@ -448,5 +458,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
 
 <script src="~/js/shift.js"></script> 

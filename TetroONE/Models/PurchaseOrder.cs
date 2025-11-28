@@ -8,7 +8,7 @@ namespace TetroONE.Models
         public int? ProductId { get; set; }
         public string ModuleName { get; set; }
         public int? VendorId { get; set; }
-        public int FranchiseId { get; set; }
+        public int PlantId { get; set; } 
     }
     public class ProductModel
     {
@@ -27,13 +27,10 @@ namespace TetroONE.Models
     public class GetPurchaseOrder
     {
         public int LoginUserId { get; set; }
+        public int? PlantId { get; set; }
         public int? PurchaseOrderId { get; set; }
         public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
-        public int FranchiseId { get; set; }
-        public int? TypeId { get; set; }
-
-
+        public DateTime? ToDate { get; set; } 
     }
 
     public class DeletePurchaseOrder
@@ -72,21 +69,19 @@ namespace TetroONE.Models
     public class PurchaseDetailsStatic
     {
         public int? PurchaseOrderId { get; set; }
-        public string? PurchaseOrderNo { get; set; }
         public int VendorId { get; set; }
-        public int ShipToFranchiseId { get; set; }
-        public int FranchiseId { get; set; }
-        public int BillFromFranchiseId { get; set; }
+        public int BillFromPlantId { get; set; }
+        public int ShipToPlantId { get; set; }
+        public int PlantId { get; set; }
+        public string? PurchaseOrderNo { get; set; }
         public DateTime PurchaseOrderDate { get; set; }
         public DateTime? ExpectedDeliveryDate { get; set; }
-        public string? TermsAndCondition { get; set; }
-        public string? Notes { get; set; }
         public decimal SubTotal { get; set; }
-        public decimal GrantTotal { get; set; }
         public decimal RoundOffValue { get; set; }
-        public int PurchaseOrderStatusId { get; set; }
-        public int? TypeOfRequestId { get; set; }
-        public int? RequestNo { get; set; }
+        public decimal GrantTotal { get; set; }
+        public string? Notes { get; set; }
+        public string? TermsAndCondition { get; set; }
+        public int PurchaseOrderStatusId { get; set; } 
     }
 
     public class PurchaseOrderProductMappingDetails
@@ -109,45 +104,25 @@ namespace TetroONE.Models
         public decimal TotalAmount { get; set; }
         public int? ModuleId { get; set; }
     }
-
-    public class PurchaseOrderProposalProductMappingDetails
-    {
-        public int? PurchaseOrderProposalProductMappingId { get; set; }
-        public int? PurchaseOrderId { get; set; }
-        public string? ProposalProductName { get; set; }
-        public string? ProposalDescription { get; set; }
-        public decimal? ProposalPrice { get; set; }
-        public decimal? Quantity { get; set; }
-        public int? UnitId { get; set; }
-        public decimal? SubTotal { get; set; }
-        public decimal? CGST { get; set; }
-        public decimal? SGST { get; set; }
-        public decimal? IGST { get; set; }
-        public decimal? CESS { get; set; }
-        public decimal? Total { get; set; }
-    }
-
+    
     public class InsertPurchaseOrderDetails
     {
         public int LoginUserId { get; set; }
         public int? PurchaseOrderId { get; set; }
-        public string? PurchaseOrderNo { get; set; }
         public int VendorId { get; set; }
-        public int ShipToFranchiseId { get; set; }
-        public int FranchiseId { get; set; }
-        public int BillFromFranchiseId { get; set; }
+        public int BillFromPlantId { get; set; }
+        public int ShipToPlantId { get; set; }
+        public int PlantId { get; set; }
+        public string? PurchaseOrderNo { get; set; }
         public DateTime PurchaseOrderDate { get; set; }
         public DateTime? ExpectedDeliveryDate { get; set; }
-        public string? TermsAndCondition { get; set; }
-        public string? Notes { get; set; }
         public decimal SubTotal { get; set; }
-        public decimal GrantTotal { get; set; }
         public decimal RoundOffValue { get; set; }
-        public int PurchaseOrderStatusId { get; set; }
-        public int? TypeOfRequestId { get; set; }
-        public int? RequestNo { get; set; }
-        public DataTable TVP_Purchase_ProductMappingDetails { get; set; } 
-        public DataTable TVP_PurchaseOrderProposalProductMappingDetails { get; set; }
+        public decimal GrantTotal { get; set; }
+        public string? Notes { get; set; }
+        public string? TermsAndCondition { get; set; }
+        public int PurchaseOrderStatusId { get; set; } 
+        public DataTable TVP_Purchase_ProductMappingDetails { get; set; }  
         public DataTable TVP_AttachmentDetails { get; set; }
     }
 

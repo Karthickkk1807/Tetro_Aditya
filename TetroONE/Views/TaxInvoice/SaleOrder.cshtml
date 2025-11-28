@@ -1,5 +1,8 @@
-﻿<link href="~/css/saleorder.css" rel="stylesheet" />
- 
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.SaleOrder, Context.Session);
+}
+<link href="~/css/saleorder.css" rel="stylesheet" />
+
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
         <div class="row m-t-25">
@@ -136,11 +139,16 @@
         <div class="datapiker ml-2 mt-1" style="position: relative;">
             <div class="add-imp-exp-btn">
                 <div class="exportsiconpop">
-                    <span class="pop">
-                        <a id="customBtn_SaleOrderData" title="Add SaleOrder">
-                            <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
-                        </a>
-                    </span>
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="customBtn_SaleOrderData" title="Add SaleOrder">
+                                    <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -298,7 +306,7 @@
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Fabric Type<span id="Asterisk">*</span></label>
+                                            <label>Fabric<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="FabricTypeId" name="FabricTypeId" required>
                                                 <option value="">--Select--</option>
                                                 <option value="1">Cotton</option>
@@ -402,7 +410,7 @@
                                                 <option value="4">Bleaching</option>
                                             </select>
                                         </div>
-                                    </div> 
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -531,5 +539,8 @@
     </div>
 </div>
 
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
 
 <script src="~/js/saleorder.js"></script>

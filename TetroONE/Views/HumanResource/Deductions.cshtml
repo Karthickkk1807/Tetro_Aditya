@@ -1,6 +1,6 @@
 ﻿@using System.Security.Claims;
 @{
-    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Deductions, Context.Session);
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Claim, Context.Session);
     var EmployeeId = 0;
     bool isAdmin = false, isEmployee = false;
     if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))

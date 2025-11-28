@@ -1,15 +1,16 @@
-﻿
-var CheckedValue = [];
+﻿var CheckedValue = [];
 var IsFirst = true;
+var PlantMappingId = 0;
+
 $(document).ready(function () {
     /* var Listdata = parsedUserAccessList;*/
 
-    var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
     var category = "UserType";
     var search = null;
 
     var editData = {
-        PlantId: FranchiseMappingId,
+        PlantId: PlantMappingId,
         Value: 0,
         Category: category,
         Search: search
@@ -74,11 +75,10 @@ $(document).ready(function () {
 
         if (IsFirst) {
             $('#loader-pms').show();
-            var thisVal = parseInt($(this).val());
-            var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
+            var thisVal = parseInt($(this).val()); 
             var category = $('#Category').val();
             var search = $('#tableFilter_User').val() || null;
-            var editData = { PlantId: FranchiseMappingId, Value: thisVal, Category: category, Search: search };
+            var editData = { PlantId: parseInt(PlantMappingId), Value: thisVal, Category: category, Search: search };
             Common.ajaxCall("GET", "/UserAccess/GetUserAcces", editData, function (response) {
                 if (response && response.data) {
                     //localStorage.removeItem("UserAccessList");

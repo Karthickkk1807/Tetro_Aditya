@@ -25,8 +25,7 @@ namespace TetroONE.Models
         public string ContactNumber { get; set; }
         public string Email { get; set; }
         public string Website { get; set; }
-        public string GSTNumber { get; set; }
-       
+        public string GSTNumber { get; set; } 
         public string ExistingImage { get; set; }
         public string Signature { get; set; }
         public string SignatureExistingImage { get; set; }
@@ -92,7 +91,7 @@ namespace TetroONE.Models
         public string? PlantName { get; set; }
         public string? PlantAddress { get; set; }
         public string? PlantCity { get; set; }
-        public string? PlantState { get; set; }
+        public int? PlantStateId { get; set; }
         public string? PlantZipCode { get; set; }
         public string? PlantContactNo { get; set; }
         public string? PlantEmail { get; set; }

@@ -132,14 +132,14 @@ namespace TetroONE.Controllers
 
 
 		[HttpGet]
-		[Route("GetFranchise")]
-		public IActionResult GetFranchise()
+		[Route("GetPlant")]
+		public IActionResult GetPlant()
 		{
-			GetFranchise1 Get = new GetFranchise1()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-			};
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetFranchiseDetails_Popup]", Get);
+            GetPlant Get = new GetPlant()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+            };
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetPlantDetails_Popup]", Get);
 			return Json(response);
 		}
 
@@ -211,8 +211,8 @@ namespace TetroONE.Controllers
 				relativeFilePath = null;
 			}
 
-			DataTable UserFranchiseMappingDetails = new DataTable();
-			UserFranchiseMappingDetails = GenericTetroONE.ToDataTable(request.userFranchiseMappingDetails);
+			DataTable UserPlantMappingDetails = new DataTable();
+            UserPlantMappingDetails = GenericTetroONE.ToDataTable(request.UserPlantMappingDetails);
 
 			DataTable UserDepartmentMappingDetails = new DataTable();
 			UserDepartmentMappingDetails = GenericTetroONE.ToDataTable(request.userDepartmentMappingDetails);
@@ -236,7 +236,7 @@ namespace TetroONE.Controllers
 					command.Parameters.AddWithValue("@UserTypeId", request.UserTypeId);
 					command.Parameters.AddWithValue("@UserGroupId", request.UserGroupId);
 					command.Parameters.AddWithValue("@ContactId", request.ContactId ?? (object)DBNull.Value);
-					command.Parameters.AddWithValue("@TVP_UserFranchiseMappingDetails", UserFranchiseMappingDetails);
+					command.Parameters.AddWithValue("@TVP_UserPlantMappingDetails", UserPlantMappingDetails);
 					command.Parameters.AddWithValue("@TVP_UserDepartmentMappingDetails", UserDepartmentMappingDetails);
 
 					command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -305,8 +305,8 @@ namespace TetroONE.Controllers
 				relativeFilePath = request.ExistingImage;
 			}
 
-			DataTable UserFranchiseMappingDetails = new DataTable();
-			UserFranchiseMappingDetails = GenericTetroONE.ToDataTable(request.userFranchiseMappingDetails);
+			DataTable UserPlantMappingDetails = new DataTable();
+            UserPlantMappingDetails = GenericTetroONE.ToDataTable(request.UserPlantMappingDetails);
 
 			DataTable UserDepartmentMappingDetails = new DataTable();
 			UserDepartmentMappingDetails = GenericTetroONE.ToDataTable(request.userDepartmentMappingDetails);
@@ -331,7 +331,7 @@ namespace TetroONE.Controllers
 					command.Parameters.AddWithValue("@UserTypeId", request.UserTypeId);
 					command.Parameters.AddWithValue("@UserGroupId", request.UserGroupId);
 					command.Parameters.AddWithValue("@ContactId", request.ContactId ?? (object)DBNull.Value);
-					command.Parameters.AddWithValue("@TVP_UserFranchiseMappingDetails", UserFranchiseMappingDetails);
+					command.Parameters.AddWithValue("@TVP_UserPlantMappingDetails", UserPlantMappingDetails);
 					command.Parameters.AddWithValue("@TVP_UserDepartmentMappingDetails", UserDepartmentMappingDetails);
 
 					command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;

@@ -150,10 +150,12 @@
     </li>
 
     <li class="nav-item" role="presentation">
-        <a class="nav-link navbar-tab titleForHeaderProductTab" id="FinishedProductData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Finished Product</a>
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="UnProcessed-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Un-Processed</a>
     </li>
 
-  
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="Processed-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Processed</a>
+    </li>
 </ul>
 
 <div class="" id="ProductDynamic" style="margin-top:-12px;">
@@ -162,13 +164,6 @@
     </div>
 </div>
 
-
-@* <div class="modal-body" style="max-height: 295px; overflow: auto; overflow-x: hidden;height: 295px;">
-</div> *@
-
-
-
-
 <div id="ProductCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
         <h2 id="ProductHeader"></h2>
@@ -176,7 +171,6 @@
               style="font-size:30px;cursor:pointer;color:white;"
               title="Close">&times;</span>
     </div>
-
     <div class="offcanvas-body">
         <div class="row">
             <div class="col-12">
@@ -200,7 +194,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-6 ProductType">
                                         <div class="form-group">
                                             <label>Product Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProductTypeId" name="ProductTypeId" required>
+                                            <select class="form-control" id="ProductTypeId" name="ProductTypeId" disabled>
                                             </select>
                                         </div>
                                     </div>
@@ -258,7 +252,7 @@
                                                 <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;font-size:12px">
                                                     1 Unit =
                                                 </button>
-                                                <input id="SecondaryUnitValue" name="SecondaryUnitValue" class="ember-text-field text-end ember-view form-control text-end" type="text" placeholder="0" autocomplete="off" oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" required>
+                                                <input id="ConvertionValue" name="ConvertionValue" class="ember-text-field text-end ember-view form-control text-end" type="text" placeholder="0" autocomplete="off" oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" required>
                                                 <button id="SecondaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:12px">
                                                     Unit
                                                 </button>
@@ -267,29 +261,26 @@
                                     </div>
 
                                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	            	                    <div class="form-group">
-	            		                    <label>Primary Price<span id="Asterisk">*</span></label>
-	            		                    <input type="text" class="form-control PrimaryPrice" id="PrimaryPrice" name="PrimaryPrice" placeholder="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" required>
-	            	                    </div>
-	                                </div>
-	                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	            	                    <div class="form-group">
-	            		                    <label>Secondary Price<span id="Asterisk">*</span></label>
-	            		                    <input type="text" class="form-control SecondaryPrice" id="SecondaryPrice" name="SecondaryPrice" placeholder="0" value="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" disabled required>
-	            	                    </div>
-	                                </div>
+                                        <div class="form-group">
+                                            <label>Primary Price<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control PrimaryPrice" id="PrimaryPrice" name="PrimaryPrice" placeholder="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
+                                        <div class="form-group">
+                                            <label>Secondary Price<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control SecondaryPrice" id="SecondaryPrice" name="SecondaryPrice" placeholder="0" value="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" disabled required>
+                                        </div>
+                                    </div> 
                                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4">
-	            	                    <div class="form-group">
-	            		                    <label>Reorder Level<span id="Asterisk">*</span></label>
-	            		                    <input type="text" class="form-control ReOrderlevel" id="ReOrderlevel" name="ReOrderlevel" placeholder="Reorder Level" autocomplete="off" required>
-	            	                    </div>
-	                                </div>
-                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4" style="visibility: hidden";>
-	            	                    <div class="form-group">
-	            		                    <label>Reorder Level<span id="Asterisk">*</span></label>
-	            		                    <input type="text" class="form-control" id="" name="" placeholder="Reorder Level" autocomplete="off" required>
-	            	                    </div>
-	                                </div>
+                                        <div class="form-group">
+                                            <label>Reorder Level<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control ReOrderLevel" id="ReOrderLevel" name="ReOrderLevel" placeholder="Ex : 3590" autocomplete="off" required>
+                                        </div>
+                                    </div> 
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4">
+                                         
+                                    </div> 
                                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-6">
                                         <div class="form-group">
                                             <label>CGST</label>
@@ -337,113 +328,13 @@
             </div>
             <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
                 <div id="Styleenterydetalis" class="card-body">
-                    <form id="FormProductFranchiseData">
+                    <form id="FormProductPlantData">
                         <div class="d-flex justify-content-end align-items-start" id="dynamicButtonDiv">
                             <button id="" class="btn AddStockBtn" type="button" onclick="dyanmicRow(this)">
                                 <i class="fas fa-plus" id="AddButton"></i>
                             </button>
                         </div>
-                        <div class="mt--3" id="BindProductDyanimcData">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion QcMappingHide" id="styleAccordionluf3ws29vt">
-            <div class="accordion-header">
-                <h2 id="Styleentery" class="mb-0 Styleentery">
-                    <a data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapseTwo2" class="">
-                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                            <strong class="text-white">
-                                QC Mapping Info
-                            </strong>
-                            <i class="fas fa-angle-down text-white"></i>
-                        </p>
-                    </a>
-                </h2>
-            </div>
-            <div id="collapse6" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
-                <div id="Styleenterydetalis" class="card-body">
-                    <form id="FormQVMappingData">
-                        @* <div class="d-flex justify-content-end dynamicButton" id="dynamicButtonDiv">
-                            <button id="" class="btn AddStockBtn" type="button" onclick="DynamicRowOfQCMapping(this)">
-                                <i class="fas fa-plus" id="AddButton"></i>
-                            </button>
-                        </div>
-                        <div class="mt-1" id="BindQVMappingData" style="max-height: 240px; overflow-y: auto;overflow-x: hidden;">
-                        </div> *@
-                        <div class="row">
-                            <!-- QC 1 -->
-                            <div class="col-md-6 col-sm-12 d-flex align-items-center mb-2">
-                                <input type="checkbox" id="QC1" name="QCMapping" value="QC1" class="mr-2" />
-                                <label for="QC1" class="mb-0">QC Checking</label>
-                            </div>
-
-                            <!-- QC 2 -->
-                            <div class="col-md-6 col-sm-12 d-flex align-items-center mb-2">
-                                <input type="checkbox" id="QC2" name="QCMapping" value="QC2" class="mr-2" />
-                                <label for="QC2" class="mb-0">QC Approval</label>
-                            </div>
-
-                            <!-- QC 3 -->
-                            <div class="col-md-6 col-sm-12 d-flex align-items-center mb-2">
-                                <input type="checkbox" id="QC3" name="QCMapping" value="QC3" class="mr-2" />
-                                <label for="QC3" class="mb-0">Final QC</label>
-                            </div>
-
-                            <!-- QC 4 -->
-                            <div class="col-md-6 col-sm-12 d-flex align-items-center mb-2">
-                                <input type="checkbox" id="QC4" name="QCMapping" value="QC4" class="mr-2" />
-                                <label for="QC4" class="mb-0">Packing QC</label>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion" id="ProductProcessHide">
-            <div class="accordion-header">
-                <h2 id="Styleentery" class="mb-0 Styleentery">
-                    <a data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapseThree3" class="">
-                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                            <strong class="text-white">
-                                Product Process Info
-                            </strong>
-                            <i class="fas fa-angle-down text-white"></i>
-                        </p>
-                    </a>
-                </h2>
-            </div>
-            <div id="collapse3" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
-                <div id="Styleenterydetalis" class="card-body">
-                    <form id="FormProductProcessData">
-                        <div class="row mt--2" id="BindProductProcessData">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion" id="RawMaterialInfoHide">
-            <div class="accordion-header">
-                <h2 id="Styleentery" class="mb-0 Styleentery">
-                    <a data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapseFour4" class="">
-                        <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                            <strong class="text-white">
-                                Raw Material Info
-                            </strong>
-                            <i class="fas fa-angle-down text-white"></i>
-                        </p>
-                    </a>
-                </h2>
-            </div>
-            <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
-                <div id="Styleenterydetalis" class="card-body">
-                    <form id="FormRawMaterialInfoData">
-                        <div class="row mt--2" id="BindRawMaterialInfoData">
+                        <div class="mt--3" id="BindPlantDyanimcData">
                         </div>
                     </form>
                 </div>
@@ -460,9 +351,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 <div id="ManPowerModal" class="modal">
     <div class="modal-dialog modal-dialog-centered modal-xxl" data-bs-loader-pms="static" data-bs-keyboard="false">

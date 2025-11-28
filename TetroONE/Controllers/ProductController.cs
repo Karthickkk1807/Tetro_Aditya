@@ -32,14 +32,13 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetProduct")]
-        public IActionResult GetProduct(int ProductTypeId, int FranchiseId)
+        public IActionResult GetProduct(int PlantId)
         {
             GetProduct GetProduct = new GetProduct()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                ProductTypeId = ProductTypeId,
                 ProductId = null,
-                FranchiseId = FranchiseId,
+                PlantId = PlantId,
             };
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductDetails]", GetProduct);
             return Json(response);
@@ -47,19 +46,18 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetProductId")]
-        public IActionResult GetProductId(int ProductId, int FranchiseId)
+        public IActionResult GetProductId(int ProductId, int PlantId)
         {
             GetProduct GetProduct = new GetProduct()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
                 ProductId = ProductId,
-                FranchiseId = FranchiseId
+                PlantId = PlantId
             };
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductDetails]", GetProduct);
             return Json(response);
         }
-
-
+         
         public partial class GetProductProcess_1
         {
             public int LoginUserId	 { get; set; }
@@ -99,80 +97,28 @@ namespace TetroONE.Controllers
         public async Task<IActionResult> SaveLoan([FromBody] InsertUpdateDetails request)
         {
             _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+             
+            DataTable ProductPlantMappingDetails = new DataTable();
+            ProductPlantMappingDetails = GenericTetroONE.ToDataTable(request.ProductPlantMappingDetails);
 
-            DataTable ProductFranchiseMapping = new DataTable();
-            ProductFranchiseMapping = GenericTetroONE.ToDataTable(request.productFranchiseMapping);
-
-            DataTable ProductProductionStagesMapping = new DataTable();
-            ProductProductionStagesMapping = GenericTetroONE.ToDataTable(request.productProductionStagesMapping);
-
-            DataTable ProductRawMaterialMapping = new DataTable();
-            ProductRawMaterialMapping = GenericTetroONE.ToDataTable(request.productRawMaterialMapping);
-
-            DataTable ProductQCMappingDetails = new DataTable();
-            ProductQCMappingDetails = GenericTetroONE.ToDataTable(request.productQCMappingDetails);
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value); 
+            request.TVP_ProductPlantMappingDetails = ProductPlantMappingDetails;
 
             var spName = string.Empty;
+            string[] Exclude;
+
             if (request.ProductId != null && request.ProductId != 0)
             {
+                Exclude = new string[] { "ProductPlantMappingDetails" };
                 spName = "[dbo].[USP_UpdateProductDetails]";
             }
             else
             {
+                Exclude = new string[] { "ProductId", "ProductPlantMappingDetails" };
                 spName = "[dbo].[USP_InsertProductDetails]";
             }
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
 
-                using (SqlCommand command = new SqlCommand(spName, connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.AddWithValue("@LoginUserId", _userId);
-                    command.Parameters.AddWithValue("@ProductTypeId", request.ProductTypeId);
-                    command.Parameters.AddWithValue("@ProductName", request.ProductName);
-                    command.Parameters.AddWithValue("@ProductCategoryId", request.ProductCategoryId);
-                    command.Parameters.AddWithValue("@ProductSubCategoryId", request.ProductSubCategoryId);
-                    command.Parameters.AddWithValue("@ProductFlavourId", request.ProductFlavourId ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@ProductDescription", request.ProductDescription);
-                    command.Parameters.AddWithValue("@PrimaryUnitId", request.PrimaryUnitId);
-                    command.Parameters.AddWithValue("@SecondaryUnitId", request.SecondaryUnitId);
-                    command.Parameters.AddWithValue("@SecondaryUnitValue", request.SecondaryUnitValue);
-                    command.Parameters.AddWithValue("@CGST", request.CGST ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@SGST", request.SGST ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@IGST", request.IGST ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@CESS", request.CESS ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@TVP_ProductFranchiseMappingDetails", ProductFranchiseMapping);
-                    command.Parameters.AddWithValue("@TVP_ProductProductionStagesMappingDetails", ProductProductionStagesMapping);
-                    command.Parameters.AddWithValue("@TVP_ProductRawMaterialMappingDetails_1", ProductRawMaterialMapping);
-                    command.Parameters.AddWithValue("@TVP_ProductQCMappingDetails", ProductQCMappingDetails);
-
-                    if (request.ProductId > 0)
-                    {
-                        command.Parameters.AddWithValue("@ProductId", request.ProductId);
-                    }
-
-                    command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-
-                    try
-                    {
-                        await command.ExecuteNonQueryAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log or inspect the error
-                        Console.WriteLine(ex.Message);
-                        throw;
-                    }
-
-                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
-                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
-
-                }
-                connection.Close();
-            }
+            response = GenericTetroONE.Execute(_connectionString, spName, request, Exclude); 
             return Json(response);
         }
 

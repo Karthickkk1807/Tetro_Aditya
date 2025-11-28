@@ -1,5 +1,5 @@
 ﻿@{
-    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.SaleReturn, Context.Session);
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.SecondarySales, Context.Session);
 }
 
 <link href="~/css/secondarysales.css" rel="stylesheet" />
@@ -86,7 +86,7 @@
         </div>
     </div>
 </div>
- 
+
 <div class="row justify-content-end mr-2">
     <div class="searchbar">
         <input type="text" class="searchbar__input" name="q" id="tableFilterSecondarySales" placeholder="Search">
@@ -97,11 +97,16 @@
     <div class="datapiker ml-2 mt-1" style="position: relative;">
         <div class="add-imp-exp-btn">
             <div class="exportsiconpop">
-                <span class="pop">
-                    <a id="AddSecondarySales" title="Add Secondary Sales">
-                        <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
-                    </a>
-                </span>
+                @{
+                    if (access.Create)
+                    {
+                        <span class="pop">
+                            <a id="AddSecondarySales" title="Add Secondary Sales">
+                                <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                            </a>
+                        </span>
+                    }
+                }
             </div>
         </div>
     </div>
@@ -110,7 +115,7 @@
 <div class="table-responsive">
     <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="SecondarySalesTable"></table>
 </div>
- 
+
 <div id="SecondarySalesCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
         <h2 id="SecondarySalesHeader"></h2>
@@ -251,8 +256,8 @@
     </div>
 </div>
 
-<script src="~/js/secondarysales.js"></script>
-
 <script>
     var access = @Html.Raw(Json.Serialize(access));
 </script>
+
+<script src="~/js/secondarysales.js"></script>

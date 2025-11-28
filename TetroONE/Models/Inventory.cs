@@ -5,7 +5,7 @@ namespace TetroONE.Models
     public class GetManageStock
     {
         public int LoginUserId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public int? ProductTypeId { get; set; }
         public int? ManageStockId { get; set; }
         public DateTime? FromDate { get; set; }

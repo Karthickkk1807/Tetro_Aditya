@@ -169,7 +169,7 @@
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>State<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="StateId" name="StateId" required></select>
+                                            <select class="form-control" id="State" name="State" required></select>
 
                                         </div>
                                     </div>
@@ -178,15 +178,13 @@
                                             <label>Country</label>
                                             <input type="text" class="form-control" placeholder="Ex: India" id="Country" name="Country" oninput="Common.allowOnlyTextLength(this,20)" />
                                         </div>
-                                    </div>
-
+                                    </div> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Zipcode</label>
                                             <input type="text" class="form-control" placeholder="Ex: 600028" id="ZipCode" name="ZipCode" oninput="Common.allowOnlyNumberLength(this,6)" />
                                         </div>
-                                    </div>
-
+                                    </div> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Contact No<span id="Asterisk">*</span></label>
@@ -205,33 +203,58 @@
                                             <input type="text" class="form-control" placeholder="Ex: 27AAACB1234C1Z5" id="GSTNumber" name="GSTNumber" oninput="Common.allowGSTNumber(this, 15)" />
                                         </div>
                                     </div>
-
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6" style="margin-top: 26px;" id="IsActiveHide">
-                                        <div class="form-group">
-                                            <input type="checkbox" id="IsActive" name="IsActive" style="position: relative;top: 2px;">
-                                            <label for="IsActive"> Is Active </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6 mt-2">
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Max Credit Limit<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Max Credit Limit" id="MaxCreditLimit" name="MaxCreditLimit" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6 mt-2" id="CurrentlimitHide">
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6" id="CurrentlimitHide">
                                         <div class="form-group">
                                             <label>Current Credit</label>
                                             <input type="text" class="form-control" placeholder="0.00" id="CurrentCreditLimit" name="CurrentCreditLimit" disabled />
                                         </div>
                                     </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-12 justify-content-center" style="margin-top: 8px; display: flex;" id="IsActiveHide">
+                                        <div class="form-group">
+                                            <input type="checkbox" id="IsActive" name="IsActive" style="position: relative;top: 2px;">
+                                            <label for="IsActive"> Is Active </label>
+                                        </div>
+                                        <div class="mt-1 ml-4" id="RatingStars">
+                                            <div style="display:flex; gap:2px;">
+                                                <span style="margin-top: -4px;font-size: 14px;color: black;">Ratings : </span>
+                                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                                                <i class="fas fa-star-half-alt" style="color:#f1c40f;"></i>
+                                                <i class="far fa-star" style="color:#f1c40f;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-12 col-lg-12 col-sm-12 col-12">
                                         <div class="form-group">
                                             <label>Remarks</label>
                                             <textarea class="form-control" id="Remark" autocomplete="off" name="Remark" rows="1" maxlength="250" placeholder="Remarks"></textarea>
                                         </div>
                                     </div>
-
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
+                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                                            <!-- Add a custom button for choosing files -->
+                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                                                <b>Click Here to Attach your files</b>
+                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                                            </label>
+                                            <div class="file-preview d-flex justify-content-center" id="preview">
+                                                <div class="attachrow">
+                                                    <div class="attachcolumn">
+                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                    </div>
+                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -392,31 +415,6 @@
                     </div>
                 </div>
             </div>
-
-            @* <div class="col-12">
-                <div class="accordion" id="styleAccordionluf3ws29vt">
-                    <div class="accordion-header">
-                        <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse5" aria-expanded="true" aria-controls="collapseOne1" class="">
-                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                                    <strong class="text-white">
-                                        Franchise Mapping Info
-                                    </strong>
-                                    <i class="fas fa-angle-down text-white"></i>
-                                </p>
-                            </a>
-                        </h2>
-                    </div>
-                    <div id="collapse5" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
-                        <div id="Styleenterydetalis" class="card-body">
-                            <form id="FormFranchiseData">
-                                <div class="row mt--2" id="BindFranchiseData">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> *@
         </div>
     </div>
 
@@ -424,7 +422,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="form-group text-center">
                 <div class="card-action">
-                    <a class="btn btn-success m-r-20 text-white" id="SaveClient">Save</a>
+                    <a class="btn btn-success m-r-20 text-white" id="SaveVendor">Save</a>
                 </div>
 
             </div>
