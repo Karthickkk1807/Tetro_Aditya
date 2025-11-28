@@ -303,7 +303,7 @@ body > div.wrapper > div.main-panel > div > div > div.card.m-b-30 > div.card-bod
     width: 100%;
 }
 .counter-text {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     margin-bottom: 10px;
     color: black;
@@ -311,6 +311,6 @@ body > div.wrapper > div.main-panel > div > div > div.card.m-b-30 > div.card-bod
 .counter-value {
     display: flex;
     align-items: center;
-    font-size: 16px;
+    font-size: 13px;
     color: black;
 }

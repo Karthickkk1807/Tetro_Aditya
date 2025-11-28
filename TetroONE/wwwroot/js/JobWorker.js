@@ -21,7 +21,9 @@ $(document).ready(function () {
         $('#fadeinpage').addClass('fadeoverlay');
         $("#FormJobWorker")[0].reset();
         CanvasOpenFirstShowingJobWorker();
-         
+
+        $('#TransactionsHide').hide();
+
         Common.removevalidation('FormJobWorker');
         Common.removeMessage('FormJobWorker');
         Common.removevalidation('FormJobWorkersBank');
@@ -160,6 +162,9 @@ $(document).ready(function () {
             $("#JobWorkerCanvas").css("width", "39%");
         }
         CanvasOpenFirstShowingJobWorker();
+
+        $('#TransactionsHide').show();
+
         Common.removeMessage('FormJobWorker');  
         $('#IsActiveHide').show(); 
         $("#JobWorkerHeader").text('Edit JobWorkers Details');
@@ -230,7 +235,7 @@ function JobWorkersSuccess(response) {
         $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
         var columns = Common.bindColumn(data[1], ['JobWorkerId', 'Status_Color']);
-        Common.bindTable('JobWorkerTable', data[1], columns, -1, 'JobWorkerId', '330px', true, access);
+        Common.bindTableStarRating('JobWorkerTable', data[1], columns, -1, 'JobWorkerId', '330px', true, access);
     }
 }
 
@@ -337,7 +342,20 @@ function editSuccess(response) {
                 ulElement.append(liElement);
             }
         });
-         
+
+        $('#TransactionsHide').show();
+        $('#TransactionsInfo').empty('');
+        var html =
+        `
+         <div class="table-responsive">
+             <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="Managetable"></table>
+         </div>
+         `;
+        $('#TransactionsInfo').append(html);
+
+        var columns = Common.bindColumn(data[3], ['PurchaseRequestId', 'Status_Color']);
+        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'PurchaseRequestId', '151px', true);
+
         updateRemoveButtons();
     }
 }
@@ -717,4 +735,90 @@ function CanvasOpenFirstShowingJobWorker() {
     $('html, body').animate({
         scrollTop: $('#JobWorkerCanvas').offset().top
     }, 'fast');
+}
+
+
+function bindTableTransactionsInfo(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction) {
+    if ($.fn.DataTable.isDataTable('#' + tableid)) {
+        if ($('#' + tableid).DataTable().rows().data().toArray().length > 0) {
+            $('#' + tableid).DataTable().clear().destroy();
+        }
+    }
+    $('#' + tableid).empty();
+    columns = columns.filter(x => x.name != "TetroONEnocount");
+    var isbuyernocount = data[0].hasOwnProperty('TetroONEnocount');
+    var StatusColumnIndex = columns.findIndex(column => column.data === "Status");
+
+    if (isAction == true && data != null && data.length > 0 && !isbuyernocount) {
+        columns.push({
+            "data": "Action", "name": "Action", "title": "Action", orderable: false
+        });
+    } else {
+        columns.push({
+            "data": "Action", "name": "Action", "autoWidth": true, "title": "Action", orderable: false, visible: false
+        });
+    }
+
+    var renderColumn = [
+        {
+            "targets": StatusColumnIndex,
+            render: function (data, type, row, meta) {
+                if (type === 'display' && row.Status_Color != null && row.Status_Color.length > 0) {
+                    var dataText = row.Status;
+                    var statusColor = row.Status_Color.toLowerCase();
+
+                    var htmlContent = '<div>';
+                    htmlContent += '<span class="ana-span badge text-white" style="background:' + statusColor + ';width: 99px;font-size: 12px;height: 20px;">' + dataText + '</span>';
+                    htmlContent += '</div>';
+
+                    return htmlContent;
+                }
+                return data;
+            }
+        },
+
+    ];
+
+
+    renderColumn.push(
+        {
+            targets: actionTarget,
+            render: function (data, type, row, meta) {
+                return `<td>
+                            <div class="actionEllipsis">
+                                <i class="edity mx-1" data-id="${row[editcolumn]}" title="Edit">
+                                    <img src="/assets/CommonImages/eye_icon.svg" alt="View">
+                                </i>
+                            </div>
+                        </td> `;
+            }
+        }
+    ) 
+    var dataTableOptions = {
+        "dom": "Blfrtip",
+        "bDestroy": true,
+        "responsive": true,
+        "data": !isbuyernocount ? data : [],
+        "columns": columns,
+        "destroy": true,
+        "scrollY": scrollpx,
+        "sScrollX": "100%",
+        "scrollX": true,
+        "scroller": true,
+        "scrollCollapse": true,
+        "aaSorting": [],
+        "language": {
+            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
+        },
+        "searching": false,
+        "info": false,
+        "paging": false,
+        "pageLength": 30,
+        //"lengthMenu": [5, 10, 25, 50],
+        "columnDefs": renderColumn
+    };
+    $('#' + tableid).DataTable(dataTableOptions);
+    var tableId = $('#' + tableid).DataTable();
+    Common.autoAdjustColumns(tableId);
+
 }

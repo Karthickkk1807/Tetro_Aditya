@@ -32,8 +32,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox1">Total Sample</div>
-                                    <h4 class="card-title" id="CounterValBox1">37</h4>
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
                                 </div>
                             </div>
                         </div>
@@ -51,8 +51,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2">Draft</div>
-                                    <h4 class="card-title" id="CounterValBox2">10</h4>
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
                                 </div>
                             </div>
                         </div>
@@ -70,8 +70,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3">Approved</div>
-                                    <h4 class="card-title" id="CounterValBox3">21</h4>
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
                                 </div>
                             </div>
                         </div>
@@ -89,8 +89,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox4">Cancelled</div>
-                                    <h4 class="card-title" id="CounterValBox4">6</h4>
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
                                 </div>
                             </div>
                         </div>
@@ -219,117 +219,92 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Sample Name<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: Text Sample Name" id="SampleName" name="SampleName" />
+                                            <label>Client<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="Client" name="Client"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Client Referance Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ClientReferanceType" name="ClientReferanceType"></select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>SaleOrder No<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="SaleOrderNoId" name="SaleOrderNoId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">SALE/NO/001</option>
-                                                <option value="2">SALE/NO/002</option>
-                                                <option value="3">SALE/NO/003</option>
-                                                <option value="4">SALE/NO/004</option>
-                                                <option value="5">SALE/NO/005</option>
-                                                <option value="5">SALE/NO/006</option>
+                                            <label>Client Referance No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ClientReferanceNo" name="ClientReferanceNo"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Color Code<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: #FFFFFF" id="ColorCode" name="ColorCode" maxlength="50" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 d-flex justify-content-center" style="margin-top: 26px;">
+                                        <div class="form-group">
+                                            <input type="checkbox" id="IsExistingSample" name="IsExistingSample">
+                                            <label for="IsExistingSample"> Is Existing Sample </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Sample Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="SampleTypeId" name="SampleTypeId"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Fabric<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="FabricTypeId" name="FabricTypeId" required>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Customer<span id="Asterisk">*</span></label>
-                                            <select class="form-control ProcessStage" id="CustomerId" name="CustomerId" disabled>
-                                                <option value="">--Select--</option>
-                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
-                                                <option value="2">KARTHIKEYANI</option>
-                                                <option value="3">MITHRAN</option>
-                                                <option value="6">DEXY</option>
-                                                <option value="34">INDRASENAN</option>
-                                                <option value="109">KAVINESH RAJASEKAR</option>
-                                            </select>
+                                            <label>GSM</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 200" id="FabricGSM" name="FabricGSM" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Fabric Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="FabricType" name="FabricType" required disabled>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Cotton</option>
-                                                <option value="2">Polyester</option>
-                                                <option value="3">Blended</option>
+                                            <label>Recived By<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="SampleRecivedById" name="SampleRecivedById" required>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="HandledByIdDiv">
+                                        <div class="form-group">
+                                            <label>Handled By<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="HandledById" name="HandledById" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-12">
                                         <div class="form-group">
                                             <label>Process Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProcessType" name="ProcessType" required disabled>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Dyed</option>
-                                                <option value="2">Printed</option>
-                                                <option value="3">Finished</option>
+                                            <select class="form-control" id="ProcessTypeId" name="ProcessTypeId" multiple required>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6" id="BuyerCommentsIdDiv">
                                         <div class="form-group">
-                                            <label>GSM<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required disabled />
+                                            <label>Buyer Comments<span id="Asterisk">*</span></label>
+                                            <textarea class="form-control" id="BuyerComments" name="BuyerComments" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Buyer Querys"></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="RemarksDiv">
                                         <div class="form-group">
-                                            <label>Weight<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Weight" name="Weight" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" disabled />
+                                            <label>Remarks</label>
+                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Any Querys"></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Color<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: SkyBlue" id="Color" name="Color" required disabled />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Priority<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="PriorityId" name="PriorityId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="2">Medium</option>
-                                                <option value="3">High</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Prepared By<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" name="PreparedBy" value="PreparedBy" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Approved By<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ApprovedBy" name="ApprovedBy">
-                                                <option value="">--Select--</option>
-                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
-                                                <option value="2">KARTHIKEYANI</option>
-                                                <option value="3">MITHRAN</option>
-                                                <option value="6">DEXY</option>
-                                                <option value="34">INDRASENAN</option>
-                                                <option value="109">KAVINESH RAJASEKAR</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="SampleStatusIdDiv">
                                         <div class="form-group">
                                             <label>Status<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="Status" name="Status">
-                                                <option value="">--Select--</option>
-                                                <option value="1">Draft</option>
-                                                <option value="2">Approved</option>
-                                                <option value="3">Cancelled</option>
+                                            <select class="form-control" id="SampleStatusId" name="SampleStatusId" required>
                                             </select>
                                         </div>
                                     </div>
@@ -340,7 +315,7 @@
                 </div>
             </div>
 
-            <div class="col-12">
+            <div class="col-12" id="AccordionHide1">
                 <div class="accordion" id="styleAccordion2">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
@@ -360,28 +335,17 @@
                                 <div class="row">
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Machine Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="MachineType" name="MachineType">
-                                                <option value="">--Select--</option>
-                                                <option value="1">Jet Dyeing</option>
-                                                <option value="2">Winch</option>
-                                                <option value="3">Pad-Dry</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Batch Size<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control BatchSize" placeholder="Ex: 200 KG" id="BatchSize" name="BatchSize" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Bath Ratio<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 1:10" id="BathRatio" name="BathRatio" required />
+                                            <label>Recipe No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: #34FH" id="RecipeNo" name="RecipeNo" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Machine Used<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: A-Machine" id="MachineUsed" name="MachineUsed" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Temperature<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: 12.76" id="Temperature" name="Temperature" required />
@@ -389,14 +353,20 @@
                                     </div>
                                     <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Time<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control mydatetimepicker" placeholder="Ex: Time" id="Time" name="Time" required style="background: #ffffff;" />
+                                            <label>pH Value<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 6.8" id="pHLevel" name="pHLevel" />
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>pH Value<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 6.8" id="pHLevel" name="pHLevel" />
+                                            <label>Time<span id="Asterisk">*</span></label>
+                                            <input type="time" class="form-control" placeholder="Ex: Time" id="Time" name="Time" required style="background: #ffffff;" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Finished Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="FinishedTypeId" name="FinishedTypeId"></select>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-sm-12 col-6">
@@ -413,8 +383,8 @@
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Special Instructions<span id="Asterisk">*</span></label>
-                                            <textarea class="form-control" id="SpecialInstructions" name="SpecialInstructions" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Special Instructions Querys"></textarea>
+                                            <label>Notes</label>
+                                            <textarea class="form-control" id="Notes" name="Notes" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -424,7 +394,38 @@
                 </div>
             </div>
 
-            <div class="col-12">
+            <div class="col-12" id="AccordionHide3">
+                <div class="accordion" id="styleAccordion2">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse4" aria-expanded="true" aria-controls="collapseFour4">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Output Lab Option Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse4" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion4">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button id="" class="btn AddStockBtn" type="button" onclick="DynamicForOutputLabOption(this)" style="">
+                                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <form id="FormOutputLabOptionInfo">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12" id="AccordionHide2">
                 <div class="accordion" id="styleAccordion3">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
@@ -444,60 +445,58 @@
                                 <div class="row">
                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Shade Matching<span id="Asterisk">*</span></label>
+                                            <label>Shade Matching</label>
                                             <select class="form-control" id="ShadeMatching" name="ShadeMatching">
-                                                <option value="">--Select--</option>
-                                                <option value="1">Pass</option>
-                                                <option value="2">Fail</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>pH Value<span id="Asterisk">*</span></label>
+                                            <label>pH Value</label>
                                             <input type="text" class="form-control" placeholder="Ex: 6.8" id="pHLevel" name="pHLevel" />
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Dimensional Stability<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 8" id="DimensionalStability" name="DimensionalStability" />
+                                            <label>GSM</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 200" id="GSM" name="GSM">
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Color Fastness (Washing)<span id="Asterisk">*</span></label>
+                                            <label>Color Fastness (Washing)</label>
                                             <input type="text" class="form-control" placeholder="Ex: 6.8" id="ColorFastnessWashing" name="ColorFastnessWashing" />
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Color Fastness (Rubbing)<span id="Asterisk">*</span></label>
+                                            <label>Color Fastness (Rubbing)</label>
                                             <input type="text" class="form-control" placeholder="Ex: 7.9" id="ColorFastnessRubbing" name="ColorFastnessRubbing" />
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Color Fastness (Light)<span id="Asterisk">*</span></label>
+                                            <label>Color Fastness (Light)</label>
                                             <input type="text" class="form-control" placeholder="Ex: 8.0" id="ColorFastnessLight" name="ColorFastnessLight" />
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Hand Feel Appearance<span id="Asterisk">*</span></label>
+                                            <label>Shrinkage</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 8.0" id="Shrinkage" name="Shrinkage" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Hand Feel</label>
                                             <select class="form-control" id="HandFeelAppearance" name="HandFeelAppearance">
-                                                <option value="">--Select--</option>
-                                                <option value="1">Text Soft</option>
-                                                <option value="2">Stiff</option>
-                                                <option value="3">Smooth</option>
-                                                <option value="4">Rough</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-8 col-lg-8 col-sm-6 col-6">
+                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Remarks<span id="Asterisk">*</span></label>
-                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                            <label>Comments</label>
+                                            <textarea class="form-control" id="Comments" name="Comments" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">

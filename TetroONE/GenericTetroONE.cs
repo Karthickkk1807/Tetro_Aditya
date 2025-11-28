@@ -159,24 +159,7 @@ namespace TetroONE
             isdeleted = true;
 
             return isdeleted;
-        }
-        public static async Task<bool> IsAttachmentDeletedProductionAttachmentDetails(List<ProductionAttachmentDetails> lstattachment)
-        {
-            bool isdeleted = false;
-
-            foreach (var item in lstattachment)
-            {
-                if (item.AttachmentFilePath != null)
-                {
-                    string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\");
-                    string filePath = directoryPath + item.AttachmentFilePath.Replace("../", "\\").Replace("/", "\\");
-                    File.Delete(filePath.Replace("\\\\", "\\"));
-                }
-            }
-            isdeleted = true;
-
-            return isdeleted;
-        }
+        } 
         public static (string, string) GetFilePath(string reqfilename)
         {
             string guid = Guid.NewGuid().ToString();

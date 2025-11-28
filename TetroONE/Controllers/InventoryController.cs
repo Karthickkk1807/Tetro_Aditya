@@ -75,39 +75,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetManageStockDetails]", request);
             return Json(response);
         }
-         
-        [HttpGet]
-        [Route("GetOutWardPo")]
-        public IActionResult GetOutWardPo(int FranchiseId, int DistributorId)
-        {
-            GetOutWardPo request = new GetOutWardPo()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                FranchiseId = FranchiseId,
-                DistributorId = DistributorId
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetPurchaseOrderNoDetails_OutWard]", request);
-            return Json(response);
-
-        }
-
-        [HttpGet]
-        [Route("GetOutWardPoOutWard")]
-        public IActionResult GetOutWardPoOutWard(int PurchaseOrderId)
-        {
-            GetOutWardPoOutWard request = new GetOutWardPoOutWard()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                PurchaseOrderId = PurchaseOrderId,
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetPurchaseOrderDetails_OutWardPurchaseOrderId]", request);
-            return Json(response);
-        }
-
-      
-
+        
         [HttpGet]
         [Route("GetTransfer")]
         public IActionResult GetTransfer(int TransferId, DateTime? FromDate, DateTime? ToDate, int FranchiseId)

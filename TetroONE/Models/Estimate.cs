@@ -2,14 +2,13 @@
 
 namespace TetroONE.Models
 {
-    public class GetEstimate
+    public class GetQuotation
     {
         public int LoginUserId { get; set; }
-        public int? EstimateId { get; set; }
+        public int? PlantId { get; set; }
+        public int? QuotationId { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
-        public int? FranchiseId { get; set; }
-
     }
 
     public class DeleteEstimate

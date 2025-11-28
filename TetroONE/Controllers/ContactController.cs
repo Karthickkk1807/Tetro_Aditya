@@ -689,8 +689,7 @@ namespace TetroONE.Controllers
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetFranchiseDetails]", getFranchise);
 			return Json(response);
 		}
-
-
+         
 		[HttpPost]
 		[Route("InsertUpdateFranchise")]
 		public async Task<IActionResult> InsertUpdateFranchise()

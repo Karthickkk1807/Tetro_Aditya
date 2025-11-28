@@ -91,7 +91,7 @@ namespace TetroONE.Models
         public string? PlantName { get; set; }
         public string? PlantAddress { get; set; }
         public string? PlantCity { get; set; }
-        public string? PlantState { get; set; }
+        public int? PlantStateId { get; set; }
         public string? PlantZipCode { get; set; }
         public string? PlantContactNo { get; set; }
         public string? PlantEmail { get; set; }

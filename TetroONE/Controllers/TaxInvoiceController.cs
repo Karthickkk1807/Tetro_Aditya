@@ -33,8 +33,25 @@ namespace TetroONE.Controllers
 		{
 			return View();
 		}
-		 
-		[HttpGet]
+
+        [HttpGet]
+        [Route("GetQuotation")]
+        public IActionResult GetQuotation(int? QuotationId, int PlantId, DateTime FromDate, DateTime ToDate)
+        {
+            GetQuotation request = new GetQuotation()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                QuotationId = QuotationId == 0 ? null : QuotationId,
+                PlantId = PlantId,
+                FromDate = FromDate,
+                ToDate = ToDate
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetQuotationDetails]", request);
+            return Json(response);
+        }
+
+        [HttpGet]
 		[Route("GetSale")]
 		public IActionResult GetSale(DateTime FromDate, DateTime ToDate, int FranchiseId)
 		{
@@ -51,145 +68,7 @@ namespace TetroONE.Controllers
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetSaleDetails]", request);
 			return Json(response);
 		}
-
-		[HttpGet]
-		[Route("GetQuickBill")]
-		public IActionResult GetQuickBill(bool IsSale)
-		{
-			GetQuickBill request = new GetQuickBill()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				SaleId = null,
-				IsSale = IsSale,
-
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetSaleDetails]", request);
-			return Json(response);
-		}
-
-		[HttpGet]
-		[Route("GetOtherChargesType")]
-		public IActionResult GetOtherChargesType(string OtherChargesTypeName)
-		{
-
-			SaleOtherchargesType getInfo = new SaleOtherchargesType()
-			{
-				LoginuserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				OtherChargesType = OtherChargesTypeName,
-
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[DBO].[USP_GetOtherChargesDetailsByType]", getInfo);
-			return Json(response);
-		}
-
-
-		[HttpGet]
-		[Route("GetShifingDropdownByClientId")]
-		public IActionResult GetShifingDropdownByClientId(string moduleType, int moduleTypeId)
-		{
-			GetShiftingAddressDDByClientId request = new GetShiftingAddressDDByClientId()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				ModuleType = moduleType,
-				ModuleTypeId = moduleTypeId
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_AlternateAddressDetailsByClientId]", request);
-			return Json(response);
-
-		}
-
-		[HttpGet]
-		[Route("GetAlternateAddressDetails")]
-		public IActionResult GetAlternateAddressDetails(string type, int altAddressId, int moduleTypeId)
-		{
-			GetAlternateAddressDetails request = new GetAlternateAddressDetails()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				Type = type,
-				AltAddressId = altAddressId,
-				ModuleTypeId = moduleTypeId
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAlternateAddressDetails]", request);
-			return Json(response);
-
-		}
-
-		[HttpGet]
-		[Route("CompanyAddressDetails")]
-		public IActionResult CompanyAddressDetails()
-		{
-			CompanyAddressDetails request = new CompanyAddressDetails()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				CompanyId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimaryGroupSid)?.Value),
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[DBO].[USP_GetCompanyDetails]", request);
-			return Json(response);
-
-		}
-
-		[HttpGet]
-		[Route("DispatchAddressDetails")]
-		public IActionResult DispatchAddressDetails(int masterInfoId, string moduleName)
-		{
-			DispatchAddressDetails request = new DispatchAddressDetails()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				MasterInfoId = masterInfoId,
-				ModuleName = moduleName,
-
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[DBO].[USP_DD_GetMasterInfoDetails]", request);
-			return Json(response);
-
-		}
-
-
-		[HttpPost]
-		[Route("UpdateClientDetails")]
-		public IActionResult UpdateClientDetails([FromBody] UpdateClientInfo request)
-		{
-			request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-
-			response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateClientDetailsByBillingScreen]", request);
-			return Json(response);
-		}
-
-
-		[HttpGet]
-		[Route("GetEstimateDetails_ByClientId")]
-		public IActionResult GetEstimateDetails_ByClientId(string moduleName, int ClientId)
-		{
-			EstimateDetailsRequest request = new EstimateDetailsRequest()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				ModuleName = moduleName,
-				ClientId = ClientId,
-
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetInventoryNumberDetails_ByClientId]", request);
-			return Json(response);
-		}
-
-		[HttpGet]
-		[Route("ShippingAddressDDRequestForSale")]
-		public IActionResult ShippingAddressDDRequestForSale(int moduleId)
-		{
-			ShippingAddressDDRequestForSale request = new ShippingAddressDDRequestForSale()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				ModuleId = moduleId
-			};
-			return Json(GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetAliasNameDetails_ByModuleId]", request));
-		}
-
+		 
 		[HttpPost]
 		[Route("InsertUpdateSale")]
 		public async Task<IActionResult> InsertUpdateSale()
@@ -301,27 +180,7 @@ namespace TetroONE.Controllers
 			return Json(response);
 
 		}
-
-
-		[HttpGet]
-		[Route("NotNullGetSale")]
-		public IActionResult NotNullGetSale(int SaleId)
-		{
-
-			GetSale getInfo = new GetSale()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				SaleId = SaleId,
-				FromDate = null,
-				ToDate = null,
-				FranchiseId = null
-
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetSaleDetails]", getInfo);
-			return Json(response);
-		}
-
+		 
 		[HttpGet]
 		[Route("DeleteSaleDetails")]
 		public IActionResult DeletePurchaseBillDetails(int SaleId)
@@ -363,36 +222,7 @@ namespace TetroONE.Controllers
 			}
 			return Json(response);
 		}
-
-		[HttpGet]
-		[Route("GetEstimateMappingByEstimateId")]
-		public IActionResult GetEstimateMappingByEstimateId(int EstimateId)
-		{
-			EstimateMappingRequest request = new EstimateMappingRequest()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				EstimateId = EstimateId
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetEstimateDetails_ByEstimateId]", request);
-			return Json(response);
-		}
-
-		[HttpGet]
-		[Route("GetDeliveryChallanMappingByDeliveryChallanId")]
-		public IActionResult GetDeliveryChallanMappingByDeliveryChallanId(int DeliveryChallanId)
-		{
-			GetDCDeliveryChallanId request = new GetDCDeliveryChallanId()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				DeliveryChallanId = DeliveryChallanId
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetDeliveryChallanDetails_ByDeliveryChallanId]", request);
-			return Json(response);
-		}
-
-
+		 
 		[HttpGet]
 		[Route("TaxInvoicePrint")]
 		public IActionResult TaxInvoicePrint(int ModuleId, int ContactId, int NoOfCopies, string printType, int FranchiseId)
@@ -580,7 +410,62 @@ namespace TetroONE.Controllers
 			}
 		}
 
-		[HttpGet]
+		 
+        [HttpGet]
+        [Route("SaleOrderPrint")]
+        public IActionResult SaleOrderPrint(int NoOfCopies, string printType)
+        {
+            PDFTaxInvoice pdfService = new PDFTaxInvoice();
+            byte[] pdfContent = pdfService.SaleOrderPrintNew(NoOfCopies);
+
+            switch (printType?.ToLower())
+            {
+                case "mail":
+                    var base64PdfContent = Convert.ToBase64String(pdfContent);
+                    return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
+
+                case "download":
+                    return File(pdfContent, "application/pdf", "TaxInvoice.pdf");
+
+                case "preview":
+                    var customFileName = "Kavinesh Developer Testing";
+                    Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
+                    return File(pdfContent, "application/pdf");
+
+                case "print":
+                    return File(pdfContent, "application/pdf");
+
+                case "whatsapp":
+                    string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                    string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
+
+                    if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                    string fileName = "TaxInvoice_" + Guid.NewGuid() + ".pdf";
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    try
+                    {
+                        System.IO.File.WriteAllBytes(filePath, pdfContent);
+                        string fileUrlPath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
+                        return Json(new { status = true, message = $"PDF saved successfully.", data = fileUrlPath });
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(new { status = false, message = "Error saving PDF: " + ex.Message });
+                    }
+
+                default:
+                    return Json(new { status = false, message = "Invalid print type selected." });
+            }
+
+            // ⭐ FINAL REQUIRED RETURN
+            return Json(new { status = true, message = "" });
+        }
+
+
+        [HttpGet]
 		[Route("GetCreditLimitDetails")]
 		public IActionResult GetCreditLimitDetails(int ModuleId, bool IsEdit, int clientId, int FranchiseId)
 		{

@@ -6,6 +6,8 @@ $(document).ready(function () {
         $(this).attr('autocomplete', 'no-' + Math.random());
     });
 
+    Common.bindDropDownParent('PlantStateId', 'FormPlant', 'State'); 
+
     $('#AddAlternativeCompany').hide();
     //$('#BankInfoHide').hide();
     $('#UpdateSetting').show();
@@ -439,7 +441,7 @@ function PlantSuccess(response) {
         if (data[0][0].PlantId != null && data[0][0].PlantId != "") {
             $.each(data[0], function (index, branchData) {
                 html += `
-                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
                     <div class="custom-counter-box">
                         <img src="/assets/commonimages/plantlogo.svg" alt="Image" class="counter-image">
                         <div class="counter-content">
@@ -552,6 +554,7 @@ $(document).on('click', '#SavePlant', function (e) {
         objvalue.PlantId = PlantId > 0 ? PlantId : null;
         objvalue.PlantEmail = $('#FormPlant #PlantEmail').val() || null;
         objvalue.IsActive = true;
+        objvalue.PlantStateId = parseInt($('#PlantStateId').val());
         //objvalue.IsActive = $('#FormPlant #IsActive').is(':checked');
 
         var ContactPerson = [];

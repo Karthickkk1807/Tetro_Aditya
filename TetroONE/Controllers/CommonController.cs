@@ -68,8 +68,7 @@ namespace TetroONE.Controllers
 
 			return Ok("");
 		}
-
-
+		 
 		[HttpGet]
 		public IActionResult VendorDetailsByVendorId(int vendorId)
 		{
@@ -283,8 +282,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@LoginUserId", _userId);
                     command.Parameters.AddWithValue("@ModuleId", (object?)ModuleId ?? DBNull.Value);
                     command.Parameters.AddWithValue("@ModuleName", (object?)ModuleName ?? DBNull.Value);
-                   
-
+                    
                     command.Parameters.Add("@Status", SqlDbType.Int).Direction = ParameterDirection.Output;
                     command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
 
@@ -334,14 +332,14 @@ namespace TetroONE.Controllers
         }
 
 		[HttpGet]
-		public IActionResult GetAutoGenerate(string ModuleName, int? FranchiseId)
+		public IActionResult GetAutoGenerate(string ModuleName, int? PlantId)
 		{
 			GetAutoGenerate Get = new GetAutoGenerate()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 				ModuleName = ModuleName,
-				FranchiseId = FranchiseId
-			};
+                PlantId = PlantId
+            };
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAutoGenerateNoDetails]", Get);
 			return Json(response);

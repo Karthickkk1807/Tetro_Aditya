@@ -178,15 +178,13 @@
                                             <label>Country</label>
                                             <input type="text" class="form-control" placeholder="Ex: India" id="Country" name="Country" oninput="Common.allowOnlyTextLength(this,20)" />
                                         </div>
-                                    </div>
-
+                                    </div> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Zipcode</label>
                                             <input type="text" class="form-control" placeholder="Ex: 600028" id="ZipCode" name="ZipCode" oninput="Common.allowOnlyNumberLength(this,6)" />
                                         </div>
-                                    </div>
-
+                                    </div> 
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Contact No<span id="Asterisk">*</span></label>
@@ -205,14 +203,6 @@
                                             <input type="text" class="form-control" placeholder="Ex: 27AAACB1234C1Z5" id="GSTNumber" name="GSTNumber" oninput="Common.allowGSTNumber(this, 15)" />
                                         </div>
                                     </div>
-
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6" style="margin-top: 26px;" id="IsActiveHide">
-                                        <div class="form-group">
-                                            <input type="checkbox" id="IsActive" name="IsActive" style="position: relative;top: 2px;">
-                                            <label for="IsActive"> Is Active </label>
-                                        </div>
-                                    </div>
-
                                     <div class="col-md-3 col-lg-3 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Max Credit Limit<span id="Asterisk">*</span></label>
@@ -225,6 +215,23 @@
                                             <input type="text" class="form-control" placeholder="0.00" id="CurrentCreditLimit" name="CurrentCreditLimit" disabled />
                                         </div>
                                     </div>
+                                    <div class="col-md-12 col-lg-12 col-sm-12 col-12 justify-content-center" style="margin-top: 8px; display: flex;" id="IsActiveHide">
+                                        <div class="form-group">
+                                            <input type="checkbox" id="IsActive" name="IsActive" style="position: relative;top: 2px;">
+                                            <label for="IsActive"> Is Active </label>
+                                        </div>
+                                        <div class="mt-1 ml-4" id="RatingStars">
+                                            <div style="display:flex; gap:2px;">
+                                                <span style="margin-top: -4px;font-size: 14px;color: black;">Ratings : </span>
+                                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                                                <i class="fas fa-star" style="color:#f1c40f;"></i>
+                                                <i class="fas fa-star-half-alt" style="color:#f1c40f;"></i>
+                                                <i class="far fa-star" style="color:#f1c40f;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-12 col-lg-12 col-sm-12 col-12">
                                         <div class="form-group">
                                             <label>Remarks</label>

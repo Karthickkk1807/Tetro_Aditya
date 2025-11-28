@@ -412,3 +412,8 @@ textarea.form-controltext {
     border-bottom: 1px solid #111;
     margin-bottom: 10px;
 }
+ 
+#QuotationTable{
+    width: 100% !important;
+    margin-top: -16px !important;
+}

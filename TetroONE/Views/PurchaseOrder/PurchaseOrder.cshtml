@@ -18,8 +18,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox1"></div>
-                                    <h4 class="card-title" id="valCounterBox1"></h4>
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
                                 </div>
                             </div>
                         </div>
@@ -37,8 +37,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox2"></div>
-                                    <h4 class="card-title" id="valCounterBox2"></h4>
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
                                 </div>
                             </div>
                         </div>
@@ -56,8 +56,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox3"></div>
-                                    <h4 class="card-title" id="valCounterBox3"></h4>
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
                                 </div>
                             </div>
                         </div>
@@ -75,8 +75,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox4"></div>
-                                    <h4 class="card-title" id="valCounterBox4"></h4>
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
                                 </div>
                             </div>
                         </div>
@@ -155,11 +155,12 @@
     </div>
 </div>
 
-<div class="table-responsive">
-    <table class="table   table-head-bg-primary basic-datatables table-hover tableResponsive" style="max-height:200px" id="PurchaseOrderData">
-    </table>
+<div id="PurchaseOrderMainTableDynamic">
+    <div class="table-responsive">
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" style="max-height:200px" id="PurchaseOrderTable">
+        </table>
+    </div>
 </div>
-
 
 <div id="PurchaseOrderModal" class="modal" data-bs-loader-pms="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-xxl">
@@ -175,12 +176,11 @@
                         <legend class="w-auto">PurchaseOrder Status</legend>
                         <div class="horizontal-timeline">
                             <div class="timeline-progress-line-fill"></div>
-                            <div class="timeline-progress-line"></div> 
+                            <div class="timeline-progress-line"></div>
                         </div>
                     </fieldset>
                 </div>
                 <div class="px-3" id="POTopHeadbind">
-                   
                 </div>
                 <!--Dynmic table-->
                 <div class="px-3" id="MainPurchaseOrderPopTable">
@@ -195,8 +195,7 @@
                                                 <th>Product Name <span style="visibility: hidden;">11111111</span></th>
                                                 <th>Price<span style="visibility: hidden;">1111</span></th>
                                                 <th>Quantity</th>
-                                                <th>Sub Total<span style="visibility: hidden;">1</span></th>
-                                                <th class="d-none">Discount <span style="visibility: hidden;">111111111</span></th>
+                                                <th>Sub Total<span style="visibility: hidden;">1</span></th> 
                                                 <th id="CGSTHead">CGST<span style="visibility: hidden;">1111</span></th>
                                                 <th id="SGSTHead">SGST<span style="visibility: hidden;">1111</span></th>
                                                 <th id="IGSTHead">IGST<span style="visibility: hidden;">1111</span></th>
@@ -218,11 +217,11 @@
 
                                             <tr id="SubtotalRow" style="background-color: #e4edf5;">
                                                 <td colspan="4"><div class="summary-label"><a>Sub Total</a></div></td>
-                                                <td style="padding: 4px;" id="subtotalTotalDiv"> <input type="text" id="SubTotalTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td style="padding: 4px;" id="CGSTTotalDiv"> <input type="text" id="CGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td style="padding: 4px;" id="SGSTTotalDiv"> <input type="text" id="SGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td style="padding: 4px;" id="IGSTTotalDiv"> <input type="text" id="IGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td style="padding: 4px;" id="CESSTotalDiv"> <input type="text" id="CESSTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="subtotalTotalDiv"> <input type="text" id="SubTotalTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="CGSTTotalDiv"> <input type="text" id="CGSTTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="SGSTTotalDiv"> <input type="text" id="SGSTTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="IGSTTotalDiv"> <input type="text" id="IGSTTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                <td style="padding: 4px;" id="CESSTotalDiv"> <input type="text" id="CESSTotal" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
 
                                                 <td colspan="3"><input type="text" id="Subtotal" disabled class="form-control" placeholder="0.00" style="width: 165px;background: #fbfbfb !important;"></td>
                                             </tr>
@@ -232,57 +231,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="px-3" id="MainPurchaseProposalReturnPopTable">
-                    <div class="row DynmicTableRow">
-                        <div class="container-fluid mt-2">
-                            <div class="PurchaseProposalReturn-container">
-                                <div class="PurchaseProposalReturn-scroll">
-                                    <table class="table table-bordered" id="POProductTable">
-                                        <thead class="Dynthead">
-                                            <tr>
-                                                <th>S.No</th>
-                                                <th>Product Name <span style="visibility: hidden;">11111111111111111111</span></th>
-                                                <th>Price<span style="visibility: hidden;">1111</span></th>
-                                                <th>Quantity</th>
-                                                <th>Sub Total<span style="visibility: hidden;">1</span></th>
-                                                <th class="d-none">Discount <span style="visibility: hidden;">111111111</span></th>
-                                                <th id="PCGSTHead">CGST<span style="visibility: hidden;">1111</span></th>
-                                                <th id="PSGSTHead">SGST<span style="visibility: hidden;">1111</span></th>
-                                                <th id="PIGSTHead">IGST<span style="visibility: hidden;">1111</span></th>
-                                                <th id="PCESSHead">CESS<span style="visibility: hidden;">1111</span></th>
-                                                <th style="width: 65px;">Total</th>
-                                                <th style="width: 65px;">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="PurchaseProposalReturnTablebody" class="PurchaseProposalReturnbody">
-
-                                            <!--Add Item-->
-                                            <tr id="AddItemButtonRow">
-                                                <td colspan="12" class="add-item">
-                                                    <div class="add-item">
-                                                        <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-
-                                            <tr id="PRSubtotalRow" style="background-color: #e4edf5;">
-                                                <td colspan="4"><div class="summary-label"><a>Sub Total</a></div></td>
-                                                <td style="padding: 4px;" id="PsubtotalTotalDiv"> <input type="text" id="PRSubTotalTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
-                                                <td style="padding: 4px;" id="PCGSTTotalDiv"> <input type="text" id="PRCGSTTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
-                                                <td style="padding: 4px;" id="PSGSTTotalDiv"> <input type="text" id="PRSGSTTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
-                                                <td style="padding: 4px;" id="PIGSTTotalDiv"> <input type="text" id="PRIGSTTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
-                                                <td style="padding: 4px;" id="PCESSTotalDiv"> <input type="text" id="PRCESSTotal" class="form-control mt-2" placeholder="0.00" style="background: #fbfbfb !important; font-size: .875rem !important;" disabled></td>
-
-                                                <td colspan="3"><input type="text" id="PRSubtotal" disabled class="form-control" placeholder="0.00" style="width: 165px;background: #fbfbfb !important; font-size: .875rem !important;"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </div> 
                 <!--Dynmic table-->
                 <!--Add Discount Column & Add Notes Column-->
                 <div class="px-3">
@@ -506,6 +455,9 @@
                                 <i class="fas fa-save mr-1"></i>
                                 <span>Save</span><span class="shortcut-key">[ Ctrl+S ]</span>
                             </button>
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnSalePreviewbtn">
+                                <i class="fas fa-print mr-1"></i> <span> Sale Preview</span><span class="shortcut-key">[ Alt + P ]</span>
+                            </button>
                             <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPordersaveprintbtn">
                                 <i class="fas fa-print mr-1"></i> <span> Save &amp; Print</span><span class="shortcut-key">[ Alt + P ]</span>
                             </button>
@@ -558,10 +510,9 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-<script src="~/js/purchaseorder.js"></script>
-<script src="~/js/purchaseorderreturn.js"></script>
-<script src="~/js/productadd.js"></script>
+<script src="~/js/purchaseorder.js"></script> 
 <script src="~/js/inventory.js"></script>
+<script src="~/js/productadd.js"></script>
 <script>
     var access = @Html.Raw(Json.Serialize(access));
 

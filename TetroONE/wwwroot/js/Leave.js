@@ -117,7 +117,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.btn-edit', function () {
         if ($('#Leave-TabBtn').hasClass('active')) {
-            Common.removevalidation('FormLeave')
+            Common.removevalidation('FormLeave');
             leaveId = $(this).data('id');
             $('#SaveLeave').text('Update').removeClass('btn-success').addClass('btn-update');
             $('#SaveLeave').show();

@@ -17,7 +17,7 @@
 	{
 		public int LoginUserId { get; set; }
 		public string ModuleName { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
     }
     public class GetBillingAddress
     {

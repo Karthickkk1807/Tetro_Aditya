@@ -10,7 +10,7 @@ $(document).ready(function () {
     setPrimaryCheckboxEventListeners();
     $('#ShopAccordian').hide();
     $('#IsActiveHide').hide();
-    $('#CurrentlimitHide').removeClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2').addClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2');
+    //$('#CurrentlimitHide').removeClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2').addClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2');
     
     $(document).on('click', '#SaveClient', function (e) {
         if (!Common.validateEmailwithErrorwithParent('FormClient', 'Email')) {
@@ -82,7 +82,6 @@ $(document).ready(function () {
                 data: formDataMultiple,
                 contentType: false,
                 processData: false,
-
                 success: function (response) {
                     if (response.status) {
                         formDataMultiple = new FormData();
@@ -139,7 +138,7 @@ function ClientSuccess(response) {
         $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
         var columns = Common.bindColumn(data[1], ['ClientId', 'Status_Color']);
-        bindTableForClient('ClientTable', data[1], columns, -1, 'ClientId', '330px', true, access);
+        Common.bindTableStarRating('ClientTable', data[1], columns, -1, 'ClientId', '330px', true, access);
     }
 }
 
@@ -191,13 +190,12 @@ $(document).on('click', '#AddClient', function () {
     $('#SaveClient').text('Save').addClass('btn-success').removeClass('btn-update');
     $('#loader-pms').hide();
     $('#IsActiveHide').hide();
-    $('#CurrentlimitHide').removeClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2').addClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2'); 
+    //$('#CurrentlimitHide').removeClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2').addClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2'); 
     $('#ClientCanvas .collapse').removeClass('show');
     $('#collapse1').addClass('show');
     $('#State').val('32');
     $('#Country').val('India');
-    $('#FormContactClient').empty('');
-
+    $('#FormContactClient').empty(''); 
 });
 
 
@@ -251,7 +249,7 @@ $(document).on('click', '.btn-edit', function () {
     Common.removeMessage('FormClient');
     $('#ShopAccordian').show();
     $('#IsActiveHide').show();
-    $('#CurrentlimitHide').removeClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2').addClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2');
+    //$('#CurrentlimitHide').removeClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2').addClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2');
     $("#ClientHeader").text('Edit Client Details');
     $('#fadeinpage').addClass('fadeoverlay');
     $('#SaveClient').text('Update').addClass('btn-update').removeClass('btn-success');

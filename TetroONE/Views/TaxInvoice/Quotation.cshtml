@@ -1,9 +1,9 @@
 ﻿@{
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Quotation, Context.Session);
 }
- 
-<link href="~/css/estimate.css" rel="stylesheet" />
- 
+
+<link href="~/css/quotation.css" rel="stylesheet" />
+
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
         <div class="row m-t-25">
@@ -18,8 +18,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox1"></div>
-                                    <h4 class="card-title" id="valCounterBox1"></h4>
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
                                 </div>
                             </div>
                         </div>
@@ -37,8 +37,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox2"></div>
-                                    <h4 class="card-title" id="valCounterBox2"></h4>
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
                                 </div>
                             </div>
                         </div>
@@ -56,8 +56,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox3"></div>
-                                    <h4 class="card-title" id="valCounterBox3"></h4>
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
                                 </div>
                             </div>
                         </div>
@@ -75,8 +75,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="lblCounterBox4"></div>
-                                    <h4 class="card-title" id="valCounterBox4"></h4>
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
                                 </div>
                             </div>
                         </div>
@@ -141,629 +141,127 @@
             <div class="add-imp-exp-btn">
                 <div class="exportsiconpop">
                     <span class="pop">
-                        <a id="customBtn_EstimateData" title="Add Estimate">
+                        <a id="AddQuotation" title="Add Estimate">
                             <img src="~/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
                         </a>
                     </span>
-                </div>
-            </div>
-        </div> 
-    </div>
-</div>
-
-<div class="table-responsive">
-    <table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="EstimateData">
-    </table>
-</div>
-  
-<div id="EstimateModal" class="modal" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                @* <h2 id="">Estimate</h2> *@
-                <h2 id="">Quotation</h2>
-                <span id="EstimateClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
-            </div>
-
-            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
-                <div class="Status-Div">
-                    <fieldset class="expensefild_1">
-                        <legend class="w-auto">Estimate Status</legend>
-                        <div class="horizontal-timeline">
-                            <div class="timeline-progress-line-fill"></div>
-                            <div class="timeline-progress-line"></div>
-
-
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="px-3">
-                    <div class="row DynPageRow-Div">
-                        <!--AddClientAddressColumn-->
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="AddClientlableColumn">
-                            <div class="row BilAddHead">
-                                <div class="d-flex justify-content-start p-2">
-                                    <h2 class="mb-0">Bill To Address</h2>
-                                </div>
-                            </div>
-                            <div class="row" style="height: 23vh; display: flex; align-items: center; justify-content: center;">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center" style="padding-right: 20px;position:relative;padding-left: 20px;align-items: center;">
-                                    <div class="dashed-border">
-                                        <label class="company-sign" id="AddVendorLable"> + Add Client </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--BillFromColumn-->
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-12" id="BillFromColumn" style="position: relative; display: none;">
-                            <form id="FormBillFrom" novalidate="novalidate">
-
-                                <div class="row BillFrom-info-container mt-2">
-                                    <div class="info-row" style="margin-right:15px; width:unset;">
-                                        <div class="info-label-Purchase" style="margin-top:10px;width: 75px;font-size: 15px; font-weight: 700; white-space: nowrap;">Bill From<span id="Asterisk">*</span></div>
-                                        <div class="info-colon"></div>
-                                        <div class="">
-                                            <div class="form-group mb-0 mr-2">
-                                                <select class="form-control" id="BillFrom" name="BillFrom" required>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="info-row" style="margin-right:15px; width:unset;">
-                                        <div class="info-value">
-                                            <a id="BillFromName" name="BillFromName"></a>
-                                        </div>
-                                    </div>
-                                    <div class="info-row" style="margin-right:15px; width:unset;">
-                                        <div class="info-value">
-                                            <a id="BillFromAddress" name="BillFromAddress"></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!--ClientColumn-->
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="ShippingColumn" style="position: relative; display: none;">
-                            <form id="FormClient" novalidate="novalidate">
-                                <div class="row BilAddHead px-1">
-                                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 mt-3 px-1">
-                                        <div class="d-flex">
-                                            <h2 class="mb-0">Ship From<span id="Asterisk">*</span></h2>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1">
-                                        <div class="form-group mb-0 AlternativeCompanyError">
-                                            <select class="form-control" id="AlternativeCompanyAddress" name="AlternativeCompanyAddress" required>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </form>
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <div class="info-container" id="">
-                                        <label id="WareHouseStoreId" name="WareHouseStoreId" style="display:none">tesstt</label>
-
-                                        @* <div id="StoreNameDiv" class="info-row">
-                                        <div class="info-label-Purchase">Name</div>
-                                        <div class="info-colon">:</div>
-                                        <div class="info-value">
-                                        <a id="StoreName" name="StoreName"></a>
-                                        </div>
-                                        </div> *@
-
-                                        <div id="StoreAddressDiv" class="info-row">
-                                            <div class="info-label-Purchase">Address</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StoreAddress" name="StoreAddress"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="StoreCityDiv" class="info-row">
-                                            <div class="info-label-Purchase">City</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StoreCity" name="StoreCity"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="StateNameDiv" class="info-row">
-                                            <div class="info-label-Purchase">State</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StateName" name="StateName"></a>
-                                            </div>
-                                        </div>
-
-
-                                        <div id="StoreContactNumberDiv" class="info-row">
-                                            <div class="info-label-Purchase">Mobile Number</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StoreContactNumber" name="StoreContactNumber"></a>
-                                            </div>
-                                        </div>
-
-                                        <div class="info-row d-none">
-                                            <div class="info-label-Purchase">StateId</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StateId" name="StateId"><option value="" style="font-weight: 400;">-- Select --</option><option value="1">JAMMU AND KASHMIR</option><option value="2">HIMACHAL PRADESH</option><option value="3">PUNJAB</option><option value="4">CHANDIGARH</option><option value="5">UTTARAKHAND</option><option value="6">HARYANA</option><option value="7">DELHI</option><option value="8">RAJASTHAN</option><option value="9">UTTAR PRADESH</option><option value="10">BIHAR</option><option value="11">SIKKIM</option><option value="12">ARUNACHAL PRADESH</option><option value="13">NAGALAND</option><option value="14">MANIPUR</option><option value="15">MIZORAM</option><option value="16">TRIPURA</option><option value="17">MEGHALAYA</option><option value="18">ASSAM</option><option value="19">WEST BENGAL</option><option value="20">JHARKHAND</option><option value="21">ODISHA</option><option value="22">CHHATTISGARH</option><option value="23">MADHYA PRADESH</option><option value="24">GUJARAT</option><option value="25">DAMAN AND DIU</option><option value="26">DADRA AND NAGAR HAVELI</option><option value="27">MAHARASHTRA</option><option value="29">KARNATAKA</option><option value="30">GOA</option><option value="31">LAKSHADWEEP</option><option value="32">KERALA</option><option value="33">TAMIL NADU</option><option value="34">PUDUCHERRY</option><option value="35">ANDAMAN AND NICOBAR</option><option value="36">TELANGANA</option><option value="37">ANDHRA PRADESH</option><option value="38">LADAKH</option><option value="97">OTHER TERRITORY</option><option value="96">OTHER COUNTRY</option></a>
-                                            </div>
-                                        </div>
-
-                                        <div class="info-row d-none">
-                                            <div class="info-label-Purchase">StoreId</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StoreNoId" name="StoreNoId"></a>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--ShippingColumn-->
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="ClientColumn" style="position: relative; display: none;">
-                            <form id="FormShipping" novalidate="novalidate">
-                                <div class="row BilAddHead">
-                                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 mt-3 px-1">
-                                        <div class="d-flex">
-                                            <h2 class="mb-0">Ship To<span id="Asterisk">*</span></h2>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1 overraphide" id="">
-                                        <div class="form-group mb-0">
-                                            <select class="form-control" id="ClientId">
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <div class="info-container" id="">
-                                        @* <div id="ClientNameDiv" class="info-row">
-                                        <div class="info-label-Purchase">Name</div>
-                                        <div class="info-colon">:</div>
-                                        <div class="info-value">
-                                        <a id="ClientName" name="ClientName"></a>
-                                        </div>
-                                        <label id="StoreIdVal" name="StoreIdVal" style="display:none"></label>
-                                        </div> *@
-                                        <div id="ClientAddressDiv" class="info-row">
-                                            <div class="info-label-Purchase">Address</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="ClientAddress" name="ClientAddress"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="ClientCountryDiv" class="info-row d-none">
-                                            <div class="info-label-Purchase">Country</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="ClientCountry" name="ClientCountry"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="ClientStateNameDiv" class="info-row d-none">
-                                            <div class="info-label-Purchase">Place Of Supply</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="ClientStateName" name="ClientStateName"></a>
-                                            </div>
-                                            <label id="StateCodeId" name="StateCodeId" style="display:none"></label>
-                                        </div>
-
-                                        <div id="ClientCityDiv" class="info-row">
-                                            <div class="info-label-Purchase">City</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="ClientCity" name="ClientCity"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="ClientEmailDiv" class="info-row d-none">
-                                            <div class="info-label-Purchase">Email</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="ClientEmail" name="ClientEmail"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="ClientContactNumberDiv" class="info-row">
-                                            <div class="info-label-Purchase">Mobile Number</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="ClientContactNumber" name="ClientContactNumber"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="ClientGSTNumberDiv" class="info-row">
-                                            <div class="info-label-Purchase">GST Number</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="ClientGSTNumber" name="ClientGSTNumber"></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="ClientNameDiv" class="info-row d-none">
-                                            <div class="info-label-Purchase">StateIdGet</div>
-                                            <div class="info-colon">:</div>
-                                            <div class="info-value">
-                                                <a id="StateIdGet" name="StateIdGet"></a>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            @*
-                            <div class="purchase-edit">
-                            <a title="Edit Billing Address" flow="left" class="purchaseedit-icon" id="VendorEdit">
-                            <i class="fas fa-pencil-alt"></i>
-                            </a>
-                            </div> *@
-
-
-                        </div>
-
-                        <!--POColumn-->
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-12" id="EstimateColumn">
-                            <form id="FormRightSideHeader">
-                                <div class="row mt-2">
-                                    <div class="col-lg-4 col-md-6 col-sm-6 col-6" id="EstimateNumberDiv">
-                                        <div class="form-group">
-                                            @* <label>Estimate No<span id="Asterisk">*</span></label> *@
-                                            <label>Quotation No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" id="EstimateNumber" name="EstimateNumber" placeholder="Quotation No" autocomplete="off" disabled="" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6 col-6" id="EstimateDateDiv">
-                                        <div class="form-group">
-                                            @* <label>Estimate Date<span id="Asterisk">*</span></label> *@
-                                            <label>Quotation Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" id="EstimateDate" name="EstimateDate" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6 col-6" id="validDateDiv">
-                                        <div class="form-group">
-                                            <label>Valid Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" id="ValidDate" name="ExpectedDeliveryDate" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!--Dynmic table-->
-                <div class="px-3">
-                    <div class="row DynmicTableRow">
-                        <div class="container-fluid mt-2">
-                            <div class="Purchasetable-container">
-                                <div class="Purchasetable-scroll">
-                                    <table class="table table-bordered" id="EstimateProductTable">
-                                        <thead class="Dynthead">
-                                            <tr>
-                                                <th>S.No</th>
-                                                <th>Product Name <span style="visibility: hidden;">111111111111111111111</span></th>
-                                                <th>Price <span style="visibility: hidden;">1111</span></th>
-                                                <th>Quantity</th>
-                                                <th id="DiscountColumn">Discount<span style="visibility: hidden;">1111</span></th>
-                                                <th>CGST<span style="visibility: hidden;">1111</span></th>
-                                                <th>SGST<span style="visibility: hidden;">1111</span></th>
-                                                <th>IGST<span style="visibility: hidden;">1111</span></th>
-                                                <th>CESS %<span style="visibility: hidden;">1111</span></th>
-                                                <th>Total</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="Dyntbody" id="EstimateProductTablebody">
-
-                                            <!--Add Item-->
-                                            <tr id="AddItemButtonRow">
-                                                <td colspan="12" class="add-item">
-                                                    <div class="add-item">
-                                                        <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <!--Add Item-->
-                                            <!--Subtotal-->
-                                            <tr style="background-color: #e4edf5;" id="SubtotalRow">
-                                                <td colspan="4"><div class="summary-label"><a>Sub Total</a></div></td>
-                                                <td><input id="discounttotal" type="text" class="form-control form-control-sm" placeholder="0.00" disabled></td>
-                                                <td id="CGSTTotalDiv"> <input type="text" id="CGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td id="SGSTTotalDiv"> <input type="text" id="SGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td id="IGSTTotalDiv"> <input type="text" id="IGSTTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td id="CESSTotalDiv"> <input type="text" id="CESSTotal" class="form-control form-control-sm" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                <td colspan="3"><input type="text" id="Subtotal" class="form-control" placeholder="0.00" style="width: 165px;background: #fbfbfb !important;" disabled></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Dynmic table-->
-                <!--Add Discount Column & Add Notes Column-->
-                <div class="px-3">
-                    <div class="row DynmicTableRow">
-                        <!--Notes & Terms Column-->
-                        <div class="col-lg-5 col-md-12 col-sm-12 col-12 order-2 order-md-2 order-lg-1 AddnotesDiv">
-                            <div class="row mt-3 mb-3">
-                                <!--Add Notes-->
-                                <div class="col-12">
-                                    <input class="AdddiscountLable px-0" id="AddNotesLable" type="button" value="+ Add Notes" fdprocessedid="ecr2ah">
-                                </div>
-                                <div id="AddNotes" class="col-12" style="display: none;">
-                                    <div class="addterms-Attchbg mb-2 mt-2">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Notes</label>
-                                                    <textarea class="form-controltext" id="AddNotesText" name="AddNotesText" rows="3"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <input class="AdddiscountLable px-0 mb-2" id="HideNotesLable" type="button" value="✖ Hide Notes">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Add Terms & Conditions-->
-                                <div class="col-12">
-                                    <input class="AdddiscountLable px-0" id="AddTermsLable" type="button" value="+ Add Terms &amp; Conditions" fdprocessedid="wlm3ic">
-                                </div>
-                                <div id="AddTerms" class="col-12" style="display: none;">
-                                    <div class="addterms-Attchbg mb-2 mt-2">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Terms and Conditions</label>
-                                                    <textarea class="form-controltext" id="TermsAndCondition" name="TermsAndCondition" rows="3"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <input class="AdddiscountLable px-0 mb-2" id="HideTermsLable" type="button" value="✖ Hide Terms &amp; Conditions">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Add Attachment-->
-                                <div class="col-12">
-                                    <input class="AdddiscountLable px-0" id="AddAttachLable" type="button" value="+ Add Attachment" fdprocessedid="7gduj">
-                                </div>
-                                <div id="AddAttachment" class="col-12" style="display: none;">
-                                    <div class="addterms-Attchbg mb-2 mt-2">
-                                        <div class="row">
-                                            <div class="col-12" style="height: 120px;margin-top:5px;">
-                                                <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 120px;">
-                                                    <!-- Add a custom button for choosing files -->
-                                                    <label class=" d-flex justify-content-center align-content-center mt-3 " style="text-decoration:underline; color:#7D7C7C;">
-                                                        <b>Click Here to Attach your files</b>
-                                                        <input type="file" id="fileInput" multiple="" class="custom-file-input valid" aria-invalid="false">
-                                                    </label>
-                                                    <div class="file-preview d-flex justify-content-center" id="preview" style="display: block;">
-                                                        <div class="attachrow">
-                                                            <div class="attachcolumn">
-                                                                <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
-                                                            </div>
-                                                            <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"> </ul></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 attachLableDiv">
-                                                <input class="AdddiscountLable px-0 mt-2" id="HideAttachlable" type="button" value="✖ Hide Attachment">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--Discount Column-->
-                        <div class="col-lg-7 col-md-12 col-sm-12 col-12 order-1 order-md-1 order-lg-2">
-                            <div class="row mt-3">
-                                <!--Discount Div-->
-                                <div class="col-12">
-                                    <div class="input-group-append d-flex justify-content-end">
-                                        <input class="dropdown-toggle AdddiscountLable px-0 btn" id="OtherchargesAdd" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="+ Add discount and More">
-                                        <div class="dropdown-menu" id="OtherChargesDropDown" style="left: unset;">
-                                            <a class="discountCharges ddlOtherCharges" OtherCharges="Discount">Add Discount</a>
-                                            <a class="OtherCharges ddlOtherCharges" OtherCharges="OtherCharges">Add Others</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <form id="frmtaxdiscountothers" class="w-100" novalidate="novalidate">
-                                    <div id="dynamicBindRow">
-                                    </div>
-                                </form>
-                                <!--Discount Div-->
-                                <!--Grand Total-->
-                                <div class="col-12">
-                                    <div class="mt-3">
-                                        <div id="RoundOffDiv" class="round-off-container">
-                                            <label for="roundOff" class="round-off-label">Round Off Value</label>
-                                            <input type="text" id="roundOff" name="roundOff" class="form-control round-off-input" placeholder="0.00" disabled="" fdprocessedid="t5zlur">
-                                        </div>
-                                        <div class="round-off-container">
-                                            <label for="GrantTotal" class="round-off-label">Grand Total</label>
-                                            <input type="text" id="GrantTotal" name="GrantTotal" class="form-control round-off-input" placeholder="0.00" disabled="" fdprocessedid="gq8ki">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--loyalty-point-container-->
-                                <!--Paid-From-container-->
-                                <div class="col-12 d-none">
-                                    <form id="FormPaidBalance" novalidate="novalidate">
-                                        <div class="row justify-content-end">
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                                                <div class="form-group">
-                                                    <label>Paid From</label>
-                                                    <select class="form-control" id="PaidFrom" name="PaidFrom" required="">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-6 col-6" id="InvoiceNoDiv">
-                                                <div class="form-group">
-                                                    <label>Days</label>
-                                                    <input type="text" class="form-control" id="PaidFromDays" name="PaidFromDays" placeholder="Days" oninput="Common.allowOnlyNumberLength(this,6)" autocomplete="off" maxlength="3" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4 col-md-6 col-sm-6 col-6" id="InvoiceNoDiv">
-                                                <div class="form-group">
-                                                    <label>Due Date</label>
-                                                    <input type="date" class="form-control" id="PaidFromDueDate" name="PaidFromDueDate" autocomplete="off" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="row justify-content-end">
-                                                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6 mt-2" style="align-content:center;align-items:center">
-                                                        <div id="ExistingBalRow" class="pl-3">
-                                                            <div class="d-flex justify-content-center">
-                                                                <lable class="ExtngLable" id="LimitValue" style="color: #ad5d00;">Existing Balance ()</lable>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6 mt-2 PartiallyPaidHide" style="align-content: center; align-items: center; display: none;">
-                                                        <div class="d-flex justify-content-end">
-                                                            <input type="checkbox" name="IsPartiallyPaid" id="IsPartiallyPaid" value="">
-                                                            <lable class="ExtngLable ml-1">Partially Paid</lable>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-6 col-lg-6 col-md-4 col-sm-12 col-12" id="ModeOfPaymentContainer">
-                                                        <div id="appendContainer" class="my-2">
-                                                            <div class="input-group" id="ModeOfPaymentStaticContainer">
-                                                                <!-- Store Name Input on the Left -->
-                                                                <input type="text" id="PaymenyTextBox" class="form-control PaymenyTextBox" placeholder="Amount">
-
-                                                                <!-- Dropdown for Bulk Actions in the Middle -->
-                                                                <div class="payment-drop">
-                                                                    <select class="form-select form-control ModeOfPaymentId" id="ModeOfPaymentId" required><option value="" style="font-weight: 400;">-- Select --</option><option value="1">Cash</option><option value="2">UPI	Paytm</option><option value="3">Net banking</option><option value="4">Paytm</option></select>
-                                                                </div>
-
-                                                                <!-- Add Button on the Right -->
-                                                                <button id="addPartialPayment" class="btn AddStockBtn ml-2" type="button">
-                                                                    <i class="fas fa-plus"></i>
-                                                                </button>
-                                                            </div>
-                                                            <div class="input-group mt-2 mb-2 MOPdynamicRow">
-                                                                <input type="text" id="PaymenyTextBox2" name="PaymenyTextBox2" class="MOPAmount form-control" placeholder="Amount" oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" required="" fdprocessedid="ndswvr">
-                                                                <div class="payment-drop">
-                                                                    <select class="form-select form-control ModeOfPaymentId" name="ModeOfPaymentId2" id="ModeOfPaymentId2" required="" fdprocessedid="7vuna">
-                                                                    </select>
-                                                                </div>
-                                                                <button class="btn DynrowRemove PaymentDynremoveBtn ml-2 mt-0" type="button" fdprocessedid="45ro5">
-                                                                    <i class="fas fa-trash-alt"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--Statuscolumn-->
-                        <div class="Statuscolumn col-12 order-3">
-                            <form id="FormStatus">
-                                <div class="row" style="margin-top: 5px;">
-                                    <div class="col-lg-9 col-md-8 col-6" style="visibility: hidden;">
-                                        <div class="form-group">
-                                            <label>Balance Amount</label>
-                                            <input type="text" class="form-control" id="BalanceAmount" name="BalanceAmount" placeholder="0.00" disabled="" autocomplete="off" maxlength="10">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-4 col-6">
-                                        <div class="form-group">
-                                            <label>Status<span id="Asterisk">*</span></label>
-                                            <select id="EstimateStatusId" class="form-control" required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!--Add Discount Column & Add Notes Column-->
-            </div>
-
-            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="button-container d-lg-flex d-block justify-content-center">
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="EstimateSaveBtn"> <span>Save</span><span class="shortcut-key">[ Ctrl+S ]</span></button>
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPrintEstimate">
-                                <i class="fas fa-print mr-1"></i> <span> Save &amp; Print</span><span class="shortcut-key">[ Alt + P ]</span>
-                            </button>
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPreviewEstimate">
-                                <i class="fas fa-save mr-1"></i> <span>Preview</span><span class="shortcut-key">[ Alt + V ]</span>
-                            </button>
-
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnsharePorder" data-bs-toggle="modal" data-bs-target="#emailModal">
-                                <i class="fas fa-share"></i> <span>Share</span><span class="shortcut-key">[ Alt + H ]</span>
-                            </button>
-                            <!-- Dropdown Menu -->
-                            <ul class="dropdown-menu shadow-lg sharedrop" id="ShareDropdownitems" aria-labelledby="btnsharePorder" style="display: none;">
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" id="EstimateWhatsAppBtn">
-                                        <i class="fab fa-whatsapp me-3 whatsapp-icon"></i> WhatsApp
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" id="EstimateMailBtn">
-                                        <i class="fas fa-envelope me-3 email-icon"></i> Email
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="#" id="downloadLink">
-                                        <i class="fas fa-download me-3 download-icon"></i> Download
-                                    </a>
-                                </li>
-
-                                <div id="SpinnerWhatsApp" style="position: absolute; display: none;">
-                                    <div class="spinner-border" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </div>
-                            </ul>
-
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="EstimateCancelBtn">
-                                <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div id="QuotationMainTableDynamic">
+    <div class="table-responsive">
+        <table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="QuotationTable">
+        </table>
+    </div>
+</div>
+
+
+<div id="QuotationCanvas" class="offcanvas-container">
+    <div class="offcanvas-header d-flex align-items-center justify-content-between">
+        <h2 id="QuotationHeader">Add Quotation</h2>
+        <span id="CloseCanvas" class="close"
+              style="font-size:30px;cursor:pointer;color:white;"
+              title="Close">&times;</span>
+    </div>
+    <div class="offcanvas-body">
+        <form id="FormQuotation">
+            <div class="row">
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Quotation No<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: QUT/SA/001" id="QuotationNo" name="QuotationNo" maxlength="50" required disabled />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Date<span id="Asterisk">*</span></label>
+                        <input type="date" class="form-control" id="Date" name="Date" maxlength="500" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Client<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ClientId" name="ClientId"></select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Valid To<span id="Asterisk">*</span></label>
+                        <input type="date" class="form-control" id="ValidTo" name="ValidTo" maxlength="500" />
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                    <fieldset class="expensefild1">
+                        <legend class="w-auto">
+                            Fabric & Color Info
+                            <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowColor(this)" style="position: absolute; top: 1px; right: 21px;">
+                                <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                            </button>
+                        </legend>
+                        <div class="DynamicColorList"></div>
+                    </fieldset>
+                </div>
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                    <fieldset class="expensefild1">
+                        <legend class="w-auto">
+                            Process Info
+                            <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowProcess(this)" style="position: absolute; top: 1px; right: 21px;">
+                                <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                            </button>
+                        </legend>
+                        <div class="DynamicProcessList"></div>
+                    </fieldset>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Created By<span id="Asterisk">*</span></label>
+                        <select class="form-control" id="CreatedBy" name="CreatedBy"></select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Status<span id="Asterisk">*</span></label> 
+                        <select class="form-control" id="StatusId" name="StatusId">
+                            <option value="">--Select--</option>
+                            <option value="1">Draft</option>
+                            <option value="2">Approved</option>
+                            <option value="3">Sent</option>
+                            <option value="4">Accepted</option>
+                            <option value="5">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        <textarea class="form-control" id="Remark" autocomplete="off" name="Remark" rows="1" maxlength="250" placeholder="Remarks"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="offcanvas-footer">
+        <div class="col-md-12 col-lg-12">
+            <div class="form-group text-center">
+                <div class="card-action">
+                    <a class="btn btn-success m-r-20 text-white" id="SaveQuotation">Save</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-<script src="~/js/estimate.js"></script>
+<script src="~/js/quotation.js"></script>
 <script src="~/js/productadd.js"></script>
-<script src="~/js/inventory.js"></script>
 
 <script>
 

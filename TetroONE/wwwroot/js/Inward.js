@@ -1,44 +1,95 @@
-﻿$(document).ready(function () {
-    MainGridData();
+﻿var PlantMappingId = 0;
+var InwardId = 0;
 
-    const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+$(document).ready(function () {
+
+    Common.bindDropDown('ClientId', 'Client');
+    Common.bindDropDown('TransactionId', 'TransactionType');
+    Common.bindDropDown('ReceivedBy', 'SampleReceivedBy');
+
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
+
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    let displayedDate = new Date(currentYear, currentMonth);
+    updateMonthDisplay(displayedDate);
+    $('#increment-month-btn2').hide();
 
     $('#decrement-month-btn2').click(function () {
-        let currentText = $('#dateDisplay2').text().trim();
-        let [currentMonth, currentYear] = currentText.split(" ");
-        let monthIndex = months.indexOf(currentMonth);
+        displayedDate.setMonth(displayedDate.getMonth() - 1);
+        updateMonthDisplay(displayedDate);
+        $('#increment-month-btn2').show();
+        $('#tableFilter').val('');
 
-        if (monthIndex === -1) return;
-
-        monthIndex--;
-        if (monthIndex < 0) {
-            monthIndex = 11;
-            currentYear = parseInt(currentYear) - 1;
-        }
-
-        let newMonth = months[monthIndex];
-        $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), QuotationId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
-        let currentText = $('#dateDisplay2').text().trim();
-        let [currentMonth, currentYear] = currentText.split(" ");
-        let monthIndex = months.indexOf(currentMonth);
+        displayedDate.setMonth(displayedDate.getMonth() + 1);
+        updateMonthDisplay(displayedDate);
 
-        if (monthIndex === -1) return;
-
-        monthIndex++;
-        if (monthIndex > 11) {
-            monthIndex = 0;
-            currentYear = parseInt(currentYear) + 1;
-        }
-
-        let newMonth = months[monthIndex];
-        $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), QuotationId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardSuccess, null);
     });
+
+    function updateMonthDisplay(date) {
+        let monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        let month = monthNames[date.getMonth()];
+        let year = date.getFullYear();
+        $('#dateDisplay2').text(month + " " + year);
+
+        let now = new Date();
+        let currentMonth = now.getMonth();
+        let currentYear = now.getFullYear();
+
+        if (date.getFullYear() > currentYear || (date.getFullYear() === currentYear && date.getMonth() >= currentMonth)) {
+            $('#increment-month-btn2').hide();
+        } else {
+            $('#increment-month-btn2').show();
+        }
+    }
+
+    var today = new Date().toISOString().split('T')[0];
+    $('#FromDate, #ToDate').attr('max', today);
+    $(document).on('change', '#FromDate,#ToDate', function () {
+        var fromDate = $('#FromDate').val();
+        $('#tableFilter').val('');
+        $('#ToDate').attr('min', fromDate);
+        if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
+            Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), QuotationId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString() }, GetInwardSuccess, null);
+        }
+    });
+
+    $(document).on('click', '#downloadExcelBtn', function () {
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        $('#tableFilter').val('');
+
+        displayedDate = new Date(currentYear, currentMonth);
+        $('#increment-month-btn2').show();
+
+        updateMonthDisplay(displayedDate);
+
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), QuotationId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardSuccess, null);
+    });
+
+    $(document).on('click', '#bulkEmployee', function () {
+        $('#FromDate').val('');
+        $('#ToDate').val('');
+        $('#ToDate').removeAttr('max');
+        $('#tableFilter').val('');
+    });
+
+    var fnData = Common.getDateFilter('dateDisplay2');
+    Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), QuotationId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardSuccess, null);
 
     $(document).on('click', '#AddInWard', function () {
         var windowWidth = $(window).width();
@@ -51,8 +102,13 @@
         }
         $('#fadeinpage').addClass('fadeoverlay');
         CanvasOpenFirstShowingJobOrder();
-        $('#AutoGenertedNo').empty().append($('<option>', { value: '', text: '--Select--', }));
-        $('#DivName').hide();
+        $('#TransactionNo').empty().append($('<option>', { value: '', text: '--Select--', }));
+
+        $('#InWardStatusDiv').hide(); 
+
+        $('#FormProcessing').empty();
+        duplicateFabric();
+
         $("#FormInWard")[0].reset();
         $('#InWardHeader').text('InWard Details');
         $('#SaveInWard').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
@@ -68,8 +124,15 @@
             $("#InWardCanvas").css("width", "39%");
         }
         $('#fadeinpage').addClass('fadeoverlay');
-        CanvasOpenFirstShowingJobOrder(); 
+        CanvasOpenFirstShowingJobOrder();
         $('#InWardHeader').text('Edit InWard Details');
+        $('#TransactionNo').empty().append($('<option>', { value: '', text: '--Select--', }));
+
+        $('#FormProcessing').empty();
+        duplicateFabric();
+
+        $('#InWardStatusDiv').show(); 
+
         $('#SaveInWard').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
     });
 
@@ -80,47 +143,24 @@
 
     $(document).on('change', '#TransactionId', function () {
         var $thisVal = $(this).val();
-        var $autoNo = $('#AutoGenertedNo');
-        var $personNameLable = $('#PersonNameLable');
-        var $typeNo = $('#TypeNo');
-         
-        $autoNo.empty().append($('<option>', { value: '', text: '--Select--' }));
-        $personNameLable.text('Name');
-        $typeNo.text('Type No');
-
-        $thisVal == 4 || $thisVal == '' ? $('#DivName').hide() : $('#DivName').show(); 
-         
-        if (!$thisVal) return;
-
-        var dataMap = {
-            1: { prefix: 'PO/NO/', label: 'Vendor Name', typelable: 'PurchaseOrder No' },
-            2: { prefix: 'SALE/NO/', label: 'Client Name', typelable: 'SaleOrder No' },
-            3: { prefix: 'JOB/NO/', label: 'Client Name', typelable: 'JobOrder No' },
-            default: { prefix: 'TRANS/NO/', label: 'Client Name', typelable: 'Transfer No' }
-        };
-
-        var data = dataMap[$thisVal] || dataMap.default;
-         
-        for (var i = 1; i <= 6; i++) {
-            $autoNo.append($('<option>', {
-                value: i,
-                text: data.prefix + ('00' + i).slice(-3)
-            }));
+        if ($thisVal != '' || $thisVal != null) {
+            var EditData = {
+                PlantId: parseInt(PlantMappingId), Transactiontype: parseInt($thisVal)
+            }
+            Common.ajaxCall("GET", "/Productions/GetTransactionTypeNoDetails", EditData,
+                function (response) {
+                    if (response.status) {
+                        Common.bindDropDownSuccess(response.data, "TransactionNo");
+                    }
+                },
+                null
+            );
         }
-         
-        $personNameLable.text(data.label);
-        $typeNo.text(data.typelable);
-    });
-
-    $(document).on('change', '#AutoGenertedNo', function () {
-        var $thisval = $(this).val();
-        if ($thisval != null || $thisval != '') {
-            $('#PersonName').val('2');
-        } else {
-            $('#PersonName').val('');
+        else {
+            $('#TransactionNo').empty().append($('<option>', { value: '', text: '--Select--', }));
         }
     });
-
+     
     $('.accordion-header').on('click', function () {
         var $offcanvas = $(this).closest('.offcanvas-container');
         var $accordion = $(this).closest('.accordion');
@@ -140,242 +180,153 @@ function CanvasOpenFirstShowingJobOrder() {
     $('#InWardCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
     $('html, body').animate({
         scrollTop: $('#InWardCanvas').offset().top
-    }, 'fast'); 
+    }, 'fast');
 }
 
-function MainGridData() {
+function GetInwardSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+        var CounterBox = Object.keys(data[0][0]);
 
-    const InwardData = [
-        {
-            Date: "02 Oct 2025",
-            InWardNo: "IN/NO/001",
-            Transaction: "Purchase Order",
-            OrderNo: "PO/NO/001",
-            ContactName: "RPKS & CO",
-            RecivedQty: "125 KGS",
-            FabricType: "Woven",
-            Status: "Draft",
-            Status_Color: "#6c757d"
-        },
-        {
-            Date: "05 Oct 2025",
-            InWardNo: "IN/NO/002",
-            Transaction: "Sale Order",
-            OrderNo: "SALE/NO/004",
-            ContactName: "H&M Group",
-            RecivedQty: "200 KGS",
-            FabricType: "Knitted",
-            Status: "Approved",
-            Status_Color: "#28a745"
-        },
-        {
-            Date: "10 Oct 2025",
-            InWardNo: "IN/NO/003",
-            Transaction: "Job Order",
-            OrderNo: "JOB/NO/006",
-            ContactName: "Nike",
-            RecivedQty: "150 KGS",
-            FabricType: "Terry",
-            Status: "Sent",
-            Status_Color: "#007bff"
-        },
-        {
-            Date: "14 Oct 2025",
-            InWardNo: "IN/NO/004",
-            Transaction: "Transfer Order",
-            OrderNo: "TRANS/NO/001",
-            ContactName: "Inditex",
-            RecivedQty: "175 KGS",
-            FabricType: "Woven",
-            Status: "Accepted",
-            Status_Color: "#17a2b8"
-        },
-        {
-            Date: "18 Oct 2025",
-            InWardNo: "IN/NO/005",
-            Transaction: "Purchase Order",
-            OrderNo: "PO/NO/005",
-            ContactName: "RM CHEMICAL",
-            RecivedQty: "98 KGS",
-            FabricType: "Knitted",
-            Status: "Cancelled",
-            Status_Color: "#dc3545"
-        },
-        {
-            Date: "20 Oct 2025",
-            InWardNo: "IN/NO/006",
-            Transaction: "Sale Order",
-            OrderNo: "SALE/NO/007",
-            ContactName: "Raymond Ltd",
-            RecivedQty: "120 KGS",
-            FabricType: "Terry",
-            Status: "Approved",
-            Status_Color: "#28a745"
-        },
-        {
-            Date: "22 Oct 2025",
-            InWardNo: "IN/NO/007",
-            Transaction: "Job Order",
-            OrderNo: "JOB/NO/008",
-            ContactName: "Arvind Limited",
-            RecivedQty: "185 KGS",
-            FabricType: "Knitted",
-            Status: "Draft",
-            Status_Color: "#6c757d"
-        },
-        {
-            Date: "24 Oct 2025",
-            InWardNo: "IN/NO/008",
-            Transaction: "Transfer Order",
-            OrderNo: "TRANS/NO/016",
-            ContactName: "Gokaldas Exports Ltd",
-            RecivedQty: "160 KGS",
-            FabricType: "Woven",
-            Status: "Sent",
-            Status_Color: "#007bff"
-        }
-    ];
-     
-    const inwardColumns = [
-        { data: 'Date', name: 'Date', title: 'Date' },
-        { data: 'InWardNo', name: 'InWardNo', title: 'InWard No' },
-        { data: 'Transaction', name: 'Transaction', title: 'Transaction' },
-        { data: 'OrderNo', name: 'OrderNo', title: 'Order No' },
-        { data: 'ContactName', name: 'ContactName', title: 'Contact Name' },
-        { data: 'RecivedQty', name: 'RecivedQty', title: 'Received Qty' },
-        { data: 'FabricType', name: 'FabricType', title: 'Fabric Type' },
-        { data: 'Status', name: 'Status', title: 'Status' }
-    ];
+        $("#CounterTextBox1").text(CounterBox[0]);
+        $("#CounterTextBox2").text(CounterBox[1]);
+        $("#CounterTextBox3").text(CounterBox[2]);
+        $("#CounterTextBox4").text(CounterBox[3]);
 
+        $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
+        $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
+        $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
+        $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
-    $('#MainGrid').empty('');
-    var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="InWardTable">
+        $('#MainGrid').empty('');
+        var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="InWardTable">
                 </table>
             `;
-    $('#MainGrid').append(html);
-    bindTable('InWardTable', InwardData, inwardColumns, 8, 'Date', '350px', true, { update: true, delete: true });
+        $('#MainGrid').append(html);
+
+        var columns = Common.bindColumn(data[1], ['InWardId', 'Status_Color']);
+        Common.bindTable('InWardTable', data[1], columns, -1, 'InWardId', '360px', true, access);
+    }
 }
 
-function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
+function duplicateFabric() {
+    let numberIncr = Math.random().toString(36).substring(2);
+    var rowadd = $('.DynamicRowProcessing').length;
+    var DynamicLableNo = rowadd + 1;
 
-    if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
-        try {
-            $('#' + tableid).DataTable().destroy();
-        } catch (error) {
-            console.error('DataTable destroy error:', error);
-            return;
-        }
-    }
+    var htmlRow = `
+        <div class="row DynamicRowProcessing">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
+                <label class="DynamicLable">Fabric Details ${DynamicLableNo}</label>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Fabric<span id="Asterisk">*</span></label>
+                    <select class="form-control FabricType" id="FabricType${numberIncr}" name="FabricType${numberIncr}" required> 
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Width<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control Width" placeholder="Ex: 30" id="Width${numberIncr}" name="Width${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>GSM<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control GSM" placeholder="Ex: 200" id="GSM${numberIncr}" name="GSM${numberIncr}" required />
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Received Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 40" id="QuantityReceived${numberIncr}" name="QuantityReceived${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>No Of Roll<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control RollCount" placeholder="Ex: 100" id="RollCount${numberIncr}" name="RollCount${numberIncr}" required />
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Storage Location<span id="Asterisk">*</span></label>
+                    <select class="form-control StorageLocationId" id="StorageLocationId${numberIncr}" name="StorageLocationId${numberIncr}" required>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Lab Option</label>
+                    <input type="text" class="form-control LabOption" placeholder="Ex: 12" id="LabOption${numberIncr}" name="LabOption${numberIncr}" maxlength="50" />
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                <div class="form-group">
+                    <label>Process Involved</label>
+                    <select class="form-control ProcessTypeId" id="ProcessTypeId${numberIncr}" name="ProcessTypeId${numberIncr}" multiple>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-9 col-lg-9 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea class="form-control Remarks" id="Remarks${numberIncr}" name="Remarks${numberIncr}" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-3 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
+                <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
+                    <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+    $('#FormProcessing').append(htmlRow);
 
-    $('#' + tableid).empty();
+    $('.ProcessTypeId').select2({
+        dropdownParent: $('#FormProcessing'),
+        width: '100%',
+        placeholder: '--Select ProcessType--'
+    }).on('select2:open', function () {
+        $('.select2-container').css('z-index', 1100);
+    }).trigger('change');
 
-    const StatusColumnIndex = columns.findIndex(col => col.data === 'Status');
-    const LocationColumnIndex = columns.findIndex(col => col.data === 'HiringLocation');
-    const SourcesColumnIndex = columns.findIndex(col => col.data === 'Sources');
+    var ProcessTypeId = "ProcessTypeId" + numberIncr;
+    var FabricTypeId = "FabricType" + numberIncr;
+    var StorageLocationId = "StorageLocationId" + numberIncr;
 
-    const renderColumn = [];
+    Common.bindDropDown(FabricTypeId, 'FabricType'); 
+    Common.bindDropDown(StorageLocationId, 'StorageLocation'); 
+    Common.bindDropDownMulti(ProcessTypeId, 'ProcessType');
 
-    // Status rendering with color badge
-    if (StatusColumnIndex !== -1) {
-        renderColumn.push({
-            targets: StatusColumnIndex,
-            render: function (data, type, row) {
-                if (type === 'display' && row.Status_Color) {
-                    return `
-                        <div>
-                            <span class="ana-span badge text-white" 
-                                  style="background:${row.Status_Color};width: 115px;font-size: 12px;height: 23px;">
-                                ${row.Status}
-                            </span>
-                        </div>`;
-                }
-                return data;
-            }
-        });
-    }
-
-    // Hiring Location with red dot if hot
-    if (LocationColumnIndex !== -1) {
-        renderColumn.push({
-            targets: LocationColumnIndex,
-            render: function (data, type, row) {
-                if (type === 'display') {
-                    const hotDot = row.IsHot ? '<span style="color:red;font-size:20px;">•</span> ' : '';
-                    return hotDot + data;
-                }
-                return data;
-            }
-        });
-    }
-
-    // Add action buttons column
-    if (isAction && (access.update || access.delete)) {
-        columns.push({
-            data: "Action", name: "Action", title: "Action", orderable: false
-        });
-
-        renderColumn.push({
-            targets: actionTarget,
-            render: function (data, type, row) {
-                let html = '';
-                if (access.update) {
-                    html += `<i class="btn-edit mx-1" data-id="${row[editcolumn]}" title="Edit">
-                                <img src="/assets/commonimages/edit.svg" />
-                             </i>`;
-                }
-                if (access.delete) {
-                    html += `<i class="btn-delete alert_delete mx-1" data-id="${row[editcolumn]}" title="Delete">
-                                <img src="/assets/commonimages/delete.svg" />
-                             </i>`;
-                }
-                return html;
-            }
-        });
-    }
-
-    const hasValidData = data.length > 0 && Object.values(data[0]).some(v => v !== null);
-
-    const lang = $(window).width() <= 575 ? {
-        "paginate": {
-            "next": ">",
-            "previous": "<"
-        }
-    } : {};
-
-    const table = $('#' + tableid).DataTable({
-        dom: "Bfrtip",
-        bDestroy: true,
-        responsive: true,
-        data: data,
-        columns: columns,
-        scrollY: scrollpx,
-        sScrollX: "100%",
-        scrollCollapse: true,
-        aaSorting: [],
-        info: hasValidData,
-        paging: hasValidData,
-        pageLength: 7,
-        lengthMenu: [7, 14, 50],
-        language: $.extend({}, lang, {
-            emptyTable: `
-                <div>
-                    <img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">
-                    No records found
-                </div>`
-        }),
-        columnDefs: renderColumn
-    });
-
-    $('#tableFilter').on('keyup', function () {
-        table.search($(this).val()).draw();
-    });
-
-    // Auto adjust columns after small delay
-    setTimeout(function () {
-        const table1 = $('#' + tableid).DataTable();
-        if (window.Common && Common.autoAdjustColumns) {
-            Common.autoAdjustColumns(table1);
-        }
-    }, 100);
+    updateRemoveButtons();
 }
 
+function updateRowLabels() {
+    $('.DynamicRowProcessing').each(function (index) {
+        $(this).find('.DynamicLable').text('Fabric Details ' + (index + 1));
+    });
+}
+
+function updateRemoveButtons() {
+    var rows = $('.DynamicRowProcessing');
+    rows.each(function (index) {
+        var removeButtonDiv = $(this).find('.thiswillshow');
+        if (rows.length == 1) {
+            removeButtonDiv.css('display', 'none');
+        } else {
+            removeButtonDiv.css('display', 'block');
+        }
+    });
+}
+
+function removeRow(button) {
+    var totalRows = $('.DynamicRowProcessing').length;
+    if (totalRows > 1) {
+        $(button).closest('.DynamicRowProcessing').remove();
+        updateRowLabels();
+        updateRemoveButtons();
+    }
+}

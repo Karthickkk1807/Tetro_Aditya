@@ -22,149 +22,19 @@ namespace TetroONE.Controllers
 		}
 		  
 		[HttpGet]
-		[Route("GetEstimate")]
-		public IActionResult GetEstimate(DateTime FromDate, DateTime ToDate, int FranchiseId)
+		[Route("GetQuotation")]
+		public IActionResult GetQuotation(int? QuotationId, int PlantId, DateTime FromDate, DateTime ToDate)
 		{
-			GetEstimate request = new GetEstimate()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				EstimateId = null,
-				FromDate = FromDate,
-				ToDate = ToDate,
-				FranchiseId = FranchiseId
+            GetQuotation request = new GetQuotation()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                QuotationId = QuotationId == 0 ? null : QuotationId,
+                PlantId = PlantId,
+                FromDate = FromDate,
+                ToDate = ToDate
+            };
 
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetEstimateDetails]", request);
-			return Json(response);
-		}
-
-		[HttpGet]
-		[Route("GetOtherChargesType")]
-		public IActionResult GetOtherChargesType(string OtherChargesTypeName)
-		{
-
-			PurchaseOrderOtherchargesType getInfo = new PurchaseOrderOtherchargesType()
-			{
-				LoginuserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				OtherChargesType = OtherChargesTypeName,
-
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[DBO].[USP_GetOtherChargesDetailsByType]", getInfo);
-			return Json(response);
-		}
-
-		[HttpPost]
-		[Route("InsertUpdateEstimate")]
-		public async Task<IActionResult> InsertUpdateEstimate()
-		{
-			IFormFileCollection file = Request.Form.Files;
-			List<AttachmentTable> lstattachment = new List<AttachmentTable>();
-			DataTable dtattachment = new DataTable();
-
-			foreach (var item in file)
-			{
-				var attachment = GenericTetroONE.GetFilePath(item.FileName);
-				lstattachment.Add(new AttachmentTable()
-				{
-					AttachmentExactFileName = item.FileName,
-					AttachmentFileName = attachment.Item1,
-					AttachmentFilePath = attachment.Item2,
-					ModuleRefId = null,
-					ModuleName = "Estimate"
-				});
-			}
-
-			bool isuploaded = await GenericTetroONE.IsAttachmentUploaded(file, lstattachment);
-
-			foreach (var item in lstattachment)
-			{
-				item.AttachmentFileName = item.AttachmentExactFileName;
-			}
-
-			List<AttachmentTable> existFiles = JsonConvert.DeserializeObject<List<AttachmentTable>?>(Request.Form["ExistFiles"]);
-			if (existFiles != null && existFiles.Count > 0)
-			{
-				lstattachment.AddRange(existFiles);
-			}
-
-			dtattachment = GenericTetroONE.ToDataTable(lstattachment);
-			dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
-
-			EstimateDetailsStatic EstimateDetailsStatic = JsonConvert.DeserializeObject<EstimateDetailsStatic>(Request.Form["EstimateDetailsStatic"]);
-			List<EstimateProductMappingDetails>? EstimateProductMappingDetails = JsonConvert.DeserializeObject<List<EstimateProductMappingDetails>?>(Request.Form["EstimateProductMappingDetails"]);
-			List<EstimateOtherChargesMappingDetails>? EstimateOtherChargesMappingDetails = JsonConvert.DeserializeObject<List<EstimateOtherChargesMappingDetails>?>(Request.Form["EstimateOtherChargesMappingDetails"]);
-
-			DataTable dtproductData = new DataTable();
-			dtproductData = GenericTetroONE.ToDataTable(EstimateProductMappingDetails);
-
-			DataTable dtOtherChargesData = new DataTable();
-			dtOtherChargesData = GenericTetroONE.ToDataTable(EstimateOtherChargesMappingDetails);
-
-			InsertEstimateDetails request = new InsertEstimateDetails()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				EstimateId = EstimateDetailsStatic.EstimateId,
-				EstimateNo = EstimateDetailsStatic.EstimateNo,
-				ClientId = EstimateDetailsStatic.ClientId,
-				BillingFranchiseId = EstimateDetailsStatic.BillingFranchiseId,
-				BillFromFranchiseId = EstimateDetailsStatic.BillFromFranchiseId,
-				FranchiseId = EstimateDetailsStatic.FranchiseId,
-				EstimateDate = EstimateDetailsStatic.EstimateDate,
-				SubTotal = EstimateDetailsStatic.SubTotal,
-				GrantTotal = EstimateDetailsStatic.GrantTotal,
-				RoundOffValue = EstimateDetailsStatic.RoundOffValue,
-				EstimateStatusId = EstimateDetailsStatic.EstimateStatusId,
-				TermsAndCondition = EstimateDetailsStatic.TermsAndCondition,
-
-				ValidDate = EstimateDetailsStatic.ValidDate,
-				Notes = EstimateDetailsStatic.Notes,
-				TVP_SaleProductMappingDetails = dtproductData,
-				TVP_PurchaseSaleOtherChargesMappingDetails = dtOtherChargesData,
-
-				TVP_AttachmentDetails = dtattachment
-			};
-
-			if (EstimateDetailsStatic.EstimateId > 0)
-				response = GenericTetroONE.ExecuteReturnData(_connectionString, "[dbo].[USP_UpdateEstimateDetails]", request);
-			else
-				response = GenericTetroONE.ExecuteReturnData(_connectionString, "[dbo].[USP_InsertEstimateDetails]", request, "EstimateId");
-			//response.Data = relativeFilePath;
-
-			if (response.Status)
-			{
-				List<AttachmentTable> deletedFiles = JsonConvert.DeserializeObject<List<AttachmentTable>?>(Request.Form["DeletedFiles"]);
-				if (deletedFiles != null && deletedFiles?.Count > 0)
-				{
-					await GenericTetroONE.IsAttachmentDeleted(deletedFiles);
-				}
-
-
-			}
-
-			return Json(response);
-		}
-
-
-		[HttpGet]
-		[Route("NotNullGetEstimate")]
-		public IActionResult NotNullGetEstimate(int EstimateId, int FranchiseId)
-		{
-
-			GetEstimate getInfo = new GetEstimate()
-			{
-
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				EstimateId = EstimateId,
-				FromDate = null,
-				ToDate = null,
-				FranchiseId = FranchiseId
-
-
-			};
-
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetEstimateDetails]", getInfo);
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetQuotationDetails]", request);
 			return Json(response);
 		}
 		 
@@ -175,9 +45,7 @@ namespace TetroONE.Controllers
 			DeleteEstimate getInfo = new DeleteEstimate()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				EstimateId = EstimateId,
-
-
+				EstimateId = EstimateId, 
 			};
 			 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteEstimateDetails_1]", getInfo);
@@ -208,24 +76,7 @@ namespace TetroONE.Controllers
 			}
 			return Json(response);
 		}
-
-        [HttpGet]
-        [Route("GetEstimateProduct")]
-        public IActionResult GetEstimateProduct(string ModuleName, int? VendorId, int FranchiseId)
-        {
-            GetProduct_PurchaseSale request = new GetProduct_PurchaseSale()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                ProductId = null,
-                ModuleName = ModuleName,
-                VendorId = VendorId,
-                FranchiseId = FranchiseId
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductDetails_PurchaseSale]", request);
-            return Json(response);
-        }
-
+		
         [HttpGet]
 		[Route("EstimatePrint")]
 		public IActionResult EstimatePrint(int ModuleId, int ContactId, int NoOfCopies, string printType, int FranchiseId)

@@ -26,7 +26,7 @@ input[type="checkbox"]:checked + .checkbox-label {
     width:500px;
 }
 .dataTables_scrollBody {
-    height: 330px !important;
+    height: 350px !important;
     margin-top: -18px !important;
     border-bottom: 1px solid #111;
     margin-bottom: 10px;
@@ -35,4 +35,8 @@ input[type="checkbox"]:checked + .checkbox-label {
 #VendorProductList {
     height: 168px !important;
     overflow-y: scroll !important;
+}
+
+#Managetable_wrapper div.dataTables_scrollBody {
+    max-height: 157px !important;
 }

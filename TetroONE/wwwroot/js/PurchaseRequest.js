@@ -705,6 +705,7 @@ function editPurchaseRequest(EditPurchaseRequest) {
     Common.ajaxCall("GET", "/Common/ActivityHistoryDetails", { ModuleName: "PurchaseRequest", ModuleId: EditPurchaseRequest }, Inventory.StatusActivity, null);
     Common.ajaxCall("GET", "/PurchaseRequest/NotNullGetPurchaseRequest", EditDataId, PurchaseRequestGetNotNull, null);
 }
+
 async function PurchaseRequestGetNotNull(response) {
     disableChangeEvent = true;
     formDataMultiple = new FormData();

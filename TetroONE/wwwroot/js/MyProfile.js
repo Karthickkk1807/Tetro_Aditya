@@ -513,7 +513,7 @@ function ManageUserSuccess(response) {
                                 divImage = `<img src="/assets/commonimages/user.png" class="avatar-img rounded-circle">`;
                                 break;
                             case "JobWorker User":
-                                divImage = `<img src="/assets/commonimages/franchise.svg" class="avatar-img rounded-circle">`;
+                                divImage = `<img src="/assets/commonimages/jobworker_icon.svg" class="avatar-img rounded-circle">`;
                                 break;
                             case "Vendor":
                                 divImage = `<img src="/assets/commonimages/vendor.svg" class="avatar-img rounded-circle">`;
@@ -742,23 +742,28 @@ $(document).on('change', '#ManageUserForm #UserTypeId', function () {
     $('#DepartmentDetailsId').val('').trigger('change');
 
     if (thisVal == 1) {
-        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/franchise.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
+        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/jobworker_icon.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
             $('#imagePreview').attr('src', '/assets/commonimages/user.png');
         }
         $('#ClientVendorhide').hide();
-        $('#DepartmentManageUserhide').show();
+        //$('#DepartmentManageUserhide').show();
         $('.LableName').text('');
     }
     else if (thisVal == 2) {
-        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/franchise.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
-            $('#imagePreview').attr('src', '/assets/commonimages/franchise.svg');
+        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/jobworker_icon.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
+            $('#imagePreview').attr('src', '/assets/commonimages/jobworker_icon.svg');
         }
-        $('#ClientVendorhide').hide();
-        $('#DepartmentManageUserhide').show();
-        $('.LableName').text('');
+        $('#ClientVendorhide').show();
+        $('#DepartmentManageUserhide').hide();
+        $('.LableName').text('JobWorker Name');
+        var ValueOfContactDropDown = parseInt(thisVal);
+        getvalContactDetailsResponse(ValueOfContactDropDown);
+        //$('#ClientVendorhide').hide();
+        //$('#DepartmentManageUserhide').show();
+        //$('.LableName').text('');
     }
     else if (thisVal == 3) {
-        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/franchise.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
+        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/jobworker_icon.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
             $('#imagePreview').attr('src', '/assets/commonimages/vendor.svg');
         }
         $('#ClientVendorhide').show();
@@ -768,7 +773,7 @@ $(document).on('change', '#ManageUserForm #UserTypeId', function () {
         getvalContactDetailsResponse(ValueOfContactDropDown);
     }
     else if (thisVal == 4) {
-        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/franchise.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
+        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/jobworker_icon.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
             $('#imagePreview').attr('src', '/assets/commonimages/client.svg');
         }
         $('#ClientVendorhide').show();
@@ -795,7 +800,7 @@ $(document).on('change', '#ManageUserForm #UserTypeId', function () {
                 var textproperty = Object.keys(dataValue[0])[1];
 
                 // If the selected UserTypeId is vendor or client, don't add '--Select--', just preselect the first item
-                if (thisVal == 3 || thisVal == 4) {
+                if (thisVal == 2 || thisVal == 3 || thisVal == 4) {
                     var firstOption = dataValue[0];
                     // Append the first option to the select
                     $('#ManageUserForm #UserGroupId').append($('<option>', {

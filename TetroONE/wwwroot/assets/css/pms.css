@@ -1814,11 +1814,7 @@ legend {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999945;
 }
-
-.GSM {
-    padding: 0px 15px 0px 0px !important;
-}
-
+ 
 .noofQty {
     padding: 0px 15px 0px 0px !important;
 }
@@ -1827,13 +1823,7 @@ legend {
     padding: 0px 15px 0px 0px !important;
 }
 
-
-@media (max-width:991px) {
-    .GSM {
-        padding: 0px 0px 0px 15px !important;
-    }
-}
-
+ 
 @media (max-width:991px) {
     .noofQty {
         padding: 0px 0px 0px 15px !important;

@@ -1,0 +1,53 @@
+﻿.modal-header {
+    padding: 7px 10px 7px 10px !important;
+    background: linear-gradient(to right, rgba(56, 39, 180, 1) 0%, rgba(108, 24, 164, 1) 64%, rgba(108, 24, 164, 1) 100%) !important;
+    border-bottom: 1px solid #ddd !important;
+    flex-shrink: 0 !important;
+    color: white;
+}
+
+#Asterisk, .Asterisk {
+    color: red !important;
+    margin-left: 3px;
+}
+
+.form-control {
+    font-size: 12px;
+    border-color: #ebedf2;
+    padding: .4rem 0.5rem;
+    height: 34px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    border-bottom: 5px solid #6C18A4 !important;
+    width: 100%;
+    padding: 0px;
+    border-radius: 7px 7px 7px 7px !important;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+}
+
+.form-group {
+    margin-bottom: 5px !important;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 2px;
+    font-size: 14px !important;
+}
+
+.fadeoverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999945;
+}
+
+body > div.swal2-container.swal2-center.swal2-noanimation {
+    z-index: 999999;
+} 

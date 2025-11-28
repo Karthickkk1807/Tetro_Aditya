@@ -63,8 +63,7 @@ $(document).ready(async function () {
             "employeeName[]": {
                 required: "This field is required."
             }
-        }
-
+        } 
     });
 
     var PlantData = await Common.bindDropDownSync('Plant');

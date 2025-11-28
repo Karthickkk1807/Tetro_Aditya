@@ -46,8 +46,7 @@ namespace TetroONE.Controllers
 		[AllowAnonymous]
 		[HttpPost]
 		public async Task<IActionResult> LoginValue([FromBody] LoginRequest request)
-		{
-
+		{ 
 			CommonResponse response = new CommonResponse();
 			if (!string.IsNullOrEmpty(request.Username) && !string.IsNullOrEmpty(request.Password))
 			{

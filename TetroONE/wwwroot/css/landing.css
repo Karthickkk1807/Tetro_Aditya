@@ -55,6 +55,7 @@
     border: none;
     font-weight: 600;
     text-align: center;
+    pointer-events: none;
 }
 .content.collapsed {
     white-space: nowrap;
@@ -659,4 +660,13 @@ table {
 #ManageUserForm > div:nth-child(2) > div.col-md-6.col-lg-6.col-sm-12.col-12 > div > span > span.selection > span {
     overflow-y: auto;
     height: 53px;
+}
+
+#SubTotalTotal, #CGSTTotal, #SGSTTotal, #IGSTTotal, #CESSTotal, #Subtotal {
+    font-size: .875rem !important;
+    text-align: center !important;
+}
+
+#Subtotal {
+    text-align: start !important;
 }

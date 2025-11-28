@@ -597,7 +597,7 @@
                                                         </a>
                                                     </li>
                                                 }
-                                                @if (access.Any(x => x.ToLower() == UserScreen.SaleOrder.ToLower()))
+                                               @*@if (access.Any(x => x.ToLower() == UserScreen.SaleOrder.ToLower()))
                                                 {
                                                     <li>
                                                         <a asp-controller="TaxInvoice" asp-action="SaleOrder">
@@ -606,7 +606,7 @@
                                                             </i> <span class="sub-item">Sale Order</span>
                                                         </a>
                                                     </li>
-                                                }
+                                                }*@
                                                 @if (access.Any(x => x.ToLower() == UserScreen.TaxInvoice.ToLower()))
                                                 {
                                                     <li>
@@ -747,7 +747,7 @@
                                                         <a asp-controller="Productions" asp-action="Production">
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/production_sidebar/production.svg" width="20" />
-                                                            </i> <span class="sub-item">Production</span>
+                                                            </i> <span class="sub-item">Production Log</span>
                                                         </a>
                                                     </li>
                                                 }
@@ -1425,7 +1425,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 col-lg-6 col-sm-12 col-12" id="DepartmentManageUserhide">
+                                                <div class="col-md-6 col-lg-6 col-sm-12 col-12 d-none" id="DepartmentManageUserhide">
                                                     <div class="form-group">
                                                         <label>Department Mapping</label>
                                                         <select multiple class="multi-select" data-allow-clear="1" id="DepartmentDetailsId" name="DepartmentDetailsId">
@@ -1520,7 +1520,7 @@
                                             <p class="pt-1 TotalSelctAmount cursor-pointer  m-0"> Total Amount:<span id="TotalItemsAmount" style="font-weight:700;"></span> </p>
                                         </div>
                                         <div>
-                                            <button type="button" id="UpdateProductsInAddItem" class="btn btn-added mr-2" fdprocessedid="56heq">Update</button>
+                                            <button type="button" id="UpdateProductsTableInAddItem" class="btn btn-added mr-2" fdprocessedid="56heq">Update</button>
                                             <button type="button" id="CloseInAddItem" class="btn modal-close-btn" data-dismiss="modal" fdprocessedid="fmiob">Close</button>
                                         </div>
                                     </div>

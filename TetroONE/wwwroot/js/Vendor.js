@@ -146,7 +146,7 @@ function VendorSuccess(response) {
         $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
         var columns = Common.bindColumn(data[1], ['VendorId', 'Status_Color']);
-        Common.bindTable('VendorTable', data[1], columns, -1, 'VendorId', '330px', true, access);
+        Common.bindTableStarRating('VendorTable', data[1], columns, -1, 'VendorId', '350px', true, access);
     }
 }
 
