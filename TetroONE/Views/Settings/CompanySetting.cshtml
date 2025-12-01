@@ -178,8 +178,62 @@
     </div>
 
     <div class="offcanvas-body">
-        <div class="row">
-            <div class="col-12">
+        <form id="FormBank">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>IFSC Code</label>
+                        <input type="text" id="IFSCCode" name="IFSCCode" class="form-control" autocomplete="off" placeholder="Ex: SBIN0001234">
+                        <label id="ifscError" class="error" style="color: red; display: none;">Invalid IFSC Code</label>
+                        <label id="ifscValid" style="color: green; display: none;">Valid IFSC Code</label>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Bank Name</label>
+                        <input type="text" id="BankName" name="BankName" class="form-control" placeholder="Ex: State Bank of India" autocomplete="off" oninput="Common.allowOnlyTextLength(this, 25)" disabled>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Plant Name</label>
+                        <input type="text" id="BranchName" name="BranchName" class="form-control" placeholder="Ex: Main Plant" autocomplete="off" oninput="Common.allowOnlyTextLength(this, 25)" disabled>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Account Type</label>
+                        <select class="form-select form-control" id="AccountType" autocomplete="off" name="AccountType" required>
+                            <option value="">--Select--</option>
+                            <option value="Current">Current</option>
+                            <option value="Savings">Savings</option>
+                            <option value="Cash Credit">Cash Credit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Account Name</label>
+                        <input type="text" id="AccountName" name="AccountName" class="form-control" autocomplete="off" placeholder="Ex: Bank User Name" oninput="Common.allowOnlyTextLength(this, 50)" required>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Account Number</label>
+                        <input type="text" id="AccountNumber" name="AccountNumber" class="form-control" autocomplete="off" placeholder="Ex: 123456789012" oninput="Common.allowOnlyNumberLength(this,16)" required>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 branch">
+                    <div class="form-group">
+                        <label>UPI Id</label>
+                        <input type="text" id="UPIId" name="UPIid" class="form-control" placeholder="Ex: example@upi" autocomplete="off" maxlength="50">
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        @* <div class="col-12">
                 <div class="accordion" id="styleAccordionluf3ws29vt">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
@@ -252,10 +306,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-
-        </div>
+            </div> *@ 
     </div>
 
     <div class="offcanvas-footer">
@@ -269,9 +320,7 @@
         </div>
     </div>
 </div>
-
-
-
+ 
 <div id="AddPlantCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
         <h2 id="PlantHeader"></h2>
@@ -286,7 +335,7 @@
                 <div class="accordion" id="styleAccordion">
                     <div class="accordion-header">
                         <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1" class="">
+                            <a data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapseOne1" class="">
                                 <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
                                     <strong class="text-white">
                                         Plant Info
@@ -296,7 +345,7 @@
                             </a>
                         </h2>
                     </div>
-                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                    <div id="collapse6" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
                         <div id="Styleenterydetalis" class="card-body">
                             <form id="FormPlant">
                                 <div class="row">

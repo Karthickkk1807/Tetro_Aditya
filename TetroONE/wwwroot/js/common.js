@@ -599,6 +599,27 @@
         }
     },
 
+    bindDropDownParentAsync: function (id, parent, moduleName) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: '/Common/GetDropDown',
+                data: JSON.stringify({ moduleName }),
+                success: function (response) {
+                    if (response.status) {
+                        Common.bindParentDropDownSuccess(response.data, id, parent);
+                        resolve();  // <<< IMPORTANT
+                    } else {
+                        reject("Dropdown failed: " + moduleName);
+                    }
+                },
+                error: reject
+            });
+        });
+    },
+
     bindColumn: function (data, hideColumns) {
         var columns = [];
         if (data != null && data.length > 0) {
@@ -883,7 +904,7 @@
             Common.autoAdjustColumns(table1);
         }, 100);
     },
-    
+
     bindTableStarRating: function (tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
         if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
             try {
@@ -1214,7 +1235,7 @@
         let resultValue = integerPart + decimalPart;
         inputElement.value = resultValue;
     },
-    
+
     allowTextNumberAndWithoutSpace: function (inputElement, maxLength) {
         let value = inputElement.value;
         // Allow letters, numbers, and special characters, disallowing spaces
@@ -2673,7 +2694,7 @@
                 },
             });
         });
-    },    
+    },
 }
 
 

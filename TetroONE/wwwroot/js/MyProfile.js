@@ -69,8 +69,7 @@ $(document).ready(function () {
         ignoreUserTypeChangeEvent = false;
         Common.ajaxCall("GET", "/Myprofile/GetPlant", null, PlantSuccessMyProfile, null);
     });
-
-
+     
     $('#myProfileViewbtn').on('click', function () {
         $('#myProfileModal').modal('show');
     });
@@ -644,6 +643,7 @@ function UserEditSuccess(response) {
 
         setTimeout(function () {
             $('#ManageUserForm #UserGroupId').val(data[0][0].UserGroupId);
+            ignoreUserTypeChangeEvent = false;
         }, 300);
 
         $('#AddUserModal').show();

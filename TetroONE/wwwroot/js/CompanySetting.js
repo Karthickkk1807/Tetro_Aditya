@@ -485,7 +485,7 @@ $(document).on('click', '#AddPlantBtn', function () {
     //$('#AddPlantCanvas [data-toggle="collapse"]').attr('aria-expanded', 'false');
 
     //// Open the first (Plant Info)
-    $('#AddPlantCanvas #collapse1').addClass('show');
+    //$('#AddPlantCanvas #collapse1').addClass('show');
     //$('#styleAccordion [data-target="#collapse1"]').attr('aria-expanded', 'true');
 
     // Reset forms
@@ -493,9 +493,20 @@ $(document).on('click', '#AddPlantBtn', function () {
     Common.removevalidation('FormPlantContact');
     $('#FormPlantContact .Plantcontact').remove();
     duplicateRow();
-
+    CanvasOpenFirstShowing();
     $('#SavePlant').text('Save').removeClass('btn-update').addClass('btn-success');
 });
+
+
+function CanvasOpenFirstShowing() {
+    $('#AddPlantCanvas').addClass('show');
+    $('#collapse6').collapse('show');
+    $('#collapse2, #collapse3, #collapse4, #collapse5').collapse('hide');
+    $('#AddPlantCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
+    $('html, body').animate({
+        scrollTop: $('#AddPlantCanvas').offset().top
+    }, 'fast');
+}
 
 
 $(document).on('click', '#CloseCanvas', function () {
@@ -509,7 +520,16 @@ $(document).on('click', '#CloseCanvas', function () {
 $(document).on('click', '.btn-edit-Plant', function () {
     PlantId = $(this).data('id');
     $('#SavePlant').text('Update').removeClass('btn-success').addClass('btn-update');
+    CanvasOpenFirstShowing();
     Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: PlantId }, PlantNotNullSuccess, null);
+});
+
+$('.accordion-header').on('click', function () {
+    var $offcanvas = $(this).closest('.offcanvas-container');
+    var $accordion = $(this).closest('.accordion');
+    var target = $(this).find('a').attr('data-target');
+    $offcanvas.find('.collapse').not(target).collapse('hide');
+    $(target).collapse('toggle');
 });
 
 $(document).on('click', '.btn-delete-Plant', async function () {
@@ -614,7 +634,7 @@ function PlantNotNullSuccess(response) {
         $('#SaveClient').addClass('btn-update');
         $('#fadeinpage').addClass('fadeoverlay');
         $('#AddPlantCanvas .collapse').removeClass('show');
-        $('#AddPlantCanvas #collapse1').addClass('show');
+        CanvasOpenFirstShowing();
         $('#FormPlantContact .Plantcontact').remove('');
         Common.removevalidation('FormPlant');
         Common.removevalidation('FormPlantContact');
