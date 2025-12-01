@@ -6,17 +6,16 @@ namespace TetroONE.Models
     {
         public int LoginUserId { get; set; }
         public int? VendorId { get; set; }
-        public int? FranchiseId { get; set; }
     }
 
-    public class InsertUpdareVendorDetails
+    public class InsertUpdateVendorDetails
     {
         public int LoginUserId { get; set; }
         public int? VendorId { get; set; }
         public string VendorName { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }
-        public int StateId { get; set; }
+        public int State { get; set; }
         public string? Country { get; set; }
         public string? ZipCode { get; set; }
         public string ContactNumber { get; set; }
@@ -34,20 +33,10 @@ namespace TetroONE.Models
         public decimal? CurrentCreditLimit { get; set; }
         public List<ContactPersonDetails> contactPersonDetails { get; set; }
         public DataTable TVP_ContactPersonDetails { get; set; }
-        public List<FranchiseMappingDetails> franchiseMappingDetails { get; set; }
-        public DataTable TVP_ContactFranchiseMappingDetails { get; set; }
         public List<VendorProductMappingDetails> vendorProductMappingDetails { get; set; }
         public DataTable TVP_VendorProductMappingDetails { get; set; }
     }
-
-    public class FranchiseMappingDetails
-    {
-        public int? ContactFranchiseMappingId { get; set; }
-        public int? ContactId { get; set; }
-        public int? FranchiseId { get; set; }
-        public bool IsSelected { get; set; }
-    }
-
+     
     public class ContactPersonDetails
     {
         public int? ContactPersonId { get; set; }
@@ -68,11 +57,9 @@ namespace TetroONE.Models
 
 
     public class GetClient
-    {
+    {   
         public int LoginUserId { get; set; }
         public int? ClientId { get; set; }
-
-        public int? ClientTypeId { get; set; }
     }
 
     public class DeleteClient
@@ -82,16 +69,14 @@ namespace TetroONE.Models
 
     }
 
-    public class InsertUpdareClientDetails
+    public class InsertUpdateClientDetails
     {
         public int LoginUserId { get; set; }
         public int? ClientId { get; set; }
-        public int ClientTypeId { get; set; }
-        public string? ClientNo { get; set; }
         public string ClientName { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }
-        public int? StateId { get; set; }
+        public int? State { get; set; }
         public string? Country { get; set; }
         public string? ZipCode { get; set; }
         public string ContactNumber { get; set; }
@@ -100,34 +85,13 @@ namespace TetroONE.Models
         public decimal CreditLimit { get; set; }
         public decimal? CurrentCreditLimit { get; set; }
         public string? Remark { get; set; }
-        public DateTime? CollaboratedDate { get; set; }
-        public DateTime? ExpiryDate { get; set; }
-        public decimal? InvoiceAmount { get; set; }
-        public decimal? NoOfCrates { get; set; }
-        public decimal? PerCrateCost { get; set; }
-        public int? CurrentEligibility { get; set; }
-
         public bool? IsActive { get; set; }
         public List<ContactPersonDetails> ClientContactPersonDetails { get; set; }
-        public List<ClientProductMappingDetails> clientProductMappingDetails { get; set; }
         public DataTable TVP_ContactPersonDetails { get; set; }
-        public List<FranchiseMappingDetails> franchiseMappingDetails { get; set; }
-        public DataTable TVP_ContactFranchiseMappingDetails { get; set; }
         public DataTable TVP_AttachmentDetails { get; set; }
-    
+
     }
-
- 
-
-    public class ClientProductMappingDetails
-    {
-        public int? ClientProductMappingId { get; set; }
-        public int? ClientId { get; set; }
-        public int? ProductId { get; set; }
-        public decimal? SellingPrice { get; set; }
-        public int? UnitId { get; set; }
-    }
-
+     
     public class AttachmentTableDyanamicClient
     {
         public int? VisicoolarAttachmentId { get; set; }
@@ -177,38 +141,37 @@ namespace TetroONE.Models
 
     }
 
-    public class GetShop
+    public class GetJobWorker
     {
         public int LoginUserId { get; set; }
-        public int? ShopId { get; set; }
-        public int? DistributorId { get; set; }
+        public int? JobWorkerId { get; set; }
     }
 
-    public class InsertUpdateShop
+    public class InsertUpdateJobWorker
     {
         public int LoginUserId { get; set; }
-        public int? ShopId { get; set; }
-        public int? ShopTypeId { get; set; }
-        public string? ShopName { get; set; }
-        public string? ShopAddress { get; set; }
-        public string? ShopCity { get; set; }
-        public int? ShopStateId { get; set; }
-        public string? ShopCountry { get; set; }
-        public string? ShopZipcode { get; set; }
-        public string? ShopContactNo { get; set; }
-        public string? ShopEmail { get; set; }
-        public string? ShopGSTNumber { get; set; }
-        public decimal? MaxCreditLimit { get; set; }
-        public decimal? CurrentCreditLimit { get; set; }
-        public string? Remarks { get; set; }
+        public int? JobWorkerId { get; set; }
+        public string? JobWorkerName { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? Country { get; set; }
+        public string? ZipCode { get; set; }
+        public string? ContactNumber { get; set; }
+        public string? Email { get; set; }
+        public string? GSTNumber { get; set; }
+        public string? Remark { get; set; }
+        public string? IFSCCode { get; set; }
+        public string? BankName { get; set; }
+        public string? BranchName { get; set; }
+        public string? AccountType { get; set; }
+        public string? AccountName { get; set; }
+        public string? AccountNumber { get; set; }
         public bool? IsActive { get; set; }
-        public int? Visicooler { get; set; }
-        public int? DistributorId { get; set; }
-        public List<ContactPersonDetails> ShopContactPersonDetails { get; set; }
+        public List<ContactPersonDetails> ClientContactPersonDetails { get; set; }
         public DataTable TVP_ContactPersonDetails { get; set; }
+        public DataTable TVP_AttachmentDetails { get; set; }
     }
-
-
 
     public class GetServiceEngr
     {

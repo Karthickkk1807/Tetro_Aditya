@@ -1,9 +1,9 @@
-﻿
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Auding, Context.Session);
+}
 
 <link href="~/css/auditing.css" rel="stylesheet" />
-
-
-
+ 
 <div id="filter-Column" class="Date-SearchColumn audinting-searchcloumn d-flex justify-content-end">
     
     <div class="d-flex justify-content-end">
@@ -304,6 +304,10 @@
         </div>
     </div>
 </div>
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script src="~/js/Auditing.js"></script>

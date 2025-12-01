@@ -247,3 +247,8 @@ input[type="checkbox"]:checked ~ .dynamicinputselect {
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+
+#Managetable_wrapper div.dataTables_scrollBody {
+    max-height: 157px !important;
+}

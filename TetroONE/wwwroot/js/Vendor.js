@@ -1,17 +1,19 @@
 ﻿let selectedItems = [];
 var vendorId = 0;
+var deletedFiles = [];
+var existFiles = [];
+var formDataMultiple = new FormData();
+
 $(document).ready(function () {
 
     var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
-    Common.ajaxCall("GET", "/Contact/GetVendor", { FranchiseId: FranchiseMappingId }, VendorSuccess, null);
-    Common.bindDropDownParent('StateId', 'FormVendor', 'State');
-    //$('#FormFranchiseData #BindFranchiseData').empty();
+    Common.ajaxCall("GET", "/Contact/GetVendor", { }, VendorSuccess, null);
+    Common.bindDropDownParent('State', 'FormVendor', 'State'); 
     $('#IsActiveHide').hide();
 
     setPrimaryCheckboxEventListeners();
-    $(document).on('click', '#SaveClient', function (e) {
-
+    $(document).on('click', '#SaveVendor', function (e) {
         if (!Common.validateEmailwithErrorwithParent('FormVendor', 'Email')) {
             return false;
         }
@@ -39,6 +41,8 @@ $(document).ready(function () {
             var DataUpdate1 = JSON.parse(JSON.stringify(jQuery('#FormVendor').serializeArray()));
             var DataUpdate2 = JSON.parse(JSON.stringify(jQuery('#FormVendorBank').serializeArray()));
 
+            getExistFiles();
+
             var DataUpdate = DataUpdate1.concat(DataUpdate2);
 
             var objvalue = {};
@@ -51,6 +55,9 @@ $(document).ready(function () {
             objvalue.BranchName = $('#BranchName').val();
             objvalue.MaxCreditLimit = Common.parseFloatInputValue('MaxCreditLimit') || null;
             objvalue.CurrentCreditLimit = Common.parseFloatInputValue('CurrentCreditLimit') || null;
+
+            objvalue.VendorId = vendorId > 0 ? vendorId : null;
+            objvalue.State = parseInt($('#State').val()) || null;
 
             var ContactPerson = [];
             var ClosestDiv = $('#FormVendorContact .Vendorcontact');
@@ -90,30 +97,35 @@ $(document).ready(function () {
 
             objvalue.vendorProductMappingDetails = ProductList;
 
+            formDataMultiple.append("VendorData", JSON.stringify(objvalue));
+            formDataMultiple.append("VendorContactPersonDetails", JSON.stringify(ContactPerson));
+            formDataMultiple.append("VendorProductMappingDetails", JSON.stringify(ProductList));
+            formDataMultiple.append("Exist", JSON.stringify(existFiles));
+            formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
+            $.ajax({
+                type: "POST",
+                url: "/Contact/InsertUpdateVendorDetails",
+                data: formDataMultiple,
+                contentType: false,
+                processData: false,
 
-            //var FranchiseList = [];
-            //var ClosestDivProductList = $('#FormFranchiseData #BindFranchiseData input[type="checkbox"]:checked');
-
-            //$.each(ClosestDivProductList, function (index, element) {
-            //    var ContactFranchiseMappingId = $(element).siblings('.ProductMappingId').text();
-            //    var moduleId = vendorId;
-            //    var franchiseId = $(element).data('id');
-            //    var IsActive = $(element).prop('checked');
-
-            //    FranchiseList.push({
-            //        ContactFranchiseMappingId: parseInt(ContactFranchiseMappingId) || null,
-            //        ContactId: parseInt(moduleId) || null,
-            //        FranchiseId: franchiseId,
-            //        IsSelected: IsActive,
-            //    });
-            //});
-
-            //objvalue.franchiseMappingDetails = FranchiseList;
-
-
-            objvalue.VendorId = parseInt(vendorId) || null;
-            objvalue.StateId = parseInt($('#StateId').val()) || null;
-            Common.ajaxCall("POST", "/Contact/InsertUpdareVendorDetails", JSON.stringify(objvalue), VendorInsertUpdateSuccess, null);
+                success: function (response) {
+                    if (response.status) {
+                        formDataMultiple = new FormData();
+                        Common.successMsg(response.message);
+                        $("#VendorCanvas").css("width", "0%");
+                        $('#fadeinpage').removeClass('fadeoverlay');
+                        Common.ajaxCall("GET", "/Contact/GetVendor", {}, VendorSuccess, null);
+                    }
+                    else {
+                        formDataMultiple = new FormData();
+                        Common.errorMsg(response.message);
+                    }
+                },
+                error: function (response) {
+                    Common.errorMsg(response.message);
+                }
+            });
         }
     });
 });
@@ -134,18 +146,17 @@ function VendorSuccess(response) {
         $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
         var columns = Common.bindColumn(data[1], ['VendorId', 'Status_Color']);
-        Common.bindTable('VendorTable', data[1], columns, -1, 'VendorId', '330px', true, access);
+        Common.bindTableStarRating('VendorTable', data[1], columns, -1, 'VendorId', '350px', true, access);
     }
 }
 
 function VendorInsertUpdateSuccess(response) {
-    if (response.status) {
-       // $('#FormFranchiseData #BindFranchiseData').empty();
+    if (response.status) { 
         Common.successMsg(response.message);
         $("#VendorCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
         var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-        Common.ajaxCall("GET", "/Contact/GetVendor", { FranchiseId: franchiseId }, VendorSuccess, null);
+        Common.ajaxCall("GET", "/Contact/GetVendor", { }, VendorSuccess, null);
     }
     else {
         Common.errorMsg(response.message);
@@ -198,53 +209,26 @@ $(document).on('click', '#AddVendor', function () {
     Common.removeMessage('FormVendorContact');
     $('#FormVendorContact').empty('');
     duplicateRow();
+
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
     $("#FormVendor,#FormVendorBank select").val("").trigger("change");
-    $('#FormVendor #StateId').val('32');
+    $('#FormVendor #State').val('32');
     $('#Country').val('India');
     $('#AccountType').val('Current');
     $('#IsActiveHide').hide();
-    $('#SaveClient').text('Save').addClass('btn-success').removeClass('btn-update');
+    $('#SaveVendor').text('Save').addClass('btn-success').removeClass('btn-update');
     $("input[name='products']").prop("checked", false);
-    $('#loader-pms').hide();
-    //$('#FormFranchiseData #BindFranchiseData').empty('');
+    $('#loader-pms').hide(); 
 
     $('#TransactionsHide').hide();
 
     Common.ajaxCall("GET", "/Contact/GetProductListVendor", { ModuleName: "Vendor" }, ProductListSuccess, null);
-
-    //Common.ajaxCall("GET", "/Myprofile/GetFranchise", null, FranchiseSuccess, null);
-
+     
     $('#VendorCanvas.collapse').removeClass('show');
     $('#collapse1').addClass('show');
 });
-
-//function FranchiseSuccess(response) {
-//    if (response.status) {
-//        var data = JSON.parse(response.data);
-//        var htmlDynamicProduct = "";
-//        if (data[0][0].FranchiseId != null && data[0][0].FranchiseId != "") {
-//            $.each(data[0], function (index, franchiseData) {
-//                var FranchiseId = franchiseData.FranchiseId;
-//                var FranchiseName = franchiseData.FranchiseName;
-//                var IsActiveCheck = franchiseData.IsActive == true ? 'checked' : '';
-
-//                htmlDynamicProduct += `
-//                 <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
-//                    <lable class="FranchiseMappingId d-none"></lable>
-//                    <input type="checkbox" data-id="${FranchiseId}" name="product${FranchiseId}" ${IsActiveCheck} id="product${FranchiseId}">
-//                    <label for="product${FranchiseId}" class="checkbox-label">${FranchiseName}</label>
-//                </div>
-//            `;
-//            });
-//            $('#FormFranchiseData #BindFranchiseData').append(htmlDynamicProduct);
-//        }
-//        else {
-//            $('#FormFranchiseData #BindFranchiseData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-//        }
-//        $('#FormVendor #StateId').val('32');
-//    }
-//}
-
+  
 $(document).on('click', '.btn-edit', function () {
     $('#loader-pms').show();
     var windowWidth = $(window).width();
@@ -261,12 +245,11 @@ $(document).on('click', '.btn-edit', function () {
     Common.removeMessage('FormVendorContact');
     $('#fadeinpage').addClass('fadeoverlay');
     $("#VendorHeader").text('Edit Vendor Details');
-    $('#SaveClient').text('Update').addClass('btn-update').removeClass('btn-success');
-    //$('#FormFranchiseData #BindFranchiseData').empty();
+    $('#SaveVendor').text('Update').addClass('btn-update').removeClass('btn-success'); 
     $('#IsActiveHide').show();
     vendorId = $(this).data('id');
     var franchiseId = parseInt($('#UserFranchiseMappingId').val());
-    Common.ajaxCall("GET", "/Contact/GetVendorID", { VendorId: vendorId, FranchiseId: franchiseId }, editSuccess, null);
+    Common.ajaxCall("GET", "/Contact/GetVendorID", { VendorId: vendorId }, editSuccess, null);
 
     $('#VendorCanvas.collapse').removeClass('show');
     $('#collapse1').addClass('show');
@@ -288,6 +271,8 @@ function editSuccess(response) {
         Common.bindData(data[1]);
         $('#Email').val(data[0][0].Email);
         $('#ContactNumber').val(data[0][0].ContactNumber);
+
+        $('#State').val(data[0][0].StateId);
 
         var htmlDynamicProduct = '';
 
@@ -382,27 +367,32 @@ function editSuccess(response) {
             setPrimaryCheckboxEventListeners();
         });
 
-        //var htmlDynamicProduct = "";
-        //if (data[3][0].FranchiseId != null && data[3][0].FranchiseId != "") {
-        //    $.each(data[3], function (index, franchiseData) {
-        //        var FranchiseMappingId = franchiseData.VendorFranchiseMappingId;
-        //        var FranchiseId = franchiseData.FranchiseId;
-        //        var FranchiseName = franchiseData.FranchiseName;
-        //        var IsActiveCheck = franchiseData.IsSelected == true ? 'checked' : '';
+        $('#ExistselectedFiles, #selectedFiles').empty("");
+        var ulElement = $('#ExistselectedFiles');
+        $.each(data[4], function (index, file) {
+            if (file.AttachmentId != null) {
+                var truncatedFileName = file.AttachmentFileName.length > 10 ? file.AttachmentFileName.substring(0, 10) + '...' : file.AttachmentFileName;
+                var liElement = $('<li>');
+                var spanElement = $('<span>').text(truncatedFileName);
+                var downloadLink = $('<a>').addClass('download-link')
+                    .attr('href', file.AttachmentFilePath)
+                    .attr('download', file.AttachmentFileName)
+                    .html('<i class="fas fa-download"></i>');
 
-        //        htmlDynamicProduct += `
-        //         <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
-        //            <lable class="FranchiseMappingId d-none">${FranchiseMappingId}</lable>
-        //            <input type="checkbox" data-id="${FranchiseId}" name="products" ${IsActiveCheck} id="product-${FranchiseId}">
-        //            <label for="product-${FranchiseId}" class="checkbox-label">${FranchiseName}</label>
-        //        </div>
-        //    `;
-        //    });
-        //    $('#FormFranchiseData #BindFranchiseData').append(htmlDynamicProduct);
-        //}
-        //else {
-        //    $('#FormFranchiseData #BindFranchiseData').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        //}
+                var deleteButton = $('<a>').attr({
+                    'src': file.AttachmentFilePath,
+                    'AttachmentId': file.AttachmentId,
+                    'ModuleRefId': file.ModuleRefId,
+                    'id': 'deletefile'
+                }).addClass('delete-buttonattach').html('<i class="fas fa-trash"></i>');
+
+                liElement.append(spanElement);
+                liElement.append(downloadLink);
+                liElement.append(deleteButton);
+                ulElement.append(liElement);
+            }
+        });
+
 
         $('#TransactionsHide').show();
 
@@ -638,17 +628,112 @@ function setPrimaryCheckboxEventListeners() {
     });
 }
 
-function validateFormAccordions(accordionSelector, errorMessageDefault = 'This field is required') {
-    var isFormValid = true;
-    var foundInvalidAccordion = false;
 
-    $(accordionSelector).each(function () {
-        if (foundInvalidAccordion) {
-            return false;
+$(document).on('click', '#deletefile', function () {
+    var listItem = $(this).closest('li');
+    var fileText = listItem.find('span').text();
+    var attachmentid = parseInt($(this).attr('attachmentid'));
+    var src = $(this).attr('src');
+    var moduleRefId = $(this).attr('ModuleRefId');
+    deletedFiles.push({
+        AttachmentId: attachmentid,
+        ModuleName: "Vendor",
+        ModuleRefId: parseInt(moduleRefId),
+        AttachmentFileName: fileText,
+        AttachmentFilePath: src
+    });
+    $(listItem).remove();
+});
+
+function getExistFiles() {
+
+    var existitem = $('#ExistselectedFiles li');
+    $.each(existitem, function (index, value) {
+
+        var fileText = $(value).find('span').text();
+        var attachmentid = parseInt($(value).find('.delete-buttonattach').attr('attachmentid'));
+        var src = $(value).find('.delete-buttonattach').attr('src');
+        var moduleRefId = $(value).find('.delete-buttonattach').attr('ModuleRefId');
+        existFiles.push({
+            AttachmentId: attachmentid,
+            ModuleName: "Vendor",
+            ModuleRefId: parseInt(moduleRefId),
+            AttachmentFileName: fileText,
+            AttachmentFilePath: src
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const selectedFiles = document.getElementById('selectedFiles');
+    selectedFiles.innerHTML = '';
+    fileInput.addEventListener('change', (e) => {
+
+        const files = e.target.files;
+        for (var i = 0; i < files.length; i++) {
+            formDataMultiple.append('files[]', files[i]);
         }
 
+        if (files.length > 0) {
+            preview.style.display = 'block';
+
+
+            for (const file of files) {
+                const fileItem = document.createElement('li');
+                const fileName = document.createElement('span');
+                const downloadButton = document.createElement('button');
+                const deleteButton = document.createElement('button');
+                downloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                downloadButton.className = 'download-button';
+                deleteButton.className = 'delete-button';
+
+                downloadButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const blob = new Blob([file]);
+                    const blobURL = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobURL;
+                    a.download = file.name;
+                    a.click();
+                    URL.revokeObjectURL(blobURL);
+                });
+
+                deleteButton.addEventListener('click', () => {
+                    var itemName = $(fileItem).find('span').text();
+                    var newFormData = new FormData();
+                    $.each(formDataMultiple.getAll('files[]'), function (index, value) {
+                        if (value.name !== itemName) {
+                            newFormData.append('files[]', value);
+                        }
+                    });
+                    formDataMultiple = newFormData;
+
+                    fileItem.remove();
+                });
+
+                fileName.textContent = file.name.length > 10 ? file.name.substring(0, 11) + '...' : file.name;
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(downloadButton);
+                fileItem.appendChild(deleteButton);
+                selectedFiles.appendChild(fileItem);
+            }
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+});
+
+
+function validateFormAccordions(accordionSelector, errorMessageDefault = 'This field is required') {
+    var isFormValid = true;
+    var firstInvalidAccordion = null;
+
+    $(accordionSelector).each(function () {
         var currentAccordion = $(this);
-        var headerText = currentAccordion.find('.accordion-header strong').text().trim();
         var requiredFields = currentAccordion.find('input[required], select[required], textarea[required]');
         var isCurrentValid = true;
 
@@ -663,12 +748,10 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
             if (!value) {
                 isInvalid = true;
                 errorMessage = errorMessageDefault;
-            }
-            else if (minLength && value.length < parseInt(minLength)) {
+            } else if (minLength && value.length < parseInt(minLength)) {
                 isInvalid = true;
                 errorMessage = `Please enter at least ${minLength} characters.`;
-            }
-            else if (maxLength && value.length > parseInt(maxLength)) {
+            } else if (maxLength && value.length > parseInt(maxLength)) {
                 isInvalid = true;
                 errorMessage = `Please enter no more than ${maxLength} characters.`;
             }
@@ -679,42 +762,29 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
                 input.after('<div class="invalid-feedback">' + errorMessage + '</div>');
 
                 isCurrentValid = false;
+                isFormValid = false;
+
+                if (!firstInvalidAccordion) {
+                    firstInvalidAccordion = currentAccordion;
+                }
             } else {
                 input.removeClass('is-invalid error');
                 input.nextAll('.invalid-feedback, .error').remove();
             }
         });
 
-        //if (headerText === "Franchise Mapping Info") {
-        //    var checkboxes = currentAccordion.find('input[type="checkbox"]');
-        //    var anyChecked = checkboxes.is(':checked');
-
-        //    if (!anyChecked) {
-        //        isCurrentValid = false;
-
-        //        if (!currentAccordion.find('.checkbox-error').length) {
-        //            currentAccordion.find('#BindFranchiseData').append(
-        //                '<div class="invalid-feedback checkbox-error d-flex justify-content-center">Please select at least one franchise</div>'
-        //            );
-        //        }
-        //    } else {
-        //        currentAccordion.find('.checkbox-error').remove();
-        //    }
-        //}
-
-        if (!isCurrentValid) {
-            isFormValid = false;
-            foundInvalidAccordion = true;
-            currentAccordion.find('.collapse').collapse('show');
-            currentAccordion[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
-            $(accordionSelector).not(currentAccordion).find('.collapse').collapse('hide');
-        } else {
+        if (isCurrentValid) {
             currentAccordion.find('.collapse').collapse('hide');
         }
     });
 
+    if (firstInvalidAccordion) {
+        firstInvalidAccordion.find('.collapse').collapse('show');
+    }
+
     return isFormValid;
 }
+
 
 $(document).on("input", '#FormVendor #Email', function (event) {
     var inputElement = $(this);

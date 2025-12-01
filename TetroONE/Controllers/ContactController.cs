@@ -1,5 +1,4 @@
-﻿using TetroONE.Models;
-using log4net;
+﻿using log4net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -7,7 +6,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Net;
 using System.Security.Claims;
+using TetroONE.Models;
 using TetroPos.Models;
+using static TetroONE.Controllers.ContactController;
 
 namespace TetroONE.Controllers
 {
@@ -34,15 +35,15 @@ namespace TetroONE.Controllers
 		{
 			return View();
 		}
-
-		[Route("Franchise")]
-		public IActionResult Franchise()
+		 
+		[Route("ServiceEngr")]
+		public IActionResult ServiceEngr()
 		{
 			return View();
 		}
 
-        [Route("ServiceEngr")]
-        public IActionResult ServiceENGR()
+        [Route("JobWorker")]
+        public IActionResult JobWorker()
         {
             return View();
         }
@@ -50,14 +51,13 @@ namespace TetroONE.Controllers
         //===============================================================================================Vendor==========================================================================================================
         [HttpGet]
 		[Route("GetVendor")]
-		public IActionResult GetVendor(int FranchiseId)
+		public IActionResult GetVendor()
 		{
 			GetVendor getVendor = new GetVendor()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 				VendorId = null,
-				FranchiseId = FranchiseId
-			};
+            };
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetVendorDetails]", getVendor);
 			return Json(response);
@@ -65,52 +65,165 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetVendorID")]
-		public IActionResult GetVendorID(int VendorId, int FranchiseId)
+		public IActionResult GetVendorID(int VendorId)
 		{
 			GetVendor getVendor = new GetVendor()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-				VendorId = VendorId,
-				FranchiseId = FranchiseId
-			};
+				VendorId = VendorId
+            };
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetVendorDetails]", getVendor);
 			return Json(response);
 		}
 
-		[HttpPost]
-		[Route("InsertUpdareVendorDetails")]
-		public IActionResult InsertUpdareVendorDetails([FromBody] InsertUpdareVendorDetails request)
-		{
-			DataTable VendorContactData = new DataTable();
-			VendorContactData = GenericTetroONE.ToDataTable(request.contactPersonDetails);
+        [HttpPost]
+        [Route("InsertUpdateVendorDetails")]
+        public async Task<IActionResult> InsertUpdateVendorDetails()
+        {
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-			DataTable ProductMappingDetails = new DataTable();
-			ProductMappingDetails = GenericTetroONE.ToDataTable(request.vendorProductMappingDetails);
+            InsertUpdateVendorDetails staticDetails = new InsertUpdateVendorDetails();
 
-			DataTable FranchiseMappingDetails = new DataTable();
-			FranchiseMappingDetails = GenericTetroONE.ToDataTable(request.franchiseMappingDetails);
+            staticDetails = JsonConvert.DeserializeObject<InsertUpdateVendorDetails>(Request.Form["VendorData"]);
 
-			request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-			request.TVP_ContactPersonDetails = VendorContactData;
-			request.TVP_VendorProductMappingDetails = ProductMappingDetails;
-			request.TVP_ContactFranchiseMappingDetails = FranchiseMappingDetails;
+            IFormFileCollection file = Request.Form.Files;
+            List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
+            DataTable dtattachment = new DataTable();
 
-			if (request.VendorId != null && request.VendorId != 0)
-			{
-				string[] Exclude = { "contactPersonDetails", "vendorProductMappingDetails", "franchiseMappingDetails" };
-				response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateVendorDetails]", request, Exclude);
-			}
-			else
-			{
-				string[] Exclude = { "contactPersonDetails", "vendorProductMappingDetails", "franchiseMappingDetails", "VendorId", "IsActive" };
-				response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertVendorDetails]", request, Exclude);
-			}
+            foreach (var item in file)
+            {
+                var attachment = GetFilePath(item.FileName);
+                lstattachment.Add(new AttachmentDetails()
+                {
+                    AttachmentExactFileName = item.FileName,
+                    AttachmentFileName = attachment.Item1,
+                    AttachmentFilePath = attachment.Item2,
+                    ModuleName = "Vendor"
+                });
+            }
 
-			return Json(response);
-		}
+            bool isuploaded = await IsClaimAttachmentUploaded(file, lstattachment);
+            foreach (var item in lstattachment)
+            {
+                item.AttachmentFileName = item.AttachmentExactFileName;
+            }
 
-		[HttpGet]
+            var exist = Request.Form["Exist"].ToList();
+            if (exist != null && exist.Count > 0)
+            {
+                List<AttachmentDetails> lstexistattachment = ParseFormData(Request.Form["Exist"]);
+                if (lstexistattachment.Any())
+                {
+                    lstattachment.AddRange(lstexistattachment);
+                }
+            }
+            List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstattachment.AddRange(lstdeleteattachment);
+                    lstattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
+                }
+            }
+
+            dtattachment = GenericTetroONE.ToDataTable(lstattachment);
+            dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
+
+            List<ContactPersonDetails>? staticData = JsonConvert.DeserializeObject<List<ContactPersonDetails>?>(Request.Form["VendorContactPersonDetails"]);
+            DataTable ClientContactPersonDetails = GenericTetroONE.ToDataTable(staticData);
+
+            List<VendorProductMappingDetails>? ProductMapping = JsonConvert.DeserializeObject<List<VendorProductMappingDetails>?>(Request.Form["VendorProductMappingDetails"]);
+            DataTable ProductMappingDetails = GenericTetroONE.ToDataTable(ProductMapping);
+
+            var spName = string.Empty;
+            if (staticDetails.VendorId != null && staticDetails.VendorId != 0)
+            {
+                spName = "[dbo].[USP_UpdateVendorDetails]";
+            }
+            else
+            {
+                spName = "[dbo].[USP_InsertVendorDetails]";
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(spName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@LoginUserId", _userId);
+                    command.Parameters.AddWithValue("@VendorName", staticDetails.VendorName);
+                    command.Parameters.AddWithValue("@Address", staticDetails.Address);
+                    command.Parameters.AddWithValue("@City", staticDetails.City);
+                    command.Parameters.AddWithValue("@State", staticDetails.State);
+                    command.Parameters.AddWithValue("@Country", staticDetails.Country);
+                    command.Parameters.AddWithValue("@ZipCode", staticDetails.ZipCode);
+                    command.Parameters.AddWithValue("@ContactNumber", staticDetails.ContactNumber);
+                    command.Parameters.AddWithValue("@Email", staticDetails.Email);
+                    command.Parameters.AddWithValue("@GSTNumber", staticDetails.GSTNumber);
+                    command.Parameters.AddWithValue("@Remark", staticDetails.Remark);
+                    command.Parameters.AddWithValue("@IFSCCode", staticDetails.IFSCCode);
+                    command.Parameters.AddWithValue("@BankName", staticDetails.BankName);
+                    command.Parameters.AddWithValue("@BranchName", staticDetails.BranchName);
+                    command.Parameters.AddWithValue("@AccountType", staticDetails.AccountType);
+                    command.Parameters.AddWithValue("@AccountName", staticDetails.AccountName);
+                    command.Parameters.AddWithValue("@AccountNumber", staticDetails.AccountNumber);
+                    command.Parameters.AddWithValue("@MaxCreditLimit", staticDetails.MaxCreditLimit);
+                    command.Parameters.AddWithValue("@CurrentCreditLimit", staticDetails.CurrentCreditLimit);
+
+                    command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails);
+                    command.Parameters.AddWithValue("@TVP_VendorProductMappingDetails", ProductMappingDetails);
+                    command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
+
+                    if (staticDetails.VendorId > 0)
+                    {
+                        command.Parameters.AddWithValue("@VendorId", staticDetails.VendorId);
+                        command.Parameters.AddWithValue("@IsActive", staticDetails.IsActive);
+                    }
+
+                    command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
+                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                }
+                connection.Close();
+
+            }
+            if (!response.Status)
+            {
+                foreach (var item in lstattachment)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                                .Replace("..", "").Replace("/", "\\");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
+
+            return Json(response);
+        }
+
+
+        [HttpGet]
 		[Route("GetProductListVendor")]
 		public IActionResult GetProductListVendor(string ModuleName)
 		{
@@ -142,13 +255,12 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetClient")]
-		public IActionResult GetClient(int ClientTypeId)
+		public IActionResult GetClient()
 		{
 			GetClient getClient = new GetClient()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-				ClientId = null,
-                ClientTypeId = ClientTypeId
+				ClientId = null, 
             };
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetClientDetails]", getClient);
@@ -163,197 +275,150 @@ namespace TetroONE.Controllers
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 				ClientId = ClientId,
-				ClientTypeId = null
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetClientDetails]", getClient);
 			return Json(response);
 		}
 
-		[HttpPost]
-		[Route("InsertUpdareClientDetails")]
-		public async Task<IActionResult> InsertUpdareClientDetails()
-		{
-			_userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        [HttpPost]
+        [Route("InsertUpdateClientDetails")]
+        public async Task<IActionResult> InsertUpdateClientDetails()
+        {
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-			InsertUpdareClientDetails staticDetails = new InsertUpdareClientDetails();
+            InsertUpdateClientDetails staticDetails = new InsertUpdateClientDetails();
 
-			staticDetails = JsonConvert.DeserializeObject<InsertUpdareClientDetails>(Request.Form["ClientDetailsStatic"]);
+            staticDetails = JsonConvert.DeserializeObject<InsertUpdateClientDetails>(Request.Form["ClientData"]);
 
             IFormFileCollection file = Request.Form.Files;
-            List<AttachmentTable> lstattachment = new List<AttachmentTable>();
+            List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
             DataTable dtattachment = new DataTable();
-
-            List<AttachmentTableDyanamicClient> DyanamicAttachment = JsonConvert.DeserializeObject<List<AttachmentTableDyanamicClient>?>(Request.Form["VisicoolerDyanamicAttachment"]);
-
-            List<AttachmentTableDyanamicClient> lstattachmentDynamic = new List<AttachmentTableDyanamicClient>();
-            DataTable dtattachmentDynamic = new DataTable();
 
             foreach (var item in file)
             {
-                var matchingDocument = DyanamicAttachment.FirstOrDefault(d => d.Visi_AttachmentFileName == item.FileName);
-                if (!lstattachmentDynamic.Any(x => x.AttachmentExactFileName == item.FileName)
-                        && matchingDocument != null
-                        && matchingDocument.Visi_AttachmentFileName == item.FileName)
+                var attachment = GetFilePath(item.FileName);
+                lstattachment.Add(new AttachmentDetails()
                 {
-                    var attachmentName = GetFilePath(item.FileName);
-                    lstattachmentDynamic.Add(new AttachmentTableDyanamicClient()
-                    {
-                        VisicoolarAttachmentId = null,
-                        AttachmentExactFileName = item.FileName,
-                        Visi_AttachmentFileName = attachmentName.Item1,
-                        Visi_AttachmentFilePath = attachmentName.Item2,
-                        DistributorVisicoolarId = staticDetails.ClientId,
-                        RowNumber = matchingDocument.RowNumber,
-                    });
-                }
-
-                else
-                {
-                    var attachment = GenericTetroONE.GetFilePath(item.FileName);
-                    lstattachment.Add(new AttachmentTable()
-                    {
-                        AttachmentExactFileName = item.FileName,
-                        AttachmentFileName = attachment.Item1,
-                        AttachmentFilePath = attachment.Item2,
-                        ModuleName = "Client"
-                    });
-                }
+                    AttachmentExactFileName = item.FileName,
+                    AttachmentFileName = attachment.Item1,
+                    AttachmentFilePath = attachment.Item2,
+                    ModuleName = "Client"
+                });
             }
 
-            bool isuploadedDynamic = await IsClaimAttachmentUploadedDynamic(file, lstattachmentDynamic);
-
-            foreach (var item in lstattachmentDynamic)
-            {
-                item.Visi_AttachmentFileName = item.AttachmentExactFileName;
-            }
-            List<AttachmentTableDyanamicClient> existFilesDyn = JsonConvert.DeserializeObject<List<AttachmentTableDyanamicClient>?>(Request.Form["ExistFilesDyanamicAttachment"]);
-
-            if (existFilesDyn != null && existFilesDyn.Count > 0)
-            {
-                lstattachmentDynamic.AddRange(existFilesDyn);
-            }
-
-            dtattachmentDynamic = GenericTetroONE.ToDataTable(lstattachmentDynamic);
-            dtattachmentDynamic = GenericTetroONE.RemoveColumn(dtattachmentDynamic, "AttachmentExactFileName");
-
-            bool isuploaded = await GenericTetroONE.IsAttachmentUploaded(file, lstattachment);
-
+            bool isuploaded = await IsClaimAttachmentUploaded(file, lstattachment);
             foreach (var item in lstattachment)
             {
                 item.AttachmentFileName = item.AttachmentExactFileName;
             }
 
-            List<AttachmentTable> existFiles = JsonConvert.DeserializeObject<List<AttachmentTable>?>(Request.Form["Exist"]);
-
-            if (existFiles != null && existFiles.Count > 0)
+            var exist = Request.Form["Exist"].ToList();
+            if (exist != null && exist.Count > 0)
             {
-                lstattachment.AddRange(existFiles);
+                List<AttachmentDetails> lstexistattachment = ParseFormData(Request.Form["Exist"]);
+                if (lstexistattachment.Any())
+                {
+                    lstattachment.AddRange(lstexistattachment);
+                }
+            }
+            List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstattachment.AddRange(lstdeleteattachment);
+                    lstattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
+                }
             }
 
             dtattachment = GenericTetroONE.ToDataTable(lstattachment);
             dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
-
-
+			 
             List<ContactPersonDetails>? staticData = JsonConvert.DeserializeObject<List<ContactPersonDetails>?>(Request.Form["ClientContactPersonDetails"]);
-			DataTable ClientContactPersonDetails = GenericTetroONE.ToDataTable(staticData);
-
-			List<FranchiseMappingDetails>? FranchiseData = JsonConvert.DeserializeObject<List<FranchiseMappingDetails>?>(Request.Form["FranchiseStaticData"]);
-			DataTable FranchiseStaticData = GenericTetroONE.ToDataTable(FranchiseData);
-
-            List<ClientProductMappingDetails>? ClientProductMappingDetails = JsonConvert.DeserializeObject<List<ClientProductMappingDetails>?>(Request.Form["ClientProductMappingDetails"]);
-            DataTable ClientProductStaticDetails = GenericTetroONE.ToDataTable(ClientProductMappingDetails);
-
+            DataTable ClientContactPersonDetails = GenericTetroONE.ToDataTable(staticData);
 
             var spName = string.Empty;
-			if (staticDetails.ClientId != null && staticDetails.ClientId != 0)
-			{
-				spName = "[dbo].[USP_UpdateClientDetails]";
-			}
-			else
-			{
-				spName = "[dbo].[USP_InsertClientDetails]";
-			}
-			using (SqlConnection connection = new SqlConnection(_connectionString))
-			{
-				connection.Open();
+            if (staticDetails.ClientId != null && staticDetails.ClientId != 0)
+            {
+                spName = "[dbo].[USP_UpdateClientDetails]";
+            }
+            else
+            {
+                spName = "[dbo].[USP_InsertClientDetails]";
+            }
 
-				using (SqlCommand command = new SqlCommand(spName, connection))
-				{
-					command.CommandType = CommandType.StoredProcedure;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
 
-					command.Parameters.AddWithValue("@LoginUserId", _userId);
-					command.Parameters.AddWithValue("@ClientTypeId", staticDetails.ClientTypeId);
-                    command.Parameters.AddWithValue("@ClientNo", staticDetails.ClientNo == null?DBNull.Value: staticDetails.ClientNo);
+                using (SqlCommand command = new SqlCommand(spName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
 
+                    command.Parameters.AddWithValue("@LoginUserId", _userId); 
                     command.Parameters.AddWithValue("@ClientName", staticDetails.ClientName);
-					command.Parameters.AddWithValue("@Address", staticDetails.Address);
-					command.Parameters.AddWithValue("@City", staticDetails.City);
-					command.Parameters.AddWithValue("@StateId", staticDetails.StateId);
-					command.Parameters.AddWithValue("@Country", staticDetails.Country);
-					command.Parameters.AddWithValue("@ZipCode", staticDetails.ZipCode);
-					command.Parameters.AddWithValue("@ContactNumber", staticDetails.ContactNumber);
-					command.Parameters.AddWithValue("@Email", staticDetails.Email);
-					command.Parameters.AddWithValue("@GSTNumber", staticDetails.GSTNumber);
-					command.Parameters.AddWithValue("@CreditLimit", staticDetails.CreditLimit);
-					command.Parameters.AddWithValue("@CurrentCreditLimit", staticDetails.CurrentCreditLimit);
-					command.Parameters.AddWithValue("@Remark", staticDetails.Remark);
-					command.Parameters.AddWithValue("@CollaboratedDate", staticDetails.CollaboratedDate ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@ExpiryDate",staticDetails.ExpiryDate?.AddDays(1) ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@InvoiceAmount", staticDetails.InvoiceAmount ?? (object)DBNull.Value);
-					command.Parameters.AddWithValue("@NoOfCrates", staticDetails.NoOfCrates ?? (object)DBNull.Value);
-					command.Parameters.AddWithValue("@PerCrateCost", staticDetails.PerCrateCost ?? (object)DBNull.Value);
-					command.Parameters.AddWithValue("@CurrentEligibility", staticDetails.CurrentEligibility ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@Address", staticDetails.Address);
+                    command.Parameters.AddWithValue("@City", staticDetails.City);
+                    command.Parameters.AddWithValue("@State", staticDetails.State);
+                    command.Parameters.AddWithValue("@Country", staticDetails.Country);
+                    command.Parameters.AddWithValue("@ZipCode", staticDetails.ZipCode);
+                    command.Parameters.AddWithValue("@ContactNumber", staticDetails.ContactNumber);
+                    command.Parameters.AddWithValue("@Email", staticDetails.Email);
+                    command.Parameters.AddWithValue("@GSTNumber", staticDetails.GSTNumber);
+                    command.Parameters.AddWithValue("@CreditLimit", staticDetails.CreditLimit);
+                    command.Parameters.AddWithValue("@CurrentCreditLimit", staticDetails.CurrentCreditLimit);
+                    command.Parameters.AddWithValue("@Remark", staticDetails.Remark);
 
-                 
+
                     command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails);
-					command.Parameters.AddWithValue("@TVP_ClientProductMappingDetails", ClientProductStaticDetails);
-					command.Parameters.AddWithValue("@TVP_ContactFranchiseMappingDetails", FranchiseStaticData);
-					command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
-                    command.Parameters.AddWithValue("@TVP_VisicoolarAttachmentDetails", dtattachmentDynamic);
-
+                    command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
 
                     if (staticDetails.ClientId > 0)
-					{
-						command.Parameters.AddWithValue("@ClientId", staticDetails.ClientId);
-						command.Parameters.AddWithValue("@IsActive", staticDetails.IsActive);
-					}
+                    {
+                        command.Parameters.AddWithValue("@ClientId", staticDetails.ClientId);
+                        command.Parameters.AddWithValue("@IsActive", staticDetails.IsActive);
+                    }
 
-					command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
-					command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-					try
-					{
-						await command.ExecuteNonQueryAsync();
-					}
-					catch (Exception ex)
-					{
+                    command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
 
-					}
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception ex)
+                    {
 
-					response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
-					response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                    }
 
-				}
-				connection.Close();
+                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
+                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                }
+                connection.Close();
 
-			}
-			if (!response.Status)
-			{
-				foreach (var item in lstattachment)
-				{
-					var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
-					string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
-								.Replace("..", "").Replace("/", "\\");
-					if (System.IO.File.Exists(filePath))
-					{
-						System.IO.File.Delete(filePath);
-					}
-				}
-			}
-			return Json(response);
-		}
+            }
+            if (!response.Status)
+            {
+                foreach (var item in lstattachment)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                                .Replace("..", "").Replace("/", "\\");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
 
-		[HttpGet]
+            return Json(response);
+        }
+
+
+        [HttpGet]
 		[Route("DeleteClient")]
 		public IActionResult DeleteClient(int ClientId)
 		{
@@ -390,8 +455,6 @@ namespace TetroONE.Controllers
 			}
 			return Json(response);
 		}
-
-
 
 		private (string, string) GetFilePath(string reqfilename)
 		{
@@ -440,102 +503,180 @@ namespace TetroONE.Controllers
 
 		}
 
-		[HttpGet]
-		[Route("GetShop")]
-		public IActionResult GetShop(int? ShopId, int? DistributorId)
-		{
-			GetShop Get = new GetShop()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-				ShopId = ShopId == 0 ? null : ShopId,
-                DistributorId = DistributorId
+
+        //===============================================================================================Vendor==========================================================================================================
+        [HttpGet]
+        [Route("GetJobWorker")]
+        public IActionResult GetJobWorker(int? JobWorkerId)
+        {
+            GetJobWorker getJobWorker = new GetJobWorker()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                JobWorkerId = JobWorkerId,
             };
 
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetShopDetails]", Get);
-			return Json(response);
-		}
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetJobWorkersDetails]", getJobWorker);
+            return Json(response);
+        }
+        
+        [HttpPost]
+        [Route("InsertUpdateJobWorkerDetails")]
+        public async Task<IActionResult> InsertUpdateJobWorkerDetails()
+        {
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
+            InsertUpdateJobWorker staticDetails = new InsertUpdateJobWorker();
 
-		[HttpPost]
-		[Route("InsertUpdateShop")]
-		public IActionResult InsertUpdateShop([FromBody] InsertUpdateShop request)
-		{
-			_userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            staticDetails = JsonConvert.DeserializeObject<InsertUpdateJobWorker>(Request.Form["JobWorkersData"]);
 
-			DataTable ShopMappingDetails = new DataTable();
-			ShopMappingDetails = GenericTetroONE.ToDataTable(request.ShopContactPersonDetails);
+            IFormFileCollection file = Request.Form.Files;
+            List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
+            DataTable dtattachment = new DataTable();
 
-			string storedProcedure = (request.ShopId != null)
-				? "[dbo].[USP_UpdateShopDetails]"
-				: "[dbo].[USP_InsertShopDetails]";
+            foreach (var item in file)
+            {
+                var attachment = GetFilePath(item.FileName);
+                lstattachment.Add(new AttachmentDetails()
+                {
+                    AttachmentExactFileName = item.FileName,
+                    AttachmentFileName = attachment.Item1,
+                    AttachmentFilePath = attachment.Item2,
+                    ModuleName = "JobWorker"
+                });
+            }
 
-			using (SqlConnection connection = new SqlConnection(_connectionString))
-			{
-				connection.Open();
+            bool isuploaded = await IsClaimAttachmentUploaded(file, lstattachment);
+            foreach (var item in lstattachment)
+            {
+                item.AttachmentFileName = item.AttachmentExactFileName;
+            }
 
-				using (SqlCommand command = new SqlCommand(storedProcedure, connection))
-				{
-					command.CommandType = CommandType.StoredProcedure;
+            var exist = Request.Form["Exist"].ToList();
+            if (exist != null && exist.Count > 0)
+            {
+                List<AttachmentDetails> lstexistattachment = ParseFormData(Request.Form["Exist"]);
+                if (lstexistattachment.Any())
+                {
+                    lstattachment.AddRange(lstexistattachment);
+                }
+            }
+            List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstattachment.AddRange(lstdeleteattachment);
+                    lstattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
+                }
+            }
 
-					command.Parameters.AddWithValue("@LoginUserId", _userId);
-					command.Parameters.AddWithValue("@ShopTypeId", request.ShopTypeId);
-					command.Parameters.AddWithValue("@ShopName", request.ShopName);
-					command.Parameters.AddWithValue("@ShopAddress", request.ShopAddress);
-					command.Parameters.AddWithValue("@ShopCity", request.ShopCity);
-					command.Parameters.AddWithValue("@ShopStateId", request.ShopStateId);
-					command.Parameters.AddWithValue("@ShopCountry", request.ShopCountry);
-					command.Parameters.AddWithValue("@ShopZipcode", request.ShopZipcode);
-					command.Parameters.AddWithValue("@ShopContactNo", request.ShopContactNo);
-					command.Parameters.AddWithValue("@ShopEmail", request.ShopEmail);
-					command.Parameters.AddWithValue("@ShopGSTNumber", request.ShopGSTNumber);
-					command.Parameters.AddWithValue("@MaxCreditLimit", request.MaxCreditLimit);
-					command.Parameters.AddWithValue("@CurrentCreditLimit", request.CurrentCreditLimit ?? (object)DBNull.Value);
-					command.Parameters.AddWithValue("@Remarks", request.Remarks);
-					command.Parameters.AddWithValue("@Visicooler", request.Visicooler ?? (object)DBNull.Value);
-					command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ShopMappingDetails);
+            dtattachment = GenericTetroONE.ToDataTable(lstattachment);
+            dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
 
-					if (request.ShopId > 0)
-					{
-						command.Parameters.AddWithValue("@ShopId", request.ShopId);
-						command.Parameters.AddWithValue("@IsActive", request.IsActive);
-					}
-					else
-					{
-                        command.Parameters.AddWithValue("@DistributorId", request.DistributorId ?? (object)DBNull.Value);
+            List<ContactPersonDetails>? staticData = JsonConvert.DeserializeObject<List<ContactPersonDetails>?>(Request.Form["JobWorkerContactPersonDetails"]);
+            DataTable ClientContactPersonDetails = GenericTetroONE.ToDataTable(staticData);
+             
+            var spName = string.Empty;
+            if (staticDetails.JobWorkerId != null && staticDetails.JobWorkerId != 0)
+            {
+                spName = "[dbo].[USP_UpdateJobWorkersDetails]";
+            }
+            else
+            {
+                spName = "[dbo].[USP_InsertJobWorkersDetails]";
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(spName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@LoginUserId", _userId);
+                    command.Parameters.AddWithValue("@JobWorkerName", staticDetails.JobWorkerName);
+                    command.Parameters.AddWithValue("@Address", staticDetails.Address);
+                    command.Parameters.AddWithValue("@City", staticDetails.City);
+                    command.Parameters.AddWithValue("@State", staticDetails.State);
+                    command.Parameters.AddWithValue("@Country", staticDetails.Country);
+                    command.Parameters.AddWithValue("@ZipCode", staticDetails.ZipCode);
+                    command.Parameters.AddWithValue("@ContactNumber", staticDetails.ContactNumber);
+                    command.Parameters.AddWithValue("@Email", staticDetails.Email);
+                    command.Parameters.AddWithValue("@GSTNumber", staticDetails.GSTNumber);
+                    command.Parameters.AddWithValue("@Remark", staticDetails.Remark);
+                    command.Parameters.AddWithValue("@IFSCCode", staticDetails.IFSCCode);
+                    command.Parameters.AddWithValue("@BankName", staticDetails.BankName);
+                    command.Parameters.AddWithValue("@BranchName", staticDetails.BranchName);
+                    command.Parameters.AddWithValue("@AccountType", staticDetails.AccountType);
+                    command.Parameters.AddWithValue("@AccountName", staticDetails.AccountName);
+                    command.Parameters.AddWithValue("@AccountNumber", staticDetails.AccountNumber); 
+
+                    command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails); 
+                    command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
+
+                    if (staticDetails.JobWorkerId > 0)
+                    {
+                        command.Parameters.AddWithValue("@JobWorkerId", staticDetails.JobWorkerId);
+                        command.Parameters.AddWithValue("@IsActive", staticDetails.IsActive);
                     }
 
-						command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
-					command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
 
-					command.ExecuteNonQuery();
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception ex)
+                    {
 
-					response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
-					response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                    }
 
-				}
-				connection.Close();
-			}
-			return Json(response);
-		}
+                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
+                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                }
+                connection.Close();
 
-		public class DeletedShop { public int LoginUserId { get; set; } public int? ShopId { get; set; } }
-		[HttpGet]
-		[Route("DeletedShop")]
-		public IActionResult DeletedShop_1(int? ShopId)
-		{
-			DeletedShop Get = new DeletedShop()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-				ShopId = ShopId == 0 ? null : ShopId
-			};
+            }
+            if (!response.Status)
+            {
+                foreach (var item in lstattachment)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                                .Replace("..", "").Replace("/", "\\");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            } 
+            return Json(response);
+        }
+        
+        [HttpGet]
+        [Route("DeleteJobWorker")]
+        public IActionResult DeleteJobWorker(int JobWorkerId)
+        {
+            GetJobWorker getJobWorkers = new GetJobWorker()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                JobWorkerId = JobWorkerId,
+            };
 
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteShopDetails]", Get);
-			return Json(response);
-		}
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteJobWorkersDetails]", getJobWorkers);
+            return Json(response);
+        }
 
-		//===============================================================================================Franchise=====================================================================================
+        //===============================================================================================End JobWorkers==========================================================================================================
 
-		[HttpGet]
+
+        //===============================================================================================Franchise=====================================================================================
+
+        [HttpGet]
 		[Route("GetFranchise")]
 		public IActionResult GetFranchise(int? FranchiseId)
 		{
@@ -548,8 +689,7 @@ namespace TetroONE.Controllers
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetFranchiseDetails]", getFranchise);
 			return Json(response);
 		}
-
-
+         
 		[HttpPost]
 		[Route("InsertUpdateFranchise")]
 		public async Task<IActionResult> InsertUpdateFranchise()
@@ -562,7 +702,6 @@ namespace TetroONE.Controllers
 
 			IFormFileCollection file = Request.Form.Files;
 			List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
-			//List<AttachmentDetails> lstnewattachment = new List<AttachmentDetails>();
 			DataTable dtattachment = new DataTable();
 
 			foreach (var item in file)
@@ -763,71 +902,69 @@ namespace TetroONE.Controllers
             catch (Exception ex)
             {
                 isuploaded = false;
-            }
-
+            } 
             return isuploaded;
         }
+		
+        //===============================================================================================ServiceEngr=====================================================================================
+
+		 
+        //[HttpGet]
+        //[Route("GetServiceEngr")]
+        //public IActionResult GetServiceEngr(int BranchId, int ServiceEngrId)
+        //{
+        //    GetServiceEngr getVendor = new GetServiceEngr()
+        //    {
+        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //        BranchId = BranchId,
+        //        ServiceEngrId = ServiceEngrId != 0 ? ServiceEngrId : null,
+        //    };
+
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetServiceEngrDetails]", getVendor);
+        //    return Json(response);
+        //}
+
+        //[HttpPost]
+        //[Route("InsertUpdateServiceEngr")]
+        //public IActionResult InsertUpdateServiceEngr([FromBody] InsertUpdateServiceEngr request)
+        //{
+        //    DataTable ContactPersonDetails = new DataTable();
+        //    ContactPersonDetails = GenericTetroONE.ToDataTable(request.ContactPersonDetails);
 
 
 
+        //    request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+        //    request.TVP_ContactPersonDetails = ContactPersonDetails;
 
 
-        [HttpGet]
-        [Route("GetServiceEngr")]
-        public IActionResult GetServiceEngr(int BranchId, int ServiceEngrId)
-        {
-            GetServiceEngr getVendor = new GetServiceEngr()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                BranchId = BranchId,
-                ServiceEngrId = ServiceEngrId != 0 ? ServiceEngrId : null,
-            };
+        //    if (request.ServiceEngrId != null && request.ServiceEngrId != 0)
+        //    {
+        //        string[] Exclude = { "ContactPersonDetails", "ContactBranchMappingDetails" };
+        //        response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateServiceEngrDetails]", request, Exclude);
+        //    }
+        //    else
+        //    {
+        //        string[] Exclude = { "ContactPersonDetails", "ContactBranchMappingDetails", "ServiceEngrId", "IsActive" };
+        //        response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertServiceEngrDetails]", request, Exclude);
+        //    }
 
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetServiceEngrDetails]", getVendor);
-            return Json(response);
-        }
+        //    return Json(response);
+        //}
 
-        [HttpPost]
-        [Route("InsertUpdateServiceEngr")]
-        public IActionResult InsertUpdateServiceEngr([FromBody] InsertUpdateServiceEngr request)
-        {
-            DataTable ContactPersonDetails = new DataTable();
-            ContactPersonDetails = GenericTetroONE.ToDataTable(request.ContactPersonDetails);
+        //public class DeleteServiceEngrClass { public int LoginUserId { get; set; } public int? ServiceEngrId { get; set; } }
+        //[HttpGet]
+        //[Route("DeleteServiceEngr")]
+        //public IActionResult DeleteServiceEngr(int ServiceEngrId)
+        //{
+        //    DeleteServiceEngrClass getDelete = new DeleteServiceEngrClass()
+        //    {
+        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //        ServiceEngrId = ServiceEngrId
+        //    };
 
-           
-
-            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            request.TVP_ContactPersonDetails = ContactPersonDetails;
-          
-
-            if (request.ServiceEngrId != null && request.ServiceEngrId != 0)
-            {
-                string[] Exclude = { "ContactPersonDetails", "ContactBranchMappingDetails" };
-                response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateServiceEngrDetails]", request, Exclude);
-            }
-            else
-            {
-                string[] Exclude = { "ContactPersonDetails", "ContactBranchMappingDetails", "ServiceEngrId", "IsActive" };
-                response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertServiceEngrDetails]", request, Exclude);
-            }
-
-            return Json(response);
-        }
-
-        public class DeleteServiceEngrClass { public int LoginUserId { get; set; } public int? ServiceEngrId { get; set; } }
-        [HttpGet]
-        [Route("DeleteServiceEngr")]
-        public IActionResult DeleteServiceEngr(int ServiceEngrId)
-        {
-            DeleteServiceEngrClass getDelete = new DeleteServiceEngrClass()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                ServiceEngrId = ServiceEngrId
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteServiceEngrDetails]", getDelete);
-            return Json(response);
-        }
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteServiceEngrDetails]", getDelete);
+        //    return Json(response);
+        //}
 
 
 

@@ -15,7 +15,6 @@ namespace TetroONE.Controllers
     [Route("PurchaseOrder")]
     public class PurchaseOrderController : BaseController
     {
-
         public PurchaseOrderController(IConfiguration configuration) : base(configuration)
         {
 
@@ -27,24 +26,20 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetPurchaseOrder")]
-        public IActionResult GetPurchaseOrder(DateTime FromDate, DateTime ToDate, int FranchiseId, int? TypeId)
+        public IActionResult GetPurchaseOrder(int? PlantId, int? PurchaseOrderId, DateTime FromDate, DateTime ToDate)
         {
             GetPurchaseOrder request = new GetPurchaseOrder()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                PurchaseOrderId = null,
+                PlantId = PlantId,
+                PurchaseOrderId = PurchaseOrderId,
                 FromDate = FromDate,
                 ToDate = ToDate,
-                FranchiseId = FranchiseId,
-                TypeId = TypeId
-
-
             };
-
             response = GenericTetroONE.GetData(_connectionString, "[USP_GetPurchaseOrderDetails]", request);
             return Json(response);
         }
-         
+
         [HttpGet]
         [Route("GetOtherChargesType")]
         public IActionResult GetOtherChargesType(string OtherChargesTypeName)
@@ -100,15 +95,11 @@ namespace TetroONE.Controllers
 
             try
             {
-                PurchaseDetailsStatic PurchaseDetailsStatic = JsonConvert.DeserializeObject<PurchaseDetailsStatic>(Request.Form["PurchaseDetailsStatic"]);
+                PurchaseDetailsStatic PurchaseDetailsStatic = JsonConvert.DeserializeObject<PurchaseDetailsStatic>(Request.Form["PurchaseOrderDetailsStatic"]);
                 List<PurchaseOrderProductMappingDetails>? PurchaseOrderProductMappingDetails = JsonConvert.DeserializeObject<List<PurchaseOrderProductMappingDetails>?>(Request.Form["PurchaseOrderProductMappingDetails"]);
-                List<PurchaseOrderProposalProductMappingDetails>? PurchaseOrderProposalProductMappingDetails = JsonConvert.DeserializeObject<List<PurchaseOrderProposalProductMappingDetails>?>(Request.Form["PurchaseOrderProposalProductMappingDetails"]);
-                 
+
                 DataTable dtproductData = new DataTable();
                 dtproductData = GenericTetroONE.ToDataTable(PurchaseOrderProductMappingDetails);
-                 
-                DataTable dtPOPPproductData = new DataTable(); 
-                dtproductData = GenericTetroONE.ToDataTable(PurchaseOrderProposalProductMappingDetails);
 
                 InsertPurchaseOrderDetails request = new InsertPurchaseOrderDetails()
                 {
@@ -116,21 +107,18 @@ namespace TetroONE.Controllers
                     PurchaseOrderId = PurchaseDetailsStatic.PurchaseOrderId,
                     PurchaseOrderNo = PurchaseDetailsStatic.PurchaseOrderNo,
                     VendorId = PurchaseDetailsStatic.VendorId,
-                    ShipToFranchiseId = PurchaseDetailsStatic.ShipToFranchiseId,
-                    FranchiseId = PurchaseDetailsStatic.FranchiseId,
-                    BillFromFranchiseId = PurchaseDetailsStatic.BillFromFranchiseId,
+                    ShipToPlantId = PurchaseDetailsStatic.ShipToPlantId,
+                    BillFromPlantId = PurchaseDetailsStatic.BillFromPlantId,
+                    PlantId = PurchaseDetailsStatic.PlantId,
                     PurchaseOrderDate = PurchaseDetailsStatic.PurchaseOrderDate,
                     ExpectedDeliveryDate = PurchaseDetailsStatic.ExpectedDeliveryDate,
-                    TermsAndCondition = PurchaseDetailsStatic.TermsAndCondition,
-                    Notes = PurchaseDetailsStatic.Notes,
                     SubTotal = PurchaseDetailsStatic.SubTotal,
-                    GrantTotal = PurchaseDetailsStatic.GrantTotal,
                     RoundOffValue = PurchaseDetailsStatic.RoundOffValue,
+                    GrantTotal = PurchaseDetailsStatic.GrantTotal,
+                    Notes = PurchaseDetailsStatic.Notes,
+                    TermsAndCondition = PurchaseDetailsStatic.TermsAndCondition,
                     PurchaseOrderStatusId = PurchaseDetailsStatic.PurchaseOrderStatusId,
-                    TypeOfRequestId = PurchaseDetailsStatic.TypeOfRequestId,
-                    RequestNo = PurchaseDetailsStatic.RequestNo, 
                     TVP_Purchase_ProductMappingDetails = dtproductData,
-                    TVP_PurchaseOrderProposalProductMappingDetails = dtPOPPproductData,
                     TVP_AttachmentDetails = dtattachment
                 };
 
@@ -156,28 +144,10 @@ namespace TetroONE.Controllers
                 throw;
             }
         }
-         
-        [HttpGet]
-        [Route("NotNullGetPurchaseOrder")]
-        public IActionResult NotNullGetPurchaseOrder(int PurchaseOrderId, int FranchiseId)
-        { 
-            GetPurchaseOrder getInfo = new GetPurchaseOrder()
-            { 
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                PurchaseOrderId = PurchaseOrderId,
-                FromDate = null,
-                ToDate = null,
-                FranchiseId = FranchiseId,
-                TypeId = null
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetPurchaseOrderDetails]", getInfo);
-            return Json(response);
-        }
 
         [HttpGet]
         [Route("GetProduct")]
-        public IActionResult GetProduct(string ModuleName, int? VendorId, int FranchiseId)
+        public IActionResult GetProduct(string ModuleName, int VendorId, int PlantId)
         {
             GetProduct_PurchaseSale request = new GetProduct_PurchaseSale()
             {
@@ -185,7 +155,7 @@ namespace TetroONE.Controllers
                 ProductId = null,
                 ModuleName = ModuleName,
                 VendorId = VendorId,
-                FranchiseId = FranchiseId
+                PlantId = PlantId
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductDetails_PurchaseSale]", request);
@@ -232,13 +202,12 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("DeletePurchaseOrderDetails")]
-        public IActionResult DeletePurchaseOrderDetails(int purchaseOrderId)
+        public IActionResult DeletePurchaseOrderDetails(int PurchaseOrderId)
         {
             DeletePurchaseOrder getInfo = new DeletePurchaseOrder()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                PurchaseOrderId = purchaseOrderId,
-
+                PurchaseOrderId = PurchaseOrderId,
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeletePurchaseOrderDetails]", getInfo);
@@ -269,172 +238,60 @@ namespace TetroONE.Controllers
             }
             return Json(response);
         }
-
+        
         [HttpGet]
         [Route("PurchaseOrderPrint")]
-
-        public IActionResult PurchaseOrderPrint(int ModuleId, int ContactId, int NoOfCopies, string printType, int FranchiseId)
+        public IActionResult PurchaseOrderPrint(int NoOfCopies, string printType)
         {
-            try
-            {
-                _employeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            PDFPurchaseOrder pdfService = new PDFPurchaseOrder();
+            byte[] pdfContent = pdfService.PurchaseOrderPrintNew(NoOfCopies);
 
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand("[dbo].[USP_GetPrintDetails]", connection))
+            switch (printType?.ToLower())
+            {
+                case "mail":
+                    var base64PdfContent = Convert.ToBase64String(pdfContent);
+                    return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
+
+                case "download":
+                    return File(pdfContent, "application/pdf", "PurchaseOrder.pdf");
+
+                case "preview":
+                    var customFileName = "Kavinesh Developer Testing";
+                    Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
+                    return File(pdfContent, "application/pdf");
+
+                case "print":
+                    return File(pdfContent, "application/pdf");
+
+                case "whatsapp":
+                    string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                    string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
+
+                    if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                    string fileName = "PurchaseOrder_" + Guid.NewGuid() + ".pdf";
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    try
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("@LoginUserId", _employeeId);
-                        command.Parameters.AddWithValue("@ModuleName", "PurchaseOrder");
-                        command.Parameters.AddWithValue("@ModuleId", ModuleId);
-                        command.Parameters.AddWithValue("@ContactId", ContactId);
-                        command.Parameters.AddWithValue("@FranchiseId", FranchiseId);
-
-
-                        //command.Parameters.AddWithValue("@ShippingAddressId", ShippingAddressId);
-                        //command.Parameters.AddWithValue("@IsSameAddress", DBNull.Value);
-
-
-                        command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                        command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-                        DataSet ds = new DataSet();
-
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                        {
-                            adapter.Fill(ds);
-                        }
-
-                        if (ds.Tables.Count >= 6)
-                        {
-                            DataTable dt1 = ds.Tables[0];
-                            DataTable dt2 = ds.Tables[1];
-                            DataTable dt3 = ds.Tables[2];
-                            DataTable dt4 = ds.Tables[3];
-                            DataTable dt5 = ds.Tables[4];
-                            DataTable dt6 = ds.Tables[5];
-
-                            // Check if dt1 has rows
-                            if (dt1.Rows.Count > 0)
-                            {
-                                var data = new PurchaseOrderPrint
-                                {
-                                    CompanyName = dt1.Rows[0]["CompanyName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyName"]) : null,
-                                    CompanyLogo = dt1.Rows[0]["CompanyLogo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyLogo"]) : null,
-                                    CompanyAddress = dt1.Rows[0]["CompanyAddress"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyAddress"]) : null,
-                                    CompanyCity = dt1.Rows[0]["CompanyCity"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyCity"]) : null,
-                                    CompanyCountry = dt1.Rows[0]["CompanyCountry"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyCountry"]) : null,
-                                    CompanyGSTNumber = dt1.Rows[0]["CompanyGSTNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyGSTNumber"]) : null,
-                                    CompanyContactNumber = dt1.Rows[0]["ContactNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["ContactNumber"]) : null,
-                                    CompanyEmail = dt1.Rows[0]["Email"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Email"]) : null,
-                                    CompanyWebsite = dt1.Rows[0]["Website"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Website"]) : null,
-
-                                    VendorName = dt1.Rows[0]["VendorName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorName"]) : null,
-                                    VendorAddress = dt1.Rows[0]["VendorAddress"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorAddress"]) : null,
-                                    VendorCity = dt1.Rows[0]["VendorCity"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorCity"]) : null,
-                                    VendorZipCode = dt1.Rows[0]["VendorZipCode"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorZipCode"]) : null,
-                                    VendorState = dt1.Rows[0]["VendorState"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorState"]) : null,
-                                    VendorCountry = dt1.Rows[0]["VendorCountry"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorCountry"]) : null,
-                                    VendorContact = dt1.Rows[0]["VendorContactNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorContactNumber"]) : null,
-                                    VendorGSTNumber = dt1.Rows[0]["VendorGSTNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorGSTNumber"]) : null,
-
-                                    PurchaseOrderNumber = dt2.Rows[0]["PurchaseOrderNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["PurchaseOrderNo"]) : null,
-                                    PurchaseOrderDate = dt2.Rows[0]["PurchaseOrderDate"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["PurchaseOrderDate"]) : null,
-                                    ExpectedDeliveryDate = dt2.Rows[0]["ExpectedDeliveryDate"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["ExpectedDeliveryDate"]) : null,
-
-                                    RoundOffValue = dt4.Rows[0]["RoundOffValue"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["RoundOffValue"]) : null,
-                                    GrantTotal = dt4.Rows[0]["GrantTotal"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["GrantTotal"]) : null,
-                                    NumberToWords = dt5.Rows[0]["Amount_InWords"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["Amount_InWords"]) : null,
-                                    Notes = dt6.Rows[0]["Notes"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["Notes"]) : null,
-
-                                    TermsandConditions = dt6.Rows[0]["TermsAndCondition"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["TermsAndCondition"]) : null,
-                                    Signature = dt6.Rows[0]["Signature"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["Signature"]) : null,
-                                    ProductItemTable = dt3,
-
-                                };
-
-                                string PurchaseOrderNumber = dt2.Rows[0]["PurchaseOrderNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["PurchaseOrderNo"]) : null;
-                                string customFileName = $"PurchaseOrder_{PurchaseOrderNumber}.pdf";
-                                PDFPurchaseOrder pdfService = new PDFPurchaseOrder();
-                                byte[] pdfContent = null;
-
-                                pdfContent = pdfService.PurchaseOrderPrintNew(data, NoOfCopies);
-
-
-                                switch (printType.ToLower())
-                                {
-                                    case "mail":
-                                        var base64PdfContent = Convert.ToBase64String(pdfContent);
-                                        return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
-
-                                    case "download":
-                                        return File(pdfContent, "application/pdf", "PurchaseOrder.pdf");
-
-                                    case "preview":
-                                        Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
-                                        return File(pdfContent, "application/pdf");
-
-                                    case "print":
-                                        return File(pdfContent, "application/pdf");
-
-                                    case "whatsapp":
-                                        string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-
-                                        string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
-
-                                        if (!Directory.Exists(folderPath))
-                                        {
-                                            Directory.CreateDirectory(folderPath);
-                                        }
-
-                                        string fileName = "PurchaseOrder_" + Guid.NewGuid().ToString() + ".pdf";
-                                        string filePath = Path.Combine(folderPath, fileName);
-
-                                        //string fileName = "PurchaseOrder_" + PurchaseOrderNumber + ".pdf";
-                                        //string filePath = Path.Combine(folderPath, fileName);
-
-                                        //if (System.IO.File.Exists(filePath))
-                                        //{
-                                        //    System.IO.File.Delete(filePath);
-                                        //}
-                                        try
-                                        {
-                                            // Write the PDF file to the specified path
-                                            System.IO.File.WriteAllBytes(filePath, pdfContent);
-
-                                            // Return the response with status, message, and the file URL
-                                            string fileurlpath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
-                                            return Json(new { status = true, message = $"PDF saved successfully at {filePath}", data = fileurlpath });
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            return Json(new { success = false, message = "Error saving PDF: " + ex.Message });
-                                        }
-
-                                    default:
-                                        return Json(new { success = false, message = "Invalid print type selected." });
-                                }
-                            }
-                            else
-                            {
-
-                                return Json(new { success = false, message = "No data found for the given ModuleId." });
-                            }
-                        }
-                        else
-                        {
-                            // Handle case where expected number of tables is not returned
-                            return Json(new { success = false, message = "Expected number of tables not returned from stored procedure." });
-                        }
+                        System.IO.File.WriteAllBytes(filePath, pdfContent);
+                        string fileUrlPath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
+                        return Json(new { status = true, message = $"PDF saved successfully.", data = fileUrlPath });
                     }
-                }
+                    catch (Exception ex)
+                    {
+                        return Json(new { status = false, message = "Error saving PDF: " + ex.Message });
+                    }
+
+                default:
+                    return Json(new { status = false, message = "Invalid print type selected." });
             }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it appropriately
-                return Json(new { success = false, message = "An error occurred while generating purchase order print.", error = ex.Message });
-            }
+
+            // ⭐ FINAL REQUIRED RETURN
+            return Json(new { status = true, message = "" });
         }
+         
 
         [HttpPost]
         [Route("UpdateBankInfo")]
@@ -456,7 +313,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateVendorDetailsByBillingScreen]", request);
             return Json(response);
         }
-         
+
         [HttpGet]
         [Route("GetPurchaseReturn_ProposalReturn_ReturnNo")]
         public IActionResult GetPurchaseReturn_ProposalReturn_ReturnNo(int FranchiseId, int ModuleId, int BillTo, int? PurchaseRequestNo, int? ProposalRequestNo)

@@ -260,7 +260,3 @@ function NotificationReload() {
     }, null);
 
 }
-
-setInterval(function () {
-    Common.ajaxCall("GET", "/Common/SetUserAccess", null, null, null);
-}, 50000);

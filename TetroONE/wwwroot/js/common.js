@@ -883,6 +883,153 @@
             Common.autoAdjustColumns(table1);
         }, 100);
     },
+    
+    bindTableStarRating: function (tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
+        if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
+            try {
+                //$('#' + tableid).DataTable().clear().destroy();
+            } catch (error) {
+                console.error('DataTable destroy error:', error);
+                return; // stop execution if there's an error
+            }
+        }
+        $('#' + tableid).empty();
+
+        columns = columns.filter(x => x.name != "TetroONEnocount");
+        var isTetroONEnocount = data[0] && data[0].hasOwnProperty('TetroONEnocount');
+        var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
+
+        // Status column
+        var StatusColumnIndex = columns.findIndex(column => column.data === "Status");
+        // Rating column
+        var RatingColumnIndex = columns.findIndex(column => column.data === "Rating");
+
+        if (isAction == true && data != null && data.length > 0 && !isTetroONEnocount && (access.update || access.delete)) {
+            columns.push({
+                "data": "Action", "name": "Action", "title": "Action", orderable: false
+            });
+        }
+
+        var renderColumn = [];
+
+        // Status badge render
+        if (StatusColumnIndex >= 0) {
+            renderColumn.push({
+                "targets": StatusColumnIndex,
+                render: function (data, type, row, meta) {
+                    if (type === 'display' && row.Status_Color) {
+                        var htmlContent = '<div>';
+                        htmlContent += '<span class="ana-span badge text-white" style="background:' + row.Status_Color.toLowerCase() + ';width: 115px;font-size: 12px;height: 23px;">' + row.Status + '</span>';
+                        htmlContent += '</div>';
+                        return htmlContent;
+                    }
+                    return data;
+                }
+            });
+        }
+
+        // Rating render
+        if (RatingColumnIndex >= 0) {
+            renderColumn.push({
+                targets: RatingColumnIndex,
+                render: function (data, type, row, meta) {
+                    if (type === 'display' && data) {
+                        var parts = data.split('/');
+                        var rating = parseFloat(parts[0]);
+                        var maxRating = 5;
+
+                        var fullStars = Math.floor(rating);
+                        var halfStar = rating % 1 >= 0.5 ? 1 : 0;
+                        var emptyStars = maxRating - fullStars - halfStar;
+
+                        var html = '<div style="display:flex; gap:2px;">';
+
+                        for (var i = 0; i < fullStars; i++) html += '<i class="fas fa-star" style="color:#f1c40f;"></i>';
+                        if (halfStar) html += '<i class="fas fa-star-half-alt" style="color:#f1c40f;"></i>';
+                        for (var i = 0; i < emptyStars; i++) html += '<i class="far fa-star" style="color:#f1c40f;"></i>';
+
+                        html += '</div>';
+                        return html;
+                    }
+                    // default 5 empty stars if no rating
+                    return '<div style="display:flex; gap:2px;">' + '<i class="far fa-star" style="color:#f1c40f;"></i>'.repeat(5) + '</div>';
+                }
+            });
+        }
+
+        // Action column
+        if (access.update || access.delete) {
+            renderColumn.push({
+                targets: actionTarget,
+                render: function (data, type, row, meta) {
+                    var editCondition = access.update;
+                    var deleteCondition = access.delete;
+                    let html = "";
+                    if (tableid === "Audittable") {
+                        html += `<i class="btn-report mx-1 fas fa-file-alt text-primary" 
+        data-id="${row[editcolumn]}" 
+        title="Report" 
+        style="cursor:pointer; font-size:16px;">
+    </i>`;
+                    }
+                    if (editCondition) {
+                        html += `<i class="btn-edit mx-1" data-id="${row[editcolumn]}" title="Edit">
+                        <img src="/assets/commonimages/edit.svg" />
+                     </i>`;
+                    }
+                    if (deleteCondition) {
+                        html += `<i class="btn-delete alert_delete mx-1" data-id="${row[editcolumn]}" title="Delete">
+                        <img src="/assets/commonimages/delete.svg" />
+                     </i>`;
+                    }
+
+                    return html;
+                }
+            });
+        }
+
+        var lang = {};
+        var screenWidth = $(window).width();
+        if (screenWidth <= 575) {
+            lang = {
+                "paginate": {
+                    "next": ">",
+                    "previous": "<"
+                }
+            }
+        }
+
+        var table = $('#' + tableid).DataTable({
+            "dom": "Bfrtip",
+            "bDestroy": true,
+            "responsive": true,
+            "data": !isTetroONEnocount ? data : [],
+            "columns": columns,
+            "destroy": true,
+            "scrollY": scrollpx,
+            "sScrollX": "100%",
+            "aaSorting": [],
+            "scrollCollapse": true,
+            "oSearch": { "bSmart": false, "bRegex": true },
+            "info": hasValidData,
+            "paging": hasValidData,
+            "pageLength": 7,
+            "lengthMenu": [7, 14, 50],
+            "language": $.extend({}, lang, {
+                "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
+            }),
+            "columnDefs": !isTetroONEnocount ? renderColumn : [],
+        });
+
+        $('#tableFilter').on('keyup', function () {
+            table.search($(this).val()).draw();
+        });
+
+        setTimeout(function () {
+            var table1 = $('#' + tableid).DataTable();
+            Common.autoAdjustColumns(table1);
+        }, 100);
+    },
 
     bindTablePurchase: function (tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
         if ($.fn.DataTable.isDataTable('#' + tableid)) {

@@ -1,6 +1,4 @@
-﻿
-
-function updateSelectionSummary(table) {
+﻿function updateSelectionSummary(table) {
     let selectedRows = table.find("tbody input[type='checkbox']:checked").closest("tr");
     let selectedCount = selectedRows.length;
     let totalAmount = 0;
@@ -13,10 +11,8 @@ function updateSelectionSummary(table) {
         totalAmount += Total;
     });
 
-
     $("#ItemSelectedCount").text(selectedCount);
     $("#TotalItemsAmount").text('₹ ' + totalAmount.toFixed(2));
-
 
     if (selectedCount > 0) {
         $(".TotalSelectedItmsCount,.TotalSelctAmount").show();
@@ -24,18 +20,6 @@ function updateSelectionSummary(table) {
         $(".TotalSelectedItmsCount,.TotalSelctAmount").hide();
     }
 }
-
-
-
-/*======================*/
-
-
-
-$(document).on('click', '#CloseInAddItem', function () {
-    Inventory.ResetProductListTable();
-});
-
-
 
 $(document).on('click', '.dropdown-item', function () {
     var selectedUnit = $(this).text();
@@ -50,12 +34,10 @@ $(document).off('click', '.RowMinus').on('click', '.RowMinus', function () {
     const row = $(this).closest('tr');
     if (currentValue > 1) {
         $input.val(currentValue - 1);
-        updateSelectionSummary($("#ProductListTable"));
-
-    }
-
-   
+        updateSelectionSummary($("#ProductListTable")); 
+    } 
 });
+
 $(document).off('input', '.QtyProductAdd').on('input', '.QtyProductAdd', function () {
     const row = $(this).closest('tr');
     const data = row.data('product-info');
@@ -68,8 +50,7 @@ $(document).off('input', '.QtyProductAdd').on('input', '.QtyProductAdd', functio
     }
     updateSelectionSummary($("#ProductListTable"));
 });
-
-
+ 
 function quantitycheck(row, Qty, stock) {
     if (Qty > stock) {
         const $qtyInput = row.find('.QtyProductAdd');
@@ -77,9 +58,7 @@ function quantitycheck(row, Qty, stock) {
         Common.warningMsg("Quantity cannot exceed available stock (" + stock + ")");
     }
 }
-
-
-
+ 
 $(document).off('click', '.RowPlus').on('click', '.RowPlus', function () {
     var $input = $(this).closest('.qty-group').find('input');
     var currentValue = parseInt($input.val() || 0, 10);
@@ -125,7 +104,6 @@ $(document).on('change', 'input[type="checkbox"]', function () {
     updateSelectionSummary($("#ProductListTable"));
 });
 
-
 function applyFilters() {
     let textFilterValue = $('#AdditemSearch').val().toLowerCase();
     let categoryFilterValue = $('#Category').val()?.toLowerCase() || "";
@@ -149,15 +127,11 @@ function applyFilters() {
 
     $('.AllProductEmptyRow').toggle(visibleRowCount === 0);
 }
-
-
-$(document).on('input', '#AdditemSearch', function () {
-
+ 
+$(document).on('input', '#AdditemSearch', function () { 
     applyFilters();
 });
-
-
-
+ 
 $(document).on('click', '#AddNewProduct', function () {
     ProductCanvasOpen();
 });
@@ -177,7 +151,3 @@ function ProductCanvasOpen() {
     $('.content-overlay').fadeIn();
 
 }
-
-
-
-

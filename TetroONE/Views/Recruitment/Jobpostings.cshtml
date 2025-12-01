@@ -1,4 +1,8 @@
-﻿<link href="~/css/job.css" rel="stylesheet" />
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Recruitment, Context.Session);
+}
+
+<link href="~/css/job.css" rel="stylesheet" />
 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
@@ -135,11 +139,16 @@
         <div class="datapiker ml-2 mt-1" style="position: relative;">
             <div class="add-imp-exp-btn">
                 <div class="exportsiconpop">
-                    <span class="pop">
-                        <a id="AddJob" title="Add Job">
-                            <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
-                        </a>
-                    </span>
+                    @{
+                        if (access.Create)
+                        {
+                            <span class="pop">
+                                <a id="AddJob" title="Add Job">
+                                    <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                </a>
+                            </span>
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -634,6 +643,11 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
 
 
 <script>

@@ -2,22 +2,22 @@
 
 $(document).ready(function () {
 
-    if ($('.scroll-scrolly_visible .nav-item .activesubmenu').text().trim() == "Dashboard") {
-        $('#DashboardDrop').show();
-    } else {
-        $('#DashboardDrop').hide();
-    } 
+    //if ($('.scroll-scrolly_visible .nav-item .activesubmenu').text().trim() == "Dashboard") {
+    //    $('#DashboardDrop').show();
+    //} else {
+    //    $('#DashboardDrop').hide();
+    //} 
 
     Common.ajaxCall("GET", "/Myprofile/GetMyprofile", null, profileSuccess, null);
 
     $(document).on('click', '#sidebar-menu a', function () {
         const clickedText = $(this).text().trim(); 
 
-        if ($(this).hasClass('activesubmenu') && clickedText === "Dashboard" && $('#DashboardDrop').val() === "/NewDashboard") {
-            $('#DashboardDrop').show();
-        } else {
-            $('#DashboardDrop').hide();
-        }
+        //if ($(this).hasClass('activesubmenu') && clickedText === "Dashboard" && $('#DashboardDrop').val() === "/NewDashboard") {
+        //    $('#DashboardDrop').show();
+        //} else {
+        //    $('#DashboardDrop').hide();
+        //}
     });
      
     Common.bindDropDownParent('UserTypeId', 'ManageUserForm', 'UserType');
@@ -65,9 +65,9 @@ $(document).ready(function () {
         $('#DepartmentDetailsId').val('').trigger('change');
         Common.bindDropDownMulti('DepartmentDetailsId', 'Department');
         Common.bindDropDownParent('UserTypeId', 'ManageUserForm', 'UserType');
-        $('#BindFranchiseDataProfile').empty('');
+        $('#BindPlantDataProfile').empty('');
         ignoreUserTypeChangeEvent = false;
-        Common.ajaxCall("GET", "/Myprofile/GetFranchise", null, FranchiseSuccessMyProfile, null);
+        Common.ajaxCall("GET", "/Myprofile/GetPlant", null, PlantSuccessMyProfile, null);
     });
 
 
@@ -209,11 +209,11 @@ $(document).ready(function () {
             return false;
         }
 
-        const checkedCount = $('#BindFranchiseDataProfile input[type="checkbox"]:checked').length;
+        const checkedCount = $('#BindPlantDataProfile input[type="checkbox"]:checked').length;
 
         if (checkedCount === 0) {
             e.preventDefault();
-            Common.warningMsg("Please select at least one Franchise.");
+            Common.warningMsg("Please select at least one Plant.");
             return false;
         }
 
@@ -239,41 +239,39 @@ $(document).ready(function () {
                 var DepartmentMapping = [];
                 var departmentId = $('#DepartmentDetailsId').val();
 
-                // Check if departmentId is an array and contains values
                 if (Array.isArray(departmentId) && departmentId.length > 0) {
                     departmentId.forEach(function (machine) {
                         var parsedMachine = parseInt(machine.trim(), 10);
 
-                        // Check if parsedMachine is a valid number
                         if (!isNaN(parsedMachine)) {
                             DepartmentMapping.push({
                                 UserDepartmentMappingId: null,
-                                DepartmentId: parsedMachine, // Use parsedMachine as DepartmentId
-                                UserId: parseInt(InfoId) || null, // Assign UserId or null
+                                DepartmentId: parsedMachine,
+                                UserId: parseInt(InfoId) || null,
                                 IsSelected: true,
                             });
                         }
                     });
                 }
 
-                var FranchiseList = [];
-                var ClosestDivProductList = $('.expensefild #BindFranchiseDataProfile input[type="checkbox"]:checked');
+                var PlantList = [];
+                var ClosestDivProductList = $('.expensefild #BindPlantDataProfile input[type="checkbox"]:checked');
 
                 $.each(ClosestDivProductList, function (index, element) {
-                    var UserfranchiseMappingId = $(element).siblings('.ProductMappingId').text();
+                    var UserPlantMappingId = $(element).siblings('.PlantMappingId').text();
                     var UserId = InfoId;
-                    var franchiseId = $(element).data('id');
+                    var PlantId = $(element).data('id');
                     var IsActive = $(element).prop('checked');
 
-                    FranchiseList.push({
-                        UserfranchiseMappingId: parseInt(UserfranchiseMappingId) || null,
+                    PlantList.push({
+                        UserPlantMappingId: parseInt(UserPlantMappingId),
                         UserId: parseInt(UserId) || null,
-                        franchiseId: franchiseId,
+                        PlantId: PlantId,
                         IsActive: IsActive,
                     });
                 });
 
-                objvalue.userFranchiseMappingDetails = FranchiseList;
+                objvalue.UserPlantMappingDetails = PlantList;
                 objvalue.userDepartmentMappingDetails = DepartmentMapping;
 
                 Common.ajaxCall("POST", "/Myprofile/InsertUser", JSON.stringify(objvalue), UserInsertSuccess, null);
@@ -300,8 +298,7 @@ $(document).ready(function () {
 
                 var DepartmentMapping = [];
                 var departmentId = $('#DepartmentDetailsId').val();
-
-                // Check if departmentId is an array and contains values
+                 
                 if (Array.isArray(departmentId) && departmentId.length > 0) {
                     departmentId.forEach(function (machine) {
                         var parsedMachine = parseInt(machine.trim(), 10);
@@ -316,24 +313,24 @@ $(document).ready(function () {
                     });
                 }
 
-                var FranchiseList = [];
-                var ClosestDivProductList = $('.expensefild #BindFranchiseDataProfile input[type="checkbox"]:checked');
+                var PlantList = [];
+                var ClosestDivProductList = $('.expensefild #BindPlantDataProfile input[type="checkbox"]:checked');
 
                 $.each(ClosestDivProductList, function (index, element) {
-                    var UserfranchiseMappingId = $(element).siblings('.ProductMappingId').text();
+                    var UserPlantMappingId = $(element).siblings('.PlantMappingId').text();
                     var UserId = InfoId;
-                    var franchiseId = $(element).data('id');
+                    var PlantId = $(element).data('id');
                     var IsActive = $(element).prop('checked');
 
-                    FranchiseList.push({
-                        UserfranchiseMappingId: null,
+                    PlantList.push({
+                        UserPlantMappingId: parseInt(UserPlantMappingId),
                         UserId: parseInt(UserId) || null,
-                        franchiseId: franchiseId,
+                        PlantId: PlantId,
                         IsActive: IsActive,
                     });
                 });
 
-                objvalue.userFranchiseMappingDetails = FranchiseList;
+                objvalue.UserPlantMappingDetails = PlantList;
                 objvalue.userDepartmentMappingDetails = DepartmentMapping;
 
                 Common.ajaxCall("POST", "/Myprofile/UpdateUser", JSON.stringify(objvalue), UserInsertSuccess, null);
@@ -360,9 +357,7 @@ $(document).ready(function () {
         $('#myProfileModal').modal('hide');
     });
 });
-
-
-
+ 
 function togglePassword(passwordField, icon) {
     if (passwordField.attr('type') === 'password') {
         passwordField.attr('type', 'text');
@@ -476,10 +471,10 @@ function ManageUserSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
 
-        $('#CompanyUserCount').text('(' + data[1][1].CompanyUserCount + ')');
-        $('#FranchiseUserCount').text('(' + data[1][2].CompanyUserCount + ')');
-        $('#VendorUserCount').text('(' + data[1][3].CompanyUserCount + ')');
-        $('#ClientUserCount').text('(' + data[1][0].CompanyUserCount + ')');
+        $('#CompanyUserCount').text('(' + data[1][0].CompanyUserCount + ')');
+        $('#JobWorkerUserCount').text('(' + data[1][1].CompanyUserCount + ')');
+        $('#VendorUserCount').text('(' + data[1][2].CompanyUserCount + ')');
+        $('#ClientUserCount').text('(' + data[1][3].CompanyUserCount + ')');
         
         var manageUser = '';
         $('#ManageUserDynamic').html('');
@@ -517,8 +512,8 @@ function ManageUserSuccess(response) {
                             case "Company User":
                                 divImage = `<img src="/assets/commonimages/user.png" class="avatar-img rounded-circle">`;
                                 break;
-                            case "Franchise User":
-                                divImage = `<img src="/assets/commonimages/franchise.svg" class="avatar-img rounded-circle">`;
+                            case "JobWorker User":
+                                divImage = `<img src="/assets/commonimages/jobworker_icon.svg" class="avatar-img rounded-circle">`;
                                 break;
                             case "Vendor":
                                 divImage = `<img src="/assets/commonimages/vendor.svg" class="avatar-img rounded-circle">`;
@@ -535,7 +530,7 @@ function ManageUserSuccess(response) {
                     manageUser += `
                     <div class="col-sm-6 col-md-4 managee-user-sepe-grid">
                         <a href="#" onclick="manageUserClick(${user.UserId}); return false;">
-                            <div class="box_shadow card card-stats card-round p-0" style="margin-bottom: 20px !important;">
+                            <div class="box_shadow card-stats card-round p-0" style="margin-bottom: 20px !important;">
                                 <div class="card-body p-0-imp" style="box-shadow: 5px;background-color: ${backgroundColor};">
                                     <div class="row">
                                         <div class="col-3 col-sm-3 col-md-3 ml-1">
@@ -580,54 +575,28 @@ function ManageUserSuccess(response) {
     }
 }
 
-function FranchiseGetSuccess(response) {
+function PlantSuccessMyProfile(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
-        var htmlDynamicFranchise = "";
-        if (data[0][0].FranchiseId != null && data[0][0].FranchiseId != "") {
-            $.each(data[0], function (index, franchiseData) {
-                var FranchiseId = franchiseData.FranchiseId;
-                var FranchiseName = franchiseData.FranchiseName;
-                var IsActiveCheck = franchiseData.IsActive == true ? 'checked' : '';
+        var htmlDynamicPlant = "";
+        if (data[0][0].PlantId != null && data[0][0].PlantId != "") {
+            $.each(data[0], function (index, plantData) {
+                var PlantId = plantData.PlantId;
+                var PlantName = plantData.PlantName;
+                //var IsActiveCheck = plantData.IsActive == true ? 'checked' : '';
 
-                htmlDynamicFranchise += `
+                htmlDynamicPlant += `
                 <div class="col-md-6 col-lg-6 col-sm-6 col-4 mt-2">
-                    <lable class="FranchiseMappingId d-none"></lable>
-                    <input type="checkbox" data-id="${FranchiseId}" name="products" ${IsActiveCheck} id="product-${FranchiseId}">
-                    <label for="product-${FranchiseId}" class="checkbox-label">${FranchiseName}</label>
+                    <lable class="PlantMappingId d-none"></lable>
+                    <input type="checkbox" data-id="${PlantId}" name="products" id="product-${PlantId}">
+                    <label for="product-${PlantId}" class="checkbox-label">${PlantName}</label>
                 </div>
             `;
             });
-            $('#BindFranchiseDataProfile').append(htmlDynamicFranchise);
+            $('#BindPlantDataProfile').append(htmlDynamicPlant);
         }
         else {
-            $('#BindFranchiseDataProfile').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
-        }
-    }
-}
-
-function FranchiseSuccessMyProfile(response) {
-    if (response.status) {
-        var data = JSON.parse(response.data);
-        var htmlDynamicFranchise = "";
-        if (data[0][0].FranchiseId != null && data[0][0].FranchiseId != "") {
-            $.each(data[0], function (index, franchiseData) {
-                var FranchiseId = franchiseData.FranchiseId;
-                var FranchiseName = franchiseData.FranchiseName;
-                var IsActiveCheck = franchiseData.IsActive == true ? 'checked' : '';
-
-                htmlDynamicFranchise += `
-                <div class="col-md-6 col-lg-6 col-sm-6 col-4 mt-2">
-                    <lable class="FranchiseMappingId d-none"></lable>
-                    <input type="checkbox" data-id="${FranchiseId}" name="products" ${IsActiveCheck} id="product-${FranchiseId}">
-                    <label for="product-${FranchiseId}" class="checkbox-label">${FranchiseName}</label>
-                </div>
-            `;
-            });
-            $('#BindFranchiseDataProfile').append(htmlDynamicFranchise);
-        }
-        else {
-            $('#BindFranchiseDataProfile').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
+            $('#BindPlantDataProfile').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
         }
     }
 }
@@ -659,9 +628,9 @@ function UserEditSuccess(response) {
         $('#ManageUserEye').removeClass('fa-eye-slash').addClass('fa-eye');
         $('#DeleteManageUser').show();
         $('#SaveManageUser').val('Update').removeClass('btn-success').addClass('btn-update');
-        $('#BindFranchiseDataProfile').empty('');
+        $('#BindPlantDataProfile').empty('');
         Common.bindParentData(data[0], 'ManageUserForm');
-
+        $('#Email-error').hide();
 
         $('#UserPathExist').text(data[0][0].UserImageFilePath);
         if (data[0] != null && data[0].length > 0 && data[0][0].UserImageFilePath != null && data[0][0].UserImageFilePath != "" && data[0][0].UserImageFilePath) {
@@ -688,25 +657,25 @@ function UserEditSuccess(response) {
         }
 
         var htmlDynamicFranchise = "";
-        if (data[1][0].FranchiseId != null && data[1][0].FranchiseId != "") {
-            $.each(data[1], function (index, Franchise) {
-                var franchiseId = Franchise.FranchiseId;
-                var userFranchiseMappingId = Franchise.UserFranchiseMappingId;
-                var franchiseName = Franchise.FranchiseName;
-                var isCheck = Franchise.IsActive == true ? 'checked' : '';
+        if (data[1][0].PlantId != null && data[1][0].PlantId != "") {
+            $.each(data[1], function (index, Plant) {
+                var PlantId = Plant.PlantId;
+                var UserPlantMappingId = Plant.UserPlantMappingId;
+                var PlantName = Plant.PlantName;
+                var isCheck = Plant.IsActive == true ? 'checked' : '';
 
                 htmlDynamicFranchise += `
                 <div class="col-md-6 col-lg-6 col-sm-6 col-4 mt-2">
-                    <lable class="ProductMappingId d-none">${userFranchiseMappingId}</lable>
-                    <input type="checkbox" data-id="${franchiseId}" name="products" value="${franchiseName}" ${isCheck} id="product-${franchiseId}">
-                    <label for="product-${franchiseId}" class="checkbox-label">${franchiseName}</label>
+                    <lable class="PlantMappingId d-none">${UserPlantMappingId}</lable>
+                    <input type="checkbox" data-id="${PlantId}" name="products" value="${PlantName}" ${isCheck} id="product-${PlantName}">
+                    <label for="product-${PlantId}" class="checkbox-label">${PlantName}</label>
                 </div>
             `;
             });
-            $('#BindFranchiseDataProfile').append(htmlDynamicFranchise);
+            $('#BindPlantDataProfile').append(htmlDynamicFranchise);
         }
         else {
-            $('#BindFranchiseDataProfile').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
+            $('#BindPlantDataProfile').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
         }
     }
 }
@@ -773,23 +742,28 @@ $(document).on('change', '#ManageUserForm #UserTypeId', function () {
     $('#DepartmentDetailsId').val('').trigger('change');
 
     if (thisVal == 1) {
-        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/franchise.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
+        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/jobworker_icon.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
             $('#imagePreview').attr('src', '/assets/commonimages/user.png');
         }
         $('#ClientVendorhide').hide();
-        $('#DepartmentManageUserhide').show();
+        //$('#DepartmentManageUserhide').show();
         $('.LableName').text('');
     }
     else if (thisVal == 2) {
-        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/franchise.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
-            $('#imagePreview').attr('src', '/assets/commonimages/franchise.svg');
+        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/jobworker_icon.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
+            $('#imagePreview').attr('src', '/assets/commonimages/jobworker_icon.svg');
         }
-        $('#ClientVendorhide').hide();
-        $('#DepartmentManageUserhide').show();
-        $('.LableName').text('');
+        $('#ClientVendorhide').show();
+        $('#DepartmentManageUserhide').hide();
+        $('.LableName').text('JobWorker Name');
+        var ValueOfContactDropDown = parseInt(thisVal);
+        getvalContactDetailsResponse(ValueOfContactDropDown);
+        //$('#ClientVendorhide').hide();
+        //$('#DepartmentManageUserhide').show();
+        //$('.LableName').text('');
     }
     else if (thisVal == 3) {
-        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/franchise.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
+        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/jobworker_icon.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
             $('#imagePreview').attr('src', '/assets/commonimages/vendor.svg');
         }
         $('#ClientVendorhide').show();
@@ -799,7 +773,7 @@ $(document).on('change', '#ManageUserForm #UserTypeId', function () {
         getvalContactDetailsResponse(ValueOfContactDropDown);
     }
     else if (thisVal == 4) {
-        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/franchise.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
+        if (imageSrc === '/assets/commonimages/user.png' || imageSrc === '/assets/commonimages/client.svg' || imageSrc === '/assets/commonimages/jobworker_icon.svg' || imageSrc === '/assets/commonimages/vendor.svg') {
             $('#imagePreview').attr('src', '/assets/commonimages/client.svg');
         }
         $('#ClientVendorhide').show();
@@ -826,7 +800,7 @@ $(document).on('change', '#ManageUserForm #UserTypeId', function () {
                 var textproperty = Object.keys(dataValue[0])[1];
 
                 // If the selected UserTypeId is vendor or client, don't add '--Select--', just preselect the first item
-                if (thisVal == 3 || thisVal == 4) {
+                if (thisVal == 2 || thisVal == 3 || thisVal == 4) {
                     var firstOption = dataValue[0];
                     // Append the first option to the select
                     $('#ManageUserForm #UserGroupId').append($('<option>', {

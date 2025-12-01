@@ -1,82 +1,184 @@
-﻿$(document).ready(function () {
-    MainGridData();
-    $('.mydatetimepicker').mdtimepicker();
+﻿var productionPlanLogId = 0;
 
-    const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+$(document).ready(async function () {
+
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    let displayedDate = new Date(currentYear, currentMonth);
+    updateMonthDisplay(displayedDate);
+    $('#increment-month-btn2').hide();
 
     $('#decrement-month-btn2').click(function () {
-        let currentText = $('#dateDisplay2').text().trim();
-        let [currentMonth, currentYear] = currentText.split(" ");
-        let monthIndex = months.indexOf(currentMonth);
+        displayedDate.setMonth(displayedDate.getMonth() - 1);
+        updateMonthDisplay(displayedDate);
+        $('#increment-month-btn2').show();
+        $('#tableFilter').val('');
 
-        if (monthIndex === -1) return;
-
-        monthIndex--;
-        if (monthIndex < 0) {
-            monthIndex = 11;
-            currentYear = parseInt(currentYear) - 1;
-        }
-
-        let newMonth = months[monthIndex];
-        $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
-        let currentText = $('#dateDisplay2').text().trim();
-        let [currentMonth, currentYear] = currentText.split(" ");
-        let monthIndex = months.indexOf(currentMonth);
+        displayedDate.setMonth(displayedDate.getMonth() + 1);
+        updateMonthDisplay(displayedDate);
 
-        if (monthIndex === -1) return;
-
-        monthIndex++;
-        if (monthIndex > 11) {
-            monthIndex = 0;
-            currentYear = parseInt(currentYear) + 1;
-        }
-
-        let newMonth = months[monthIndex];
-        $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
     });
 
-    $(document).on('click', '#AddProduction', function () {
-        var windowWidth = $(window).width();
-        if (windowWidth <= 600) {
-            $("#ProductionCanvas").css("width", "95%");
-        } else if (windowWidth <= 992) {
-            $("#ProductionCanvas").css("width", "50%");
+    function updateMonthDisplay(date) {
+        let monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        let month = monthNames[date.getMonth()];
+        let year = date.getFullYear();
+        $('#dateDisplay2').text(month + " " + year);
+
+        let now = new Date();
+        let currentMonth = now.getMonth();
+        let currentYear = now.getFullYear();
+
+        if (date.getFullYear() > currentYear || (date.getFullYear() === currentYear && date.getMonth() >= currentMonth)) {
+            $('#increment-month-btn2').hide();
         } else {
-            $("#ProductionCanvas").css("width", "39%");
+            $('#increment-month-btn2').show();
         }
-        $('#fadeinpage').addClass('fadeoverlay'); 
-        $("#FormProduction")[0].reset();
-        $('#ProductionHeader').text('Production Details');
-        $('#SaveProduction').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
-        CanvasOpenFirstShowingProduction();
+    }
+
+    var today = new Date().toISOString().split('T')[0];
+    $('#FromDate, #ToDate').attr('max', today);
+    $(document).on('change', '#FromDate,#ToDate', function () {
+        var fromDate = $('#FromDate').val();
+        $('#tableFilter').val('');
+        $('#ToDate').attr('min', fromDate);
+        if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
+            Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString() }, GetProductionLogSuccess, null);
+        }
     });
 
+    $(document).on('click', '#downloadExcelBtn', function () {
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        $('#tableFilter').val('');
+
+        displayedDate = new Date(currentYear, currentMonth);
+        $('#increment-month-btn2').show();
+
+        updateMonthDisplay(displayedDate);
+
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+    });
+
+    $(document).on('click', '#bulkEmployee', function () {
+        $('#FromDate').val('');
+        $('#ToDate').val('');
+        $('#ToDate').removeAttr('max');
+        $('#tableFilter').val('');
+    });
+
+    var fnData = Common.getDateFilter('dateDisplay2');
+    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+      
     $(document).on('click', '.btn-edit', function () {
+        ProductionId = $(this).data('id');
         var windowWidth = $(window).width();
         if (windowWidth <= 600) {
-            $("#ProductionCanvas").css("width", "95%");
+            $("#ProductionLogCanvas").css("width", "95%");
         } else if (windowWidth <= 992) {
-            $("#ProductionCanvas").css("width", "50%");
+            $("#ProductionLogCanvas").css("width", "50%");
         } else {
-            $("#ProductionCanvas").css("width", "39%");
+            $("#ProductionLogCanvas").css("width", "39%");
         }
         $('#fadeinpage').addClass('fadeoverlay');
-        $('#ProductionHeader').text('Edit Production Details');
-        $('#SaveProduction').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
+        $('#ProductionHeader').text('ProductionLog Details');
+        $("#FormProduction")[0].reset();
+        $('#SaveProductionLog').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
         CanvasOpenFirstShowingProduction();
+
+        var hotcodeData = [
+            { 
+                CreatedBy: "Kavinesh Raj",
+                Date: "2025-01-12 10:23:45",
+                Process: "Reversing",
+                Qty: "3900 KG"
+            },
+            { 
+                CreatedBy: "Sathiesh Kumar",
+                Date: "2025-01-12 11:45:12",
+                Process: "Stitching",
+                Qty: "3800 KG"
+            },
+            { 
+                CreatedBy: "Tharani",
+                Date: "2025-01-12 14:05:33",
+                Process: "Softflow",
+                Qty: "3800 KG"
+            },
+            { 
+                CreatedBy: "Karthick",
+                Date: "2025-01-12 16:18:59",
+                Process: "Stentering",
+                Qty: "3700 KG"
+            },
+            { 
+                CreatedBy: "Dhanush",
+                Date: "2025-01-12 19:46:09",
+                Process: "Dryer",
+                Qty: "3500 KG"
+            },
+            { 
+                CreatedBy: "Mariyan",
+                Date: "2025-01-12 23:30:00",
+                Process: "Compacting",
+                Qty: "3300 KG"
+            }
+        ];
+
+        const productionColumns = [ 
+            { data: 'Date', name: 'Date', title: 'Date' },
+            { data: 'Process', name: 'Process', title: 'Process' },
+            { data: 'Qty', name: 'Qty', title: 'Qty' },
+            { data: 'CreatedBy', name: 'CreatedBy', title: 'Created By' }
+        ];
+
+        $('#TransactionsInfo').empty('');
+        var html =
+        `
+        <div class="table-responsive">
+            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="TransactionsInfoTable"></table>
+        </div>
+        `;
+        $('#TransactionsInfo').append(html);
+
+        bindTableTransactionsInfo('TransactionsInfoTable', hotcodeData, -1, productionColumns, '350px', true);
+        //var columns = Common.bindColumn(data[3], ['PurchaseRequestId', 'Status_Color']);
+        //bindTableTransactionsInfo('TransactionsInfoTable', data[3], columns, -1, 'PurchaseRequestId', '151px', true);
+         
+        /*============================QRCODE*/
+
+        $("#QRCode").html("");
+
+        //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/QRCodePop";
+        var scanUrl = "https://localhost:44366/Productions/ProductionPlan/ProductionQRCode/QRCodePop";
+
+        new QRCode(document.getElementById("QRCode"), {
+            text: scanUrl,
+            width: 100,
+            height: 100
+        });
+        $("#QRCode").removeAttr("title");
     });
 
     $(document).on('click', '#CloseCanvas', function () {
-        $("#ProductionCanvas").css("width", "0%");
+        $("#ProductionLogCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
     });
-     
+
     $('.accordion-header').on('click', function () {
         var $offcanvas = $(this).closest('.offcanvas-container');
         var $accordion = $(this).closest('.accordion');
@@ -85,318 +187,225 @@
         $offcanvas.find('.collapse').not(target).collapse('hide');
 
         $(target).collapse('toggle');
-    }); 
+    });
+
+    $(document).on('click', '.btn-edit-Trans', function () {
+        $('#Process').val('5');
+        $('#Quantity').val('2900 KG');
+        $('#PreparedBy').val('1');
+    });
 });
 
 function CanvasOpenFirstShowingProduction() {
-    $('#ProductionPlanCanvas').addClass('show');
+    $('#ProductionLogCanvas').addClass('show');
     $('#collapse1').collapse('show');
     $('#collapse2').collapse('hide');
-    $('#ProductionPlanCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast'); 
+    $('#ProductionLogCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
     $('html, body').animate({
-        scrollTop: $('#ProductionPlanCanvas').offset().top
+        scrollTop: $('#ProductionLogCanvas').offset().top
     }, 'fast');
 }
 
-function MainGridData() {
+function GetProductionLogSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+        var CounterBox = Object.keys(data[0][0]);
 
-    const operatorNames = ["Kavinesh Rajasekar", "Karthikeyani", "Mithran", "Dexy", "Indrasenan"];
-    const approvedByNames = ["Kavinesh Rajasekar", "Karthikeyani", "Mithran", "Dexy", "Indrasenan"];
-    const shifts = ["General Shift", "Morning Shift", "Day Shift", "Night Shift"];
-    const processStages = ["Dyeing", "Printing", "Finishing"];
-    const reworkComments = ["Minor tear", "Color fade", "Loose stitch", "Small stain", "Measurement error"];
+        $("#CounterTextBox1").text(CounterBox[0]);
+        $("#CounterTextBox2").text(CounterBox[1]);
+        $("#CounterTextBox3").text(CounterBox[2]);
+        $("#CounterTextBox4").text(CounterBox[3]);
 
-    const ProductionData = [
-        {
-            Date: "01 Oct 2025",
-            ProductionNo: "PRO/NO/001",
-            Batch: "BATCH/NO/001",
-            Shift: shifts[0],
-            ProcessStage: processStages[0],
-            MachineNo: "Machine 1",
-            Operator: operatorNames[0],
-            StartTime: "08:00 AM",
-            EndTime: "04:00 PM",
-            OutputQty: "8700 KGS",
-            ReworkRejection: reworkComments[0],
-            Status: "Draft",
-            ApprovedBy: "-",
-            Status_Color: "#fd7e14" // Orange
-        },
-        {
-            Date: "03 Oct 2025",
-            ProductionNo: "PRO/NO/002",
-            Batch: "BATCH/NO/002",
-            Shift: shifts[1],
-            ProcessStage: processStages[1],
-            MachineNo: "Machine 2",
-            Operator: operatorNames[1],
-            StartTime: "06:00 AM",
-            EndTime: "02:00 PM",
-            OutputQty: "9200 KGS",
-            ReworkRejection: "-",
-            Status: "Approved",
-            ApprovedBy: approvedByNames[1],
-            Status_Color: "#6f42c1" // Purple
-        },
-        {
-            Date: "05 Oct 2025",
-            ProductionNo: "PRO/NO/003",
-            Batch: "BATCH/NO/003",
-            Shift: shifts[2],
-            ProcessStage: processStages[2],
-            MachineNo: "Machine 3",
-            Operator: operatorNames[2],
-            StartTime: "02:00 PM",
-            EndTime: "10:00 PM",
-            OutputQty: "7800 KGS",
-            ReworkRejection: reworkComments[2],
-            Status: "In-Progress",
-            ApprovedBy: "-",
-            Status_Color: "#dc3545" // Red
-        },
-        {
-            Date: "07 Oct 2025",
-            ProductionNo: "PRO/NO/004",
-            Batch: "BATCH/NO/004",
-            Shift: shifts[3],
-            ProcessStage: processStages[0],
-            MachineNo: "Machine 4",
-            Operator: operatorNames[3],
-            StartTime: "10:00 PM",
-            EndTime: "06:00 AM",
-            OutputQty: "8500 KGS",
-            ReworkRejection: reworkComments[3],
-            Status: "Draft",
-            ApprovedBy: "-",
-            Status_Color: "#fd7e14"
-        },
-        {
-            Date: "10 Oct 2025",
-            ProductionNo: "PRO/NO/005",
-            Batch: "BATCH/NO/005",
-            Shift: shifts[0],
-            ProcessStage: processStages[1],
-            MachineNo: "Machine 5",
-            Operator: operatorNames[4],
-            StartTime: "08:00 AM",
-            EndTime: "04:00 PM",
-            OutputQty: "8900 KGS",
-            ReworkRejection: "-",
-            Status: "Approved",
-            ApprovedBy: approvedByNames[4],
-            Status_Color: "#6f42c1"
-        },
-        {
-            Date: "12 Oct 2025",
-            ProductionNo: "PRO/NO/006",
-            Batch: "BATCH/NO/006",
-            Shift: shifts[1],
-            ProcessStage: processStages[2],
-            MachineNo: "Machine 6",
-            Operator: operatorNames[0],
-            StartTime: "06:00 AM",
-            EndTime: "02:00 PM",
-            OutputQty: "8100 KGS",
-            ReworkRejection: reworkComments[0],
-            Status: "In-Progress",
-            ApprovedBy: "-",
-            Status_Color: "#dc3545"
-        },
-        {
-            Date: "14 Oct 2025",
-            ProductionNo: "PRO/NO/007",
-            Batch: "BATCH/NO/007",
-            Shift: shifts[2],
-            ProcessStage: processStages[0],
-            MachineNo: "Machine 7",
-            Operator: operatorNames[1],
-            StartTime: "02:00 PM",
-            EndTime: "10:00 PM",
-            OutputQty: "8300 KGS",
-            ReworkRejection: reworkComments[1],
-            Status: "Draft",
-            ApprovedBy: "-",
-            Status_Color: "#fd7e14"
-        },
-        {
-            Date: "16 Oct 2025",
-            ProductionNo: "PRO/NO/008",
-            Batch: "BATCH/NO/008",
-            Shift: shifts[3],
-            ProcessStage: processStages[1],
-            MachineNo: "Machine 8",
-            Operator: operatorNames[2],
-            StartTime: "10:00 PM",
-            EndTime: "06:00 AM",
-            OutputQty: "8800 KGS",
-            ReworkRejection: "-",
-            Status: "Approved",
-            ApprovedBy: approvedByNames[2],
-            Status_Color: "#6f42c1"
-        },
-        {
-            Date: "18 Oct 2025",
-            ProductionNo: "PRO/NO/009",
-            Batch: "BATCH/NO/009",
-            Shift: shifts[0],
-            ProcessStage: processStages[2],
-            MachineNo: "Machine 9",
-            Operator: operatorNames[3],
-            StartTime: "08:00 AM",
-            EndTime: "04:00 PM",
-            OutputQty: "9000 KGS",
-            ReworkRejection: reworkComments[3],
-            Status: "In-Progress",
-            ApprovedBy: "-",
-            Status_Color: "#dc3545"
-        }
-    ];
-     
-    const productionColumns = [
-        { data: 'Date', name: 'Date', title: 'Date' },
-        { data: 'ProductionNo', name: 'ProductionNo', title: 'Production No' },
-        { data: 'Batch', name: 'Batch', title: 'Batch No' },
-        { data: 'Shift', name: 'Shift', title: 'Shift' },
-        { data: 'ProcessStage', name: 'ProcessStage', title: 'Process Stage' },
-        { data: 'MachineNo', name: 'MachineNo', title: 'Machine No' },
-        { data: 'Operator', name: 'Operator', title: 'Operator' },
-        { data: 'StartTime', name: 'StartTime', title: 'Start Time' },
-        { data: 'EndTime', name: 'EndTime', title: 'End Time' },
-        { data: 'OutputQty', name: 'OutputQty', title: 'Output Qty' },
-        { data: 'ReworkRejection', name: 'ReworkRejection', title: 'Rework / Rejection' },
-        { data: 'ApprovedBy', name: 'ApprovedBy', title: 'Approved By' },
-        { data: 'Status', name: 'Status', title: 'Status' }
-    ];
-     
-    $('#MainGrid').empty('');
-    var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="ProductionPlanTable">
+        $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
+        $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
+        $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
+        $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
+
+        $('#MainGrid').empty('');
+        var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="ProductionLogTable">
                 </table>
             `;
-    $('#MainGrid').append(html);
-    bindTable('ProductionPlanTable', ProductionData, productionColumns, 13, 'Date', '350px', true, { update: true, delete: true });
+        $('#MainGrid').append(html);
+
+        var columns = Common.bindColumn(data[1], ['ProductionPlanId', 'Status_Color']);
+
+        bindTable('ProductionLogTable', data[1], columns, -1, 'ProductionPlanId', '350px', true, access);
+        $(".dataTables_scrollBody").css("max-height", "310px");
+    }
 }
 
 function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
-
     if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
         try {
-            $('#' + tableid).DataTable().destroy();
+            //$('#' + tableid).DataTable().clear().destroy();
         } catch (error) {
             console.error('DataTable destroy error:', error);
-            return;
+            return; // stop execution if there's an error
         }
     }
-
     $('#' + tableid).empty();
 
-    const StatusColumnIndex = columns.findIndex(col => col.data === 'Status');
-    const LocationColumnIndex = columns.findIndex(col => col.data === 'HiringLocation');
-    const SourcesColumnIndex = columns.findIndex(col => col.data === 'Sources');
+    columns = columns.filter(x => x.name != "TetroONEnocount");
+    var isTetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
+    var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
 
-    const renderColumn = [];
+    var StatusColumnIndex = columns.findIndex(column => column.data === "Status");
 
-    // Status rendering with color badge
-    if (StatusColumnIndex !== -1) {
-        renderColumn.push({
-            targets: StatusColumnIndex,
-            render: function (data, type, row) {
-                if (type === 'display' && row.Status_Color) {
-                    return `
-                        <div>
-                            <span class="ana-span badge text-white" 
-                                  style="background:${row.Status_Color};width: 115px;font-size: 12px;height: 23px;">
-                                ${row.Status}
-                            </span>
-                        </div>`;
-                }
-                return data;
-            }
-        });
-    }
-
-    // Hiring Location with red dot if hot
-    if (LocationColumnIndex !== -1) {
-        renderColumn.push({
-            targets: LocationColumnIndex,
-            render: function (data, type, row) {
-                if (type === 'display') {
-                    const hotDot = row.IsHot ? '<span style="color:red;font-size:20px;">•</span> ' : '';
-                    return hotDot + data;
-                }
-                return data;
-            }
-        });
-    }
-
-    // Add action buttons column
-    if (isAction && (access.update || access.delete)) {
+    if (isAction == true && data != null && data.length > 0 && !isTetroONEnocount && (access.update || access.delete)) {
         columns.push({
-            data: "Action", name: "Action", title: "Action", orderable: false
-        });
-
-        renderColumn.push({
-            targets: actionTarget,
-            render: function (data, type, row) {
-                let html = '';
-                if (access.update) {
-                    html += `<i class="btn-edit mx-1" data-id="${row[editcolumn]}" title="Edit">
-                                <img src="/assets/commonimages/edit.svg" />
-                             </i>`;
-                }
-                if (access.delete) {
-                    html += `<i class="btn-delete alert_delete mx-1" data-id="${row[editcolumn]}" title="Delete">
-                                <img src="/assets/commonimages/delete.svg" />
-                             </i>`;
-                }
-                return html;
-            }
+            "data": "Action", "name": "Action", "title": "Action", orderable: false
         });
     }
 
-    const hasValidData = data.length > 0 && Object.values(data[0]).some(v => v !== null);
+    var renderColumn = [
+        {
+            "targets": StatusColumnIndex,
+            render: function (data, type, row, meta) {
+                if (type === 'display' && row.Status_Color != null && row.Status_Color.length > 0) {
+                    var dataText = row.Status;
+                    var statusColor = row.Status_Color.toLowerCase();
 
-    const lang = $(window).width() <= 575 ? {
-        "paginate": {
-            "next": ">",
-            "previous": "<"
+                    var htmlContent = '<div>';
+                    htmlContent += '<span class="ana-span badge text-white" style="background:' + statusColor + ';width: 115px;font-size: 12px;height: 23px;">' + dataText + '</span>';
+                    htmlContent += '</div>';
+
+                    return htmlContent;
+                }
+                return data;
+            }
         }
-    } : {};
+    ];
+    if (access.update || access.delete) {
+        renderColumn.push(
+            {
+                targets: actionTarget,
+                render: function (data, type, row, meta) {
+                    var editCondition = access.update;
+                    var deleteCondition = access.delete;
+                    let html = "";
+                    if (tableid === "Audittable") {
+                        html += `<i class="btn-report mx-1 fas fa-file-alt text-primary" 
+                            data-id="${row[editcolumn]}" 
+                            title="Report" 
+                            style="cursor:pointer; font-size:16px;">
+                        </i>`;
+                    }
+                    if (editCondition) {
+                        html += `<i class="btn-edit mx-1" data-id="${row[editcolumn]}" title="Edit">
+                            <img src="/assets/commonimages/edit.svg" />
+                         </i>`;
+                    }
+                    if (deleteCondition) {
+                        html += `<i class="btn-delete alert_delete mx-1" data-id="${row[editcolumn]}" title="Delete">
+                            <img src="/assets/commonimages/delete.svg" />
+                         </i>`;
+                    }
 
-    const table = $('#' + tableid).DataTable({
-        dom: "Bfrtip",
-        bDestroy: true,
-        responsive: true,
-        data: data,
-        columns: columns,
-        scrollY: scrollpx,
-        sScrollX: "100%",
-        scrollCollapse: true,
-        aaSorting: [],
-        info: hasValidData,
-        paging: hasValidData,
-        pageLength: 7,
-        lengthMenu: [7, 14, 50],
-        language: $.extend({}, lang, {
-            emptyTable: `
-                <div>
-                    <img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">
-                    No records found
-                </div>`
+                    return html;
+                }
+            }
+        )
+    }
+    var lang = {};
+    var screenWidth = $(window).width();
+    if (screenWidth <= 575) {
+        var lang = {
+            "paginate": {
+                "next": ">",
+                "previous": "<"
+            }
+        }
+    }
+
+    var table = $('#' + tableid).DataTable({
+        "dom": "Bfrtip",
+        "bDestroy": true,
+        "responsive": true,
+        "data": !isTetroONEnocount ? data : [],
+        "columns": columns,
+        "destroy": true,
+        "scrollY": scrollpx,
+        "sScrollX": "100%",
+        "aaSorting": [],
+        "scrollCollapse": true,
+        "oSearch": { "bSmart": false, "bRegex": true },
+        "info": hasValidData,
+        "paging": hasValidData,
+        "pageLength": 7,
+        "lengthMenu": [7, 14, 50],
+        "language": $.extend({}, lang, {
+            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
         }),
-        columnDefs: renderColumn
+        "columnDefs": !isTetroONEnocount
+            ? renderColumn : [],
     });
-
     $('#tableFilter').on('keyup', function () {
         table.search($(this).val()).draw();
     });
-
-    // Auto adjust columns after small delay
     setTimeout(function () {
-        const table1 = $('#' + tableid).DataTable();
-        if (window.Common && Common.autoAdjustColumns) {
-            Common.autoAdjustColumns(table1);
-        }
+        var table1 = $('#' + tableid).DataTable();
+        Common.autoAdjustColumns(table1);
     }, 100);
 }
 
+function bindTableTransactionsInfo(tableid, data, actionTarget, columns, scrollpx, isAction) {
+    if ($.fn.DataTable.isDataTable('#' + tableid)) {
+        if ($('#' + tableid).DataTable().rows().data().toArray().length > 0) {
+            $('#' + tableid).DataTable().clear().destroy();
+        }
+    }
+    $('#' + tableid).empty();
+    columns = columns.filter(x => x.name != "TetroONEnocount");
+    var isbuyernocount = data[0].hasOwnProperty('TetroONEnocount');
+
+    if (isAction == true && data != null && data.length > 0) {
+        columns.push({
+            "data": "Action", "name": "Action", "title": "Action", orderable: false
+        });
+    }
+
+    var renderColumn = [];
+
+    renderColumn.push(
+        {
+            targets: actionTarget,
+            render: function (data, type, row, meta) {
+                return `<td>
+                            <div class="actionEllipsis">
+                                <i class="btn-edit-Trans mx-1" data-id="" title="Edit">
+                                   <img src="/assets/commonimages/edit.svg" />
+                                </i> 
+                            </div>
+                        </td> `;
+            }
+        }
+    )
+
+    var dataTableOptions = {
+        "dom": "Blfrtip",
+        "bDestroy": true,
+        "responsive": true,
+        "data": !isbuyernocount ? data : [],
+        "columns": columns,
+        "destroy": true,
+        "scrollY": scrollpx,
+        "sScrollX": "100%",
+        "scrollX": true,
+        "scroller": true,
+        "scrollCollapse": true,
+        "aaSorting": [],
+        "language": {
+            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
+        },
+        "searching": false,
+        "info": false,
+        "paging": false,
+        "pageLength": 30,
+        //"lengthMenu": [5, 10, 25, 50],
+        "columnDefs": renderColumn
+    };
+    $('#' + tableid).DataTable(dataTableOptions);
+    var tableId = $('#' + tableid).DataTable();
+    Common.autoAdjustColumns(tableId);
+
+}

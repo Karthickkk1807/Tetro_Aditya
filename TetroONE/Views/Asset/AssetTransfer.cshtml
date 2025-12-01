@@ -1,21 +1,18 @@
 ﻿@{
-    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Transfer, Context.Session);
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.AssetTransfer, Context.Session);
 }
 
 <link href="~/css/transfre.css" rel="stylesheet" />
+
 <style>
-  
-  
     .Date-SearchColumn {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    margin-right: .5rem !important;
-}
-
-
-
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        margin-right: .5rem !important;
+    }
 </style>
+
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
         <div class="row m-t-25">
@@ -103,7 +100,7 @@
 
 <div id="filter-Column" class="Date-SearchColumn mb-2">
     <div class="month-piker d-flex">
-        
+
 
         <div class="ftdate">
             <div class="row" id="fromtodateCol" style="display:none; margin-left:10px;">
@@ -123,7 +120,7 @@
         </div>
     </div>
     <div class="d-flex justify-content-end">
-         <button class="btn Bulk-Action" id="toggleCustomDate" type="button" title="Select Date Range">
+        <button class="btn Bulk-Action" id="toggleCustomDate" type="button" title="Select Date Range">
             <i class="fa fa-calendar" aria-hidden="true"></i>
         </button>
         <div class="searchbar">

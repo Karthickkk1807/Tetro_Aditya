@@ -3,26 +3,9 @@
 }
 
 <link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
-
-<style>
-    #ProductionPlanTable {
-        width: 100% !important;
-        margin-top: 10px !important;
-    }
-
-    .dataTables_scrollBody {
-        height: 350px !important;
-        margin-top: -18px !important;
-        border-bottom: 1px solid #111;
-        margin-bottom: 10px;
-    }
-
-    .DynrowRemove {
-        margin-top: 17px !important;
-    }
-
-</style>
 <link href="~/assets/css/daterangepicker.min.css" rel="stylesheet" />
+<link href="~/css/productionplan.css" rel="stylesheet" />
+@* <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> *@
 
 <div class="row quick-db m-b-5">
     <div class="col-lg-12">
@@ -38,8 +21,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox1">Total ProductionPlan</div>
-                                    <h4 class="card-title" id="CounterValBox1">62</h4>
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
                                 </div>
                             </div>
                         </div>
@@ -57,8 +40,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2">Draft</div>
-                                    <h4 class="card-title" id="CounterValBox2">18</h4>
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
                                 </div>
                             </div>
                         </div>
@@ -76,8 +59,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3">Approved</div>
-                                    <h4 class="card-title" id="CounterValBox3">26</h4>
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
                                 </div>
                             </div>
                         </div>
@@ -95,8 +78,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox4">Cancelled</div>
-                                    <h4 class="card-title" id="CounterValBox4">18</h4>
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +89,6 @@
         </div>
     </div>
 </div>
-
 
 <div id="filter-Column" class="Date-SearchColumn">
     <div class="month-piker d-flex">
@@ -142,15 +124,14 @@
                 <div class="date-carousel" id="datemonth">
                     <div class="date-nav">
                         <button class="nav-button" id="decrement-month-btn2">◄</button>
-                        <span class="month-year" id="dateDisplay2">October 2025</span>
-                        <button class="nav-button" id="increment-month-btn2">►</button>
+                        <span class="month-year" id="dateDisplay2"></span>
+                        <button class="nav-button" id="increment-month-btn2" style="display: none;">►</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="d-flex justify-content-end">
-        @* <input type="button" class="mr-3" id="SendingSMS" value="Sending SMS ....."/> *@
         <div class="searchbar">
             <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
             <button type="submit" class="searchbar__button">
@@ -177,6 +158,16 @@
     </div>
 </div>
 
+<ul class="nav nav-tabs pl-2 mt-2" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab active this" id="ProductionPlanData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Production Plan</a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link navbar-tab titleForHeaderProductTab" id="CurrentFabricStockData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Grey Fabric Stock Info</a>
+    </li>
+</ul>
+
 <div id="MainGrid">
     <div class="table-responsive">
         <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductionPlanTable">
@@ -184,148 +175,83 @@
     </div>
 </div>
 
-<div id="ProductionPlanCanvas" class="offcanvas-container">
-    <div class="offcanvas-header d-flex align-items-center justify-content-between">
-        <h2 id="ProductionPlanHeader">Add New ProductionPlan</h2>
-        <span id="CloseCanvas" class="close"
-              style="font-size:30px;cursor:pointer;color:white;"
-              title="Close">&times;</span>
-    </div>
-    <div class="offcanvas-body">
-        <div class="row">
-            <div class="col-12">
-                <div class="accordion" id="styleAccordion1">
-                    <div class="accordion-header">
-                        <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1">
-                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                                    <strong class="text-white">
-                                        ProductionPlan Info
-                                    </strong>
-                                    <i class="fas fa-angle-down text-white"></i>
-                                </p>
-                            </a>
-                        </h2>
-                    </div>
-                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
-                        <div id="Styleenterydetalis" class="card-body">
-                            <form id="FormProductionPlan">
-                                <div class="row">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+<div id="ProductionPlanModal" class="modal" data-bs-loader-pms="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-xxl">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ModalHeading">Production Plan Details</h2>
+                <span id="ProductionPlanClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div class="Status-Div">
+                    <fieldset class="expensefild_1">
+                        <legend class="w-auto">Production Plan Status</legend>
+                        <div class="horizontal-timeline">
+                            <div class="timeline-progress-line-fill"></div>
+                            <div class="timeline-progress-line"></div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="px-3" id="ProductionPlanTopHeadbind">
+                    <div class="row DynPageRow-Div">
+                        <div class="col-lg-12 col-md-12 col-sm-6 col-12" id="ShippingColumn" style="position: relative;">
+                            <form id="TopStatic">
+                                <div class="row mt-2 mb-2">
+                                    <div class="col-lg-2 col-md-2 col-sm-6 col-6" id="BatchNoDiv">
                                         <div class="form-group">
-                                            <label>ProductionPlan No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: PRO/PLAN/001" id="ProductionPlanNo" name="ProductionPlanNo" maxlength="50" required disabled />
+                                            <label>Batch No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" id="BatchNo" name="BatchNo" placeholder="BATCH/NO/001" disabled required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-lg-2 col-md-2 col-sm-6 col-6" id="BatchDateDiv">
                                         <div class="form-group">
-                                            <label>ProductionPlan Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" id="ProductionPlanDate" name="ProductionPlanDate" />
+                                            <label>Batch Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="BatchDate" name="BatchDate" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-lg-2 col-md-2 col-sm-6 col-6" id="TotalWeightDiv">
                                         <div class="form-group">
-                                            <label>JobOrder No<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="JobOrderNo" name="JobOrderNo" required>
+                                            <label>Total Weight<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" id="TotalWeight" name="TotalWeight" placeholder="Ex: 890 KG" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="ColourDiv">
+                                        <div class="form-group">
+                                            <label>Colour<span id="Asterisk">*</span></label>
+                                            <select class="form-control Color" id="Color" name="Color">
                                                 <option value="">--Select--</option>
-                                                <option value="1">JOB/NO/001</option>
-                                                <option value="2">JOB/NO/002</option>
-                                                <option value="3">JOB/NO/003</option>
-                                                <option value="4">JOB/NO/004</option>
-                                                <option value="5">JOB/NO/005</option>
+                                                <option value="1">14-0002 TCX</option>
+                                                <option value="2">15-4101 TCX</option>
+                                                <option value="3">17-1578 TCX</option>
+                                                <option value="4">17-1564 TCX</option>
+                                                <option value="5">19-4052 TCX</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="MachineDiv">
                                         <div class="form-group">
-                                            <label>Fabric Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="FabricTypeId" name="FabricTypeId" required disabled>
+                                            <label>Machine<span id="Asterisk">*</span></label>
+                                            <select class="form-control Machine" id="Machine" name="Machine">
                                                 <option value="">--Select--</option>
-                                                <option value="1">Cotton</option>
-                                                <option value="2" selected>Polyester</option>
-                                                <option value="3">Blend</option>
+                                                <option value="1">JET-1</option>
+                                                <option value="2">JET-2</option>
+                                                <option value="3">JET-3</option>
+                                                <option value="4">JET-4</option>
+                                                <option value="5">JET-5</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                    <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="LoadingDateTimeDiv">
                                         <div class="form-group">
-                                            <label>GSM<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 200 GSM" id="GSM" name="GSM" required disabled />
+                                            <label>LoadingDate Time<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control dateTimePicker" id="UnLoadingDateTime" name="UnLoadingDateTime" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                    <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="UnLoadingDateTimeDiv">
                                         <div class="form-group">
-                                            <label>Width<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 30 KG" id="Width" name="Width" required disabled oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Process Route<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProcessRouteId" name="ProcessRouteId" required disabled>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Pre-treatment</option>
-                                                <option value="2">Dyeing</option>
-                                                <option value="3">Printing</option>
-                                                <option value="4" selected>Finishing</option>
-                                                <option value="5">Packing</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Priority Level<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="PrioritylevelId" name="PrioritylevelId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Normal</option>
-                                                <option value="2">Medium</option>
-                                                <option value="3">High</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Planned By<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="PlannedBy" name="PlannedBy">
-                                                <option value="">--Select--</option>
-                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
-                                                <option value="2">KARTHIKEYANI</option>
-                                                <option value="3">MITHRAN</option>
-                                                <option value="6">DEXY</option>
-                                                <option value="34">INDRASENAN</option>
-                                                <option value="109">KAVINESH RAJASEKAR</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Approved By<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ApprovedBy" name="ApprovedBy">
-                                                <option value="">--Select--</option>
-                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
-                                                <option value="2">KARTHIKEYANI</option>
-                                                <option value="3">MITHRAN</option>
-                                                <option value="6">DEXY</option>
-                                                <option value="34">INDRASENAN</option>
-                                                <option value="109">KAVINESH RAJASEKAR</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Status<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="Status" name="Status">
-                                                <option value="">--Select--</option>
-                                                <option value="1">Draft</option>
-                                                <option value="2">Approved</option>
-                                                <option value="3">Cancelled</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Remarks<span id="Asterisk">*</span></label>
-                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                                            <label>UnLoadingDate Time<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control dateTimePicker" id="UnLoadingDateTime" name="UnLoadingDateTime" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -333,63 +259,308 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                <!--Dynmic table-->
+                <div class="px-3" id="MainProductionPlanPopTable">
+                    <div class="row DynmicTableRow">
+                        <div class="container-fluid mt-2">
+                            <div class="Purchasetable-container">
+                                <div class="Purchasetable-scroll">
+                                    <table class="table table-bordered" id="ProductionPlanProductTable">
+                                        <thead class="Dynthead">
+                                            <tr>
+                                                <th>S.No</th>
+                                                <th>Lot No<span style="visibility: hidden;">11111</span></th>
+                                                <th>Colour<span style="visibility: hidden;">11111</span></th>
+                                                <th>Fabric Type<span style="visibility: hidden;">1111</span></th>
+                                                <th>GSM<span style="visibility: hidden;">1111</span></th>
+                                                <th>Width<span style="visibility: hidden;">1111</span></th>
+                                                <th>Quantity<span style="visibility: hidden;">1</span></th>
+                                                <th>Process<span style="visibility: hidden;">1</span></th>
+                                                <th>Remarks<span style="visibility: hidden;">111111111111111111111111111</span></th>
+                                                <th style="width: 65px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ProductionPlanProductTablebody" class="Dyntbody">
 
-            <div class="col-12">
-                <div class="accordion" id="styleAccordion2">
-                    <div class="accordion-header">
-                        <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2">
-                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                                    <strong class="text-white">
-                                        Batch Info
-                                    </strong>
-                                    <i class="fas fa-angle-down text-white"></i>
-                                </p>
-                            </a>
-                        </h2>
-                    </div>
-                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
-                        <div id="Styleenterydetalis" class="card-body">
-                            <form id="FormBatch">
-                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowProductionPlan(this)" style="position: absolute; top: 56px; right: 30px;">
-                                    <i class="fas fa-plus" id="AddButton"></i>
-                                </button>
-                                <div id="DynamicBatchBinding">
-                                </div>
-                                <div class="row">
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
-                                        <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
-                                            <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
-                                                <b>Click Here to Attach your files</b>
-                                                <input type="file" id="fileInput" multiple="" class="custom-file-input">
-                                            </label>
-                                            <div class="file-preview d-flex justify-content-center" id="preview">
-                                                <div class="attachrow">
-                                                    <div class="attachcolumn">
-                                                        <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                            <!--Add Item-->
+                                            <tr id="AddItemButtonRow">
+                                                <td colspan="10" class="add-item">
+                                                    <div class="add-item">
+                                                        <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
                                                     </div>
-                                                    <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                                                </td>
+                                            </tr>
+
+                                            <tr id="SubtotalRow" style="border-top: 2px solid white !important;">
+                                                <td colspan="10" class="p-2">
+                                                    <div class="summary-label"><a class="mr-3" id="RawMetarialInfo">+ RawMaterial Info</a><a id="ChemicalInfo">+ Chemical Info</a></div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Dynmic table-->
+                <!--Add Discount Column & Add Notes Column-->
+                <!--Add Discount Column & Add Notes Column-->
+                <div class="px-3">
+                    <div class="row DynmicTableRow">
+                        <!--Notes & Terms Column-->
+                        <div class="col-lg-9 col-md-9 col-sm-12 col-12 AddnotesDiv">
+                            <div class="row mt-3 mb-3">
+                                <!--Add Notes-->
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <input class="AdddiscountLable px-0" id="AddNotesLable" type="button" value="+ Add Notes" fdprocessedid="vurimd">
+
+                                    <div id="AddNotes" style="display: none;">
+                                        <div class="addterms-Attchbg mb-2 mt-2">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group">
+                                                        <label>Notes</label>
+                                                        <textarea class="form-controltext" id="AddNotesText" name="AddNotesText" rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <input class="AdddiscountLable px-0 mb-2" id="HideNotesLable" type="button" value="✖ Hide Notes" style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!--Add Attachment-->
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <input class="AdddiscountLable px-0" id="AddAttachLable" type="button" value="+ Add Attachment" fdprocessedid="jzwagr">
+
+                                    <div id="AddAttachment" style="display: none;">
+                                        <div class="addterms-Attchbg mb-2 mt-2">
+                                            <div class="row">
+                                                <div class="col-12" style="height: 120px;margin-top:5px;">
+                                                    <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 120px;">
+                                                        <!-- Add a custom button for choosing files -->
+                                                        <label class=" d-flex justify-content-center align-content-center mt-3 " style="text-decoration:underline; color:#7D7C7C;cursor: pointer;">
+                                                            <b>Click Here to Attach your files</b>
+                                                            <input type="file" id="fileInput" multiple="" class="custom-file-input valid" aria-invalid="false">
+                                                        </label>
+                                                        <div class="file-preview d-flex justify-content-center" id="preview" style="display: block;">
+                                                            <div class="attachrow">
+                                                                <div class="attachcolumn">
+                                                                    <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                                </div>
+                                                                <div class="attachcolumn">
+                                                                    <ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 attachLableDiv">
+                                                    <input class="AdddiscountLable px-0" id="HideAttachlable" type="button" value="✖ Hide Attachment" style="margin-top: 11px; display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+                            <label class="col-12" style="font-size: medium !important;font-weight: 600;text-align: center;">QR Code</label>
+                            <div class="col-12 imageAppend" id="QRCode">
+                            </div>
+                        </div>
+
+                        <!--Statuscolumn-->
+                        <div class="Statuscolumn col-12 order-3">
+                            <form id="FormStatus" novalidate="novalidate">
+                                <div class="row" style="margin-top: 5px;">
+                                    <div class="col-lg-3 col-md-3 col-6 ">
+                                        <div class="form-group" style="visibility: hidden;">
+                                            <label>Mode Of Transport<span id="Asterisk">*</span></label>
+                                            <select id="ModeOfTrafxgfgnsferId" name="ModeOfTrafgfgnsferId" class="form-control">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-6">
+                                        <div class="form-group" id="DivModeOfTransport" style="display: none;">
+                                            <label>Mode Of Transport<span id="Asterisk">*</span></label>
+                                            <select id="ModeOfTransferId" name="ModeOfTransferId" class="form-control" required=""><option value="">--Select--</option><option value="1">Company Vehicle</option><option value="2">Private Logistics</option><option value="3">Others</option></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-6">
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-6">
+                                        <div class="form-group" id="PreparedByDiv">
+                                            <label>Prepared By</label>
+                                            <select class="form-control" id="PreparedBy" name="PreparedBy" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-6">
+                                        <div class="form-group" id="">
+                                            <label>Status<span id="Asterisk">*</span></label>
+                                            <select id="TransferStatusId" name="TransferStatusId" class="form-control" required="" fdprocessedid="ld5kwd"><option value="">--Select--</option><option value="1">Requested</option></select>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="button-container d-lg-flex d-block justify-content-center">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="PurchaseOrderSaveBtn">
+                                <i class="fas fa-save mr-1"></i>
+                                <span>Save</span><span class="shortcut-key">[ Ctrl+S ]</span>
+                            </button>
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPordersaveprintbtn">
+                                <i class="fas fa-print mr-1"></i> <span> Save &amp; Print</span><span class="shortcut-key">[ Alt + P ]</span>
+                            </button>
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPreviewPorder">
+                                <i class="fas fa-eye mr-1"></i> <span>Preview</span><span class="shortcut-key">[ Alt + V ]</span>
+                            </button>
+
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnsharePorder" data-bs-toggle="modal" data-bs-target="#emailModal">
+                                <i class="fas fa-share"></i> <span>Share</span><span class="shortcut-key">[ Alt + H ]</span>
+                            </button>
+                            <!-- Dropdown Menu -->
+                            <ul class="dropdown-menu shadow-lg sharedrop" id="ShareDropdownitems" aria-labelledby="btnsharePorder" style="display: none;">
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" id="PurchaseOrderWhatsAppBtn">
+                                        <i class="fab fa-whatsapp me-3 whatsapp-icon"></i> WhatsApp
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" id="PurchaseOrderMailBtn">
+                                        <i class="fas fa-envelope me-3 email-icon"></i> Email
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="#" id="downloadLink">
+                                        <i class="fas fa-download me-3 download-icon"></i> Download
+                                    </a>
+                                </li>
+
+                                <div id="SpinnerWhatsApp" style="position: absolute; display: none;">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </ul>
+
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanCancelBtn">
+                                <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
+                            </button>
+
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="offcanvas-footer">
-        <div class="col-md-12 col-lg-12">
-            <div class="form-group text-center">
-                <div class="card-action">
-                    <a class="btn btn-success m-r-20 text-white" id="SaveProductionPlan">Save</a>
+<div id="ProductionPlanAddItemModal" class="modal" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="">Add Item</h2>
+                <span id="ProductionPlanAddItemClose" class="close d-none" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="d-flex justify-content-end" style="padding: .5rem !important;">
+                <!-- Search Input -->
+                <div class="searchbar" style="margin: 10px 4px 0px 10px;">
+                    <input type="text" class="searchbar_input" name="q" id="AdditemSearchProduction" placeholder="Search" style="height: 34px;" autocomplete="off">
+                    <button type="submit" class="searchbar__button" style="height: 34px;">
+                        <img src="~/assets/commonimages/search.svg" />
+                    </button>
                 </div>
+            </div>
+            <div class="modal-body" style="max-height: 58vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-wrapper">
+                            <table class="table table-bordered mb-0" id="ProductionPlanAddItemTable">
+                                <thead class="Additemthead">
+                                    <tr>
+                                        <th scope="col">Customer</th>
+                                        <th scope="col">Lot No</th>
+                                        <th scope="col">Colour</th>
+                                        <th scope="col">Fabric Type</th>
+                                        <th scope="col">GSM</th>
+                                        <th scope="col">Width</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Avail Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="Additemtbody" id="ProductionPlanAddItem-table-body">
+                                    <!-- Repeatable Row Template (10x below) -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between align-items-center w-100">
+                <div class="">
+                    <p class="pt-1 TotalSelectedItmsPra cursor-pointer text-primary  mb-0" style="font-weight:700;">Items Selected : <span id="TotalItemSelect">0</span></p>
+                    <p class="pt-1 TotalSelectedItmsPra cursor-pointer text-primary  mb-0" style="font-weight:700;">No Of Qty : <span id="NoOfQty">0</span> KG</p>
+                </div>
+                <div>
+                    <button type="button" id="BtnAdd" class="btn btn-added mr-2">Update</button>
+                    <button type="button" id="ProductionPlanAddItemClose" class="btn modal-close-btn" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div id="RawMaterialModal" class="modal" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="">RawMetarial Details</h2>
+                <span id="RawMaterialClose" class="close d-none" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 73vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div id="RawMaterialDynamic">
+                </div>
+            </div>
+            <div class="modal-footer w-100" style="text-align: center;align-items: center !important;align-content: center;display: block;">
+                <div>
+                    <button type="button" id="BtnAddRawMaterial" class="btn mr-2" style="background-color: green; color:white">Save</button>
+                    <button type="button" id="RawMaterialClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ChemicalModal" class="modal" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-te">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="">Chemical Details</h2>
+                <span id="ChemicalClose" class="close d-none" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 73vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div id="ChemicalDynamic">
+                </div>
+            </div>
+            <div class="modal-footer w-100" style="text-align: center;align-items: center !important;align-content: center;display: block;">
+                <div>
+                    <button type="button" id="BtnAddChemical" class="btn mr-2" style="background-color: green; color:white">Save</button>
+                    <button type="button" id="ChemicalClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -399,6 +570,39 @@
     var access = @Html.Raw(Json.Serialize(access));
 </script>
 
+@* For Date Time Picker *@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+@* For QRCode *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+@* For Draggable and Reorderable *@ 
+@* <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> *@
+
+<script>
+    flatpickr(".dateTimePicker", {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      time_24hr: false,
+      defaultDate: new Date()
+    });
+</script>
+@* 
+<script>
+    $(function () {
+        $("#ProcessCheckboxContainer").sortable({
+            items: ".checkDiv",
+            placeholder: "ui-state-highlight",
+            forcePlaceholderSize: true,
+            tolerance: "pointer",
+            helper: "clone"
+        });
+    });
+</script> *@
+
 <script src="~/assets/js/mdtimepicker.js"></script>
 <script src="~/js/productionplan.js"></script>
+
+
 

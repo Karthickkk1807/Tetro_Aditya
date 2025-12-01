@@ -278,10 +278,6 @@ namespace TetroONE.Controllers
 
         //=============================================================================BankSettings============================================================================
 
-
-
-
-
         //=============================================================================BankSettings============================================================================
 
         [HttpGet]
@@ -338,10 +334,6 @@ namespace TetroONE.Controllers
 
         //=============================================================================BankSettings============================================================================
 
-
-
-
-
         [HttpGet]
         [Route("GetMasterInfo")]
         public IActionResult GetMasterInfo(int MasterInfoId, int FranchiseId, string ModuleName)
@@ -377,10 +369,8 @@ namespace TetroONE.Controllers
                 ? "[dbo].[USP_UpdateMasterInfoDetails]"
                 : "[dbo].[USP_InsertMasterInfoDetails]";
 
-            response = GenericTetroONE.Execute(_connectionString, storedProcedure, request, Exculuted);
-
-            return Json(response);
-
+            response = GenericTetroONE.Execute(_connectionString, storedProcedure, request, Exculuted); 
+            return Json(response); 
         }
 
         public class DeleteMasterInfo { public int LoginUserId { get; set; } public int? MasterInfoId { get; set; } public string ModuleName { get; set; } }

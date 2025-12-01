@@ -1,44 +1,95 @@
-﻿$(document).ready(function () {
-    MainGridData();
+﻿var PlantMappingId = 0;
+var OutWardId = 0;
 
-    const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+$(document).ready(function () {
+
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
+
+    Common.bindDropDown('InwardNo', 'InwardNo');
+    Common.bindDropDown('OutwardType', 'OutWardType');
+    Common.bindDropDown('OutWardBy', 'SampleReceivedBy');
+
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    let displayedDate = new Date(currentYear, currentMonth);
+    updateMonthDisplay(displayedDate);
+    $('#increment-month-btn2').hide();
 
     $('#decrement-month-btn2').click(function () {
-        let currentText = $('#dateDisplay2').text().trim();
-        let [currentMonth, currentYear] = currentText.split(" ");
-        let monthIndex = months.indexOf(currentMonth);
+        displayedDate.setMonth(displayedDate.getMonth() - 1);
+        updateMonthDisplay(displayedDate);
+        $('#increment-month-btn2').show();
+        $('#tableFilter').val('');
 
-        if (monthIndex === -1) return;
-
-        monthIndex--;
-        if (monthIndex < 0) {
-            monthIndex = 11;
-            currentYear = parseInt(currentYear) - 1;
-        }
-
-        let newMonth = months[monthIndex];
-        $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
-        let currentText = $('#dateDisplay2').text().trim();
-        let [currentMonth, currentYear] = currentText.split(" ");
-        let monthIndex = months.indexOf(currentMonth);
+        displayedDate.setMonth(displayedDate.getMonth() + 1);
+        updateMonthDisplay(displayedDate);
 
-        if (monthIndex === -1) return;
-
-        monthIndex++;
-        if (monthIndex > 11) {
-            monthIndex = 0;
-            currentYear = parseInt(currentYear) + 1;
-        }
-
-        let newMonth = months[monthIndex];
-        $('#dateDisplay2').text(`${newMonth} ${currentYear}`);
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
     });
+
+    function updateMonthDisplay(date) {
+        let monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        let month = monthNames[date.getMonth()];
+        let year = date.getFullYear();
+        $('#dateDisplay2').text(month + " " + year);
+
+        let now = new Date();
+        let currentMonth = now.getMonth();
+        let currentYear = now.getFullYear();
+
+        if (date.getFullYear() > currentYear || (date.getFullYear() === currentYear && date.getMonth() >= currentMonth)) {
+            $('#increment-month-btn2').hide();
+        } else {
+            $('#increment-month-btn2').show();
+        }
+    }
+
+    var today = new Date().toISOString().split('T')[0];
+    $('#FromDate, #ToDate').attr('max', today);
+    $(document).on('change', '#FromDate,#ToDate', function () {
+        var fromDate = $('#FromDate').val();
+        $('#tableFilter').val('');
+        $('#ToDate').attr('min', fromDate);
+        if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
+            Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString() }, GetOutwardSuccess, null);
+        }
+    });
+
+    $(document).on('click', '#downloadExcelBtn', function () {
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        $('#tableFilter').val('');
+
+        displayedDate = new Date(currentYear, currentMonth);
+        $('#increment-month-btn2').show();
+
+        updateMonthDisplay(displayedDate);
+
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
+    });
+
+    $(document).on('click', '#bulkEmployee', function () {
+        $('#FromDate').val('');
+        $('#ToDate').val('');
+        $('#ToDate').removeAttr('max');
+        $('#tableFilter').val('');
+    });
+
+    var fnData = Common.getDateFilter('dateDisplay2');
+    Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
 
     $(document).on('click', '#AddOutWard', function () {
         var windowWidth = $(window).width();
@@ -50,12 +101,21 @@
             $("#OutWardCanvas").css("width", "39%");
         }
         $('#fadeinpage').addClass('fadeoverlay');
-        CanvasOpenFirstShowingOutWard();
-        $('#AutoGenertedNo').empty().append($('<option>', { value: '', text: '--Select--', }));
+        CanvasOpenFirstShowingOutWard(); 
+
+        $('#FormProcessing').empty();
+        duplicateFabric();
+
+        $('#StatusDiv').hide();
+
+        $('.OutwardNoBindLable').html('Name<span id="Asterisk">*</span>');
+
+        $('#OutwardNoBind').empty().append($('<option>', { value: '', text: '--Select--', }));
         $('#TypeNo').text('Type No');
         $("#FormOutWard")[0].reset();
         $('#OutWardHeader').text('OutWard Details');
         $('#SaveOutWard').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
+        $('#PrintOutWard').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
     });
 
     $(document).on('click', '.btn-edit', function () {
@@ -69,8 +129,18 @@
         }
         $('#fadeinpage').addClass('fadeoverlay');
         CanvasOpenFirstShowingOutWard();
+
+        $('.OutwardNoBindLable').html('Name<span id="Asterisk">*</span>');
+
+        $('#FormProcessing').empty();
+        duplicateFabric();
+
+        $('#StatusDiv').show();
+
+        $('#OutwardNo').empty().append($('<option>', { value: '', text: '--Select--', }));
         $('#OutWardHeader').text('Edit OutWard Details');
         $('#SaveOutWard').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
+        $('#PrintOutWard').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
     });
 
     $(document).on('click', '#CloseCanvas', function () {
@@ -88,37 +158,78 @@
         $(target).collapse('toggle');
     });
 
-    $(document).on('change', '#TransactionId', function () {
+    $(document).on('change', '#OutwardType', function () {
         var $thisVal = $(this).val();
-        var $autoNo = $('#AutoGenertedNo'); 
-        var $typeNo = $('#TypeNo');
-
-        $autoNo.empty().append($('<option>', { value: '', text: '--Select--' })); 
-        $typeNo.text('Type No');
-
-        $thisVal == 4 || $thisVal == '' ? $('#DivName').hide() : $('#DivName').show();
-
-        if (!$thisVal) return;
-
-        var dataMap = { 
-            1: { prefix: 'SALE/NO/', typelable: 'SaleOrder No' },
-            2: { prefix: 'JOB/NO/', typelable: 'JobOrder No' },
-            default: { prefix: 'TRANS/NO/', typelable: 'Transfer No' }
-        };
-
-        var data = dataMap[$thisVal] || dataMap.default;
-
-        for (var i = 1; i <= 6; i++) {
-            $autoNo.append($('<option>', {
-                value: i,
-                text: data.prefix + ('00' + i).slice(-3)
-            }));
+        if ($thisVal !== "") {
+            var EditData = { OutwardType: parseInt($thisVal) }
+            Common.ajaxCall("GET", "/Productions/GetOutWardTypeContactDetails", EditData,
+                function (response) {
+                    if (response.status) {
+                        Common.bindDropDownSuccess(response.data, "OutwardNoBind");
+                        $thisVal == "1" ? $('.OutwardNoBindLable').html('Client Name<span id="Asterisk">*</span>') : $('.OutwardNoBindLable').html('JobWorker Name<span id="Asterisk">*</span>'); 
+                    }
+                },
+                null
+            );
         }
-         
-        $typeNo.text(data.typelable);
+        else {
+            $('#OutwardNoBind').empty().append($('<option>', { value: '', text: '--Select--', }));
+            $('.OutwardNoBindLable').html('Name<span id="Asterisk">*</span>');
+        }
     });
 
+    $(document).on('click', '#PrintOutWard', function () {
+        $('#loader-pms').show();
+        var EditData = { NoOfCopies: 1, printType: "preview" }
 
+        $.ajax({
+            url: '/Productions/OutwardPrint',
+            method: 'GET',
+            data: EditData,
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (response) {
+                var printType = "Preview";
+                $('#ShareDropdownitems').css('display', 'none');
+                var blob = new Blob([response], { type: 'application/pdf' });
+                var blobUrl = URL.createObjectURL(blob);
+                if (printType == "Preview") {
+                    var newTab = window.open();
+                    if (newTab) {
+                        newTab.document.write(`
+                                              <html>
+                                              <head><title>Outward Preview</title></head>
+                                              <body style="margin:0;">
+                                                  <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                                              </body>
+                                              </html>
+                                          `);
+                        newTab.document.close();
+                    }
+
+                } else if (printType == "Download") {
+                    var link = document.createElement('a');
+                    link.href = blobUrl;
+                    link.download = 'Purchase Order.pdf';
+                    link.click();
+                } else if (printType == "Print") {
+                    var iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = blobUrl;
+                    document.body.appendChild(iframe);
+                    iframe.contentWindow.print();
+                }
+                $('#loader-pms').hide();
+                /* Print*/
+
+            },
+            error: function () {
+                $('#loader-pms').hide();
+                Common.errorMsg(response.message);
+            }
+        });
+    });
 });
 
 function CanvasOpenFirstShowingOutWard() {
@@ -128,232 +239,119 @@ function CanvasOpenFirstShowingOutWard() {
     $('#OutWardCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
     $('html, body').animate({
         scrollTop: $('#OutWardCanvas').offset().top
-    }, 'fast'); 
+    }, 'fast');
 }
- 
-function MainGridData() {
+function GetOutwardSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+        var CounterBox = Object.keys(data[0][0]);
 
-    const OutwardData = [
-        {
-            Date: "03 Oct 2025",
-            OutwardNo: "OUT/NO/001",
-            Transaction: "Sales Order",
-            OrderNo: "SALE/NO/001",
-            DeliveryChallanNo: "DC/NO/001",
-            OutwardQty: "125 KGS",
-            Status: "Approved",
-            Status_Color: "#28a745"
-        },
-        {
-            Date: "06 Oct 2025",
-            OutwardNo: "OUT/NO/002",
-            Transaction: "Job Order",
-            OrderNo: "JOB/NO/002",
-            DeliveryChallanNo: "DC/NO/002",
-            OutwardQty: "210 KGS",
-            Status: "Hold",
-            Status_Color: "#ffc107"
-        },
-        {
-            Date: "09 Oct 2025",
-            OutwardNo: "OUT/NO/003",
-            Transaction: "Transfer Order",
-            OrderNo: "TRANS/NO/003",
-            DeliveryChallanNo: "DC/NO/003",
-            OutwardQty: "175 KGS",
-            Status: "Approved",
-            Status_Color: "#28a745"
-        },
-        {
-            Date: "12 Oct 2025",
-            OutwardNo: "OUT/NO/004",
-            Transaction: "Sales Order",
-            OrderNo: "SALE/NO/004",
-            DeliveryChallanNo: "DC/NO/004",
-            OutwardQty: "145 KGS",
-            Status: "Rejected",
-            Status_Color: "#dc3545"
-        },
-        {
-            Date: "16 Oct 2025",
-            OutwardNo: "OUT/NO/005",
-            Transaction: "Job Order",
-            OrderNo: "JOB/NO/005",
-            DeliveryChallanNo: "DC/NO/005",
-            OutwardQty: "190 KGS",
-            Status: "Hold",
-            Status_Color: "#ffc107"
-        },
-        {
-            Date: "18 Oct 2025",
-            OutwardNo: "OUT/NO/006",
-            Transaction: "Transfer Order",
-            OrderNo: "TRANS/NO/006",
-            DeliveryChallanNo: "DC/NO/006",
-            OutwardQty: "165 KGS",
-            Status: "Approved",
-            Status_Color: "#28a745"
-        },
-        {
-            Date: "21 Oct 2025",
-            OutwardNo: "OUT/NO/007",
-            Transaction: "Sales Order",
-            OrderNo: "SALE/NO/007",
-            DeliveryChallanNo: "DC/NO/007",
-            OutwardQty: "155 KGS",
-            Status: "Rejected",
-            Status_Color: "#dc3545"
-        },
-        {
-            Date: "23 Oct 2025",
-            OutwardNo: "OUT/NO/008",
-            Transaction: "Transfer Order",
-            OrderNo: "TRANS/NO/008",
-            DeliveryChallanNo: "DC/NO/008",
-            OutwardQty: "180 KGS",
-            Status: "Approved",
-            Status_Color: "#28a745"
-        }
-    ];
-     
-    const outwardColumns = [
-        { data: 'Date', name: 'Date', title: 'Date' },
-        { data: 'OutwardNo', name: 'OutwardNo', title: 'Outward No' },
-        { data: 'Transaction', name: 'Transaction', title: 'Transaction' },
-        { data: 'OrderNo', name: 'OrderNo', title: 'Order No' },
-        { data: 'DeliveryChallanNo', name: 'DeliveryChallanNo', title: 'Delivery Challan No' },
-        { data: 'OutwardQty', name: 'OutwardQty', title: 'Outward Qty' },
-        { data: 'Status', name: 'Status', title: 'Status' }
-    ];
-    
-    $('#MainGrid').empty('');
-    var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="OutWardTable">
+        $("#CounterTextBox1").text(CounterBox[0]);
+        $("#CounterTextBox2").text(CounterBox[1]);
+        $("#CounterTextBox3").text(CounterBox[2]);
+        $("#CounterTextBox4").text(CounterBox[3]);
+
+        $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
+        $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
+        $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
+        $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
+
+        $('#MainGrid').empty('');
+        var html = `<table class="table  table-hover  table-head-bg-primary basic-datatables tableHeaderResponsive tableResponsive" style="max-height:200px" id="OutWardTable">
                 </table>
             `;
-    $('#MainGrid').append(html);
-    bindTable('OutWardTable', OutwardData, outwardColumns, 7, 'Date', '350px', true, { update: true, delete: true });
+        $('#MainGrid').append(html);
+
+        var columns = Common.bindColumn(data[1], ['OutWardId', 'Status_Color']);
+        Common.bindTable('OutWardTable', data[1], columns, -1, 'OutWardId', '360px', true, access);
+    }
 }
 
-function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
+function duplicateFabric() {
+    let numberIncr = Math.random().toString(36).substring(2);
+    var rowadd = $('.DynamicRowProcessing').length;
+    var DynamicLableNo = rowadd + 1;
 
-    if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
-        try {
-            $('#' + tableid).DataTable().destroy();
-        } catch (error) {
-            console.error('DataTable destroy error:', error);
-            return;
-        }
-    }
+    var htmlRow = `
+        <div class="row DynamicRowProcessing">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
+                <label class="DynamicLable">Fabric Details ${DynamicLableNo}</label>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Fabric<span id="Asterisk">*</span></label>
+                    <select class="form-control FabricType" id="FabricType${numberIncr}" name="FabricType${numberIncr}" required> 
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Width<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control Width" placeholder="Ex: 30" id="Width${numberIncr}" name="Width${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>GSM<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control GSM" placeholder="Ex: 200" id="GSM${numberIncr}" name="GSM${numberIncr}" required />
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>OutWard Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 40" id="OutWardQuantity${numberIncr}" name="OutWardQuantity${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>No Of Roll<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control RollCount" placeholder="Ex: 100" id="RollCount${numberIncr}" name="RollCount${numberIncr}" required />
+                </div>
+            </div> 
+            <div class="col-md-9 col-lg-9 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea class="form-control Remarks" id="Remarks${numberIncr}" name="Remarks${numberIncr}" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-3 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
+                <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
+                    <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+    $('#FormProcessing').append(htmlRow);
 
-    $('#' + tableid).empty();
+    var FabricTypeId = "FabricType" + numberIncr;
+    Common.bindDropDown(FabricTypeId, 'FabricType');
 
-    const StatusColumnIndex = columns.findIndex(col => col.data === 'Status');
-    const LocationColumnIndex = columns.findIndex(col => col.data === 'HiringLocation');
-    const SourcesColumnIndex = columns.findIndex(col => col.data === 'Sources');
-
-    const renderColumn = [];
-
-    // Status rendering with color badge
-    if (StatusColumnIndex !== -1) {
-        renderColumn.push({
-            targets: StatusColumnIndex,
-            render: function (data, type, row) {
-                if (type === 'display' && row.Status_Color) {
-                    return `
-                        <div>
-                            <span class="ana-span badge text-white" 
-                                  style="background:${row.Status_Color};width: 115px;font-size: 12px;height: 23px;">
-                                ${row.Status}
-                            </span>
-                        </div>`;
-                }
-                return data;
-            }
-        });
-    }
-
-    // Hiring Location with red dot if hot
-    if (LocationColumnIndex !== -1) {
-        renderColumn.push({
-            targets: LocationColumnIndex,
-            render: function (data, type, row) {
-                if (type === 'display') {
-                    const hotDot = row.IsHot ? '<span style="color:red;font-size:20px;">•</span> ' : '';
-                    return hotDot + data;
-                }
-                return data;
-            }
-        });
-    }
-
-    // Add action buttons column
-    if (isAction && (access.update || access.delete)) {
-        columns.push({
-            data: "Action", name: "Action", title: "Action", orderable: false
-        });
-
-        renderColumn.push({
-            targets: actionTarget,
-            render: function (data, type, row) {
-                let html = '';
-                if (access.update) {
-                    html += `<i class="btn-edit mx-1" data-id="${row[editcolumn]}" title="Edit">
-                                <img src="/assets/commonimages/edit.svg" />
-                             </i>`;
-                }
-                if (access.delete) {
-                    html += `<i class="btn-delete alert_delete mx-1" data-id="${row[editcolumn]}" title="Delete">
-                                <img src="/assets/commonimages/delete.svg" />
-                             </i>`;
-                }
-                return html;
-            }
-        });
-    }
-
-    const hasValidData = data.length > 0 && Object.values(data[0]).some(v => v !== null);
-
-    const lang = $(window).width() <= 575 ? {
-        "paginate": {
-            "next": ">",
-            "previous": "<"
-        }
-    } : {};
-
-    const table = $('#' + tableid).DataTable({
-        dom: "Bfrtip",
-        bDestroy: true,
-        responsive: true,
-        data: data,
-        columns: columns,
-        scrollY: scrollpx,
-        sScrollX: "100%",
-        scrollCollapse: true,
-        aaSorting: [],
-        info: hasValidData,
-        paging: hasValidData,
-        pageLength: 7,
-        lengthMenu: [7, 14, 50],
-        language: $.extend({}, lang, {
-            emptyTable: `
-                <div>
-                    <img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">
-                    No records found
-                </div>`
-        }),
-        columnDefs: renderColumn
-    });
-
-    $('#tableFilter').on('keyup', function () {
-        table.search($(this).val()).draw();
-    });
-
-    // Auto adjust columns after small delay
-    setTimeout(function () {
-        const table1 = $('#' + tableid).DataTable();
-        if (window.Common && Common.autoAdjustColumns) {
-            Common.autoAdjustColumns(table1);
-        }
-    }, 100);
+    updateRemoveButtons();
 }
 
+function updateRowLabels() {
+    $('.DynamicRowProcessing').each(function (index) {
+        $(this).find('.DynamicLable').text('Fabric Details ' + (index + 1));
+    });
+}
+
+function updateRemoveButtons() {
+    var rows = $('.DynamicRowProcessing');
+    rows.each(function (index) {
+        var removeButtonDiv = $(this).find('.thiswillshow');
+        if (rows.length == 1) {
+            removeButtonDiv.css('display', 'none');
+        } else {
+            removeButtonDiv.css('display', 'block');
+        }
+    });
+}
+
+function removeRow(button) {
+    var totalRows = $('.DynamicRowProcessing').length;
+    if (totalRows > 1) {
+        $(button).closest('.DynamicRowProcessing').remove();
+        updateRowLabels();
+        updateRemoveButtons();
+    }
+}

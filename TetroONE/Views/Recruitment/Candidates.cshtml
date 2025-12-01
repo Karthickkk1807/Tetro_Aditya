@@ -1,4 +1,8 @@
-﻿<link href="~/css/candidates.css" rel="stylesheet" />
+﻿@{
+    UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Recruitment, Context.Session);
+}
+
+<link href="~/css/candidates.css" rel="stylesheet" />
 
 <div class="MainDiv">
     <div class="row quick-db m-b-5">
@@ -100,11 +104,16 @@
             <div class="datapiker ml-2 mt-1" style="position: relative;">
                 <div class="add-imp-exp-btn">
                     <div class="exportsiconpop">
-                        <span class="pop">
-                            <a id="AddCandidates" title="Add Candidates">
-                                <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
-                            </a>
-                        </span>
+                        @{
+                            if (access.Create)
+                            {
+                                <span class="pop">
+                                    <a id="AddCandidates" title="Add Candidates">
+                                        <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
+                                    </a>
+                                </span>
+                            }
+                        }
                     </div>
                 </div>
             </div>
@@ -575,7 +584,7 @@
                     <h6>
                         <span class="badge badgeLevel">
                             <span style="margin-right: 10px;">Level 1</span> <img src="~/assets/moduleusedtetroone/candidates editscreen/more.svg" class="menu-toggle" style="width: 14px;margin-top: -3px;margin-right: -5px;" />
-                            
+
                             <div class="menu-dot">
                                 <ul class="menu-list">
                                     <li class="menu-item p-0" id="ScheduleCanvaOff"><a href="#"><img src="~/assets/moduleusedtetroone/candidates editscreen/calendar.svg" style="width: 15px;margin-top: 1px; margin-right: -1px" /><span style="font-size: 10px;">Schedule</span></a></li>
@@ -589,7 +598,7 @@
                 <div style="position: absolute;top: 56px;right: 8px;">
                     <h6 style="font-size: small;font-weight: 700;color: #155f1c"><img src="~/assets/moduleusedtetroone/candidates editscreen/sms.svg" style=" width: 18px; margin-top: -3px;" /> Sent</h6>
                 </div>
-            </div>  
+            </div>
         </div>
     </div>
 
@@ -1373,7 +1382,7 @@
     <div class="timeline-container CareerInfo">
         <div class="stepper-vertical">
             <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div></div>
-            <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div></div> 
+            <div class="step"><div class="circle blue"><i class="fas fa-check"></i></div></div>
         </div>
         <div class="timeline-content ml-2 mr-2">
             <span class="d-flex justify-content-end"><a class="btn btn-primary m-r-20 text-white" id="Sumbit">Add</a></span>
@@ -1453,7 +1462,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 </div>
@@ -1490,7 +1499,7 @@
                             <label>Start Time<span id="Asterisk">*</span></label>
                             <input type="time" class="form-control" placeholder="Ex: 0:00" id="StartTime" name="StartTime" maxlength="50" required />
                         </div>
-                    </div>  
+                    </div>
                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                         <div class="form-group">
                             <label>Duration<span id="Asterisk">*</span></label>
@@ -1513,11 +1522,11 @@
                             <label>Location<span id="Asterisk">*</span></label>
                             <input type="text" class="form-control" placeholder="Ex: 0:00" id="Location" name="Location" maxlength="50" required />
                         </div>
-                    </div> 
+                    </div>
                     <div class="col-md-6 col-lg-12 col-sm-12 col-12 mt-2">
                         <div class="form-group">
-                            <label>Main Interviewer</label> 
-                            <select class="form-control" id="MainInterviewerId" name="MainInterviewerId" multiple> 
+                            <label>Main Interviewer</label>
+                            <select class="form-control" id="MainInterviewerId" name="MainInterviewerId" multiple>
                                 <option value="1" selected>Kavinesh Rajasekar</option>
                                 <option value="2" selected>Satheesh Kumar</option>
                                 <option value="3">Tharani</option>
@@ -1527,8 +1536,8 @@
                     </div>
                     <div class="col-md-6 col-lg-12 col-sm-12 col-12 mt-2">
                         <div class="form-group">
-                            <label>Sub Interviewer</label> 
-                            <select class="form-control" id="SubInterviewerId" name="SubInterviewerId" multiple> 
+                            <label>Sub Interviewer</label>
+                            <select class="form-control" id="SubInterviewerId" name="SubInterviewerId" multiple>
                                 <option value="1">Kavinesh RPKS</option>
                                 <option value="2" selected>Dhanush</option>
                                 <option value="3">Satheesh</option>
@@ -1558,7 +1567,13 @@
         </div>
     </div>
 </div>
- 
+
+
+<script>
+    var access = @Html.Raw(Json.Serialize(access));
+</script>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
 <script src="~/js/candidates.js"></script>

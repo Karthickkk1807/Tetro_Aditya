@@ -22,7 +22,12 @@
     border-right: 1px solid #c7c7c7;
 }
 
-#PurchaseOrderData {
+#PurchaseOrderTable {
+    width: 100% !important;
+    margin-top: -18px !important;
+}
+
+#PurchaseOrderTable_wrapper > div.dataTables_scroll > div.dataTables_scrollHead > div {
     width: 100% !important;
 }
 

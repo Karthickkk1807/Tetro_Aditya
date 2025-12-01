@@ -1717,7 +1717,7 @@ function getExistFiles() {
 }
 
 /*========================================================End Attachment=================================================================*/
-
+ 
 function updateSelectedItemCount() {
     let count = $('#ProductItem-table-body .AllProductRowItem input[type="checkbox"]:checked').length;
     $('#TotalItemSelect').text(count);
@@ -1726,7 +1726,6 @@ function updateSelectedItemCount() {
 
 $('#ProductItem-table-body').on('change', '.AllProductRowItem input[type="checkbox"]', function () {
     updateSelectedItemCount();
-
     if (!$(this).is(':checked')) {
         let $row = $(this).closest('tr');
         $row.find('.addQtyBtn').show();

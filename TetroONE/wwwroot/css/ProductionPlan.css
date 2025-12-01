@@ -1,0 +1,171 @@
+﻿
+#ProductionPlanTable {
+    width: 100% !important;
+    margin-top: 16px !important;
+}
+
+.dataTables_scrollBody {
+    height: 350px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+}
+
+.DynrowRemove {
+    margin-top: 17px !important;
+}
+
+#MainGrid {
+    margin-top: -12px;
+}
+
+.DynmicTableRow {
+    border-right: 1px solid #c7c7c7;
+    border-left: 1px solid #c7c7c7;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.AddnotesDiv {
+    border-right: 1px solid #c7c7c7;
+}
+
+.Dynthead tr th {
+    height: 50px;
+    background-color: #a3c1df !important;
+    color: #001d3a;
+    border-color: #dbdbdb !important;
+    white-space: nowrap;
+}
+
+.add-item {
+    border: 2px dashed #007bff;
+    color: #007bff;
+    cursor: pointer;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.summary-label {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    background: no-repeat;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.AdddiscountLable {
+    background: no-repeat;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.addterms-Attchbg {
+    background: #e4edf5;
+    padding: 10px 10px 10px 10px;
+    border-radius: 5px;
+}
+
+textarea.form-controltext {
+    display: block;
+    width: 100%;
+    /* height: calc(7.25rem + 2px); */
+    font-size: 13px;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15sease-in-out, box-shadow .15sease-in-out;
+    margin-bottom: 1rem;
+}
+
+.Statuscolumn {
+    background-color: #e4edf5;
+    border-top: 1px solid #c7c7c7;
+    /* margin-top: 10px; */
+}
+
+.quickbillbtn-outline {
+    color: #1c3c5c;
+    background-color: #a3c1df;
+    /* background-image: linear-gradient(to right, #c4c2ff, #7c78f7); */
+    background-repeat: no-repeat;
+    border-color: #5b7d9e;
+    transition: all 0.6sease;
+    font-size: 12px !important;
+    font-weight: 700;
+}
+
+.btn-added {
+    background-color: #1A2A47;
+    color: white;
+    transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    height: min-content;
+}
+
+.searchbar__input {
+    height: 34px;
+    flex-grow: 1;
+    padding: 5px;
+    outline: none;
+    border: 1px solid rgba(56, 39, 180, 1);
+    border-radius: 5px 0 0 5px;
+    background: #F4FAF9;
+    transition: background 0.25s, box-shadow 0.25s;
+    width: 100%;
+}
+
+.imageAppend {
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 7px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+@media (min-width: 576px) {
+    .modal-te {
+        max-width: 600px !important;
+        margin: 1.75rem auto !important;
+    }
+}
+
+.AvailableQuantity {
+    border-color: black !important;
+    padding: 5px 9px;
+    height: 26px;
+    width: 61px;
+}
+/*
+#ProcessCheckboxContainer {
+    display: block !important;
+}*/
+
+/*.checkDiv {
+    display: block !important;
+    cursor: move;
+}*/
+/*
+.ui-state-highlight {
+    height: 40px;
+    background: #eaeaea;
+    border: 1px dashed #999;
+    margin-bottom: 6px;
+}*/
