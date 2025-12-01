@@ -54,30 +54,38 @@ namespace TetroONE.Models
         public int? VendorId { get; set; }
         public int? PlantId { get; set; } 
     }
+    
+    public class DD_GetPurchaseOrderNo
+    {
+        public int LoginuserId { get; set; }
+        public int? ModuleId { get; set; }
+        public string? ModuleName { get; set; } 
+    }
 
     public class PurchaseBillDetailsStatic
     {
+        public int LoginUserId { get; set; }
         public int? PurchaseBillId { get; set; }
-        public int VendorId { get; set; } 
-        public int? FranchiseId { get; set; }
-        public int? ShipToFranchiseId { get; set; }
-        public int? BillFromFranchiseId { get; set; }
-        public string PurchaseBillNo { get; set; }
-        public DateTime PurchaseBillDate { get; set; }  
-        public int? PurchaseOrderId { get; set; } 
-        public string OriginalInvoiceNo { get; set; } 
+        public int? VendorId { get; set; }
+        public int BillFromPlantId { get; set; }
+        public int? PlantId { get; set; }
+        public int? ShipToPlantId { get; set; }
+        public string? PurchaseBillNo { get; set; }
+        public DateTime? PurchaseBillDate { get; set; }
+        public int? PurchaseOrderId { get; set; }
+        public string? OriginalInvoiceNo { get; set; }
+        public decimal? SubTotal { get; set; }
+        public decimal? RoundOffValue { get; set; }
+        public decimal? GrantTotal { get; set; }
+        public decimal? BalanceAmount { get; set; }
         public string? Notes { get; set; }
         public string? TermsAndCondition { get; set; }
-        public decimal SubTotal { get; set; }
-        public decimal GrantTotal { get; set; }
-        public decimal RoundOffValue { get; set; }
-        public decimal BalanceAmount { get; set; }
-        public int? PurchaseBillStatusId { get; set; }       
+        public int PurchaseBillStatusId { get; set; }
     }
 
     public class PurchaseBillProductMappingDetails
     {
-        public int? PurchaseBillProductMappingId { get; set; }
+        public int? PurchaseProductMappingId { get; set; }
         public int ProductId { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal Quantity { get; set; }
@@ -93,55 +101,44 @@ namespace TetroONE.Models
         public decimal? CESS_Percentage { get; set; }
         public decimal? CESS_Value { get; set; }
         public decimal TotalAmount { get; set; }
-        public int? PurchaseBillId { get; set; } 
+        public int? ModuleId { get; set; } 
     }
 
     public class PurchaseBillOtherChargesMappingDetails
     {
-        public int? PurchaseSaleOtherChargesMappingId { get; set; }
-        public int OtherChargesId { get; set; }
-        public string OtherChargesType { get; set; }
-        public bool IsPercentage { get; set; }
-        public decimal Value { get; set; }
-        public decimal OtherChargeValue { get; set; }
-        public int ModuleId { get; set; }
-    }
-
-    public class PurchaseBillProductQCDetails
-    {
-        public int? PurchaseBillQCMappingId { get; set; }
-        public int ProductId { get; set; }
-        public int ProductQCMappingId { get; set; }
+        public int? PurchaseSaleOtherChargesMappingId { get; set; } 
+        public int? OtherChargesId { get; set; }
+        public string? OtherChargesType { get; set; }
+        public bool? IsPercentage { get; set; }
         public decimal? Value { get; set; }
-        public int? PurchaseBillId { get; set; }
-
+        public decimal? OtherChargeValue { get; set; }
+        public int? ModuleId { get; set; }
     }
+     
     public class InsertUpdatePurchaseBill
     {
         public int LoginUserId { get; set; }
         public int? PurchaseBillId { get; set; }
-        public int? FranchiseId { get; set; }
-        public int VendorId { get; set; }
-        public int? ShipToFranchiseId { get; set; }
-        public int? BillFromFranchiseId { get; set; }
-        public string PurchaseBillNo { get; set; }
-        public DateTime PurchaseBillDate { get; set; }
-        public int? PurchaseOrderId { get; set; }
-        
-        public string OriginalInvoiceNo { get; set; }
+        public int? VendorId { get; set; }
+        public int BillFromPlantId { get; set; }
+        public int? PlantId { get; set; }
+        public int? ShipToPlantId { get; set; }
+        public string? PurchaseBillNo { get; set; }
+        public DateTime? PurchaseBillDate { get; set; }
+        public int? PurchaseOrderId { get; set; } 
+        public string? OriginalInvoiceNo { get; set; }
+        public decimal? SubTotal { get; set; }
+        public decimal? RoundOffValue { get; set; }
+        public decimal? GrantTotal { get; set; }
+        public decimal? BalanceAmount { get; set; }
         public string? Notes { get; set; }
         public string? TermsAndCondition { get; set; }
-        public decimal SubTotal { get; set; }
-        public decimal GrantTotal { get; set; }
-        public decimal RoundOffValue { get; set; }
-        public int? PurchaseBillStatusId { get; set; }
-        public decimal BalanceAmount { get; set; }
+        public int PurchaseBillStatusId { get; set; }
         public DataTable TVP_Purchase_ProductMappingDetails { get; set; }
         public DataTable TVP_PurchaseSaleOtherChargesMappingDetails  { get; set; } 
         public DataTable TVP_AttachmentDetails { get; set; }
     }
-
-
+     
     public class PurchaseBillPrint
     {
         public string? CompanyName { get; set; }

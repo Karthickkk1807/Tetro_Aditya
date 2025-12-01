@@ -9,6 +9,7 @@ else
 var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 }
 <link href="~/css/managestock.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/assets/css/daterangepicker.min.css" />
 
 <style>
     #dynamicProduction .row > .col-2 {
@@ -59,8 +60,7 @@ var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.V
         top: 0;
         z-index: 2;
         background: #a3c1df;
-    }
-
+    } 
 </style>
 
 
@@ -226,7 +226,7 @@ var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.V
 
     <li class="nav-item" role="presentation">
         <a class="nav-link navbar-tab titleForHeaderProductTab" id="Processed-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Processed</a>
-    </li> 
+    </li>
 </ul>
 
 <div class="" id="ManageStockDynamic">
@@ -245,6 +245,27 @@ var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.V
             </div>
 
             <div class="modal-body" style="max-height: 80vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;"> 
+                 <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-6 d-flex justify-content-start">
+                        <div class="form-group">
+                            <div id="reportrange"
+                                 style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%; color: #a9a8a8;">
+                                <i class="fa fa-calendar"></i>&nbsp;
+                                <span>01-11-2025 - 30-11-2025</span>
+                                <i class="fa fa-caret-down"></i>
+                            </div>
+                            <label id="reportrange-error" class="error" style="display: none;">This field is required.</label>
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex align-items-center justify-content-end" style="margin-top: -3px;">
+                        <div class="searchbar">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilter1" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="~/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="" id="EditManageStockDynamic">
                     <div class="table-responsive">
                         <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="EditManageStockTable">
@@ -264,4 +285,6 @@ var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.V
 </script>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="~/assets/js/daterangepicker.min.js"></script>
 <script src="~/js/managestock.js"></script>

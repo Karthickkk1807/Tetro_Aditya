@@ -7,6 +7,8 @@ var formDataMultiple = new FormData();
 var EditPurchaseBillId = 0;
 var PlantMappingId = 0;
 var printType = "";
+var TriggerValues = true;
+var PurchaseOrderNOData = true;
 
 $(document).ready(async function () {
     $('.Status-Div').removeClass('d-block').addClass('d-none');
@@ -133,6 +135,8 @@ $(document).ready(async function () {
         var formattedDate = currentDate.toISOString().slice(0, 10);
         $('#InvoiceDate').val(formattedDate);
 
+        TriggerValues = true;
+        PurchaseOrderNOData = true;
         EditPurchaseBillId = 0;
         ProductIdArray = [];
         $('#selectedFiles').empty();
@@ -168,51 +172,55 @@ $(document).ready(async function () {
     });
 
     $(document).on('change', '#VendorColumn #Vendor', async function () {
-        var BillToId = $('#VendorColumn #Vendor').val();
-        ClearInputs(); // Clear inputs 
-        $('#PurchaseOrderNo').empty().append('<option value="">-- Select --</option>');
+        if (TriggerValues) {
+            var BillToId = $('#VendorColumn #Vendor').val();
+            ClearInputs(); // Clear inputs 
+            $('#PurchaseOrderNo').empty().append('<option value="">-- Select --</option>');
 
-        var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
-        if (response !== null) {
-            BillToAddress(response);
-            updateGSTVisibility('#VendorStateName', '#StateName');
-        }
-        if (BillToId != '' || BillToId != null) {
-            updateGSTVisibility('#VendorStateName', '#StateName');
-        } else {
-            BillToAddressClear();
+            var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
+            if (response !== null) {
+                BillToAddress(response);
+                updateGSTVisibility('#VendorStateName', '#StateName');
+            }
+            if (BillToId != '' || BillToId != null) {
+                updateGSTVisibility('#VendorStateName', '#StateName');
+            } else {
+                BillToAddressClear();
+            }
         }
     });
 
     $(document).on('change', '#AlternativeCompanyAddress', function () {
-        var ShipToId = $(this).val();
-        var VendorId = $('#VendorColumn #Vendor').val();
-        ClearInputs(); // Clear inputs
+        if (TriggerValues) {
+            var ShipToId = $(this).val();
+            var VendorId = $('#VendorColumn #Vendor').val();
+            ClearInputs(); // Clear inputs
 
-        Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: parseInt(ShipToId) }, function (responsePlant) {
-            if (responsePlant !== null) {
-                ShipToAddress(responsePlant);
+            Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: parseInt(ShipToId) }, function (responsePlant) {
+                if (responsePlant !== null) {
+                    ShipToAddress(responsePlant);
+                    updateGSTVisibility('#VendorStateName', '#StateName');
+                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(VendorId), PlantId: parseInt(ShipToId) }, function (responseOrderNo) {
+                        if (responseOrderNo !== null) {
+                            Common.bindDropDownSuccess(responseOrderNo.data, "PurchaseOrderNo");
+                        }
+                    }, null);
+                }
+            }, null);
+            if (ShipToId != '' || ShipToId != null) {
                 updateGSTVisibility('#VendorStateName', '#StateName');
-                Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(VendorId), PlantId: parseInt(ShipToId) }, function (responseOrderNo) {
-                    if (responseOrderNo !== null) {
-                        Common.bindDropDownSuccess(responseOrderNo.data, "PurchaseOrderNo");
-                    }
-                }, null);
+            } else {
+                ShipToAddressClear();
+                $('#PurchaseOrderNo').empty().append('<option value="">-- Select --</option>');
             }
-        }, null);
-        if (ShipToId != '' || ShipToId != null) {
-            updateGSTVisibility('#VendorStateName', '#StateName'); 
-        } else {
-            ShipToAddressClear();
-            $('#PurchaseOrderNo').empty().append('<option value="">-- Select --</option>');
+
+            var ShipId = $('#ShippingColumn #AlternativeCompanyAddress').val();
+            var EditDataId = { ModuleName: 'PurchaseBill', PlantId: ShipId };
+
+            Common.ajaxCall("GET", "/Common/GetAutoGenerate", EditDataId, function (response) {
+                Common.AutoGenerateNumberGet(response, "InvoiceNo", "PurchaseBillNo");
+            });
         }
-
-        var ShipId = $('#ShippingColumn #AlternativeCompanyAddress').val();
-        var EditDataId = { ModuleName: 'PurchaseBill', PlantId: ShipId };
-
-        Common.ajaxCall("GET", "/Common/GetAutoGenerate", EditDataId, function (response) {
-            Common.AutoGenerateNumberGet(response, "InvoiceNo", "PurchaseBillNo");
-        });
     });
 
     $(document).on('change', '#BillFrom', async function () {
@@ -291,7 +299,8 @@ $(document).ready(async function () {
         var VendorFormIsValid = $("#FormVendor").validate().form();
         var StatusFormIsValid = $("#FormStatus").validate().form();
         var BillFromIsValid = $("#FormBillFrom").validate().form();
-        if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid) {
+        var TaxdiscountFormIsValid = $('#frmtaxdiscountothers').validate().form();
+        if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid || !TaxdiscountFormIsValid) {
             $('#PurchaseInvoiceSaveBtn-error').insertAfter('#statusError');
             $('#Vendor-error').insertAfter('.vendorerror');
             $('#AlternativeCompanyAddress-error').insertAfter('.AlternativeCompanyError');
@@ -319,25 +328,25 @@ $(document).ready(async function () {
         var alternativeCompanyAddress = $('#AlternativeCompanyAddress').val();
 
         var PIStatusId = $('#PurchaseInvoiceStatusId option:selected').text();
-        POStatusId = (POStatusId == '-- Select --') ? null : $('#PurchaseInvoiceStatusId').val();
+        PIStatusId = (PIStatusId == '-- Select --') ? null : $('#PurchaseInvoiceStatusId').val();
 
         PurchaseBillDetailsStatic = {
             PurchaseBillId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null,
             VendorId: parseInt(vendorId),
-            FranchiseId: franchiseId || null,
-            ShipToFranchiseId: parseInt(alternativeCompanyAddress),
-            BillFromFranchiseId: parseInt($('#BillFrom').val()),
+            BillFromPlantId: parseInt($('#BillFrom').val()),
+            PlantId: PlantMappingId || null,
+            ShipToPlantId: parseInt(alternativeCompanyAddress),
             PurchaseBillNo: $('#InvoiceNo').val(),
             PurchaseBillDate: $('#InvoiceDate').val(),
             PurchaseOrderId: $('#PurchaseOrderNo').val(),
 
             OriginalInvoiceNo: $('#InvoiceNoOriginal').val(),
-            TermsAndCondition: $('#TermsAndCondition').val(),
-            Notes: $('#AddNotesText').val(),
             SubTotal: parseFloat($('#Subtotal').val() || 0.00),
-            GrantTotal: parseFloat($('#GrantTotal').val() || 0.00),
             RoundOffValue: parseFloat($('#roundOff').val() || 0.00),
+            GrantTotal: parseFloat($('#GrantTotal').val() || 0.00),
             BalanceAmount: parseFloat($('#BalanceAmount').val() || 0.00),
+            Notes: $('#AddNotesText').val(),
+            TermsAndCondition: $('#TermsAndCondition').val(),
             PurchaseBillStatusId: parseInt(PIStatusId),
         };
 
@@ -351,7 +360,7 @@ $(document).ready(async function () {
             //var productInfo = JSON.parse(productInfoStr);
 
             var productDetail = {
-                PurchaseOrderProductMappingId: PurchaseBillProductMappingId == null ? null : parseInt(PurchaseBillProductMappingId),
+                PurchaseOrderProductMappingId: PurchaseBillProductMappingId == 0 ? null : parseInt(PurchaseBillProductMappingId),
                 ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null,
                 ProductId: parseInt(productId),
                 PurchasePrice: Common.parseFloatValue($rowTable.find('.SellingPrice').val()),
@@ -372,8 +381,29 @@ $(document).ready(async function () {
             PurchaseBillProductMappingDetails.push(productDetail);
         });
 
+        var PurchaseBillOtherChargesMappingDetails = [];
+        var PurhInvoiceOtherChargesMappingDetails = $("#dynamicBindRow .dynamicBindRow");
+
+        $.each(PurhInvoiceOtherChargesMappingDetails, function (index, value) {
+            var PurchaseSaleOtherChargesMappingId = $(value).find('.dynamicBindRow').attr('data-OtherChargeMapping-id');
+            var ispercentageval = $(value).find("input[type='radio']").attr("name");
+            var oid = $(value).find('.taxandothers').val();
+            if (oid != undefined) {
+                PurchaseBillOtherChargesMappingDetails.push({
+                    PurchaseSaleOtherChargesMappingId: PurchaseSaleOtherChargesMappingId == '' ? null : parseInt(PurchaseSaleOtherChargesMappingId),
+                    OtherChargesId: parseInt($(value).find('.taxandothers').val() || 0),
+                    OtherChargesType: $(value).find('.taxandothers').attr('OtherChargesType'),
+                    IsPercentage: $(value).find("input[name='" + ispercentageval + "']:checked").val() === "1",
+                    Value: parseFloat($(value).find('.OtherValueInsert').val() || 0),
+                    OtherChargeValue: parseFloat($(value).find('.otherChargeValue').val() || 0),
+                    ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null
+                });
+            }
+        });
+
         formDataMultiple.append("PurchaseBillDetailsStatic", JSON.stringify(PurchaseBillDetailsStatic));
         formDataMultiple.append("PurchaseBillProductMappingDetails", JSON.stringify(PurchaseBillProductMappingDetails));
+        formDataMultiple.append("PurchaseBillOtherChargesMappingDetails", JSON.stringify(PurchaseBillOtherChargesMappingDetails));
         formDataMultiple.append("ExistFiles", JSON.stringify(existFiles));
         formDataMultiple.append("DeletedFiles", JSON.stringify(deletedFiles));
 
@@ -402,18 +432,29 @@ $(document).ready(async function () {
         });
     });
 
-    $(document).on('click', '.btn-edit', function () {
+    $(document).on('change', '#PurchaseOrderNo', function () {
+        var $thisVal = $(this).val();
+        if ($thisVal != null && $thisVal != '' && $thisVal != undefined) {
+            PurchaseOrderNOData = false;
+            Common.ajaxCall("GET", "/PurchaseInvoice/DD_GetPurchaseOrderNo", { ModuleId: parseInt($thisVal), ModuleName: "PurchaseBill" }, PurchaseBillGetNotNull, null);
+        }
+        else {
+            PurchaseOrderNOData = true;
+        }
+    })
 
-        $('#loader-pms').hide();
+    $(document).on('click', '.btn-edit', async function () {
+
+        $('#loader-pms').show();
         EditPurchaseBillId = $(this).data('id');
         $('#POTopHeadbind').empty();
+
+        TriggerValues = false;
+        PurchaseOrderNOData = true;
+
         bindHeaderNormal();
         VendorAlignmentOpen();
         ClearInputs(); // Clear inputs
-
-        Common.bindDropDownParent('BillFrom', 'FormBillFrom', 'BillFrom');
-        Common.bindDropDownParent('Vendor', 'FormVendor', 'Vendor');
-        Common.bindDropDownParent('AlternativeCompanyAddress', 'FormShipping', 'PlantBillFrom');
 
         $("#ModalHeading").text("Edit Purchase Bill");
 
@@ -604,6 +645,7 @@ $(document).ready(async function () {
         updateGSTVisibility('#VendorStateName', '#StateName');
 
         calculateGrandTotal();
+        calculateOtherCharges();
 
         $('#PIProductTablebody .ProductTableRow').each(function (index) {
             $(this).find('td:first').text(index + 1);
@@ -612,7 +654,7 @@ $(document).ready(async function () {
 
     $(document).on('click', '.DynrowRemove', function () {
         var $row = $(this).closest('tr');
-        var ProductId = $row.find('.ProductId').text().trim();
+        var ProductId = parseInt($row.find('.ProductId').text().trim(), 10);
         ProductIdArray = ProductIdArray.filter(id => id !== ProductId);
         $row.remove();
         $('#PIProductTablebody .ProductTableRow').each(function (index) {
@@ -621,6 +663,7 @@ $(document).ready(async function () {
 
         calculateRow($row);
         calculateGrandTotal();
+        calculateOtherCharges();
     });
 
     $(document).on('change', '#PIProductTablebody .ForBindtableProductUnit', function () {
@@ -648,6 +691,7 @@ $(document).ready(async function () {
 
         calculateRow($row);
         calculateGrandTotal();
+        calculateOtherCharges();
     });
 
     $(document).on('click', '#btnPordersaveprintbtn', function () {
@@ -705,40 +749,96 @@ $(document).ready(async function () {
 });
 
 async function PurchaseBillGetNotNull(response) {
-    if (response.status) {
-        var data = JSON.parse(response.data);
+    if (!response.status) return;
 
-        $('#BillFrom').val(data[1][0].BillFromPlantId).trigger('change');
-        $('#VendorColumn #Vendor').val(data[1][0].VendorId).trigger('change');
-        $('#AlternativeCompanyAddress').val(data[1][0].ShipToPlantId).trigger('change');
+    const data = JSON.parse(response.data);
 
-        $('#PurchaseOrderDate').val(data[1][0].PurchaseOrderDate.split('T')[0]);
-        $('#ExpectedDeliveryDate').val(data[1][0].ExpectedDeliveryDate.split('T')[0]);
+    if (PurchaseOrderNOData) {
+        // Wait until dropdowns are fully loaded
+        await Common.bindDropDownParentAsync('BillFrom', 'FormBillFrom', 'BillFrom');
+        await Common.bindDropDownParentAsync('Vendor', 'FormVendor', 'Vendor');
+        await Common.bindDropDownParentAsync('AlternativeCompanyAddress', 'FormShipping', 'PlantBillFrom');
 
-        bindProductRowsInNotNull(data[0], data[1][0].VendorStateName, data[1][0].PlantStateName);
+        // Now safe to fetch based on dropdowns
+        const billFromResponse = await ajaxAsync("GET", "/Common/BillFromDetails_BillFromId", {
+            ModuleId: parseInt(data[1][0].BillFromPlantId),
+            ModuleName: "BillFrom"
+        });
 
-        Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
-        Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
-        Inventory.toggleFieldForAttachment(data[2][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
+        if (billFromResponse.status) {
 
-        Inventory.bindAttachments(data[2]);
+            var BillFromData = JSON.parse(billFromResponse.data);
+            $("#BillFromAddress").text(BillFromData[0][0].BillFromAddress || '');
+            TriggerValues = false;
+
+            $("#BillFrom").val(data[1][0].BillFromPlantId).trigger("change");
+
+            const vendorResponse = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(data[1][0].VendorId));
+
+            if (vendorResponse) {
+                BillToAddress(vendorResponse);
+                $('#Vendor').val(data[1][0].VendorId).trigger('change');
+
+                const plantResponse = await ajaxAsync("GET", "/Settings/GetPlantDetails", {
+                    PlantId: parseInt(data[1][0].ShipToPlantId)
+                });
+
+                if (plantResponse) {
+                    ShipToAddress(plantResponse);
+                    $('#AlternativeCompanyAddress').val(data[1][0].ShipToPlantId).trigger('change');
+                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(data[1][0].VendorId), PlantId: parseInt(data[1][0].ShipToPlantId) }, function (responseOrderNo) {
+                        if (responseOrderNo !== null) {
+                            Common.bindDropDownSuccess(responseOrderNo.data, "PurchaseOrderNo");
+
+                            if (data[1][0].PurchaseOrderId != null) {
+                                $('#PurchaseOrderNo').val(data[1][0].PurchaseOrderId);
+                            }
+
+                            $('#loader-pms').hide();
+                        }
+                    }, null);
+                }
+            }
+        }
+
+        $('#InvoiceDate').val(data[1][0].PurchaseBillDate.split('T')[0]);
+        $('#InvoiceNoOriginal').val(data[1][0].OriginalInvoiceNo);
+        $('#InvoiceNo').val(data[1][0].PurchaseBillNo);
+
 
         var EditDataId = { ModuleName: 'PurchaseBill', ModuleId: parseInt(EditPurchaseBillId) }
         Common.ajaxCall("GET", "/Common/GetInventoryStatusDetails", EditDataId, function (response) {
             if (response.status);
-            Common.bindDropDownSuccess(response.data, "PurchaseOrderStatusId");
-            $('#PurchaseOrderStatusId').val(data[1][0].PurchaseOrderStatusId);
+            Common.bindDropDownSuccess(response.data, "PurchaseInvoiceStatusId");
+            $('#PurchaseInvoiceStatusId').val(data[1][0].PurchaseBillStatusId);
         }, null);
     }
+
+    bindProductRowsInNotNull(data[0], data[1][0].VendorStateName, data[1][0].PlantStateName);
+
+    if (PurchaseOrderNOData) {
+        OtherChangesNotNull(data[2]);
+    }
+
+    Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
+    Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
+    Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
+
+    Inventory.bindAttachments(data[3]);
+}
+
+function ajaxAsync(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
 }
 
 function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
-    // Remove old product rows
     $('#PIProductTablebody .ProductTableRow').remove();
 
     $.each(productArray, function (index, productInfo) {
 
-        var PurchaseOrderProductMappingId = productInfo.PurchaseOrderProductMappingId || '';
+        var PurchaseBillProductMappingId = productInfo.PurchaseBillProductMappingId || '';
         var ProductId = productInfo.ProductId || '';
         var ProductName = productInfo.ProductName || '';
         var defaultDescription = productInfo.Description || '';
@@ -786,7 +886,7 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
             .replace(/'/g, '&#39;');  // Replace single quotes (for safety)
 
         var newRow = `
-            <tr class="ProductTableRow" data-product-id="${ProductId}" data-productMapping-id="${PurchaseOrderProductMappingId}" data-product-info="${encodedProductInfo}">
+            <tr class="ProductTableRow" data-product-id="${ProductId}" data-productMapping-id="${PurchaseBillProductMappingId}" data-product-info="${encodedProductInfo}">
                 <td data-label="S.No"></td>
                 <td data-label="Product Name">
                     <label class="d-none ProductId">${ProductId}</label>
@@ -841,7 +941,79 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
     $('#PIProductTablebody .ProductTableRow').each(function (index) {
         $(this).find('td:first').text(index + 1);
     });
+
+    updateGSTVisibility('#VendorStateName', '#StateName');
     calculateGrandTotal();
+    calculateOtherCharges();
+    TriggerValues = true;
+    PurchaseOrderNOData = true;
+}
+
+function OtherChangesNotNull(OtherChargesArray) {
+    if (OtherChargesArray[0].OtherChargesId != null) {
+        if (!OtherChargesArray || OtherChargesArray.length === 0) return;
+
+        OtherChargesArray.forEach(function (value) {
+
+            let OtherChangesSelectOptions = "";
+            let defaultOption = '<option value="">--Select--</option>';
+
+            let dropdownSource = value.OtherChargesType === "Discount" ? OtherChangesDiscountDropdown : OtherChangesOthersDropdown;
+
+            if (dropdownSource && dropdownSource.length > 0 && dropdownSource[0].length > 0) {
+                OtherChangesSelectOptions = dropdownSource[0].map(function (item) {
+                    let isSelected = item.OtherChargesId == value.OtherChargesId ? "selected" : "";
+                    return `
+                    <option value="${item.OtherChargesId}" ${isSelected}>${item.OtherChargesName}</option>`;
+                }).join("");
+            }
+
+            // Unique ID
+            let uniqueId = Math.random().toString(36).substring(2);
+
+            let HtmlOtherCharges = `
+            <div class="col-12 OtherChargesRow" data-OtherChargeMapping-id="${value.PurchaseBillOtherChargesMappingId}" data-id="${value.OtherChargesType}">
+                <div class="mt-3">
+                    <div class="discount-row dynamicBindRow">
+                        
+                        <!-- DROPDOWN -->
+                        <div class="discount-drop">
+                            <select class="form-control discount-select taxandothers" id="OtherChargesId${uniqueId}" name="OtherChargesId${uniqueId}" OtherChargesType="${value.OtherChargesType}" required>
+                                ${defaultOption}${OtherChangesSelectOptions}
+                            </select>
+                        </div>
+
+                        <!-- RADIO BUTTONS -->
+                        <div class="discount-radio">
+                            <label>
+                                <input type="radio" name="amounttype${uniqueId}" value="1" class="calculateinventory" ${value.IsPercentage ? "checked" : ""}> %
+                            </label>
+                            <label>
+                                <input type="radio" name="amounttype${uniqueId}" value="0" class="calculateinventory" ${!value.IsPercentage ? "checked" : ""}> ₹
+                            </label>
+                        </div>
+
+                        <!-- ENTERED VALUE -->
+                        <input type="text" class="form-control discount-input OtherValueInsert" id="Value${uniqueId}" name="Value${uniqueId}" value="${value.OtherChargeValue ?? ""}" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,8)"
+                        >
+
+                        <!-- CALCULATED VALUE -->
+                        <input type="text" class="form-control discount-input otherChargeValue" name="OtherChargeValue${uniqueId}" value="${value.Value ?? ""}" style="background-color:#dee2e647" readonly disabled>
+
+                        <!-- DELETE BUTTON -->
+                        <button class="btn OtherDynamicRemove DynrowRemove" type="button">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        `;
+
+            $("#dynamicBindRow").append(HtmlOtherCharges);
+        });
+        calculateOtherCharges();
+    }
 }
 
 function updateSelectedItemCount() {
@@ -984,7 +1156,7 @@ function GetPurchaseInvoiceSuccess(response) {
         `);
 
         var columns = Common.bindColumn(data[1], ['PurchaseBillId', 'Status_Color']);
-        Common.bindTable('PurchaseBillTable', data[1], columns, -1, 'PurchaseBillId', '360px', true, access);
+        Common.bindTable('PurchaseBillTable', data[1], columns, -1, 'PurchaseBillId', '365px', true, access);
     }
 }
 
@@ -1168,6 +1340,7 @@ $(document).on("input", ".SellingPrice, .TableRowQty", function () {
     var $row = $(this).closest("tr");
     calculateRow($row);
     calculateGrandTotal();
+    calculateOtherCharges();
 });
 
 
@@ -1218,6 +1391,11 @@ function VendorAlignmentOpen() {
     $('#POColumn').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-4 col-md-12 col-sm-12 col-12');
 
     $('#PurchaseOrderDateDiv').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
+    //if (!TriggerValues) {
+    //    Common.bindDropDownParent('BillFrom', 'FormBillFrom', 'BillFrom');
+    //    Common.bindDropDownParent('Vendor', 'FormVendor', 'Vendor');
+    //    Common.bindDropDownParent('AlternativeCompanyAddress', 'FormShipping', 'PlantBillFrom');
+    //} 
 }
 function VendorAlignmentClose() {
     $('#AddVendorlableColumn').show();
@@ -1697,9 +1875,9 @@ $(document).on('click', '.ddlOtherCharges', function () {
             let uniqueId = Math.random().toString(36).substring(2);
 
             var HtmlOtherCharges = `
-            <div class="col-12 OtherChargesRow">
+            <div class="col-12 OtherChargesRow" data-id="${otherChargesTypeName}">
                 <div class="mt-3">
-                    <div class="discount-row dynamicBindRow">
+                    <div class="discount-row dynamicBindRow" data-OtherChargeMapping-id="">
                         <div class="discount-drop">
                         <select class="form-control discount-select taxandothers" id="OtherChargesId${uniqueId}" name="OtherChargesId${uniqueId}" OtherChargesType="${data[0][0].OtherChargesType}" required>
                             ${defaultOption}${OtherChangesSelectOptions}
@@ -1719,8 +1897,8 @@ $(document).on('click', '.ddlOtherCharges', function () {
                 </div>
             </div>`;
             $('#dynamicBindRow').append(HtmlOtherCharges);
-            $('#OtherChargesId' + uniqueId).closest('.dynamicBindRow').find('input.calculateinventory[value="1"]').prop('checked', true);
-
+            $('#OtherChargesId' + uniqueId).closest('.dynamicBindRow').find('input.calculateinventory[value="1"]').prop('checked', false);
+            calculateOtherCharges();
         }
     }, null);
 });
@@ -1729,7 +1907,7 @@ $(document).on('change', '.taxandothers', function () {
     var $thisval = $(this).val();
     const $select = $(this);
     var otherChargesTypeName = $(this).attr('OtherChargesType');
-    if ($thisval != null) {
+    if ($thisval != null && $thisval != '') {
         Common.ajaxCall("GET", "/PurchaseInvoice/GetOtherChargesType?OtherChargesTypeName=" + otherChargesTypeName + "&OtherChargesId=" + parseInt($thisval), null,
             function (response) {
                 if (response.status) {
@@ -1743,47 +1921,90 @@ $(document).on('change', '.taxandothers', function () {
                         $row.find('#IsPercentage').prop('checked', false);
                     }
                     $row.find('.OtherValueInsert').val(data[0][0].Value ?? 0);
+                    calculateOtherCharges();
                 }
             },
             null
         );
+    } else {
+        var $row = $select.closest('.discount-row');
+        $row.find('#IsPercentage').prop('checked', false);
+        $row.find('#Amount').prop('checked', false);
+        $row.find('.OtherValueInsert').val('');
+        $row.find('.otherChargeValue').val('');
+        calculateOtherCharges();
     }
 });
 
 $(document).on('click', '.OtherDynamicRemove', function () {
     $(this).closest('.OtherChargesRow').remove();
-    //Inventory.PercentageAmountInventoryCalculateGrandTotalByOtherChargeValue();
-    //calculateBalance();
+    calculateOtherCharges();
 });
 
-//$(document).on('change', '.taxandothers', function () {
-//    Inventory.TaxAndOthersDropdownChange.call(this);
-//    Inventory.PercentageAmountInventoryCalculateGrandTotalByOtherChargeValue();
-//    calculateBalance();
-//});
-
-$(document).on('input', '.OtherValueInsert', function () {
-
-    var $thisValu = parseFloat($(this).val()) || 0;
-    var $SubValu = parseFloat($('#Subtotal').val()) || 0;
-
-    var grandTotal = $thisValu + $SubValu;
-
-    //var decimalPart = grandTotal.toFixed(2).split('.')[0];
-    //var roundedDecimal = Math.ceil(decimalPart);
-    //var AddOrSub = roundedDecimal;
-
-    //var RoundOffValu = grandTotal.toFixed(2).split('.')[1];
-
-    //if (parseInt(RoundOffValu) >= 50) {
-    //    $('#roundOff').css('color', 'green');
-    //    AddOrSub++;
-    //} else if (RoundOffValu == '00') {
-    //    $('#roundOff').css('color', 'blue');
-    //} else if (parseInt(RoundOffValu) < 50) {
-    //    $('#roundOff').css('color', 'orange');
-    //}
-
-    //$('#roundOff').val('0.' + RoundOffValu);
-    //$('#GrantTotal').val(AddOrSub.toFixed(2));
+$(document).on("input change", ".calculateinventory, .OtherValueInsert", function () {
+    calculateOtherCharges();
 });
+
+function calculateOtherCharges() {
+    let grandTotal = parseFloat($("#Subtotal").val()) || 0;
+    let finalTotal = grandTotal;
+
+    $("#dynamicBindRow .OtherChargesRow").each(function () {
+        let row = $(this);
+        let type = row.attr("data-id");
+
+        let value = parseFloat(row.find(".OtherValueInsert").val()) || 0;
+        let isPercentage = row.find("input[value='1']").is(":checked");
+
+        let calcValue = 0;
+
+        if (isPercentage) {
+            calcValue = (grandTotal * value) / 100;
+        } else {
+            calcValue = value;
+        }
+
+        row.find(".otherChargeValue").val(calcValue.toFixed(2));
+
+        if (type === "Discount") {
+            finalTotal -= calcValue;
+        } else {
+            finalTotal += calcValue;
+        }
+    });
+
+    // =========================
+    // CUSTOM ROUNDING RULE
+    // =========================
+    let beforeRound = finalTotal.toFixed(2);
+    let split = beforeRound.split('.');
+    let whole = parseInt(split[0]);
+    let decimal = parseFloat("0." + split[1]);
+
+    let roundedTotal = 0;
+    let roundOffValue = 0;
+
+    // CASE 1 — Decimal = 0 → No rounding
+    if (decimal === 0) {
+        roundedTotal = whole;
+        roundOffValue = 0;
+    }
+
+    // CASE 2 — Decimal < 0.50 → ROUND DOWN
+    else if (decimal < 0.50) {
+        roundedTotal = whole;                 // go down
+        roundOffValue = decimal.toFixed(2);   // show positive decimal
+        $('#roundOff').css('color', 'orange');
+    }
+
+    // CASE 3 — Decimal ≥ 0.50 → ROUND UP
+    else {
+        roundedTotal = whole + 1;                     // go up
+        roundOffValue = (1 - decimal).toFixed(2);     // positive difference
+        $('#roundOff').css('color', 'green');
+    }
+
+    // SET OUTPUTS
+    $('#roundOff').val(roundOffValue);
+    $("#GrantTotal").val(roundedTotal.toFixed(2));
+} 

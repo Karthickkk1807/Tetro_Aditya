@@ -224,16 +224,22 @@
                                     </div>
                                     <div class="col-md-3 col-lg-3 col-sm-3 col-6">
                                         <div class="form-group">
-                                            <label>Max Credit Limit<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Max Credit Limit" id="CreditLimit" name="CreditLimit" oninput="Common.allowOnlyNumberLength(this,8)" required />
+                                            <label>Max Credit Limit<span class="Asterisk"> *</span></label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;font-size:12px; width: 29px;"> ₹ </button>
+                                                <input type="text" class="form-control" id="CreditLimit" name="CreditLimit" placeholder="Credit" oninput="Common.allowOnlyNumberLength(this, 9)">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-lg-3 col-sm-3 col-6" id="CurrentlimitHide">
                                         <div class="form-group">
-                                            <label>Current Credit</label>
-                                            <input type="text" class="form-control" placeholder="0.00" id="CurrentCreditLimit" name="CurrentCreditLimit" disabled />
+                                            <label>Current Credit<span class="Asterisk"> *</span></label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;font-size:12px; width: 29px;"> ₹ </button>
+                                                <input type="text" class="form-control" id="CurrentCreditLimit" name="CurrentCreditLimit" placeholder="Credit" oninput="Common.allowOnlyNumberLength(this, 9)" disabled>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div class="col-md-12 col-lg-12 col-sm-12 col-12 justify-content-center" style="margin-top: 8px; display: flex;" id="IsActiveHide">
                                         <div class="form-group">
                                             <input type="checkbox" id="IsActive" name="IsActive">

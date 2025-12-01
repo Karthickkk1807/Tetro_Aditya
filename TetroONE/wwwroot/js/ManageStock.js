@@ -8,6 +8,64 @@ $(document).ready(function () {
 
     titleForHeaderProductTab = "Raw Material";
 
+    var start = moment().startOf('month');
+    var end = moment().endOf('month');
+    Common.bindDropDown('distributorSelect', 'Client');
+    $('#reportrange span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
+
+    function cb(start, end, label) {
+        if (label === 'No Date') {
+            $('#reportrange span').html('No Date');
+        } else {
+            $('#reportrange span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
+        }
+    }
+
+    // Initialize Date Range Picker
+    $('#reportrange').daterangepicker({
+        autoUpdateInput: false,
+        alwaysShowCalendars: true,
+        showCustomRangeLabel: true,
+        locale: {
+            format: 'DD-MM-YYYY'
+        },
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'),
+            moment().subtract(1, 'month').endOf('month')],
+            'No Date': [moment(), moment()]
+        }
+    }, cb);
+
+    // Default display
+    cb(moment().startOf('month'), moment().endOf('month'));
+
+    // Apply event
+    $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+
+        if (picker.chosenLabel === 'No Date') {
+            $(this).find('span').html('No Date');
+            StartDate = null;
+            EndDate = null;
+        } else {
+            $(this).find('span').html(
+                picker.startDate.format('DD-MM-YYYY') +
+                ' - ' +
+                picker.endDate.format('DD-MM-YYYY')
+            );
+
+            StartDate = picker.startDate.format('YYYY-MM-DD');
+            EndDate = picker.endDate.format('YYYY-MM-DD');
+        }
+
+        console.log("StartDate:", StartDate);
+        console.log("EndDate:", EndDate);
+    });
+
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
@@ -221,7 +279,7 @@ function ManageStockSuccess(response) {
         $('#loader-pms').hide();
     }
 }
-
+ 
 function bindTableManageStock(tableid, data, columns, actionTarget, editcolumn, scrollpx) {
     if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
         try {
@@ -342,7 +400,7 @@ function bindTableEditManageStock(tableid, data, columns, scrollpx) {
         "columnDefs": !isTetroONEnocount
             ? renderColumn : [],
     });
-    $('#tableFilter').on('keyup', function () {
+    $('#tableFilter1').on('keyup', function () {
         table.search($(this).val()).draw();
     });
     setTimeout(function () {
