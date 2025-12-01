@@ -119,155 +119,15 @@ namespace TetroONE.Models
         public int LoginUserId { get; set; }
         public int? MasterInfoId { get; set; }
         public string ModuleName { get; set; }
-        public int FranchiseId { get; set; }
     }
 
     public class InsertUpdateMasterInfo
     {
         public int LoginUserId { get; set; }
         public int? MasterInfoId { get; set; }
-        public string? MasterInfoDescription { get; set; }
         public string ModuleName { get; set; }
         public string MasterInfoName { get; set; }
-        public List<MasterInfoMappingDetails> masterInfoMappingDetails { get; set; }
-        public DataTable TVP_MasterInfoMappingDetails { get; set; }
+        public string? MasterInfoDescription { get; set; }
     }
-
-    public class MasterInfoMappingDetails
-    {
-        public int? MasterInfoId { get; set; }
-        public int? ModuleId { get; set; }
-        public int? franchiseId { get; set; }
-        public bool IsSelected { get; set; }
-    }
-
-    public class GetProductionStage
-    {
-        public int LoginUserId { get; set; }
-        public int? ProductionStagesId { get; set; }
-        public int? FranchiseId { get; set; }
-    }
-
-    public class InsertUpdateProductionStage
-    {
-        public int LoginUserId { get; set; }
-        public int? ProductionStagesId { get; set; }
-        public string ProductionStagesName { get; set; }
-        public bool IsRGB { get; set; }
-        public bool IsPet { get; set; }
-        public List<MasterInfoMappingDetails> masterInfoMappingDetails { get; set; }
-        public DataTable TVP_MasterInfoMappingDetails { get; set; }
-    }
-
-    public class GetCretaria
-    {
-        public int LoginUserId { get; set; }
-        public int? CriteriaId { get; set; }
-       
-    }
-    public class GetProductSubCategory
-    {
-        public int LoginUserId { get; set; }
-        public int? ProductSubCategoryId { get; set; }
-       
-    }
-
-    public class InsertUpdateCretaria   
-    {
-        public int LoginUserId { get; set; }
-        public int? CriteriaId { get; set; }
-        public string CriteriaTypeId { get; set; }
-        public string CriteriaName { get; set; }
-        public string CriteriaDescription { get; set; }
-        public List<MasterInfoMappingDetails> masterInfoMappingDetails { get; set; }
-        public DataTable TVP_MasterInfoMappingDetails { get; set; }
-    }
-    public class InsertUpdateProductSubCategory
-    {
-        public int LoginUserId { get; set; }
-        public int? ProductSubCategoryId { get; set; }
-        public int? ProductCategoryId { get; set; }
-        public decimal? ProductionCost { get; set; }
-        public string ProductSubCategoryName { get; set; }
-        public string ProductSubCategoryDescription { get; set; }
-    
-    }
-
-    public class GetAutoGeneratePrefix
-    {
-        public int LoginUserId { get; set; }
-        public int? FranchiseId { get; set; }
-        public int? AutoGeneratePrefixId { get; set; }
-    }
-
-    public class InsertUpdateAutoGeneratePrefix
-    {
-        public int LoginUserId { get; set; }
-        public int? AutoGeneratePrefixId { get; set; }
-        public string ModuleType { get; set; }
-        public string Prefix { get; set; }
-        public string StartingFrom { get; set; }
-        public int FranchiseId { get; set; }
-    }
-
-	public class GetAttendanceDevice
-	{
-		public int LoginUserId { get; set; }
-		public int? AttendanceMachineId { get; set; }
-		public int FranchiseId { get; set; }
-	}
-
-	public class GetEmployeeDeviceMapping
-    {
-		public int LoginUserId { get; set; }
-		public int? EmployeeId { get; set; }
-	}
-
-	public class InsertAttendanceMachine
-	{
-		public int LoginUserId { get; set; }
-		public int? FranchiseId { get; set; }
-		public int? AttendanceMachineId { get; set; }
-		public string AttendanceMachineName { get; set; }
-		public string SerialNo { get; set; }
-		public bool IsActives { get; set; }
-		public string MachineDescription { get; set; }
-		public List<ManageDeviceMappingDetailsSettings>? deviceMappingDetailsList { get; set; }
-		public DataTable TVP_EmployeeDeviceMappingDetails { get; set; }
-
-	}
-	public class ManageDeviceMappingDetailsSettings
-	{
-		public int? EmployeeDeviceMappingId { get; set; }
-		public int? EmployeeId { get; set; }
-		public int? AttendanceMachineId { get; set; }
-		public bool IsBlock { get; set; }
-	}
-	public class GetOtherCharges
-	{
-		public int LoginUserId { get; set; }
-		public int? OtherChargesId { get; set; }
-		public int FranchiseId { get; set; }
-	}
-
-
-	public class InsertUpdateOtherCharges
-	{
-		public int LoginUserId { get; set; }
-		public int? OtherChargesId { get; set; }
-		public string OtherChargesType { get; set; }
-		public string OtherChargesName { get; set; }
-		public decimal Value { get; set; }
-		public bool IsPercentage { get; set; }
-		public List<MasterInfoMappingDetails> masterInfoMappingDetails { get; set; }
-		public DataTable TVP_MasterInfoMappingDetails { get; set; }
-	}
-
-    public class GetEmployeeDetails_Franchise
-    {
-        public int LoginUserId { get; set; }
-        public int? FranchiseId { get; set; }
-    }
-
-
+      
 }

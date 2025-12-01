@@ -5,6 +5,7 @@ var formDataMultiple = new FormData();
 var EditPurchaseId = 0;
 var PlantMappingId = 0;
 var printType = "";
+var TriggerValues = true;
 
 $(document).ready(function () {
     $('.Status-Div').removeClass('d-block').addClass('d-none');
@@ -67,7 +68,7 @@ $(document).ready(function () {
             Common.ajaxCall("GET", "/PurchaseOrder/GetPurchaseOrder", { PlantId: parseInt(PlantMappingId), PurchaseOrderId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString() }, GetPurchaseOrderSuccess, null);
         }
     });
-     
+
     $(document).on('click', '#downloadExcelBtn', function () {
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
@@ -118,6 +119,7 @@ $(document).ready(function () {
         var formattedDate = currentDate.toISOString().slice(0, 10);
         $('#PurchaseOrderDate').val(formattedDate);
 
+        TriggerValues = true;
         EditPurchaseId = 0;
         ProductIdArray = [];
         $('#selectedFiles').empty();
@@ -153,45 +155,49 @@ $(document).ready(function () {
     });
 
     $(document).on('change', '#VendorColumn #Vendor', async function () {
-        var BillToId = $('#VendorColumn #Vendor').val();
-        $('#POProductTablebody .ProductTableRow').remove();
-        ClearInputs(); // Clear inputs
+        if (TriggerValues) {
+            var BillToId = $('#VendorColumn #Vendor').val();
+            $('#POProductTablebody .ProductTableRow').remove();
+            ClearInputs(); // Clear inputs
 
-        var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
-        if (response !== null) {
-            BillToAddress(response);
-            updateGSTVisibility('#VendorStateName', '#StateName');
-        }
-        if (BillToId != '' || BillToId != null) {
-            updateGSTVisibility('#VendorStateName', '#StateName');
-        } else {
-            BillToAddressClear();
+            var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
+            if (response !== null) {
+                BillToAddress(response);
+                updateGSTVisibility('#VendorStateName', '#StateName');
+            }
+            if (BillToId != '' || BillToId != null) {
+                updateGSTVisibility('#VendorStateName', '#StateName');
+            } else {
+                BillToAddressClear();
+            }
         }
     });
 
     $(document).on('change', '#AlternativeCompanyAddress', function () {
-        var ShipToId = $(this).val();
-        $('#POProductTablebody .ProductTableRow').remove();
-        ClearInputs(); // Clear inputs
+        if (TriggerValues) {
+            var ShipToId = $(this).val();
+            $('#POProductTablebody .ProductTableRow').remove();
+            ClearInputs(); // Clear inputs
 
-        Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: parseInt(ShipToId) }, function (responsePlant) {
-            if (responsePlant !== null) {
-                ShipToAddress(responsePlant);
+            Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: parseInt(ShipToId) }, function (responsePlant) {
+                if (responsePlant !== null) {
+                    ShipToAddress(responsePlant);
+                    updateGSTVisibility('#VendorStateName', '#StateName');
+                }
+            }, null);
+            if (ShipToId != '' || ShipToId != null) {
                 updateGSTVisibility('#VendorStateName', '#StateName');
+            } else {
+                ShipToAddressClear();
             }
-        }, null);
-        if (ShipToId != '' || ShipToId != null) {
-            updateGSTVisibility('#VendorStateName', '#StateName');
-        } else {
-            ShipToAddressClear();
+
+            var ShipId = $('#ShippingColumn #AlternativeCompanyAddress').val();
+            var EditDataId = { ModuleName: 'PurchaseOrder', PlantId: ShipId };
+
+            Common.ajaxCall("GET", "/Common/GetAutoGenerate", EditDataId, function (response) {
+                Common.AutoGenerateNumberGet(response, "PurchaseOrderNumber", "PurchaseOrderNo");
+            });
         }
-
-        var ShipId = $('#ShippingColumn #AlternativeCompanyAddress').val();
-        var EditDataId = { ModuleName: 'PurchaseOrder', PlantId: ShipId };
-
-        Common.ajaxCall("GET", "/Common/GetAutoGenerate", EditDataId, function (response) {
-            Common.AutoGenerateNumberGet(response, "PurchaseOrderNumber", "PurchaseOrderNo");
-        });
     });
 
     $(document).on('change', '#BillFrom', async function () {
@@ -380,16 +386,12 @@ $(document).ready(function () {
 
     $(document).on('click', '.btn-edit', function () {
 
-        $('#loader-pms').hide();
+        $('#loader-pms').show();
         EditPurchaseId = $(this).data('id');
         $('#POTopHeadbind').empty();
         bindHeaderNormal();
         VendorAlignmentOpen();
         ClearInputs(); // Clear inputs
-
-        Common.bindDropDownParent('BillFrom', 'FormBillFrom', 'BillFrom');
-        Common.bindDropDownParent('Vendor', 'FormVendor', 'Vendor');
-        Common.bindDropDownParent('AlternativeCompanyAddress', 'FormShipping', 'PlantBillFrom');
 
         $("#ModalHeading").text("Edit Purchase Order");
 
@@ -424,7 +426,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
-        if (response == true) { 
+        if (response == true) {
             var EditPurchaseBillId = $(this).data('id');
             Common.ajaxCall("GET", "/PurchaseOrder/DeletePurchaseOrderDetails", { PurchaseOrderId: parseInt(EditPurchaseId) }, function (response) {
                 response = response.status ? Common.successMsg(response.message) : Common.errorMsg(response.message);
@@ -589,7 +591,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.DynrowRemove', function () {
         var $row = $(this).closest('tr');
-        var ProductId = $row.find('.ProductId').text().trim();
+        var ProductId = parseInt($row.find('.ProductId').text().trim(), 10);
         ProductIdArray = ProductIdArray.filter(id => id !== ProductId);
         $row.remove();
         $('#POProductTablebody .ProductTableRow').each(function (index) {
@@ -675,7 +677,7 @@ $(document).ready(function () {
             },
             error: function () {
                 $('#loader-pms').hide();
-                Common.errorMsg(response.message);  
+                Common.errorMsg(response.message);
             }
         });
     });
@@ -736,31 +738,62 @@ $(document).ready(function () {
 });
 
 async function PurchaseOrderGetNotNull(response) {
-    if (response.status) {
-        var data = JSON.parse(response.data);
+    if (!response.status) return;
+    var data = JSON.parse(response.data);
 
-        $('#BillFrom').val(data[1][0].BillFromPlantId).trigger('change');
-        $('#VendorColumn #Vendor').val(data[1][0].VendorId).trigger('change');
-        $('#AlternativeCompanyAddress').val(data[1][0].ShipToPlantId).trigger('change');
+    await Common.bindDropDownParentAsync('BillFrom', 'FormBillFrom', 'BillFrom');
+    await Common.bindDropDownParentAsync('Vendor', 'FormVendor', 'Vendor');
+    await Common.bindDropDownParentAsync('AlternativeCompanyAddress', 'FormShipping', 'PlantBillFrom');
 
-        $('#PurchaseOrderDate').val(data[1][0].PurchaseOrderDate.split('T')[0]);
-        $('#ExpectedDeliveryDate').val(data[1][0].ExpectedDeliveryDate.split('T')[0]);
+    const billFromResponse = await ajaxAsync("GET", "/Common/BillFromDetails_BillFromId", { ModuleId: parseInt(data[1][0].BillFromPlantId), ModuleName: "BillFrom" });
+    if (billFromResponse.status) {
+        var BillFromData = JSON.parse(billFromResponse.data);
+        $("#BillFromAddress").text(BillFromData[0][0].BillFromAddress || '');
+        TriggerValues = false;
 
-        bindProductRowsInNotNull(data[0], data[1][0].VendorStateName, data[1][0].PlantStateName);
+        $("#BillFrom").val(data[1][0].BillFromPlantId).trigger("change");
 
-        Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
-        Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
-        Inventory.toggleFieldForAttachment(data[2][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
+        const vendorResponse = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(data[1][0].VendorId));
+        if (vendorResponse !== null) {
+            BillToAddress(vendorResponse);
+            $('#Vendor').val(data[1][0].VendorId).trigger('change');
 
-        Inventory.bindAttachments(data[2]);
-         
-        var EditDataId = { ModuleName: 'PurchaseOrder', ModuleId: parseInt(EditPurchaseId) }
-        Common.ajaxCall("GET", "/Common/GetInventoryStatusDetails", EditDataId, function (response) {
-            if (response.status);
-            Common.bindDropDownSuccess(response.data, "PurchaseOrderStatusId"); 
-            $('#PurchaseOrderStatusId').val(data[1][0].PurchaseOrderStatusId);
-        }, null); 
+            const plantResponse = await ajaxAsync("GET", "/Settings/GetPlantDetails", { PlantId: parseInt(data[1][0].ShipToPlantId) });
+            if (plantResponse !== null) {
+                ShipToAddress(plantResponse);
+                $('#AlternativeCompanyAddress').val(data[1][0].ShipToPlantId).trigger('change');
+                $('#PurchaseOrderNumber').val(data[1][0].PurchaseOrderNo);
+
+                bindProductRowsInNotNull(data[0], data[1][0].VendorStateName, data[1][0].PlantStateName);
+
+                $('#loader-pms').hide();
+            }
+        }
     }
+
+    $('#PurchaseOrderDate').val(data[1][0].PurchaseOrderDate.split('T')[0]);
+    $('#ExpectedDeliveryDate').val(data[1][0].ExpectedDeliveryDate.split('T')[0]);
+
+    Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
+    Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
+    Inventory.toggleFieldForAttachment(data[2][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
+
+    Inventory.bindAttachments(data[2]);
+
+    var EditDataId = { ModuleName: 'PurchaseOrder', ModuleId: parseInt(EditPurchaseId) };
+
+    const statusResponse = await ajaxAsync("GET", "/Common/GetInventoryStatusDetails", EditDataId);
+
+    if (statusResponse.status) {
+        Common.bindDropDownSuccess(statusResponse.data, "PurchaseOrderStatusId");
+        $('#PurchaseOrderStatusId').val(data[1][0].PurchaseOrderStatusId);
+    }
+}
+
+function ajaxAsync(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
 }
 
 function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
@@ -782,9 +815,9 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
         var CESS = parseFloat(productInfo.CESS) || 0;
 
         var SubTotal = (SecondaryPrice * QtyProductAdd).toFixed(2);
-          
+
         var cgstAmt = 0, sgstAmt = 0, igstAmt = 0, cessAmt = 0;
-         
+
         var firstState = StateName1.toLowerCase().trim();
         var secondState = StateName2.toLowerCase().trim();
 
@@ -807,10 +840,10 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
 
         ProductIdArray.push(ProductId);
 
-        var unitDropdownHtml = `<select class="form-control ForBindtableProductUnit" data-productid="${ProductId}">`; 
+        var unitDropdownHtml = `<select class="form-control ForBindtableProductUnit" data-productid="${ProductId}">`;
         unitDropdownHtml += `<option value="${productInfo.PrimaryUnitId}" ${productInfo.UnitId == productInfo.PrimaryUnitId ? 'selected' : ''}>${productInfo.PrimaryUnitName}</option>`;
         unitDropdownHtml += `<option value="${productInfo.SecondaryUnitId}" ${productInfo.UnitId == productInfo.SecondaryUnitId ? 'selected' : ''}>${productInfo.SecondaryUnitName}</option>`;
-        unitDropdownHtml += `</select>`;  
+        unitDropdownHtml += `</select>`;
 
         var encodedProductInfo = JSON.stringify(productInfo)
             .replace(/"/g, '&quot;')   // Replace double quotes
@@ -872,7 +905,10 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
     $('#POProductTablebody .ProductTableRow').each(function (index) {
         $(this).find('td:first').text(index + 1);
     });
+
+    updateGSTVisibility('#VendorStateName', '#StateName');
     calculateGrandTotal();
+    TriggerValues = true;
 }
 
 function updateSelectedItemCount() {

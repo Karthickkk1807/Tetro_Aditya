@@ -125,6 +125,21 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
+        [HttpGet]
+        [Route("DD_GetPurchaseOrderNo")]
+        public IActionResult DD_GetPurchaseOrderNo(int? ModuleId, string? ModuleName)
+        {
+            DD_GetPurchaseOrderNo getInfo = new DD_GetPurchaseOrderNo()
+            {
+                LoginuserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                ModuleId = ModuleId,
+                ModuleName = ModuleName
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[DBO].[USP_DD_GetPurchaseOrderNo_PurchaseBill]", getInfo);
+            return Json(response);
+        }
+
         [HttpPost]
         [Route("InsertUpdatePurchaseBill")]
         public async Task<IActionResult> InsertUpdatePurchaseBill()
@@ -176,26 +191,24 @@ namespace TetroONE.Controllers
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
                 PurchaseBillId = PurchaseBillDetailsStatic.PurchaseBillId,
-                PurchaseBillNo = PurchaseBillDetailsStatic.PurchaseBillNo,
                 VendorId = PurchaseBillDetailsStatic.VendorId,
-                FranchiseId = PurchaseBillDetailsStatic.FranchiseId,
-                ShipToFranchiseId = PurchaseBillDetailsStatic.ShipToFranchiseId,
-                BillFromFranchiseId = PurchaseBillDetailsStatic.BillFromFranchiseId,
-                PurchaseOrderId = PurchaseBillDetailsStatic.PurchaseOrderId,
-
+                BillFromPlantId = PurchaseBillDetailsStatic.BillFromPlantId,
+                PlantId = PurchaseBillDetailsStatic.PlantId,
+                ShipToPlantId = PurchaseBillDetailsStatic.ShipToPlantId,
+                PurchaseBillNo = PurchaseBillDetailsStatic.PurchaseBillNo,
                 PurchaseBillDate = PurchaseBillDetailsStatic.PurchaseBillDate,
+                PurchaseOrderId = PurchaseBillDetailsStatic.PurchaseOrderId,
                 OriginalInvoiceNo = PurchaseBillDetailsStatic.OriginalInvoiceNo,
+                SubTotal = PurchaseBillDetailsStatic.SubTotal,
+                RoundOffValue = PurchaseBillDetailsStatic.RoundOffValue,
+                GrantTotal = PurchaseBillDetailsStatic.GrantTotal,
+                BalanceAmount = PurchaseBillDetailsStatic.BalanceAmount,
                 Notes = PurchaseBillDetailsStatic.Notes,
                 TermsAndCondition = PurchaseBillDetailsStatic.TermsAndCondition,
-                SubTotal = PurchaseBillDetailsStatic.SubTotal,
-                GrantTotal = PurchaseBillDetailsStatic.GrantTotal,
-                RoundOffValue = PurchaseBillDetailsStatic.RoundOffValue,
                 PurchaseBillStatusId = PurchaseBillDetailsStatic.PurchaseBillStatusId,
-                BalanceAmount = PurchaseBillDetailsStatic.BalanceAmount,
 
                 TVP_Purchase_ProductMappingDetails = dtproductData,
                 TVP_PurchaseSaleOtherChargesMappingDetails = dtOtherChargesData,
-
                 TVP_AttachmentDetails = dtattachment
             };
 
@@ -212,7 +225,6 @@ namespace TetroONE.Controllers
                     await GenericTetroONE.IsAttachmentDeleted(deletedFiles);
                 }
             }
-
             return Json(response);
         }
 

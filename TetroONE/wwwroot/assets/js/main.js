@@ -62,7 +62,7 @@ $(document).ready(function(){
 		franchiseId = localStorage.getItem("FranchiseId");
 	}
 
-	bindDropDown(1, 'UserFranchiseMappingId', 'Plant', function () {
+	bindDropDown(1, 'UserFranchiseMappingId', 'UserPlantMapping', function () {
 		if (franchiseId) {
 			$("#UserFranchiseMappingId").val(franchiseId);
 			localStorage.removeItem("FranchiseId");
@@ -500,8 +500,7 @@ $(window).on('load', function () {
 function bindDropDown(FranchiseId, id, moduleName, callback) {
 	var request = {
 		moduleName: moduleName,
-		franchiseId: FranchiseId
-
+		franchiseId: FranchiseId 
 	};
 	$.ajax({
 		type: 'POST',

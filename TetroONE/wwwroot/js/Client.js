@@ -182,7 +182,6 @@ $(document).on('click', '#AddClient', function () {
     Common.removevalidation('FormClient'); 
     Common.removeMessage('FormClient');
     
-    duplicateRow();
     clientId = 0;
     $('#selectedFiles').empty();
     $('#ExistselectedFiles').empty();
@@ -195,7 +194,8 @@ $(document).on('click', '#AddClient', function () {
     $('#collapse1').addClass('show');
     $('#State').val('32');
     $('#Country').val('India');
-    $('#FormContactClient').empty(''); 
+    $('#FormContactClient').empty('');
+    duplicateRow();
 });
 
 
@@ -427,7 +427,6 @@ function duplicateRow() {
                     </div>
                 </div>
             </div>
-
 
             <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
                 <div class="form-group">
