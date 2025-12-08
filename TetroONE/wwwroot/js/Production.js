@@ -1,6 +1,14 @@
 ﻿var productionPlanLogId = 0;
+var productionPlanId = 0;
+var PlantMappingId = 0;
+var ArrayProcessTypeId = [];
 
-$(document).ready(async function () {
+$(document).ready(async function () { 
+
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
+
+    Common.bindDropDownParent('PreparedBy', 'FormProduction', 'SampleReceivedBy');
+    Common.bindDropDownParent('Status', 'FormProduction', 'ProductionLogStatus');
 
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
@@ -17,7 +25,7 @@ $(document).ready(async function () {
         $('#tableFilter').val('');
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+        Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
@@ -25,7 +33,7 @@ $(document).ready(async function () {
         updateMonthDisplay(displayedDate);
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+        Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
     });
 
     function updateMonthDisplay(date) {
@@ -55,7 +63,7 @@ $(document).ready(async function () {
         $('#tableFilter').val('');
         $('#ToDate').attr('min', fromDate);
         if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
-            Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString() }, GetProductionLogSuccess, null);
+            Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString() }, GetProductionLogSuccess, null);
         }
     });
 
@@ -71,7 +79,7 @@ $(document).ready(async function () {
         updateMonthDisplay(displayedDate);
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+        Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
     });
 
     $(document).on('click', '#bulkEmployee', function () {
@@ -82,10 +90,16 @@ $(document).ready(async function () {
     });
 
     var fnData = Common.getDateFilter('dateDisplay2');
-    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
-      
+    Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+
     $(document).on('click', '.btn-edit', function () {
-        ProductionId = $(this).data('id');
+        productionPlanLogId = 0;
+        productionPlanId = 0;
+        ArrayProcessTypeId = [];
+
+        Common.removevalidation('FormProduction');  
+
+        productionPlanId = $(this).data('id');
         var windowWidth = $(window).width();
         if (windowWidth <= 600) {
             $("#ProductionLogCanvas").css("width", "95%");
@@ -98,113 +112,76 @@ $(document).ready(async function () {
         $('#ProductionHeader').text('ProductionLog Details');
         $("#FormProduction")[0].reset();
         $('#SaveProductionLog').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
-        CanvasOpenFirstShowingProduction();
 
-        var hotcodeData = [
-            { 
-                CreatedBy: "Kavinesh Raj",
-                Date: "2025-01-12 10:23:45",
-                Process: "Reversing",
-                Qty: "3900 KG"
-            },
-            { 
-                CreatedBy: "Sathiesh Kumar",
-                Date: "2025-01-12 11:45:12",
-                Process: "Stitching",
-                Qty: "3800 KG"
-            },
-            { 
-                CreatedBy: "Tharani",
-                Date: "2025-01-12 14:05:33",
-                Process: "Softflow",
-                Qty: "3800 KG"
-            },
-            { 
-                CreatedBy: "Karthick",
-                Date: "2025-01-12 16:18:59",
-                Process: "Stentering",
-                Qty: "3700 KG"
-            },
-            { 
-                CreatedBy: "Dhanush",
-                Date: "2025-01-12 19:46:09",
-                Process: "Dryer",
-                Qty: "3500 KG"
-            },
-            { 
-                CreatedBy: "Mariyan",
-                Date: "2025-01-12 23:30:00",
-                Process: "Compacting",
-                Qty: "3300 KG"
-            }
-        ];
+        $('#Process').prop('disabled', false);
 
-        const productionColumns = [ 
-            { data: 'Date', name: 'Date', title: 'Date' },
-            { data: 'Process', name: 'Process', title: 'Process' },
-            { data: 'Qty', name: 'Qty', title: 'Qty' },
-            { data: 'CreatedBy', name: 'CreatedBy', title: 'Created By' }
-        ];
+        $('#SaveProductionLog').hide();
 
-        $('#TransactionsInfo').empty('');
-        var html =
-        `
-        <div class="table-responsive">
-            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="TransactionsInfoTable"></table>
-        </div>
-        `;
-        $('#TransactionsInfo').append(html);
-
-        bindTableTransactionsInfo('TransactionsInfoTable', hotcodeData, -1, productionColumns, '350px', true);
-        //var columns = Common.bindColumn(data[3], ['PurchaseRequestId', 'Status_Color']);
-        //bindTableTransactionsInfo('TransactionsInfoTable', data[3], columns, -1, 'PurchaseRequestId', '151px', true);
-         
-        /*============================QRCODE*/
-
-        $("#QRCode").html("");
-
-        //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/QRCodePop";
-        var scanUrl = "https://localhost:44366/Productions/ProductionPlan/ProductionQRCode/QRCodePop";
-
-        new QRCode(document.getElementById("QRCode"), {
-            text: scanUrl,
-            width: 100,
-            height: 100
-        });
-        $("#QRCode").removeAttr("title");
+        Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: parseInt(productionPlanId), ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogNotNullSuccess, null);
     });
 
     $(document).on('click', '#CloseCanvas', function () {
         $("#ProductionLogCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
     });
+     
+    $(document).on('click', '#SaveProductionLog', function () {
+        if ($("#FormProduction").valid()) {
+            var objvalue = {};
+            objvalue.ProductionPlanId = productionPlanId != 0 ? productionPlanId : null;
+            objvalue.ProductionLogId = productionPlanLogId != 0 ? productionPlanLogId : null;
+            objvalue.PlantId = parseInt(PlantMappingId);
 
-    $('.accordion-header').on('click', function () {
-        var $offcanvas = $(this).closest('.offcanvas-container');
-        var $accordion = $(this).closest('.accordion');
-        var target = $(this).find('a').attr('data-target');
+            objvalue.ProcessTypeId = parseInt($('#Process').val());
+            objvalue.PreparedBy = parseInt($('#PreparedBy').val());
+            objvalue.ProductionLogStatusId = parseInt($('#Status').val());
+            objvalue.Quantity = parseFloat($('#Quantity').val());
+            objvalue.Remarks = $('#Remarks').val();
 
-        $offcanvas.find('.collapse').not(target).collapse('hide');
-
-        $(target).collapse('toggle');
+            Common.ajaxCall("POST", "/Productions/InsertUpdateProductionLog", JSON.stringify(objvalue), GetProductionLogReload, null);
+        }
     });
 
     $(document).on('click', '.btn-edit-Trans', function () {
-        $('#Process').val('5');
-        $('#Quantity').val('2900 KG');
-        $('#PreparedBy').val('1');
+        productionPlanLogId = $(this).data('id'); 
+
+        Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: parseInt(productionPlanId), ProductionLogId: parseInt(productionPlanLogId), FromDate: null, ToDate: null }, function (response) {
+            if (response.status) {
+                var data = JSON.parse(response.data); 
+                $('#Process').val(data[0][0].ProcessTypeId || '').prop('disabled', true);
+                $('#Quantity').val(data[0][0].Quantity || '');
+                $('#PreparedBy').val(data[0][0].PreparedBy || '');
+                $('#Remarks').val(data[0][0].Remarks || '');
+                $('#Status').val(data[0][0].ProductionLogStatusId || '');
+
+                $('#SaveProductionLog').show(); 
+            }
+        }, null);
+    });
+
+    $('#Quantity').on('input', function () {
+        var quantityValue = parseFloat($(this).val().replace(/[^\d.]/g, ''));
+        var totalWeightValue = parseFloat($('#TotalWeight').val().replace(/[^\d.]/g, ''));
+
+        if (!isNaN(quantityValue) && !isNaN(totalWeightValue)) {
+            if (quantityValue > totalWeightValue) {
+                Common.warning('Quantity cannot be greater than Total Weight!');
+                $(this).val(totalWeightValue);
+            }
+        }
+    });
+       
+    $(document).on('change', '#Process', function () {
+        let selectedValue = Number($(this).val());
+        let allowedIds = ArrayProcessTypeId.map(x => x.ProcessTypeId);
+
+        if (allowedIds.includes(selectedValue)) {
+            $('#SaveProductionLog').hide();
+        } else {
+            $('#SaveProductionLog').show();
+        }
     });
 });
-
-function CanvasOpenFirstShowingProduction() {
-    $('#ProductionLogCanvas').addClass('show');
-    $('#collapse1').collapse('show');
-    $('#collapse2').collapse('hide');
-    $('#ProductionLogCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
-    $('html, body').animate({
-        scrollTop: $('#ProductionLogCanvas').offset().top
-    }, 'fast');
-}
 
 function GetProductionLogSuccess(response) {
     if (response.status) {
@@ -231,6 +208,68 @@ function GetProductionLogSuccess(response) {
 
         bindTable('ProductionLogTable', data[1], columns, -1, 'ProductionPlanId', '350px', true, access);
         $(".dataTables_scrollBody").css("max-height", "310px");
+    }
+}
+
+function GetProductionLogNotNullSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+
+        $('#BatchNo').val(data[0][0].ProductionNo);
+        $('#BatchDate').val(data[0][0].ProductionDate);
+        $('#TotalWeight').val(data[0][0].TotalWeight);
+        $('#Colour').val(data[0][0].Color);
+        $('#Machine').val(data[0][0].Machine);
+
+        Common.bindDropDownSuccessProcessType(data[1], "Process");
+
+        $('#Process').val(data[3][0].ProcessTypeId || '');
+        $('#Quantity').val(data[3][0].Quantity || '');
+        $('#PreparedBy').val(data[3][0].PreparedBy || '');
+        $('#Remarks').val(data[3][0].Remarks || '');
+        $('#Status').val(data[3][0].ProductionLogStatusId || '');
+
+        ArrayProcessTypeId = data[4];
+
+        $('#TransactionsInfo').empty('');
+        var html =`
+            <div class="table-responsive">
+                <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="TransactionsInfoTable"></table>
+            </div>
+        `;
+        $('#TransactionsInfo').append(html);
+
+        var columns = Common.bindColumn(data[2], ['ProductionLogId']);
+        bindTableTransactionsInfo('TransactionsInfoTable', data[2], -1, 'ProductionLogId', columns, '151px', true);
+
+        /*============================QRCODE=============================*/
+
+        $("#QRCode").html("");
+        
+        //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/QRCodePop?ProductionPlanId=" + productionPlanId;
+        var scanUrl = "https://localhost:44366/ProductionQRCode/QRCodePop" + "?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
+
+        new QRCode(document.getElementById("QRCode"), {
+            text: scanUrl,
+            width: 100,
+            height: 100
+        });
+        //$("#QRCode").removeAttr("title");
+    }
+}
+
+function GetProductionLogReload(response) {
+    if (response.status) {
+        Common.successMsg(response.message);
+        $("#ProductionLogCanvas").css("width", "0%");
+        $('#fadeinpage').removeClass('fadeoverlay');
+        $('#SaveProductionLog').hide();
+
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+
+    } else {
+        Common.errorMsg(response.message);
     }
 }
 
@@ -348,7 +387,7 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
     }, 100);
 }
 
-function bindTableTransactionsInfo(tableid, data, actionTarget, columns, scrollpx, isAction) {
+function bindTableTransactionsInfo(tableid, data, actionTarget, editcolumn, columns, scrollpx, isAction) {
     if ($.fn.DataTable.isDataTable('#' + tableid)) {
         if ($('#' + tableid).DataTable().rows().data().toArray().length > 0) {
             $('#' + tableid).DataTable().clear().destroy();
@@ -372,7 +411,7 @@ function bindTableTransactionsInfo(tableid, data, actionTarget, columns, scrollp
             render: function (data, type, row, meta) {
                 return `<td>
                             <div class="actionEllipsis">
-                                <i class="btn-edit-Trans mx-1" data-id="" title="Edit">
+                                <i class="btn-edit-Trans mx-1" data-id="${row[editcolumn]}" title="Edit">
                                    <img src="/assets/commonimages/edit.svg" />
                                 </i> 
                             </div>
@@ -406,6 +445,5 @@ function bindTableTransactionsInfo(tableid, data, actionTarget, columns, scrollp
     };
     $('#' + tableid).DataTable(dataTableOptions);
     var tableId = $('#' + tableid).DataTable();
-    Common.autoAdjustColumns(tableId);
-
-}
+    Common.autoAdjustColumns(tableId); 
+} 

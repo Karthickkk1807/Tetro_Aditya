@@ -10,6 +10,48 @@ namespace TetroONE.Models
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
     }
+    
+    public class DeleteQuotationDetails
+    {
+        public int LoginUserId { get; set; } 
+        public int? QuotationId { get; set; } 
+    }
+
+    public class InsertUpdateQuotationDetails
+    {
+        public int LoginUserId { get; set; }
+        public int? QuotationId { get; set; }
+        public int? PlantId { get; set; }
+        public string? QuotationNo { get; set; }
+        public DateTime? QuotationDate { get; set; }
+        public int? ClientId { get; set; }
+        public DateTime? ValidTo { get; set; }
+        public string? ReMarks { get; set; }
+        public int? QuotationStatusId { get; set; }
+        public List<QuotationColorMappingDetails> QuotationColorMappingDetails { get; set; }
+        public DataTable TVP_QuotationColorMappingDetails { get; set; }
+        public List<QuotationProcessTypeMappingDetails> QuotationProcessTypeMappingDetails { get; set; }
+        public DataTable TVP_QuotationProcessTypeMappingDetails { get; set; }
+    }
+
+    public class QuotationColorMappingDetails
+    {
+        public int? QuotationColorMappingId { get; set; }
+        public int? QuotationId { get; set; }
+        public int? FabricId { get; set; } 
+        public int? ColorId { get; set; }
+        public decimal? ProposedPrice { get; set; }
+        public decimal? ApprovedPrice { get; set; } 
+    }
+
+    public class QuotationProcessTypeMappingDetails
+    {
+        public int? QuotationProcessTypeMappingId { get; set; }
+        public int? ProcessTypeId { get; set; }
+        public decimal? ProposedPrice { get; set; }
+        public decimal? ApprovedPrice { get; set; }
+        public int? QuotationId { get; set; } 
+    }
 
     public class DeleteEstimate
     {
@@ -35,7 +77,7 @@ namespace TetroONE.Models
         public int? EstimateStatusId { get; set; }
         public string? Notes { get; set; }
         public string? TermsAndCondition { get; set; }
-        
+
     }
 
     public class EstimateProductMappingDetails
@@ -61,9 +103,9 @@ namespace TetroONE.Models
         public decimal Value { get; set; }
         public decimal OtherChargeValue { get; set; }
         public int? ModuleId { get; set; }
-       
+
     }
- 
+
     public class InsertEstimateDetails
     {
         public int LoginUserId { get; set; }
@@ -141,7 +183,7 @@ namespace TetroONE.Models
 
 
         public string? AccountName { get; set; }
-        public string? AccountNumber { get; set; }  
+        public string? AccountNumber { get; set; }
         public string? IFSCCode { get; set; }
         public string? BankName { get; set; }
         public string? UPIId { get; set; }

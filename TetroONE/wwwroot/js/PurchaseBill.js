@@ -182,7 +182,7 @@ $(document).ready(async function () {
                 BillToAddress(response);
                 updateGSTVisibility('#VendorStateName', '#StateName');
             }
-            if (BillToId != '' || BillToId != null) {
+            if (BillToId != "" || BillToId != null) {
                 updateGSTVisibility('#VendorStateName', '#StateName');
             } else {
                 BillToAddressClear();
@@ -207,7 +207,7 @@ $(document).ready(async function () {
                     }, null);
                 }
             }, null);
-            if (ShipToId != '' || ShipToId != null) {
+            if (ShipToId != "" || ShipToId != null) {
                 updateGSTVisibility('#VendorStateName', '#StateName');
             } else {
                 ShipToAddressClear();
@@ -385,7 +385,7 @@ $(document).ready(async function () {
         var PurhInvoiceOtherChargesMappingDetails = $("#dynamicBindRow .dynamicBindRow");
 
         $.each(PurhInvoiceOtherChargesMappingDetails, function (index, value) {
-            var PurchaseSaleOtherChargesMappingId = $(value).find('.dynamicBindRow').attr('data-OtherChargeMapping-id');
+            var PurchaseSaleOtherChargesMappingId = $(value).find('.dynamicBindRow').attr('data-OtherChargeMapping-id') || null;
             var ispercentageval = $(value).find("input[type='radio']").attr("name");
             var oid = $(value).find('.taxandothers').val();
             if (oid != undefined) {
@@ -439,6 +439,7 @@ $(document).ready(async function () {
             Common.ajaxCall("GET", "/PurchaseInvoice/DD_GetPurchaseOrderNo", { ModuleId: parseInt($thisVal), ModuleName: "PurchaseBill" }, PurchaseBillGetNotNull, null);
         }
         else {
+            ClearInputs(); // Clear inputs 
             PurchaseOrderNOData = true;
         }
     })
@@ -1133,6 +1134,8 @@ function GetProductPopSuccess(response) {
 
 function GetPurchaseInvoiceSuccess(response) {
     if (response.status) {
+        $('#loader-pms').show();
+
         var data = JSON.parse(response.data);
         var CounterBox = Object.keys(data[0][0]);
 
@@ -1157,6 +1160,7 @@ function GetPurchaseInvoiceSuccess(response) {
 
         var columns = Common.bindColumn(data[1], ['PurchaseBillId', 'Status_Color']);
         Common.bindTable('PurchaseBillTable', data[1], columns, -1, 'PurchaseBillId', '365px', true, access);
+        $('#loader-pms').hide();
     }
 }
 

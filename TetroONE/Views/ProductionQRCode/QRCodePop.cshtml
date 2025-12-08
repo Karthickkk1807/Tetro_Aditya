@@ -68,14 +68,7 @@
                             <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                 <div class="form-group">
                                     <label>Process<span id="Asterisk">*</span></label>
-                                    <select class="form-control ProcessStage" id="Process" name="Process">
-                                        <option value="">--Select--</option>
-                                        <option value="1">Reversing</option>
-                                        <option value="2">Stitching</option>
-                                        <option value="3">Softflow</option>
-                                        <option value="4">Stentering</option>
-                                        <option value="5">Dryer</option>
-                                        <option value="6">Compacting</option>
+                                    <select class="form-control ProcessStage" id="Process" name="Process" required>  
                                     </select>
                                 </div>
                             </div>
@@ -97,8 +90,8 @@
                 <div class="modal-footer d-flex justify-content-center align-items-center w-100">
                     <div class="row">
                         <div class="col-12">
-                            <a class="btn m-r-20 text-white" id="SaveProductionQRCode" style="background: #35d8dd;"><span style="color: black;">🖫</span> Started</a>
-                            <a class="btn m-r-20 text-white" id="SaveProductionQRCode" style="background: #254ae6;"><span style="color: black;">✓</span> Completed</a>
+                            <a class="btn m-r-20 text-white" id="SaveProductionQRCode" data-status="3" style="background: #35d8dd;"><span style="color: black;">🖫</span> Started</a>
+                            <a class="btn m-r-20 text-white" id="SaveProductionQRCode" data-status="4" style="background: #254ae6;"><span style="color: black;">✓</span> Completed</a>
                         </div>
                     </div>
                 </div>

@@ -14,7 +14,7 @@ function getMasterData(moduleName) {
 }
 
 //const moduleOrder = ["EmployeeType", "Department", "UserGroup", "UserType", "PayType", "ClaimType", "EmployeeStatus", "LeaveStatus", "DocType"];
-const moduleOrder = ["Department", "ClaimType", "EmployeeStatus", "LeaveStatus", "DocType"];
+const moduleOrder = ["Department", "ClaimType", "EmployeeStatus", "LeaveStatus", "DocType", "Unit", "ProductCategory"];
 
 $(document).ready(function () {
     InstillationMasterDataTwoPara();

@@ -118,6 +118,7 @@ $(document).ready(function () {
         var currentDate = new Date();
         var formattedDate = currentDate.toISOString().slice(0, 10);
         $('#PurchaseOrderDate').val(formattedDate);
+        $('#ExpectedDeliveryDate').attr('min', formattedDate);
 
         TriggerValues = true;
         EditPurchaseId = 0;
@@ -165,7 +166,7 @@ $(document).ready(function () {
                 BillToAddress(response);
                 updateGSTVisibility('#VendorStateName', '#StateName');
             }
-            if (BillToId != '' || BillToId != null) {
+            if (BillToId != "" || BillToId != null) {
                 updateGSTVisibility('#VendorStateName', '#StateName');
             } else {
                 BillToAddressClear();
@@ -185,7 +186,7 @@ $(document).ready(function () {
                     updateGSTVisibility('#VendorStateName', '#StateName');
                 }
             }, null);
-            if (ShipToId != '' || ShipToId != null) {
+            if (ShipToId != "" || ShipToId != null) {
                 updateGSTVisibility('#VendorStateName', '#StateName');
             } else {
                 ShipToAddressClear();
@@ -681,8 +682,7 @@ $(document).ready(function () {
             }
         });
     });
-
-
+     
     $(document).on('click', '#btnPordersaveprintbtn', function () {
         $('#loader-pms').show();
         var EditData = { NoOfCopies: 1, printType: "preview" }
@@ -735,6 +735,12 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on('change', '#PurchaseOrderDate', function () {
+        var selectedDate = $(this).val();
+        $('#ExpectedDeliveryDate').attr('min', selectedDate); 
+        $('#ExpectedDeliveryDate').val(selectedDate);
+    });
 });
 
 async function PurchaseOrderGetNotNull(response) {
@@ -772,7 +778,7 @@ async function PurchaseOrderGetNotNull(response) {
     }
 
     $('#PurchaseOrderDate').val(data[1][0].PurchaseOrderDate.split('T')[0]);
-    $('#ExpectedDeliveryDate').val(data[1][0].ExpectedDeliveryDate.split('T')[0]);
+    $('#ExpectedDeliveryDate').attr('min', data[1][0].PurchaseOrderDate.split('T')[0]).val(data[1][0].ExpectedDeliveryDate.split('T')[0]);  
 
     Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
     Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");

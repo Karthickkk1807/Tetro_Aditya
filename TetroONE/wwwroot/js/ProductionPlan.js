@@ -1,17 +1,42 @@
 ﻿var ProductionPlanId = 0;
+var PlantMappingId = 0;
 var titleForHeaderProductTab = "";
-var ProductDropdown = [];
+var titleForHeaderPopRawMatrialTab = "";
+var DyeDropdown = [];
+var PreTreatmentChemicalProduct = [];
+var AfterTreatmentChemicalProduct = [];
 var ItemListAdd = [];
 var AlreadyAddedIds = [];
+var ProcessTypeDropdown = [];
+var deletedFiles = [];
+var existFiles = [];
+var formDataMultiple = new FormData();
 
 $(document).ready(async function () {
+
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
+
     titleForHeaderProductTab = "Production Plan";
+    titleForHeaderPopRawMatrialTab = "Pre-Treatment";
+
     $('.datapiker').show();
 
     Common.bindDropDownParent('PreparedBy', 'FormStatus', 'SampleReceivedBy');
+    Common.bindDropDownParent('ProductionPlanStatusId', 'FormStatus', 'ProductionPlanStatus');
+    Common.bindDropDownParent('ColorId', 'TopStatic', 'Color');
+    Common.bindDropDownParent('MachineId', 'TopStatic', 'Machine');
 
-    var productDropdown = await Common.bindDropDownSync('SampleChemical');
-    ProductDropdown = JSON.parse(productDropdown);
+    var dyeDropdown = await Common.bindDropDownSync('DyeProduct');
+    DyeDropdown = JSON.parse(dyeDropdown);
+
+    var preTreatmentChemicalProduct = await Common.bindDropDownSync('PreTreatmentChemicalProduct');
+    PreTreatmentChemicalProduct = JSON.parse(preTreatmentChemicalProduct);
+
+    var afterTreatmentChemicalProduct = await Common.bindDropDownSync('AfterTreatmentChemicalProduct');
+    AfterTreatmentChemicalProduct = JSON.parse(afterTreatmentChemicalProduct);
+
+    var processTypeDropdown = await Common.bindDropDownSync('ProcessType');
+    ProcessTypeDropdown = JSON.parse(processTypeDropdown);
 
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
@@ -28,7 +53,7 @@ $(document).ready(async function () {
         $('#tableFilter').val('');
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
@@ -36,7 +61,7 @@ $(document).ready(async function () {
         updateMonthDisplay(displayedDate);
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
     });
 
     function updateMonthDisplay(date) {
@@ -66,7 +91,7 @@ $(document).ready(async function () {
         $('#tableFilter').val('');
         $('#ToDate').attr('min', fromDate);
         if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
-            Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString() }, GetProductionPlanSuccess, null);
+            Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTimeSendTimeAlso('ToDate').toISOString() }, GetProductionPlanSuccess, null);
         }
     });
 
@@ -82,7 +107,7 @@ $(document).ready(async function () {
         updateMonthDisplay(displayedDate);
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
     });
 
     $(document).on('click', '#bulkEmployee', function () {
@@ -93,27 +118,52 @@ $(document).ready(async function () {
     });
 
     var fnData = Common.getDateFilter('dateDisplay2');
-    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
 
     $(document).on('click', '#AddProductionPlan', function () {
         $('.Status-Div').hide();
+
+        Common.removevalidation('TopStatic');
+        Common.removevalidation('FormStatus');
+        $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
+        $('#AddAttachLable, #AddNotesLable').show();
+
         $('#SaveProductionPlan').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
         $('.AddedRow').remove();
-        $('.RowOfChemical').remove();
-        duplicateRowChemical();
+        $('.RowOfChemical-After').remove();
+        $('.RowOfChemical-Pre').remove();
+        duplicateRowChemicalPre();
+        duplicateRowChemicalAfter();
         $('.RawMetarial').remove();
         duplicateRowRawMetarial();
+        $('#ChemicalDynamic-Pre').show();
+        $('#ChemicalDynamic-After').hide();
+
+        //$('#emptyDiv').removeClass('col-lg-3 col-md-3 col-6').addClass('col-lg-5 col-md-5 col-6');
+        //$('#ProductionPlanStatusIdDiv').hide();
 
         $('#LoadingDateTimeDiv').hide();
         $('#UnLoadingDateTimeDiv').hide();
+        $('#SubtotalRow').hide();
 
         $("#QRCode").html("");
 
+        ProductionPlanId = 0;
         AlreadyAddedIds = [];
         ItemListAdd = [];
+        deletedFiles = [];
+        existFiles = [];
+        formDataMultiple = new FormData();
+        $('#selectedFiles').empty();
+        $('#ExistselectedFiles').empty();
 
         const today = new Date().toISOString().split('T')[0];
         $("#BatchDate").val(today);
+        $('#MachineId').prop('disabled', true);
+
+        Common.ajaxCall("GET", "/Common/GetAutoGenerate", { ModuleName: 'ProductionPlan', PlantId: PlantMappingId }, function (response) {
+            Common.AutoGenerateNumberGet(response, "BatchNo", "ProductionNo");
+        });
 
         $('#ProductionPlanModal').show();
     });
@@ -121,23 +171,48 @@ $(document).ready(async function () {
     $(document).on('click', '.btn-edit', function () {
         ProductionPlanId = $(this).data('id');
 
-        $('.Status-Div').show();
+        Common.removevalidation('TopStatic');
+        Common.removevalidation('FormStatus');
+         
+        $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
+        $('#AddAttachLable, #AddNotesLable').show();
+
+        //$('.Status-Div').show();
+        $('.Status-Div').hide();
         $('#SaveProductionPlan').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
 
         AlreadyAddedIds = [];
+        deletedFiles = [];
+        existFiles = [];
+        formDataMultiple = new FormData();
+        $('#selectedFiles').empty();
+        $('#ExistselectedFiles').empty();
+
         $('.AddedRow').remove();
-        $('.RowOfChemical').remove();
-        duplicateRowChemical();
+        $('.RowOfChemical-After').remove();
+        $('.RowOfChemical-Pre').remove();
+        duplicateRowChemicalPre();
+        duplicateRowChemicalAfter();
         $('.RawMetarial').remove();
         duplicateRowRawMetarial();
+        $('#ChemicalDynamic-Pre').show();
+        $('#ChemicalDynamic-After').hide();
+
+        //$('#emptyDiv').removeClass('col-lg-5 col-md-5 col-6').addClass('col-lg-3 col-md-3 col-6');
+        //$('#ProductionPlanStatusIdDiv').show();
 
         $('#LoadingDateTimeDiv').show();
         $('#UnLoadingDateTimeDiv').show();
+        $('#SubtotalRow').show();
 
         $("#QRCode").html("");
 
         const today = new Date().toISOString().split('T')[0];
         $("#BatchDate").val(today);
+        $('#MachineId').prop('disabled', false);
+
+        var fnData = Common.getDateFilter('dateDisplay2');
+        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: parseInt(ProductionPlanId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanNotNullSuccess, null);
 
         $('#ProductionPlanModal').show();
     });
@@ -146,8 +221,7 @@ $(document).ready(async function () {
         $('#ProductionPlanModal').hide();
     });
 
-    $(document).on('click', '.navbar-tab', function () {
-
+    $(document).on('click', '#MainTab .navbar-tab', function () {
         $('#tableFilter').val('');
         titleForHeaderProductTab = $(this).text().trim();
         $('.navbar-tab').removeClass('active');
@@ -159,12 +233,31 @@ $(document).ready(async function () {
         if (titleForHeaderProductTab == "Production Plan") {
             $('.datapiker').show();
             var fnData = Common.getDateFilter('dateDisplay2');
-            Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+            Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
         }
         else if (titleForHeaderProductTab == "Grey Fabric Stock Info") {
             $('.datapiker').hide();
             var fnData = Common.getDateFilter('dateDisplay2');
-            Common.ajaxCall("GET", "/Productions/GetProductionPlan", { TypeId: parseInt(2), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+            Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(2), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+        }
+    });
+
+    $(document).on('click', '#ChemicalModal .navbar-tab', function () {
+        $('#tableFilter').val('');
+        titleForHeaderPopRawMatrialTab = $(this).text().trim();
+        $('.navbar-tab').removeClass('active');
+        $(this).each(function () {
+            if ($(this).text().trim() === titleForHeaderPopRawMatrialTab) {
+                $(this).addClass('active');
+            }
+        });
+        if (titleForHeaderPopRawMatrialTab == "Pre-Treatment") {
+            $('#ChemicalDynamic-Pre').show();
+            $('#ChemicalDynamic-After').hide();
+        }
+        else if (titleForHeaderPopRawMatrialTab == "After-Treatment") {
+            $('#ChemicalDynamic-Pre').hide();
+            $('#ChemicalDynamic-After').show();
         }
     });
 
@@ -195,622 +288,197 @@ $(document).ready(async function () {
     $(document).on('click', '#ProductionPlanAddItemClose', function () {
         $('#ProductionPlanAddItemModal').hide();
     });
-});
 
-// ===================================================================
-// FUNCTION TO LOAD ITEMS INTO POPUP TABLE
-// ===================================================================
-function LoadPopupItems(allItems) {
-    $("#ProductionPlanAddItem-table-body").empty();
+    $(document).on("input", ".qty", function () {
+        let total = 0;
+        $(".qty").each(function () {
+            total += parseFloat($(this).val()) || 0;
+        });
 
-    allItems.forEach(item => {
-        const row = `
-            <tr class="AddItemRow">
-                <td>
-                    <div class="d-flex align-items-center">
-                        <input type="checkbox" class="mr-2 ItemCheckbox" id="ItemId-${item.ItemId}">
-                        <label for="ItemId-${item.ItemId}" class="Customer mb-0">${item.Customer}</label>
-                    </div>
-                </td>
-                <td><label class="LotNo mb-0">${item.LotNo}</label></td>
-                <td><label class="Colour mb-0">${item.Colour}</label></td>
-                <td><label class="FabricType mb-0">${item.FabricType}</label></td>
-                <td><label class="GSM mb-0">${item.GSM}</label></td>
-                <td><label class="Width mb-0">${item.Width}</label></td>
-                <td><label class="Quantity mb-0">${item.Quantity}</label></td>
-                <td>
-                    <input type="text" class="form-control AvailableQuantity" value="${item.Quantity}">
-                </td>
-            </tr>
-        `;
-        $("#ProductionPlanAddItem-table-body").append(row);
+        $("#TotalWeight").val(total);
     });
 
-    $("#ProductionPlanAddItemModal").show();
-}
+    $(document).on('click', '#ProductionPlanSaveBtn', function () {
 
-// ===================================================================
-// CHECKBOX CLICK HANDLER
-// ===================================================================
-$(document).on('change', '.ItemCheckbox', function () {
-    const itemId = $(this).attr('id').replace("ItemId-", "");
-    const $row = $(this).closest("tr");
-    const $tbody = $("#ProductionPlanAddItem-table-body");
-
-    if (this.checked) {
-        $row.fadeOut(200, function () {
-            $row.detach();               // remove row temporarily
-            $tbody.prepend($row);        // move to top
-            $row.fadeIn(300);            // fade in smoothly
-        });
-    } else {
-        $row.fadeOut(200, function () {
-            $row.detach();
-            $tbody.append($row);         // move to bottom
-            $row.fadeIn(300);
-        });
-    }
-
-    const itemObj = {
-        ItemId: itemId,
-        LotNo: $row.find(".LotNo").text() || '',
-        Customer: $row.find(".Customer").text() || '',
-        FabricType: $row.find(".FabricType").text() || '',
-        Colour: $row.find(".Colour").text() || '',
-        GSM: $row.find(".GSM").text() || '',
-        Width: $row.find(".Width").text() || '',
-        Quantity: parseFloat($row.find(".Quantity").text()) || 0,
-        AvailableQuantity: parseFloat($row.find(".AvailableQuantity").val()) || 0,
-        IsChecked: $(this).prop("checked")
-    };
-
-    if (itemObj.IsChecked) {
-        if (!ItemListAdd.some(x => x.ItemId == itemObj.ItemId)) {
-            ItemListAdd.push(itemObj);
-        }
-    } else {
-        ItemListAdd = ItemListAdd.filter(x => x.ItemId != itemObj.ItemId);
-    }
-
-    UpdateSelectedItemCount();
-    UpdateTotalQuantity();
-});
-
-$(document).on('input', '.AvailableQuantity', function () {
-    UpdateTotalQuantity();
-});
-
-// ===================================================================
-// UPDATE TOTAL QTY IN POPUP
-// ===================================================================
-function UpdateTotalQuantity() {
-    let totalQty = 0;
-
-    ItemListAdd.forEach(item => {
-        // Find the row corresponding to this ItemId
-        let $row = $("#ProductionPlanAddItem-table-body").find(`#ItemId-${item.ItemId}`).closest("tr");
-        if ($row.length) {
-            // Update the AvailableQuantity from the input field
-            item.AvailableQuantity = parseFloat($row.find(".AvailableQuantity").val()) || 0;
-            totalQty += item.AvailableQuantity;
-        }
-    });
-
-    $("#NoOfQty").text(totalQty);
-}
-
-
-
-
-
-//// ===================================================================
-//// CHECKBOX CLICK HANDLER
-//// ===================================================================
-//$(document).on('change', '.ItemCheckbox', function () {
-
-//    const itemId = $(this).attr('id').replace("ItemId-", "");
-//    const $row = $(this).closest("tr");
-
-//    const itemObj = {
-//        ItemId: itemId,
-//        LotNo: $row.find(".LotNo").text() || '',
-//        Customer: $row.find(".Customer").text() || '',
-//        FabricType: $row.find(".FabricType").text() || '',
-//        Colour: $row.find(".Colour").text() || '',
-//        GSM: $row.find(".GSM").text() || '',           // Add GSM
-//        Width: $row.find(".Width").text() || '',       // Add Width
-//        Quantity: parseFloat($row.find(".Quantity").text()) || 0,
-//        AvailableQuantity: parseFloat($row.find(".AvailableQuantity").val()) || 0,
-//        IsChecked: $(this).prop("checked")
-//    };
-
-//    if (itemObj.IsChecked) {
-//        if (!ItemListAdd.some(x => x.ItemId == itemObj.ItemId)) {
-//            ItemListAdd.push(itemObj);
-//        }
-//    } else {
-//        ItemListAdd = ItemListAdd.filter(x => x.ItemId != itemObj.ItemId);
-//    }
-
-//    UpdateSelectedItemCount();
-//    UpdateTotalQuantity();
-//});
-
-//$(document).on('input', '.AvailableQuantity', function () {
-//    UpdateTotalQuantity();
-//});
-
-
-//// ===================================================================
-//// UPDATE TOTAL QTY IN POPUP
-//// ===================================================================
-//function UpdateTotalQuantity() {
-//    let totalQty = 0;
-//    ItemListAdd.forEach(x => {
-//        totalQty += x.AvailableQuantity; // sum from input
-//    });
-//    $("#NoOfQty").text(totalQty);
-//}
-
-
-
-
-
-
-
-// ===================================================================
-// POPUP → SELECTED ITEM COUNT
-// ===================================================================
-function UpdateSelectedItemCount() {
-    const count = $(".ItemCheckbox:checked").length;
-    $("#TotalItemSelect").text(count);
-}
-
-// ===================================================================
-// ADD SELECTED ITEMS TO MAIN TABLE
-// ===================================================================
-var AddedItems = [];
-
-$(document).on("click", "#BtnAdd", function () {
-
-    let isAnyChecked = false;
-    $('.AddItemRow').each(function () {
-        if ($(this).find('input[type="checkbox"]').prop('checked')) {
-            isAnyChecked = true;
+        var TableLenthDynamicRow = $('.AddedRow').length;
+        if (TableLenthDynamicRow == 0) {
+            Common.warningMsg('Choose Atleast One Product');
+            $('#loader-pms').hide();
             return false;
         }
-    });
 
-    if (!isAnyChecked) {
-        Common.warningMsg('Select at least one Customer to add.');
-        return;
-    }
+        if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
+            $('#loader-pms').show();
+            getExistFiles();
 
-    $('table tbody tr').each(function () {
-        const rowData = {
-            CustomerName: $(this).find('.customerName').text(),
-            LotNo: $(this).find('.lotNo').text(),
-            Colour: $(this).find('.colour').text(),
-            FabricType: $(this).find('.fabricType').text(),
-            GSM: $(this).find('.gsm').text(),
-            Width: $(this).find('.width').text(),
-            AvailableQuantity: $(this).find('.quantity').text()
-        };
+            var objvalue = {
+                ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null,
+                PlantId: parseInt(PlantMappingId),
+                ProductionNo: $('#BatchNo').val() || null,
+                ProductionDate: $('#BatchDate').val() || null,
+                TotalWeight: parseFloat($('#TotalWeight').val()) || null,
+                ColorId: parseInt($('#ColorId').val()) || null,
+                MachineId: parseInt($('#MachineId').val()) || null,
+                LoadingDateTime: $('#LoadingDateTime').val() || null,
+                UnLoadingDateTime: $('#UnLoadingDateTime').val() || null,
+                ProductionPlanStatusId: parseInt($('#ProductionPlanStatusId').val()) || null,
+                Comments: $('#AddNotesText').val() || null,
+                PreparedBy: parseInt($('#PreparedBy').val()) || null
+            };
 
-        // Avoid duplicates (optional)
-        if (!AddedItems.find(item => item.LotNo === rowData.LotNo)) {
-            AddedItems.push(rowData);
+            var ProductionPlanFabricDetails = [];
+
+            $('#ProductionPlanProductTablebody .AddedRow').each(function () {
+
+                var $rowTable = $(this);
+                var productionplanfabricid = $rowTable.data('productionplanfabricid-id');
+                var inwardFabricId = $rowTable.data('inwardfabricid-id');
+
+                var FabricDetails = {
+                    ProductionPlanFabricId: productionplanfabricid ? parseInt(productionplanfabricid) : null,
+                    InwardId: parseInt($rowTable.find('.lotNo').parent().data('id')) || null,
+                    InwardFabricId: inwardFabricId ? parseInt(inwardFabricId) : null,
+                    FabricTypeId: parseInt($rowTable.find('.fabricType').parent().data('id')) || null,
+                    ColorId: parseInt($rowTable.find('.colour').parent().data('id')) || null,
+                    Quantity: Common.parseFloatValue($rowTable.find('.qty').val()) || null,
+                    ProcessCount: Common.parseFloatValue($rowTable.find('.processRoute').val()) || null,
+                    Comments: $rowTable.find('.Remarks').val() || null,
+                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
+                };
+
+                ProductionPlanFabricDetails.push(FabricDetails);
+            });
+
+            var ProductionPlanFabricProcessMappingDetails = [];
+
+            $('#ProductionPlanProductTablebody .AddedRow').each(function (rowIndex) {
+
+                var $rowTable = $(this);
+
+                var productionplanfabricprocessmappingId = $rowTable.data('productionplanfabricprocessmappingid-id');
+                var productionplanfabricid = $rowTable.data('productionplanfabricid-id');
+
+                var processIdsStr = $rowTable.find('.processRoute').data('id') || "";
+                var processIds = processIdsStr.toString().split(',').map(x => parseInt(x.trim()));
+
+                processIds.forEach(pid => {
+                    var FabricProcessMappingDetails = {
+                        ProductionPlanFabricProcessMappingId: productionplanfabricprocessmappingId ? parseInt(productionplanfabricprocessmappingId) : null,
+                        ProductionPlanFabricId: productionplanfabricid ? parseInt(productionplanfabricid) : null,
+                        RowNo: rowIndex + 1,
+                        ProcessTypeId: pid
+                    };
+                    ProductionPlanFabricProcessMappingDetails.push(FabricProcessMappingDetails);
+                });
+            });
+
+            var ProductionPlanDyeRequirementDetails = [];
+            var ClosestDiv = $('#RawMaterialDynamic .RawMetarial');
+
+            $.each(ClosestDiv, function (index, values) {
+                var ProductionPlanDyeRequirementId = $(values).find('.ProductionPlanDyeRequirementId').text() || null;
+                var DyeId = $(values).find('.ProductIdRawMaterial').val() || null;
+                var PercentageOfDye = $(values).find('.Dye').val() || null;
+                var TotalQty = $(values).find('.TotalDyeQty').val() || null;
+
+                ProductionPlanDyeRequirementDetails.push({
+                    ProductionPlanDyeRequirementId: parseInt(ProductionPlanDyeRequirementId) || null,
+                    DyeId: parseInt(DyeId) || null,
+                    PercentageOfDye: parseFloat(PercentageOfDye) || null,
+                    TotalQty: parseFloat(TotalQty) || null,
+                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
+                });
+            });
+
+            var ProductionPlanChemicalRequirementDetails = [];
+
+            // ---------- PRE-TREATMENT (ProcessType = 1) ----------
+            $('#ChemicalDynamic-Pre .RowOfChemical-Pre').each(function () {
+                var $row = $(this);
+
+                ProductionPlanChemicalRequirementDetails.push({
+                    ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
+                    ProcessType: 1,
+                    ChemicalId: parseInt($row.find('.ProductIdPre').val()) || null,
+                    GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
+                    TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
+                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
+                });
+            });
+
+            // ---------- AFTER-TREATMENT (ProcessType = 2) ----------
+            $('#ChemicalDynamic-After .RowOfChemical-After').each(function () {
+                var $row = $(this);
+
+                ProductionPlanChemicalRequirementDetails.push({
+                    ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
+                    ProcessType: 2,
+                    ChemicalId: parseInt($row.find('.ProductIdAfter').val()) || null,
+                    GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
+                    TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
+                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
+                });
+            });
+
+            formDataMultiple.append("ProductionPlanStaticData", JSON.stringify(objvalue));
+            formDataMultiple.append("ProductionPlanFabricDetails", JSON.stringify(ProductionPlanFabricDetails));
+            formDataMultiple.append("ProductionPlanFabricProcessMappingDetails", JSON.stringify(ProductionPlanFabricProcessMappingDetails));
+            formDataMultiple.append("ProductionPlanDyeRequirementDetails", JSON.stringify(ProductionPlanDyeRequirementDetails));
+            formDataMultiple.append("ProductionPlanChemicalRequirementDetails", JSON.stringify(ProductionPlanChemicalRequirementDetails));
+            formDataMultiple.append("Exist", JSON.stringify(existFiles));
+            formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
+
+            $.ajax({
+                type: "POST",
+                url: "/Productions/InsertUpdateProductionPlanDetails",
+                data: formDataMultiple,
+                contentType: false,
+                processData: false,
+
+                success: function (response) {
+                    if (response.status) {
+                        formDataMultiple = new FormData();
+                        $('#loader-pms').hide();
+                        Common.successMsg(response.message);
+                        $('#ProductionPlanModal').hide();
+                        var fnData = Common.getDateFilter('dateDisplay2');
+                        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+                    }
+                    else {
+                        formDataMultiple = new FormData();
+                        Common.errorMsg(response.message);
+                    }
+                },
+
+                error: function (response) {
+                    Common.errorMsg(response.message);
+                }
+            });
         }
     });
 
-    ItemListAdd.forEach(item => {
+    $(document).on('click', '.btn-delete', async function () {
+        var response = await Common.askConfirmation();
+        if (response == true) {
+            var ProductionPlanId = $(this).data('id');
+            Common.ajaxCall("GET", "/Productions/DeleteProductionPlanDetails", { ProductionPlanId: parseInt(ProductionPlanId) }, function (response) {
+                if (response.status) {
+                    Common.successMsg(response.message);
 
-        if (AlreadyAddedIds.includes(item.ItemId.toString())) return;
-
-        AlreadyAddedIds.push(item.ItemId.toString());
-
-        const newRow = `
-            <tr class="AddedRow">
-                <td></td>
-                <td><input type="text" class="form-control lotNo" value="${item.LotNo}" disabled></td>
-                <td><input type="text" class="form-control colour" value="${item.Colour}" disabled></td>
-                <td><input type="text" class="form-control fabricType" value="${item.FabricType}" disabled></td>
-                <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
-                <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
-                <td><input type="number" class="form-control qty" value="${item.AvailableQuantity}"></td>
-                <td><input type="text" class="form-control processRoute" placeholder="Click"></td>
-                <td><textarea class="form-control Remarks" name="Remarks" placeholder="Ex: Type Querys" rows="1"></textarea></td>
-                <td>
-                    <button class="btn DynremoveBtn DynrowRemove" type="button" data-id="${item.ItemId}">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-
-        $("#AddItemButtonRow").before(newRow);
-    });
-
-    //let qrDataList = [];
-
-    //$("table tbody tr.AddedRow").each(function () {
-    //    let obj = {
-    //        LotNo: $(this).find('.lotNo').val(),
-    //        Colour: $(this).find('.colour').val(),
-    //        FabricType: $(this).find('.fabricType').val(),
-    //        GSM: $(this).find('.GSM').val(),
-    //        Width: $(this).find('.Width').val(),
-    //        Qty: $(this).find('.qty').val()
-    //    };
-
-    //    qrDataList.push(obj);
-    //});
-
-    //let qrFinalString = JSON.stringify(qrDataList);
-
-    //$("#QRCode").html("");
-
-    //new QRCode(document.getElementById("QRCode"), {
-    //    text: qrFinalString,
-    //    width: 200,
-    //    height: 200
-    //});
-
-    $("#QRCode").html("");
-
-    new QRCode(document.getElementById("QRCode"), {
-        text: JSON.stringify([{ LotNo: "123", Colour: "Red" }]),
-        width: 100,
-        height: 100
-    });
-
-    RenumberRows();
-    UpdateMainTableQuantity();
-    ItemListAdd = [];
-    $("#ProductionPlanAddItemModal").hide();
-});
-
-// ===================================================================
-// DELETE ROW
-// ===================================================================
-$(document).on('click', '.DynrowRemove', function () {
-    const id = $(this).data("id").toString();
-
-    // Remove row from main table
-    $(this).closest("tr").remove();
-
-    // Remove from AlreadyAddedIds so popup will show again
-    AlreadyAddedIds = AlreadyAddedIds.filter(x => x !== id);
-
-    // Remove from ItemListAdd if exists (important if popup is open)
-    ItemListAdd = ItemListAdd.filter(x => x.ItemId.toString() !== id);
-
-    // Remove from RowProcesses array if you are tracking process selection
-    RowProcesses = RowProcesses.filter(x => x.ItemId.toString() !== id);
-
-    // Renumber rows
-    RenumberRows();
-
-    // Update main total quantity
-    UpdateMainTableQuantity();
-});
-// ===================================================================
-// RENUMBER TABLE S.NO
-// ===================================================================
-function RenumberRows() {
-    $('#ProductionPlanProductTablebody .AddedRow').each(function (index) {
-        $(this).find('td:first').text(index + 1);
-    });
-}
-
-// ===================================================================
-// UPDATE TOTAL QTY IN MAIN TABLE
-// ===================================================================
-$(document).on('input', '.qty', function () {
-    UpdateMainTableQuantity();
-});
-
-function UpdateMainTableQuantity() {
-
-    let total = 0;
-
-    $("#ProductionPlanProductTablebody tr.AddedRow").each(function () {
-        let qty = parseFloat($(this).find("input.qty").val()) || 0;
-        total += qty;
-    });
-
-    $("#Subtotal").val(total.toFixed(2));
-}
-
-// ===================================================================
-// OPEN POPUP BUTTON CLICK
-// ===================================================================
-$(document).on('click', '#AddItemBtn', function () {
-
-    $("#TotalItemSelect").text('');
-    $("#NoOfQty").text('');
-
-    const mockData = [
-        { ItemId: 1, Customer: "Customer A", LotNo: "LOT-1001", Colour: "Blue", FabricType: "Cotton", GSM: 120, Width: 45, Quantity: 500, AvailableQuantity: 400 },
-        { ItemId: 2, Customer: "Customer A", LotNo: "LOT-1002", Colour: "Light Blue", FabricType: "Cotton", GSM: 125, Width: 46, Quantity: 300, AvailableQuantity: 250 },
-        { ItemId: 3, Customer: "Customer A", LotNo: "LOT-1003", Colour: "Dark Blue", FabricType: "Cotton", GSM: 130, Width: 44, Quantity: 400, AvailableQuantity: 350 },
-
-        // Customer B
-        { ItemId: 4, Customer: "Customer B", LotNo: "LOT-2001", Colour: "Black", FabricType: "Polyester", GSM: 110, Width: 50, Quantity: 300, AvailableQuantity: 280 },
-        { ItemId: 5, Customer: "Customer B", LotNo: "LOT-2002", Colour: "Gray", FabricType: "Polyester", GSM: 115, Width: 52, Quantity: 250, AvailableQuantity: 220 },
-
-        // Customer C
-        { ItemId: 6, Customer: "Customer C", LotNo: "LOT-3001", Colour: "Red", FabricType: "Silk", GSM: 90, Width: 40, Quantity: 200, AvailableQuantity: 150 },
-
-        // Customer D
-        { ItemId: 7, Customer: "Customer D", LotNo: "LOT-4001", Colour: "White", FabricType: "Linen", GSM: 100, Width: 48, Quantity: 350, AvailableQuantity: 300 },
-
-        // Customer E
-        { ItemId: 8, Customer: "Customer E", LotNo: "LOT-5001", Colour: "Navy Blue", FabricType: "Denim", GSM: 200, Width: 60, Quantity: 600, AvailableQuantity: 500 },
-
-        // Customer F
-        { ItemId: 9, Customer: "Customer F", LotNo: "LOT-6001", Colour: "Green", FabricType: "Rayon", GSM: 150, Width: 55, Quantity: 400, AvailableQuantity: 350 },
-
-        // Customer G
-        { ItemId: 10, Customer: "Customer G", LotNo: "LOT-7001", Colour: "Yellow", FabricType: "Viscose", GSM: 130, Width: 52, Quantity: 250, AvailableQuantity: 200 }
-    ];
-
-    const filteredData = mockData.filter(item => !AlreadyAddedIds.includes(item.ItemId.toString()));
-
-    LoadPopupItems(filteredData);
-});
-
-// Array to store processes for each row
-let RowProcesses = []; // { ItemId: 1, Processes: ["Knitting", "Washing"] }
-
-// ===================================================================
-// CLICK ON .processRoute TO OPEN MODAL
-// ===================================================================
-
-$(document).on('click', '.processRoute', function () {
-    const $row = $(this).closest('tr');
-    const itemId = $row.find('.DynrowRemove').data('id'); // get row item id
-
-    // Remove any existing modal
-    $('#ProcessModal').remove();
-
-    // Create modal HTML
-    let html = `
-    <div class="modal fade show" id="ProcessModal" tabindex="-1" aria-labelledby="ProcessModalLabel" style="padding-right: 5px; display: flex; align-items: center;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content"> 
-                <div class="modal-header d-flex align-items-center justify-content-between">
-                    <h2 id="ModalHeading">Select Processes</h2>
-                    <span id="ProcessPopupClose" class="close" style="font-size:30px;cursor:pointer;color:#fffefe;" title="Close">×</span>
-                </div>
-                 
-                <div class="modal-body">
-                    <div id="ProcessCheckboxContainer" class="row g-2">
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6 checkDiv">
-                            <input type="checkbox" class="ProcessCheck me-2 mr-2" data-id="6" name="products" value="Dyeing" id="Dyeing">
-                            <label for="Dyeing" class="checkbox-label">Dyeing</label>
-                        </div>  
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6 checkDiv">
-                            <input type="checkbox" class="ProcessCheck me-2 mr-2" data-id="6" name="products" value="Printing" id="Printing">
-                            <label for="Printing" class="checkbox-label">Printing</label>
-                        </div>  
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6 checkDiv">
-                            <input type="checkbox" class="ProcessCheck me-2 mr-2" data-id="6" name="products" value="Finishing" id="Finishing">
-                            <label for="Finishing" class="checkbox-label">Finishing</label>
-                        </div>  
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6 checkDiv">
-                            <input type="checkbox" class="ProcessCheck me-2 mr-2" data-id="6" name="products" value="Biowash" id="Biowash">
-                            <label for="Biowash" class="checkbox-label">Biowash</label>
-                        </div>  
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6 checkDiv">
-                            <input type="checkbox" class="ProcessCheck me-2 mr-2" data-id="6" name="products" value="DoubleDyeing" id="DoubleDyeing">
-                            <label for="DoubleDyeing" class="checkbox-label">DoubleDyeing</label>
-                        </div>   
-                    </div>
-                </div>
-                <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-primary btn-sm d-none" id="SaveProcessBtn">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    `;
-
-    $('body').append(html);
-
-    // Pre-check checkboxes if already selected
-    let selectedRow = RowProcesses.find(r => r.ItemId == itemId);
-    let selectedProcesses = selectedRow ? selectedRow.Processes : [];
-    $('.ProcessCheck').each(function () {
-        $(this).prop('checked', selectedProcesses.includes($(this).val()));
-    });
-
-    // Show/hide Save button based on pre-checked items
-    toggleSaveButton();
-
-    // CLOSE MODAL
-    $('#ProcessPopupClose').click(function () {
-        $('#ProcessModal').remove();
-    });
-
-    // CHECKBOX CHANGE → toggle Save button
-    $(document).on('change', '.ProcessCheck', function () {
-        toggleSaveButton();
-    });
-
-    function toggleSaveButton() {
-        const checkedCount = $('.ProcessCheck:checked').length;
-        if (checkedCount > 0) {
-            $('#SaveProcessBtn').removeClass('d-none');
-        } else {
-            $('#SaveProcessBtn').addClass('d-none');
+                    var fnData = Common.getDateFilter('dateDisplay2');
+                    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+                }
+            }, null);
         }
-    }
+    });
 
-    // SAVE PROCESS SELECTION
-    $('#SaveProcessBtn').click(function () {
-        const checked = [];
-        $('.ProcessCheck:checked').each(function () {
-            checked.push($(this).val());
-        });
-
-        let existingRow = RowProcesses.find(r => r.ItemId == itemId);
-        if (existingRow) {
-            existingRow.Processes = checked;
-        } else {
-            RowProcesses.push({ ItemId: itemId, Processes: checked });
-        }
-
-        // Update the input field in main table with the COUNT of selected processes
-        $row.find('.processRoute').val(checked.length);
-
-        $('#ProcessModal').remove();
+    $("#LoadingDateTime").on("change", function () {
+        let loadTime = $(this).val(); 
+        let unloadPicker = $("#UnLoadingDateTime")[0]._flatpickr;
+        unloadPicker.set("minDate", loadTime);
+        //$("#UnLoadingDateTime").val(loadTime);
     });
 });
-
-$(document).on('click', '#RawMetarialInfo', function () {
-    $('#RawMaterialModal').show();
-});
-
-$(document).on('click', '#RawMaterialClose', function () {
-    $('#RawMaterialModal').hide();
-});
-
-$(document).on('click', '#ChemicalInfo', function () {
-    $('#ChemicalModal').show();
-});
-
-$(document).on('click', '#ChemicalClose', function () {
-    $('#ChemicalModal').hide();
-});
-
-function duplicateRowChemical() {
-    let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.RowOfChemical').length;
-
-    var ProductSelectOptions = "";
-    var defaultOption = '<option value="">--Select--</option>';
-
-    if (ProductDropdown != null && ProductDropdown.length > 0 && ProductDropdown[0].length > 0) {
-        ProductSelectOptions = ProductDropdown[0].map(function (ProductId) {
-            return `<option value="${ProductId.ProductId}">${ProductId.ProductName}</option>`;
-        }).join('');
-    }
-
-    if (rowadd < 3) {
-        var htmlRow = `
-            <div class="row RowOfChemical">
-                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label class="ProcessClass">Process<span id="Asterisk">*</span></label>
-                        <select class="form-control Process" id="Process${numberIncr}" name="Process${numberIncr}" required> 
-                            <option value="">--Select--</option>
-                            <option value="1">Pre-Treatment</option>
-                            <option value="2">After-Treatment</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label class="ProductClass">Product<span id="Asterisk">*</span></label>
-                        <select class="form-control ProductId" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required> 
-                            ${defaultOption}${ProductSelectOptions}
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2 col-lg-2 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" />
-                    </div>
-                </div>
-                <div class="col-md-2 col-lg-2 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" />
-                    </div>
-                </div>
-                <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
-                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
-                        <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical(this)" style="position: absolute; top: 22px; right: 14px;">
-                            <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
-                        </button>
-                    </div>
-                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
-                        <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemove mt-0" type="button" onclick="removeRowRowChemical(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                </div>
-            </div>
-           `;
-    }
-    $('#ChemicalDynamic').append(htmlRow);
-}
-
-function removeRowRowChemical(button) {
-    var totalRows = $('.RowOfChemical').length;
-    if (totalRows > 1) {
-        $(button).closest('.RowOfChemical').remove();
-    }
-}
-
-function duplicateRowRawMetarial() {
-    let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.RawMetarial').length;
-
-    var ProductSelectOptions = "";
-    var defaultOption = '<option value="">--Select--</option>';
-
-    if (ProductDropdown != null && ProductDropdown.length > 0 && ProductDropdown[0].length > 0) {
-        ProductSelectOptions = ProductDropdown[0].map(function (ProductId) {
-            return `<option value="${ProductId.ProductId}">${ProductId.ProductName}</option>`;
-        }).join('');
-    }
-
-    if (rowadd < 3) {
-        var htmlRow = `
-            <div class="row RawMetarial"> 
-                <div class="col-md-5 col-lg-5 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label class="DyeNameClass">DyeName<span id="Asterisk">*</span></label>
-                        <select class="form-control ProductId" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required> 
-                            ${defaultOption}${ProductSelectOptions}
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label class="DyeClass">Dye%<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye${numberIncr}" name="Dye${numberIncr}" />
-                    </div>
-                </div>
-                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label class="TotalDyeQtyClass">TotalDyeQty<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty${numberIncr}" name="TotalDyeQty${numberIncr}" />
-                    </div>
-                </div>
-                <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
-                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
-                        <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowRawMetarial(this)" style="position: absolute; top: 22px; right: 14px;">
-                            <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
-                        </button>
-                    </div>
-                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
-                        <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemove mt-0" type="button" onclick="removeRowMaterial(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
-                    </div>
-                </div>
-            </div>
-           `;
-    }
-    $('#RawMaterialDynamic').append(htmlRow);
-}
-
-function removeRowMaterial(button) {
-    var totalRows = $('.RawMetarial').length;
-    if (totalRows > 1) {
-        $(button).closest('.RawMetarial').remove();
-    }
-}
 
 function GetProductionPlanSuccess(response) {
     if (response.status) {
@@ -844,6 +512,899 @@ function GetProductionPlanSuccess(response) {
     }
 }
 
+function GetProductionPlanNotNullSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+
+        const header = data[0][0];
+        $('#ColorId').val(header.ColorId);
+        $('#AddNotesText').val(header.Comments);
+        $('#LoadingDateTime').val(header.LoadingDateTime || '');
+        $('#MachineId').val(header.MachineId);
+        $('#BatchDate').val(header.ProductionDate);
+        $('#BatchNo').val(header.ProductionNo);
+        $('#ProductionPlanStatusId').val(header.ProductionPlanStatusId);
+        $('#TotalWeight').val(header.TotalWeight);
+        $('#UnLoadingDateTime').val(header.UnLoadingDateTime);
+        $('#PreparedBy').val(header.PreparedBy);
+
+        if (header.LoadingDateTime == null || header.LoadingDateTime == '') {
+            SetDateFroLoadingAndUnLoading();
+        }
+
+        Inventory.toggleField(header.Comments, "#AddNotesText", "#AddNotes", "#AddNotesLable", "HideNotesLable");
+        Inventory.toggleFieldForAttachment(data[5][0]?.AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
+        Inventory.bindAttachments(data[5]);
+
+        if (data[1] && data[1].length > 0) {
+
+            data[1].forEach(item => {
+
+                let numberIncr = Math.random().toString(36).substring(2);
+
+                if (AlreadyAddedIds.includes(item.InwardFabricId.toString())) return;
+                AlreadyAddedIds.push(item.InwardFabricId.toString());
+
+                const newRow = `
+                <tr class="AddedRow" data-productionplanfabricid-id="${item.ProductionPlanFabricId}" data-inwardfabricid-id="${item.InwardFabricId}" data-productionplanfabricprocessmappingId-id=""> 
+                    <td></td> 
+                    <td data-id="${item.InwardId}">
+                        <input type="text" class="form-control lotNo" value="${item.InwardNo}" disabled>
+                    </td> 
+                    <td data-id="${item.ColorId}">
+                        <input type="text" class="form-control colour" value="${item.ColorName}" disabled>
+                    </td> 
+                    <td data-id="${item.FabricTypeId}">
+                        <input type="text" class="form-control fabricType" value="${item.FabricTypeName}" disabled>
+                    </td> 
+                    <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
+                    <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
+                    <td><input type="number" class="form-control qty" value="${item.Quantity || ''}" required></td> 
+                    <td>
+                        <input type="text" class="form-control processRoute" placeholder="Click" required data-id="" id="processRoute${numberIncr}" name="processRoute${numberIncr}" required value="${item.ProcessCount || ''}">
+                    </td> 
+                    <td><textarea class="form-control Remarks" placeholder="Ex: Type Querys">${item.Comments ?? ""}</textarea></td> 
+                    <td>
+                        <button class="btn DynremoveBtn DynrowRemove" type="button" data-id="${item.InwardFabricId}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+
+                $("#ProductionPlanProductTablebody #AddItemButtonRow").before(newRow);
+
+                const processes = data[2].filter(p => p.ProductionPlanFabricId == item.ProductionPlanFabricId);
+                const processTypeIds = processes.map(p => p.ProcessTypeId).join(", ");
+                const mappingIds = processes.map(p => p.ProductionPlanFabricProcessMappingId).join(", ");
+
+                const $lastRow = $("#ProductionPlanProductTablebody #AddItemButtonRow").prev("tr.AddedRow");
+
+                $lastRow.find(".processRoute").attr("data-id", processTypeIds);
+                $lastRow.attr("data-productionplanfabricprocessmappingId-id", mappingIds);
+            });
+
+            RenumberRows();
+        }
+
+        if (data[4] && data[4].length > 0) {
+            // Clear existing rows
+            $('#ChemicalDynamic-Pre').html('');
+            $('#ChemicalDynamic-After').html('');
+
+            data[4].forEach(item => {
+                if (item.ProcessType === 1) {
+                    createChemicalRow('Pre', item); // Pre-Treatment
+                } else if (item.ProcessType === 2) {
+                    createChemicalRow('After', item); // After-Treatment
+                }
+            });
+        }
+
+        if (data[3] && data[3].length > 0) {
+            bindRawMaterialRows(data[3]);
+        }
+
+        $("#QRCode").html("");
+
+        let qrData = {
+            BatchNo: $("#BatchNo").val(),
+            BatchDate: $("#BatchDate").val(),
+            TotalWeight: $("#TotalWeight").val(),
+            ColorId: $("#ColorId").val(),
+            MachineId: $("#MachineId").val(),
+            LoadingDateTime: ProductionPlanId === 0 ? '' : $("#LoadingDateTime").val(),
+            UnLoadingDateTime: ProductionPlanId === 0 ? '' : $("#UnLoadingDateTime").val()
+        };
+
+        new QRCode(document.getElementById("QRCode"), {
+            text: JSON.stringify(qrData),
+            width: 120,
+            height: 120
+        });
+    }
+}
+
+
+function bindRawMaterialRows(rawArray) {
+
+    if (!rawArray || rawArray.length === 0) return;
+
+    $('#RawMaterialDynamic').html("");
+
+    rawArray.forEach((item, index) => {
+
+        let randomId = Math.random().toString(36).substring(2);
+        let isFirstRow = index === 0;
+
+        // Build options dynamically
+        let defaultOption = '<option value="">--Select--</option>';
+        let options = "";
+
+        let DyeHTML = DyeDropdown[0].map(w => `<option value="${w.ProductId}" ${item.DyeId == w.ProductId ? 'selected' : ''}>${w.ProductName}</option>`).join('');
+
+        let html = `
+        <div class="row RawMetarial">
+            <label class="ProductionPlanDyeRequirementId d-none">${item.ProductionPlanDyeRequirementId}</label>
+
+            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="DyeNameClass">DyeName<span id="Asterisk">*</span></label>
+                    <select class="form-control ProductIdRawMaterial ProductId" id="ProductId_${randomId}" name="ProductId_${randomId}" required>
+                        <option value="">--Select--</option>
+                        ${DyeHTML}
+                    </select> 
+                </div>
+            </div>
+
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="DyeClass">Dye%<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye_${randomId}" name="Dye_${randomId}" value="${item.PercentageOfDye}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" />
+                </div>
+            </div>
+
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="TotalDyeQtyClass">TotalDyeQty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty_${randomId}" name="TotalDyeQty_${randomId}" value="${item.TotalQty}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" />
+                </div>
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                <div class="p-1 align-items-center buttonsRow" style="display: ${isFirstRow ? 'block' : 'none'}">
+                    <button class="btn AddStockBtn" type="button" onclick="duplicateRowRawMetarial(this)" style="position: absolute; top: 22px; right: 14px;">
+                        <i class="fas fa-plus" style="color:#000"></i>
+                    </button>
+                </div>
+
+                <div class="p-1 align-items-center buttonsRow" style="display: ${isFirstRow ? 'none' : 'block'}">
+                    <button class="btn DynrowRemove RowOfMetarialRemove mt-0" type="button" onclick="removeRowMaterial(this)" style="position:absolute; top:-16px; right:13px;">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>`;
+
+        $("#RawMaterialDynamic").append(html);
+        $("#RawMaterialDynamic select").last().val(item.DyeId);
+    });
+    updateRemoveButtonsRawMetarial();
+}
+
+function createChemicalRow(rowType, chemicalData) {
+    let numberIncr = Math.random().toString(36).substring(2);
+    let rowadd = $(`.RowOfChemical-${rowType}`).length;
+
+    let selectOptions = "";
+    let defaultOption = '<option value="">--Select--</option>';
+
+    if (rowType === 'Pre') {
+        if (PreTreatmentChemicalProduct && PreTreatmentChemicalProduct[0]) {
+            selectOptions = PreTreatmentChemicalProduct[0].map(c => `<option value="${c.ChemicalId}">${c.ChemicalName}</option>`).join('');
+        }
+    } else {
+        if (AfterTreatmentChemicalProduct && AfterTreatmentChemicalProduct[0]) {
+            selectOptions = AfterTreatmentChemicalProduct[0].map(c => `<option value="${c.ChemicalId}">${c.ChemicalName}</option>`).join('');
+        }
+    }
+
+    let htmlRow = `
+        <div class="row RowOfChemical-${rowType}">
+            <label class="ProductionPlanChemicalRequirementId d-none">${chemicalData.ProductionPlanChemicalRequirementId}</label>
+            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                    <select class="form-control ProductSelect${rowType} ProductId${rowType}" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                        ${defaultOption}${selectOptions}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" value="${chemicalData.GPL}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" value="${chemicalData.TotalQty}" oninput="Common.allowOnlyNumberLength(this,3)"/>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical${rowType}(this)" style="position: absolute; top: 22px; right: 14px;">
+                        <i class="fas fa-plus" style="color: #000000;"></i>
+                    </button>
+                </div>
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemove${rowType} mt-0" type="button" onclick="removeRowRowChemical${rowType}(this)" style="top: -16px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    $(`#ChemicalDynamic-${rowType}`).append(htmlRow);
+    $(`#ChemicalDynamic-${rowType} select`).last().val(chemicalData.ChemicalId);
+
+    if (rowType === 'Pre') updateRemoveChemicalPre();
+    else updateRemoveChemicalAfter();
+}
+
+function LoadPopupItems(allItems) {
+    $("#ProductionPlanAddItem-table-body").empty();
+
+    allItems.forEach((item, index) => {
+        let uniqueId = `ItemId-${item.InwardFabricId}`;
+        const row = `
+            <tr class="AddItemRow">
+                <td>
+                    <div class="d-flex align-items-center">
+                        <input type="checkbox" class="mr-2 ItemCheckbox" id="${uniqueId}">
+                        <label for="${uniqueId}" class="Customer mb-0" style="color : ${item.StatusColor}!important;">${item.MachineName}</label>
+                    </div>
+                </td> 
+                <td><label class="Customer mb-0">${item.Customer}</label></td>
+                <td><label class="d-none InWardNo">${item.InWardId}</label><label class="LotNo mb-0">${item.InWardNo}</label></td>
+                <td><label class="d-none ColorId">${item.ColorId}</label><label class="Colour mb-0">${item.ColorName}</label></td>
+                <td><label class="d-none FabricId">${item.FabricId}</label><label class="FabricType mb-0">${item.Fabric}</label></td>
+                <td><label class="GSM mb-0">${item.GSM}</label></td>
+                <td><label class="Width mb-0">${item.Width}</label></td>
+                <td><label class="FabricQty mb-0">${item.FabricQty}</label></td>
+                <td><label class="FabricQty mb-0">${item.InWardQty}</label></td> 
+                <td>
+                    <input type="text" class="form-control AvailableQuantity" value="${item.FabricQty}">
+                </td>
+            </tr>
+        `;
+        $("#ProductionPlanAddItem-table-body").append(row);
+    });
+
+    $("#ProductionPlanAddItemModal").show();
+}
+
+$(document).on('change', '.ItemCheckbox', function () {
+    const itemId = $(this).attr('id').replace("ItemId-", "");
+    const $row = $(this).closest("tr");
+    const $tbody = $("#ProductionPlanAddItem-table-body");
+
+    if (this.checked) {
+        $row.fadeOut(200, function () {
+            $row.detach();
+            $tbody.prepend($row);
+            $row.fadeIn(300);
+        });
+    } else {
+        $row.fadeOut(200, function () {
+            $row.detach();
+            $tbody.append($row);
+            $row.fadeIn(300);
+        });
+    }
+
+    const itemObj = {
+        ItemId: itemId,
+        InwardFabricId: $(this).attr("id").split("-")[1],
+        InWardId: $row.find('.InWardNo').text(),
+        ColorId: $row.find('.ColorId').text(),
+        FabricId: $row.find('.FabricId').text(),
+        LotNo: $row.find(".LotNo").text() || '',
+        Customer: $row.find(".Customer").text() || '',
+        FabricType: $row.find(".FabricType").text() || '',
+        Colour: $row.find(".Colour").text() || '',
+        GSM: $row.find(".GSM").text() || '',
+        Width: $row.find(".Width").text() || '',
+        Quantity: parseFloat($row.find(".Quantity").text()) || 0,
+        AvailableQuantity: parseFloat($row.find(".AvailableQuantity").val()) || 0,
+        IsChecked: $(this).prop("checked")
+    };
+
+    if (itemObj.IsChecked) {
+        if (!ItemListAdd.some(x => x.ItemId == itemObj.ItemId)) {
+            ItemListAdd.push(itemObj);
+        }
+    } else {
+        ItemListAdd = ItemListAdd.filter(x => x.ItemId != itemObj.ItemId);
+    }
+
+    UpdateSelectedItemCount();
+    UpdateTotalQuantity();
+});
+
+$(document).on('input', '.AvailableQuantity', function () {
+    UpdateTotalQuantity();
+});
+
+function UpdateTotalQuantity() {
+    let totalQty = 0;
+
+    ItemListAdd.forEach(item => {
+        let $row = $("#ProductionPlanAddItem-table-body").find(`#ItemId-${item.ItemId}`).closest("tr");
+        if ($row.length) {
+            item.AvailableQuantity = parseFloat($row.find(".AvailableQuantity").val()) || 0;
+            totalQty += item.AvailableQuantity;
+        }
+    });
+
+    $("#NoOfQty").text(totalQty);
+}
+
+function UpdateSelectedItemCount() {
+    const count = $(".ItemCheckbox:checked").length;
+    $("#TotalItemSelect").text(count);
+}
+
+var AddedItems = [];
+
+$(document).on("click", "#BtnAdd", function () {
+
+    // -----------------------------------------
+    // 1️⃣ CHECK: Is any checkbox selected?
+    // -----------------------------------------
+
+    let checkedRows = [];
+    $('.AddItemRow').each(function () {
+        const checkbox = $(this).find('input[type="checkbox"]');
+
+        if (checkbox.prop('checked')) {
+            checkedRows.push($(this));
+        }
+    });
+
+    if (checkedRows.length === 0) {
+        Common.warningMsg('Select at least one Customer to add.');
+        return;
+    }
+
+    // -----------------------------------------
+    // 2️⃣ CHECK: Are all selected colours same?
+    // -----------------------------------------
+
+    let commonColour = checkedRows[0].find('.Colour').text().trim();  // Note uppercase 'C'
+    let firstColor = commonColour;
+    let allSameColor = checkedRows.every(row => row.find('.Colour').text().trim() === commonColour);
+
+    if (!allSameColor) {
+        Common.warningMsg('Selected rows must have the same Colour.');
+        return;
+    }
+    // -----------------------------------------
+    // 3️⃣ CALCULATE BEFORE AJAX
+    // -----------------------------------------
+
+    let FinalValues = 0;
+
+    if ($('#TotalWeight').val() === '' || $('#TotalWeight').val() === null) {
+        FinalValues = $("#NoOfQty").text() || 0;
+    } else {
+        let value1 = $('#TotalWeight').val() || 0;
+        let value2 = $("#NoOfQty").text() || 0;
+        FinalValues = parseFloat(value1) + parseFloat(value2);
+    }
+
+    // -----------------------------------------
+    // 4️⃣ AJAX CALL (ONLY IF VALIDATION PASSED)
+    // ----------------------------------------- 
+    Common.ajaxCall("GET", "/Productions/GetFabricDetailsProductionPlan", { PlantId: parseInt(PlantMappingId), IsUpdate: 1, KG: parseFloat(FinalValues), Color: firstColor }, function (response) {
+        if (response.status) {
+
+            var data = JSON.parse(response.data);
+
+            $('#TotalWeight').val(FinalValues);
+            $('#MachineId').val(data[0][0].MachineId);
+            $('#ColorId').val(data[0][0].SelectedColorId);
+
+            // -----------------------------------------
+            // 5️⃣ PERFORM ADD OPERATIONS AFTER AJAX
+            // -----------------------------------------
+
+            $('#ProductionPlanAddItem-table-body tr.AddItemRow').each(function () {
+                const rowData = {
+                    InWardId: $(this).find('.InWardNo').text(),
+                    ColorId: $(this).find('.ColorId').text(),
+                    FabricId: $(this).find('.FabricId').text(),
+                    CustomerName: $(this).find('.Customer').first().text(), // first td label
+                    LotNo: $(this).find('.LotNo').text(),
+                    Colour: $(this).find('.Colour').text(),
+                    FabricType: $(this).find('.FabricType').text(),
+                    GSM: $(this).find('.GSM').text(),
+                    Width: $(this).find('.Width').text(),
+                    AvailableQuantity: $(this).find('.AvailableQuantity').val(),
+                };
+
+                if (!AddedItems.find(item => item.LotNo === rowData.LotNo)) {
+                    AddedItems.push(rowData);
+                }
+            });
+
+            ItemListAdd.forEach(item => {
+
+                if (AlreadyAddedIds.includes(item.ItemId.toString())) return;
+
+                AlreadyAddedIds.push(item.ItemId.toString());
+
+                let numberIncr = Math.random().toString(36).substring(2);
+
+                const newRow = `
+                    <tr class="AddedRow" data-productionplanfabricid-id="" data-inwardfabricid-id="${item.InwardFabricId}" data-productionplanfabricprocessmappingId-id="">
+                        <td></td>
+                        <td data-id="${item.InWardId}"><input type="text" class="form-control lotNo" value="${item.LotNo}" disabled></td>
+                        <td data-id="${item.ColorId}"><input type="text" class="form-control colour" value="${item.Colour}" disabled></td>
+                        <td data-id="${item.FabricId}"><input type="text" class="form-control fabricType" value="${item.FabricType}" disabled></td>
+                        <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
+                        <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
+                        <td><input type="number" class="form-control qty" value="${item.AvailableQuantity}" required></td>
+                        <td><input type="text" class="form-control processRoute" placeholder="Click" processRoute${numberIncr}" name="processRoute${numberIncr}" required></td>
+                        <td><textarea class="form-control Remarks" placeholder="Ex: Type Querys"></textarea></td>
+                        <td>
+                            <button class="btn DynremoveBtn DynrowRemove" type="button" data-id="${item.ItemId}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+                $("#AddItemButtonRow").before(newRow);
+            });
+
+            $("#QRCode").html("");
+
+            let qrData = {
+                BatchNo: $("#BatchNo").val(),
+                BatchDate: $("#BatchDate").val(),
+                TotalWeight: $("#TotalWeight").val(),
+                ColorId: $("#ColorId").val(),
+                MachineId: $("#MachineId").val(),
+                LoadingDateTime: ProductionPlanId === 0 ? '' : $("#LoadingDateTime").val(),
+                UnLoadingDateTime: ProductionPlanId === 0 ? '' : $("#UnLoadingDateTime").val()
+            };
+
+            new QRCode(document.getElementById("QRCode"), {
+                text: JSON.stringify(qrData),
+                width: 120,
+                height: 120
+            });
+
+            RenumberRows();
+            UpdateMainTableQuantity();
+
+            ItemListAdd = [];
+            $("#ProductionPlanAddItemModal").hide();
+        }
+        else {
+            Common.warningMsg(response.message);
+        }
+    }, null);
+});
+
+
+$(document).on('click', '.DynremoveBtn', function () {
+
+    const id = $(this).data("id").toString();
+    const row = $(this).closest("tr");
+
+    const qtyVal = parseFloat(row.find(".qty").val()) || 0;
+    let totalWeight = parseFloat($("#TotalWeight").val()) || 0;
+
+    let newTotal = totalWeight - qtyVal;
+    if (newTotal < 0) newTotal = 0;
+    $("#TotalWeight").val(newTotal);
+
+    row.remove();
+    AlreadyAddedIds = AlreadyAddedIds.filter(x => x !== id);
+    ItemListAdd = ItemListAdd.filter(x => x.ItemId.toString() !== id);
+
+    RenumberRows();
+    UpdateMainTableQuantity();
+});
+
+function RenumberRows() {
+    $('#ProductionPlanProductTablebody .AddedRow').each(function (index) {
+        $(this).find('td:first').text(index + 1);
+    });
+}
+
+$(document).on('input', '.qty', function () {
+    UpdateMainTableQuantity();
+});
+
+function UpdateMainTableQuantity() {
+
+    let total = 0;
+
+    $("#ProductionPlanProductTablebody tr.AddedRow").each(function () {
+        let qty = parseFloat($(this).find("input.qty").val()) || 0;
+        total += qty;
+    });
+
+    $("#Subtotal").val(total.toFixed(2));
+}
+
+$(document).on('click', '#AddItemBtn', function () {
+
+    $("#TotalItemSelect").text('');
+    $("#NoOfQty").text('');
+
+    Common.ajaxCall("GET", "/Productions/GetFabricDetailsProductionPlan", { PlantId: parseInt(PlantMappingId), IsUpdate: null, KG: 1, Color: "" }, function (response) {
+
+        if (!response.status) return;
+
+        var data = JSON.parse(response.data);
+        var items = data[0];
+
+        const filteredData = items.filter(item =>
+            !AlreadyAddedIds.includes(item.InwardFabricId.toString())
+        );
+
+        // 🚨 If NO records available, show a 'no record found' row
+        if (filteredData.length === 0) {
+            $("#ProductionPlanAddItem-table-body").html(`
+                    <tr>
+                        <td colspan="10" class="text-center text-danger fw-bold py-2">
+                            No records found
+                        </td>
+                    </tr>
+                `);
+            $("#ProductionPlanAddItemModal").show();
+            return;
+        }
+
+        // Otherwise load normally
+        LoadPopupItems(filteredData);
+    }, null);
+});
+
+/*------------------------------------------------------------------------------Dynamic Pop-------------------------------------------------------------------*/
+let selectedProcessInput = null;
+
+$(document).on('click', '.processRoute', function () {
+    const $row = $(this).closest('tr');
+    selectedProcessInput = $(this);
+
+    let storedIds = $row.find('input.processRoute').attr('data-id');
+    let selectedIds = storedIds ? storedIds.split(',').map(Number) : [];
+
+    $('#ProcessModal').remove();
+
+    let html = `
+    <div class="modal fade show" id="ProcessModal" style="display:flex;align-items:center;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header d-flex align-items-center justify-content-between">
+                    <h2>Select Processes</h2>
+                    <span id="ProcessPopupClose" class="close" style="cursor:pointer;font-size:30px">×</span>
+                </div>
+                <div class="modal-body">
+                    <div id="ProcessCheckboxContainer" class="row g-2"></div>
+                </div>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-primary btn-sm d-none" id="SaveProcessBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    $('body').append(html);
+
+    ProcessTypeDropdown[0].forEach(p => {
+        $('#ProcessCheckboxContainer').append(`
+            <div class="col-md-6 col-6 checkDiv">
+                <input type="checkbox" class="ProcessCheck me-2" data-id="${p.ProcessTypeId}" value="${p.ProcessTypeName}" id="Process_${p.ProcessTypeId}">
+                <label for="Process_${p.ProcessTypeId}" class="checkbox-label">${p.ProcessTypeName}</label>
+            </div>
+        `);
+    });
+
+    if (selectedIds.length > 0) {
+        $('.ProcessCheck').each(function () {
+            $(this).prop('checked', selectedIds.includes($(this).data('id')));
+        });
+    }
+
+    toggleSaveButton();
+
+    $('#ProcessPopupClose').click(function () {
+        $('#ProcessModal').remove();
+    });
+
+    $(document).on('change', '.ProcessCheck', function () {
+        toggleSaveButton();
+    });
+
+    function toggleSaveButton() {
+        $('#SaveProcessBtn').toggleClass('d-none', $('.ProcessCheck:checked').length === 0);
+    }
+
+    $('#SaveProcessBtn').click(function () {
+        const selectedCheckedIds = $('.ProcessCheck:checked').map(function () {
+            return $(this).data('id');
+        }).get();
+
+        const selectedCount = selectedCheckedIds.length;
+        selectedProcessInput.val(selectedCount);
+
+        $row.find('input.processRoute').attr('data-id', selectedCheckedIds.join(','));
+
+        $('#ProcessModal').remove();
+    });
+});
+
+
+$(document).on('click', '#RawMetarialInfo', function () {
+    $('#RawMaterialModal').show();
+});
+
+$(document).on('click', '#RawMaterialClose', function () {
+    $('#RawMaterialModal').hide();
+});
+
+$(document).on('click', '#ChemicalInfo', function () {
+    $('#ChemicalModal .navbar-tab').first().trigger('click');
+    $('#ChemicalModal').show();
+});
+
+$(document).on('click', '#ChemicalClose', function () {
+    $('#ChemicalModal .navbar-tab').first().trigger('click');
+    $('#ChemicalModal').hide();
+});
+
+function duplicateRowChemicalPre() {
+    let numberIncr = Math.random().toString(36).substring(2);
+    var rowadd = $('.RowOfChemical-Pre').length;
+
+    var PreTreatmentSelectOptions = "";
+    var defaultOption = '<option value="">--Select--</option>';
+
+    if (PreTreatmentChemicalProduct != null && PreTreatmentChemicalProduct.length > 0 && PreTreatmentChemicalProduct[0].length > 0) {
+        PreTreatmentSelectOptions = PreTreatmentChemicalProduct[0].map(function (ChemicalId) {
+            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+        }).join('');
+    }
+
+    var htmlRow = `
+        <div class="row RowOfChemical-Pre">
+            <label class="ProductionPlanChemicalRequirementId d-none"></label>
+            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                    <select class="form-control ProductSelectPre ProductIdPre" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                        ${defaultOption}${PreTreatmentSelectOptions}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)"/>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalPre(this)" style="position: absolute; top: 22px; right: 14px;">
+                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                    </button>
+                </div>
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemovePre mt-0" type="button" onclick="removeRowRowChemicalPre(this)" style="top: -16px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+    $('#ChemicalDynamic-Pre').append(htmlRow);
+    updateRemoveChemicalPre();
+}
+
+function updateRemoveChemicalPre() {
+    var rows = $('.RowOfChemical-Pre');
+
+    rows.each(function (index) {
+        var removeButtonDiv = $(this).find('.RowOfChemicalRemovePre');
+        var labels = $(this).find('.ProductClass, .GPLClass, .QtyClass');
+
+        if (index === 0) {
+            labels.show();
+            removeButtonDiv.hide();
+        } else {
+            labels.hide();
+            removeButtonDiv.show();
+        }
+    });
+    refreshProductDropdowns(".ProductSelectPre");
+}
+
+function removeRowRowChemicalPre(button) {
+    var totalRows = $('.RowOfChemical-Pre').length;
+    if (totalRows > 1) {
+        $(button).closest('.RowOfChemical-Pre').remove();
+    }
+    updateRemoveChemicalPre();
+    refreshProductDropdowns(".ProductSelectPre");
+}
+
+function duplicateRowChemicalAfter() {
+    let numberIncr = Math.random().toString(36).substring(2);
+    var rowadd = $('.RowOfChemical-After').length;
+
+    var AfterTreatmentSelectOptions = "";
+    var defaultOption = '<option value="">--Select--</option>';
+
+    if (AfterTreatmentChemicalProduct != null && AfterTreatmentChemicalProduct.length > 0 && AfterTreatmentChemicalProduct[0].length > 0) {
+        AfterTreatmentSelectOptions = AfterTreatmentChemicalProduct[0].map(function (ChemicalId) {
+            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+        }).join('');
+    }
+
+    var htmlRow = `
+        <div class="row RowOfChemical-After">
+            <label class="ProductionPlanChemicalRequirementId d-none"></label>
+            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                    <select class="form-control ProductSelectAfter ProductIdAfter" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                        ${defaultOption}${AfterTreatmentSelectOptions}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)"/>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalAfter(this)" style="position: absolute; top: 22px; right: 14px;">
+                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                    </button>
+                </div>
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemoveAfter mt-0" type="button" onclick="removeRowRowChemicalAfter(this)" style="top: -16px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+    $('#ChemicalDynamic-After').append(htmlRow);
+    updateRemoveChemicalAfter();
+}
+
+function updateRemoveChemicalAfter() {
+    var rows = $('.RowOfChemical-After');
+
+    rows.each(function (index) {
+        var removeButtonDiv = $(this).find('.RowOfChemicalRemoveAfter');
+        var labels = $(this).find('.ProductClass, .GPLClass, .QtyClass');
+
+        if (index === 0) {
+            labels.show();
+            removeButtonDiv.hide();
+        } else {
+            labels.hide();
+            removeButtonDiv.show();
+        }
+    });
+    refreshProductDropdowns(".ProductSelectAfter");
+}
+
+function removeRowRowChemicalAfter(button) {
+    var totalRows = $('.RowOfChemical-After').length;
+    if (totalRows > 1) {
+        $(button).closest('.RowOfChemical-After').remove();
+    }
+    updateRemoveChemicalAfter();
+    refreshProductDropdowns(".ProductSelectAfter");
+}
+
+function duplicateRowRawMetarial() {
+    let numberIncr = Math.random().toString(36).substring(2);
+    var rowadd = $('.RawMetarial').length;
+
+    var DyeSelectOptions = "";
+    var defaultOption = '<option value="">--Select--</option>';
+
+    if (DyeDropdown != null && DyeDropdown.length > 0 && DyeDropdown[0].length > 0) {
+        DyeSelectOptions = DyeDropdown[0].map(function (ProductId) {
+            return `<option value="${ProductId.ProductId}">${ProductId.ProductName}</option>`;
+        }).join('');
+    }
+
+    var htmlRow = `
+        <div class="row RawMetarial">
+            <label class="ProductionPlanDyeRequirementId d-none"></label>
+            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="DyeNameClass">DyeName<span id="Asterisk">*</span></label>
+                    <select class="form-control ProductIdRawMaterial ProductId" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                        ${defaultOption}${DyeSelectOptions}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="DyeClass">Dye%<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye${numberIncr}" name="Dye${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                </div>
+            </div>
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="TotalDyeQtyClass">TotalDyeQty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty${numberIncr}" name="TotalDyeQty${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowRawMetarial(this)" style="position: absolute; top: 22px; right: 14px;">
+                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                    </button>
+                </div>
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfMetarialRemove mt-0" type="button" onclick="removeRowMaterial(this)" style="top: -16px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+    $('#RawMaterialDynamic').append(htmlRow);
+    updateRemoveButtonsRawMetarial();
+}
+
+function updateRemoveButtonsRawMetarial() {
+    var rows = $('.RawMetarial');
+
+    rows.each(function (index) {
+        var removeButtonDiv = $(this).find('.RowOfMetarialRemove');
+        var labels = $(this).find('.DyeNameClass, .DyeClass, .TotalDyeQtyClass');
+
+        if (index === 0) {
+            labels.show();
+            removeButtonDiv.hide();
+        } else {
+            labels.hide();
+            removeButtonDiv.show();
+        }
+    });
+    refreshProductDropdowns(".ProductIdRawMaterial");
+}
+
+function removeRowMaterial(button) {
+    var totalRows = $('.RawMetarial').length;
+    if (totalRows > 1) {
+        $(button).closest('.RawMetarial').remove();
+    }
+    updateRemoveButtonsRawMetarial();
+    refreshProductDropdowns(".ProductIdRawMaterial");
+}
 
 function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
     if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
@@ -975,7 +1536,7 @@ function applyProductionFilters() {
         let gsm = $(this).find('.GSM').text().toLowerCase();
         let width = $(this).find('.Width').text().toLowerCase();
         let quantity = $(this).find('.Quantity').text().toLowerCase();
-         
+
         let rowText = customer + ' ' + lotNo + ' ' + colour + ' ' + fabricType + ' ' + gsm + ' ' + width + ' ' + quantity;
 
         let isVisible = !searchValue || rowText.includes(searchValue);
@@ -986,4 +1547,150 @@ function applyProductionFilters() {
     });
 
     $('.ProductionEmptyRow').toggle(visibleRowCount === 0);
+}
+
+/*------------------------------------------------------------------Avoid the Duplicate to select----------------------------------------------------------------*/
+
+$(document).on("change", ".ProductSelectPre, .ProductSelectAfter, .ProductIdRawMaterial", function () {
+
+    const classMap = [".ProductSelectPre", ".ProductSelectAfter", ".ProductIdRawMaterial"];
+    const changedClass = classMap.find(c => $(this).hasClass(c.substring(1)));
+    refreshProductDropdowns(changedClass);
+});
+
+function refreshProductDropdowns(selector) {
+
+    let selectedValues = $(selector).map(function () {
+        return $(this).val();
+    }).get().filter(v => v !== "");
+
+    $(selector).each(function () {
+
+        let currentVal = $(this).val();
+
+        $(this).find("option").prop("disabled", false).removeClass("d-none");
+
+        selectedValues.forEach(val => {
+            if (val !== currentVal) {
+                $(this).find(`option[value="${val}"]`).prop("disabled", true).addClass("d-none");
+            }
+        });
+    });
+}
+
+
+//------------------------------Attachment------------------------
+
+$(document).on('click', '#deletefile', function () {
+    var listItem = $(this).closest('li');
+    var fileText = listItem.find('span').text();
+    var attachmentid = parseInt($(this).attr('attachmentid'));
+    var src = $(this).attr('src');
+    var moduleRefId = $(this).attr('ModuleRefId');
+    deletedFiles.push({
+        AttachmentId: attachmentid,
+        ModuleName: "OutWard",
+        ModuleRefId: parseInt(moduleRefId),
+        AttachmentFileName: fileText,
+        AttachmentFilePath: src
+    });
+    $(listItem).remove();
+});
+
+function getExistFiles() {
+
+    var existitem = $('#ExistselectedFiles li');
+    $.each(existitem, function (index, value) {
+
+        var fileText = $(value).find('span').text();
+        var attachmentid = parseInt($(value).find('.delete-buttonattach').attr('attachmentid'));
+        var src = $(value).find('.delete-buttonattach').attr('src');
+        var moduleRefId = $(value).find('.delete-buttonattach').attr('ModuleRefId');
+        existFiles.push({
+            AttachmentId: attachmentid,
+            ModuleName: "OutWard",
+            ModuleRefId: parseInt(moduleRefId),
+            AttachmentFileName: fileText,
+            AttachmentFilePath: src
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const selectedFiles = document.getElementById('selectedFiles');
+    selectedFiles.innerHTML = '';
+    fileInput.addEventListener('change', (e) => {
+
+        const files = e.target.files;
+        for (var i = 0; i < files.length; i++) {
+            formDataMultiple.append('files[]', files[i]);
+        }
+
+        if (files.length > 0) {
+            preview.style.display = 'block';
+
+
+            for (const file of files) {
+                const fileItem = document.createElement('li');
+                const fileName = document.createElement('span');
+                const downloadButton = document.createElement('button');
+                const deleteButton = document.createElement('button');
+                downloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                downloadButton.className = 'download-button';
+                deleteButton.className = 'delete-button';
+
+                downloadButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const blob = new Blob([file]);
+                    const blobURL = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobURL;
+                    a.download = file.name;
+                    a.click();
+                    URL.revokeObjectURL(blobURL);
+                });
+
+                deleteButton.addEventListener('click', () => {
+                    var itemName = $(fileItem).find('span').text();
+                    var newFormData = new FormData();
+                    $.each(formDataMultiple.getAll('files[]'), function (index, value) {
+                        if (value.name !== itemName) {
+                            newFormData.append('files[]', value);
+                        }
+                    });
+                    formDataMultiple = newFormData;
+
+                    fileItem.remove();
+                });
+
+                fileName.textContent = file.name.length > 10 ? file.name.substring(0, 11) + '...' : file.name;
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(downloadButton);
+                fileItem.appendChild(deleteButton);
+                selectedFiles.appendChild(fileItem);
+            }
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+}); 
+ 
+function SetDateFroLoadingAndUnLoading() { 
+    let loadingPicker = document.querySelector("#LoadingDateTime")._flatpickr;
+    let unloadingPicker = document.querySelector("#UnLoadingDateTime")._flatpickr; 
+    let now = new Date();
+    loadingPicker.setDate(now);
+    unloadingPicker.setDate(now);
+     
+    $("#LoadingDateTime").off("change").on("change", function () {
+        let selectedTime = $(this).val();
+         
+        $("#UnLoadingDateTime").val(selectedTime);
+         
+        unloadingPicker.set("minDate", selectedTime);
+    });
 }

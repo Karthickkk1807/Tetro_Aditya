@@ -181,7 +181,13 @@ $(document).on('click', '#AddClient', function () {
     $('#TransactionsHide').hide();
     Common.removevalidation('FormClient'); 
     Common.removeMessage('FormClient');
-    
+
+    deletedFiles = [];
+    existFiles = [];
+    formDataMultiple = new FormData();
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
+
     clientId = 0;
     $('#selectedFiles').empty();
     $('#ExistselectedFiles').empty();
@@ -256,6 +262,12 @@ $(document).on('click', '.btn-edit', function () {
     $('#loader-pms').hide();
     existFiles = [];
     clientId = $(this).data('id');
+
+    deletedFiles = [];
+    existFiles = [];
+    formDataMultiple = new FormData();
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
 
     var PasseingData = { ClientId: clientId }
     Common.ajaxCall("GET", "/Contact/GetClientID", PasseingData, editSuccess, null);

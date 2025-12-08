@@ -43,14 +43,62 @@ namespace TetroONE.Controllers
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
                 QuotationId = QuotationId == 0 ? null : QuotationId,
                 PlantId = PlantId,
-                FromDate = FromDate,
-                ToDate = ToDate
+                FromDate = FromDate.AddDays(1),
+                ToDate = ToDate.AddDays(1),
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetQuotationDetails]", request);
             return Json(response);
         }
+		 
+        [HttpPost]
+        [Route("InsertUpdateQuotationDetails")]
+        public async Task<IActionResult> SaveLoan([FromBody] InsertUpdateQuotationDetails request)
+        {
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
+            DataTable QuotationColorMappingDetails = new DataTable();
+            QuotationColorMappingDetails = GenericTetroONE.ToDataTable(request.QuotationColorMappingDetails);
+
+            DataTable QuotationProcessTypeMappingDetails = new DataTable();
+            QuotationProcessTypeMappingDetails = GenericTetroONE.ToDataTable(request.QuotationProcessTypeMappingDetails);
+
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            request.TVP_QuotationColorMappingDetails = QuotationColorMappingDetails;
+            request.TVP_QuotationProcessTypeMappingDetails = QuotationProcessTypeMappingDetails;
+
+            var spName = string.Empty;
+            string[] Exclude;
+
+            if (request.QuotationId != null && request.QuotationId != 0)
+            {
+                Exclude = new string[] { "QuotationColorMappingDetails", "QuotationProcessTypeMappingDetails" };
+                spName = "[dbo].[USP_UpdateQuotationDetails]";
+            }
+            else
+            {
+                Exclude = new string[] { "QuotationId", "QuotationColorMappingDetails", "QuotationProcessTypeMappingDetails" };
+                spName = "[dbo].[USP_InsertQuotationDetails]";
+            }
+
+            response = GenericTetroONE.Execute(_connectionString, spName, request, Exclude);
+            return Json(response);
+        }
+		 
+        [HttpGet]
+        [Route("DeleteQuotationDetails")]
+        public IActionResult DeleteQuotationDetails(int QuotationId)
+        {
+            DeleteQuotationDetails getInfo = new DeleteQuotationDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                QuotationId = QuotationId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteQuotationDetails]", getInfo);
+            return Json(response);
+        }
+		 
         [HttpGet]
 		[Route("GetSale")]
 		public IActionResult GetSale(DateTime FromDate, DateTime ToDate, int FranchiseId)
@@ -61,8 +109,7 @@ namespace TetroONE.Controllers
 				SaleId = null,
 				FromDate = FromDate,
 				ToDate = ToDate,
-				FranchiseId = FranchiseId
-
+				FranchiseId = FranchiseId 
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetSaleDetails]", request);
@@ -184,14 +231,11 @@ namespace TetroONE.Controllers
 		[HttpGet]
 		[Route("DeleteSaleDetails")]
 		public IActionResult DeletePurchaseBillDetails(int SaleId)
-		{
-
+		{ 
 			DeleteSale getInfo = new DeleteSale()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				SaleId = SaleId,
-
-
+				SaleId = SaleId, 
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteSaleDetails]", getInfo);

@@ -5,9 +5,9 @@
 <link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
 
 <style>
-    #ProductionTable {
+    #ProductionLogTable {
         width: 100% !important;
-        margin-top: 10px !important;
+        margin-top: -5px !important;
     }
 
     #TransactionsInfoTable {
@@ -62,8 +62,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox1">Total Production</div>
-                                    <h4 class="card-title" id="CounterValBox1">38</h4>
+                                    <div class="card-category" id="CounterTextBox1"></div>
+                                    <h4 class="card-title" id="CounterValBox1"></h4>
                                 </div>
                             </div>
                         </div>
@@ -81,8 +81,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox2">Yet To Start</div>
-                                    <h4 class="card-title" id="CounterValBox2">8</h4>
+                                    <div class="card-category" id="CounterTextBox2"></div>
+                                    <h4 class="card-title" id="CounterValBox2"></h4>
                                 </div>
                             </div>
                         </div>
@@ -100,8 +100,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox3">In-Progress</div>
-                                    <h4 class="card-title" id="CounterValBox3">10</h4>
+                                    <div class="card-category" id="CounterTextBox3"></div>
+                                    <h4 class="card-title" id="CounterValBox3"></h4>
                                 </div>
                             </div>
                         </div>
@@ -119,8 +119,8 @@
                             </div>
                             <div class="col col-stats ml-3">
                                 <div class="numbers">
-                                    <div class="card-category" id="CounterTextBox4">In-QC</div>
-                                    <h4 class="card-title" id="CounterValBox4">10</h4>
+                                    <div class="card-category" id="CounterTextBox4"></div>
+                                    <h4 class="card-title" id="CounterValBox4"></h4>
                                 </div>
                             </div>
                         </div>
@@ -261,32 +261,20 @@
                 <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                     <div class="form-group">
                         <label>Process<span id="Asterisk">*</span></label>
-                        <select class="form-control ProcessStage" id="Process" name="Process">
-                            <option value="">--Select--</option>
-                            <option value="1">Reversing</option>
-                            <option value="2">Stitching</option>
-                            <option value="3">Softflow</option>
-                            <option value="4">Stentering</option>
-                            <option value="5">Dryer</option>
-                            <option value="6">Compacting</option>
+                        <select class="form-control ProcessStage" id="Process" name="Process" required>
                         </select>
                     </div>
                 </div>
                 <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                     <div class="form-group">
                         <label>Quantity<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="Quantity" name="Quantity" required />
+                        <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="Quantity" name="Quantity" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" />
                     </div>
                 </div>
                 <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                     <div class="form-group" id="PreparedByDiv">
                         <label>Created By</label>
                         <select class="form-control" id="PreparedBy" name="PreparedBy" required>
-                            <option value="">--Select--</option>
-                            <option value="1">Mr. Kavinesh</option>
-                            <option value="2">Mr. Kavinesh Rajasekar</option>
-                            <option value="3">Mr. Testing Job Worker</option>
-                            <option value="4">Mr. Super Admin</option>
                         </select>
                     </div>
                 </div>
@@ -300,9 +288,6 @@
                     <div class="form-group">
                         <label>Status<span id="Asterisk">*</span></label>
                         <select class="form-control Operator" id="Status" name="Status">
-                            <option value="">--Select--</option>
-                            <option value="1">Started</option>
-                            <option value="2">Completed</option>
                         </select>
                     </div>
                 </div>
