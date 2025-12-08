@@ -1,13 +1,30 @@
 ﻿var PlantMappingId = 0;
 var OutWardId = 0;
+var WidthDropdown = [];
+var FabricTypeDropdown = [];
+var ProcessTypeDropdown = [];
+var deletedFiles = [];
+var existFiles = [];
+var formDataMultiple = new FormData();
 
-$(document).ready(function () {
+$(document).ready(async function () {
 
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
     Common.bindDropDown('InwardNo', 'InwardNo');
-    Common.bindDropDown('OutwardType', 'OutWardType');
+    Common.bindDropDown('OutWardTo', 'OutWardType');
     Common.bindDropDown('OutWardBy', 'SampleReceivedBy');
+    Common.bindDropDown('ShipFromId', 'Plant');
+    Common.bindDropDown('OutWardStatus', 'OutWardStatus');
+
+    var fabricTypeDropdown = await Common.bindDropDownSync('FabricType');
+    FabricTypeDropdown = JSON.parse(fabricTypeDropdown);
+
+    var processTypeDropdown = await Common.bindDropDownSync('ProcessType');
+    ProcessTypeDropdown = JSON.parse(processTypeDropdown);
+
+    var widthDropdown = await Common.bindDropDownSync('Width');
+    WidthDropdown = JSON.parse(widthDropdown);
 
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
@@ -74,7 +91,6 @@ $(document).ready(function () {
 
         displayedDate = new Date(currentYear, currentMonth);
         $('#increment-month-btn2').show();
-
         updateMonthDisplay(displayedDate);
 
         var fnData = Common.getDateFilter('dateDisplay2');
@@ -92,93 +108,294 @@ $(document).ready(function () {
     Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
 
     $(document).on('click', '#AddOutWard', function () {
-        var windowWidth = $(window).width();
-        if (windowWidth <= 600) {
-            $("#OutWardCanvas").css("width", "95%");
-        } else if (windowWidth <= 992) {
-            $("#OutWardCanvas").css("width", "50%");
-        } else {
-            $("#OutWardCanvas").css("width", "39%");
-        }
-        $('#fadeinpage').addClass('fadeoverlay');
-        CanvasOpenFirstShowingOutWard(); 
-
-        $('#FormProcessing').empty();
+        $('.dynamic-item-row').remove();
+        $('.dynamic-item-row_Second').remove();
         duplicateFabric();
+        ShipToAddressClear();
+        ShipFromAddressClear();
+        $('#ShipToId').prop('disabled', true);
+        $('#ShipFromId').prop('disabled', true);
 
-        $('#StatusDiv').hide();
+        $('#ShipToId').empty().append($('<option>', { value: '', text: '--Select--', }));
+        $('#ModalHeading').text('OutWard Details');
+        $("#BtnSavePreviewbtn span:first").text("Save & Print");
+        $("#BtnSave span:first").text("Save");
 
-        $('.OutwardNoBindLable').html('Name<span id="Asterisk">*</span>');
+        OutWardId = 0;
+        deletedFiles = [];
+        existFiles = [];
+        formDataMultiple = new FormData();
+        $('#selectedFiles').empty();
+        $('#ExistselectedFiles').empty();
 
-        $('#OutwardNoBind').empty().append($('<option>', { value: '', text: '--Select--', }));
-        $('#TypeNo').text('Type No');
-        $("#FormOutWard")[0].reset();
-        $('#OutWardHeader').text('OutWard Details');
-        $('#SaveOutWard').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
-        $('#PrintOutWard').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
+        Common.removevalidation('TopStatic');
+        Common.removevalidation('FormShipping');
+        Common.removevalidation('FormShipTo');
+        Common.removevalidation('FormStatus');
+
+        Common.ajaxCall("GET", "/Common/GetAutoGenerate", { ModuleName: 'OutWard', PlantId: PlantMappingId }, function (response) {
+            Common.AutoGenerateNumberGet(response, "OutwardNo", "OutWardNo");
+        });
+
+        var currentDate = new Date().toISOString().slice(0, 10);
+        $('#OutwardDate').attr("max", currentDate);
+        $('#OutwardDate').val(currentDate);
+
+        $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
+        $('#AddAttachLable, #AddNotesLable').show();
+        $('.ShipTo-edit').hide();
+
+        $('#emptyDiv').removeClass('col-lg-2 col-md-2 col-6').addClass('col-lg-4 col-md-4 col-6');
+        $('#OutWardStatusIdDiv').hide();
+
+        $('.modal-body').animate({ scrollTop: 0 }, 300);
+        $('#OutWardModal').show();
     });
 
     $(document).on('click', '.btn-edit', function () {
-        var windowWidth = $(window).width();
-        if (windowWidth <= 600) {
-            $("#OutWardCanvas").css("width", "95%");
-        } else if (windowWidth <= 992) {
-            $("#OutWardCanvas").css("width", "50%");
-        } else {
-            $("#OutWardCanvas").css("width", "39%");
-        }
-        $('#fadeinpage').addClass('fadeoverlay');
-        CanvasOpenFirstShowingOutWard();
+        OutWardId = $(this).data('id');
 
-        $('.OutwardNoBindLable').html('Name<span id="Asterisk">*</span>');
+        $('.dynamic-item-row').remove();
+        $('.dynamic-item-row_Second').remove();
 
-        $('#FormProcessing').empty();
-        duplicateFabric();
+        ShipToAddressClear();
+        ShipFromAddressClear();
+        $('#ShipToId').prop('disabled', false);
+        $('#ShipFromId').prop('disabled', false);
 
-        $('#StatusDiv').show();
+        $('#ShipToId').empty().append($('<option>', { value: '', text: '--Select--', }));
+        $('#ModalHeading').text('Edit OutWard Details');
+        $("#BtnSavePreviewbtn span:first").text("Update & Print");
+        $("#BtnSave span:first").text("Update");
 
-        $('#OutwardNo').empty().append($('<option>', { value: '', text: '--Select--', }));
-        $('#OutWardHeader').text('Edit OutWard Details');
-        $('#SaveOutWard').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
-        $('#PrintOutWard').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
+        $('#emptyDiv').removeClass('col-lg-4 col-md-4 col-6').addClass('col-lg-2 col-md-2 col-6');
+        $('#OutWardStatusIdDiv').show();
+
+        $('.ShipTo-edit').show();
+
+        $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
+        $('#AddAttachLable, #AddNotesLable').show();
+
+        $('.modal-body').animate({ scrollTop: 0 }, 300);
+        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: parseInt(OutWardId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardNotNullSuccess, null);
+        $('#OutWardModal').show();
     });
 
-    $(document).on('click', '#CloseCanvas', function () {
-        $("#OutWardCanvas").css("width", "0%");
-        $('#fadeinpage').removeClass('fadeoverlay');
+    $(document).on('click', '#BtnCancel, #OutWardClose', function () {
+        $('#OutWardModal').hide();
     });
 
-    $('.accordion-header').on('click', function () {
-        var $offcanvas = $(this).closest('.offcanvas-container');
-        var $accordion = $(this).closest('.accordion');
-        var target = $(this).find('a').attr('data-target');
-
-        $offcanvas.find('.collapse').not(target).collapse('hide');
-
-        $(target).collapse('toggle');
-    });
-
-    $(document).on('change', '#OutwardType', function () {
+    $(document).on('change', '#InwardNo', function () {
         var $thisVal = $(this).val();
+        if ($thisVal != "") {
+            Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), InwardId: parseInt($thisVal), FromDate: null, ToDate: null }, GetInwardNotNullSuccess, null);
+        }
+        else {
+            $('#OutWardTo').val('').trigger('change');
+            $('.dynamic-item-row').remove();
+            $('.dynamic-item-row_Second').remove();
+            duplicateFabric();
+            $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
+            $('#AddNotesLable, #AddAttachLable').show();
+        }
+    });
+
+    $(document).on('change', '#OutWardTo', function () {
+        var $thisVal = $(this).val();
+        ShipToAddressClear();
         if ($thisVal !== "") {
             var EditData = { OutwardType: parseInt($thisVal) }
             Common.ajaxCall("GET", "/Productions/GetOutWardTypeContactDetails", EditData,
                 function (response) {
                     if (response.status) {
-                        Common.bindDropDownSuccess(response.data, "OutwardNoBind");
-                        $thisVal == "1" ? $('.OutwardNoBindLable').html('Client Name<span id="Asterisk">*</span>') : $('.OutwardNoBindLable').html('JobWorker Name<span id="Asterisk">*</span>'); 
+                        Common.bindDropDownSuccess(response.data, "ShipToId");
+                        $('#ShipToId').prop('disabled', false);
+                        $('#ShipFromId').prop('disabled', false);
                     }
                 },
                 null
             );
         }
         else {
-            $('#OutwardNoBind').empty().append($('<option>', { value: '', text: '--Select--', }));
-            $('.OutwardNoBindLable').html('Name<span id="Asterisk">*</span>');
+            $('#ShipToId').empty().append($('<option>', { value: '', text: '--Select--', }));
+            $('#ShipFromId, #ShipToId').val('').trigger('change'); 
+            $('#ShipToId').prop('disabled', true);
+            $('#ShipFromId').prop('disabled', true);
         }
     });
 
-    $(document).on('click', '#PrintOutWard', function () {
+    $(document).on('change', '#ShipFromId', function () {
+        var ShipFromId = $(this).val();
+        if (ShipFromId != "" && ShipFromId != null) {
+            Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: parseInt(ShipFromId) }, function (response) {
+                if (response.status) {
+                    ShipFromAddress(response);
+                } else {
+                    ShipFromAddressClear();
+                }
+            }, null);
+        } else {
+            ShipFromAddressClear();
+        }
+    });
+
+    $(document).on('change', '#ShipToId', function () {
+        var $thisVal = $(this).val();
+        var $OutwardTypeVal = $('#OutWardTo').val();
+        if ($thisVal !== "") {
+            var ModuleName = "";
+            $OutwardTypeVal == "1" ? ModuleName = 'Client' : ModuleName = 'Job';
+            var EditData = { ModuleName: ModuleName, ModuleId: parseInt($thisVal) }
+            Common.ajaxCall("GET", "/Productions/GetOutWardTypeClientJobDetails", EditData, function (response) {
+                if (response.status) {
+                    ShipToAddress(response)
+                } else {
+                    ShipToAddressClear();
+                }
+            }, null);
+        }
+        else {
+            ShipToAddressClear();
+        }
+    });
+
+    $(document).on('click', '#BtnSave', function () { 
+        if ($(".ShipToedit-icon i.fas.fa-save:visible").length > 0) { 
+            Common.warningMsg('Please Save the Ship To Address before Proceeding.');
+            return false;
+        }  
+        if ($("#TopStatic").valid() && $("#FormShipping").valid() && $("#FormShipTo").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
+            $('#loader-pms').show();
+            getExistFiles();
+
+            var objvalue = {
+                OutWardId: OutWardId > 0 ? parseInt(OutWardId) : null,
+                OutwardDate: $('#OutwardDate').val() || null,
+                OutwardNo: $('#OutwardNo').val() || null,
+                OutWardTo: parseInt($('#OutWardTo').val()) || null,
+                PackingSlipNo: $('#PackingSlipNo').val() || null,
+                ShipFrom: $('#ShipFromId').val() || null,
+                ShipTo: $('#ShipToId').val() || null,
+                ShipToAddress: $('#ShipToAddress').text() || null,
+                ShipToCity: $('#ShipToCity').text() || null,
+                ShiptoMobileNo: $('#ShipToContactNumber').text() || null,
+                ShipToPlaceOfSupply: $('#ShipToPlaceOfSupply').text() || null,
+                OutWardedBy: parseInt($('#OutWardBy').val()) || null,
+                NoofFabric: parseInt($('#NoofFabric').val()) || null,
+                TotalQty: parseFloat($('#TotalQty').val()) || null,
+                TotalRolls: parseFloat($('#TotalRolls').val()) || null,
+                Notes: $('#AddNotesText').val() || null,
+                VehicleNo: $('#VehicleNO').val() || null,
+                DriverName: $('#DriverName').val() || null,
+                OutWardStatusId: parseInt($('#OutWardStatus').val()) || null,
+                InwardId: parseInt($('#InwardNo').val()) || null,
+                PlantId: parseInt(PlantMappingId),
+            };
+
+            var FabricMapping = [];
+            var FabricProcessMapping = [];
+
+            var currentGroupRowNo = 0;
+            var parentFabricTypeId = null;
+
+            $("#OutWardTableBody .dynamic-item-row, #OutWardTableBody .dynamic-item-row_Second").each(function () {
+
+                let row = $(this);
+                let currentRowFabricVal = row.find(".FabricSelect").val();
+
+                if (row.hasClass("dynamic-item-row")) {
+                    currentGroupRowNo = 1;
+                    parentFabricTypeId = currentRowFabricVal;
+                    row.find(".FabricSelect").val(parentFabricTypeId);
+
+                } else if (row.hasClass("dynamic-item-row_Second")) {
+                    currentGroupRowNo++;
+                }
+
+                let OutwardFabricId = row.find(".outwardFabricId").text().trim();
+
+                let OutwardFabricProcessMappingId = row.find(".OutwardFabricProcessMappingId").text().trim();
+
+                pushFabricMapping(row, OutwardFabricId, parentFabricTypeId, currentGroupRowNo);
+
+                if (OutwardFabricId === "" || OutwardFabricId === null) {
+                    OutwardFabricId = row.prevAll(".dynamic-item-row").first().find(".outwardFabricId").text().trim();
+                }
+
+                appendProcessMapping(row, OutwardFabricId, parentFabricTypeId, OutwardFabricProcessMappingId, currentGroupRowNo);
+            });
+
+            formDataMultiple.append("OutwardStaticData", JSON.stringify(objvalue));
+            formDataMultiple.append("OutwardFabricDetails", JSON.stringify(FabricMapping));
+            formDataMultiple.append("OutwardFabricProcessMappingDetails", JSON.stringify(FabricProcessMapping));
+            formDataMultiple.append("Exist", JSON.stringify(existFiles));
+            formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
+
+            $.ajax({
+                type: "POST",
+                url: "/Productions/InsertUpdateOutwardDetails",
+                data: formDataMultiple,
+                contentType: false,
+                processData: false,
+
+                success: function (response) {
+                    if (response.status) {
+                        formDataMultiple = new FormData();
+                        $('#loader-pms').hide();
+                        Common.successMsg(response.message);
+                        $('#OutWardModal').hide();
+                        var fnData = Common.getDateFilter('dateDisplay2');
+                        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
+                    }
+                    else {
+                        formDataMultiple = new FormData();
+                        Common.errorMsg(response.message);
+                    }
+                },
+
+                error: function (response) {
+                    Common.errorMsg(response.message);
+                }
+            });
+
+            function pushFabricMapping(row, fabricId, fabricTypeId, rowNo) {
+
+                FabricMapping.push({
+                    OutwardFabricId: fabricId ? parseInt(fabricId) : null,
+                    FabricTypeId: parseInt(fabricTypeId) || null,
+                    ProcessCount: parseInt(row.find(".processRoute").val()) || null,
+                    Dia: parseFloat(row.find(".DiaInput").val()) || null,
+                    GSM: parseFloat(row.find(".GsmInput").val()) || null,
+                    Qty: parseFloat(row.find(".QtyInput").val()) || null,
+                    NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
+                    Width: parseInt(row.find(".WidthSelect").val()) || null,
+                    OutwardId: OutWardId > 0 ? parseInt(OutWardId) : null,
+                    RowNo: rowNo,
+                });
+            }
+
+            function appendProcessMapping(row, OutwardFabricId, fabricTypeId, OutwardFabricProcessMappingId, rowNo) {
+
+                let processData = row.find("td[data-id]").attr("data-id");
+                if (!processData) return;
+
+                let ids = processData.split(',').map(x => parseInt(x.trim()));
+
+                ids.forEach(pid => {
+                    FabricProcessMapping.push({
+                        RowNo: rowNo,
+                        OutwardFabricProcessMappingId: OutwardFabricProcessMappingId ? parseInt(OutwardFabricProcessMappingId) : null,
+                        OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
+                        FabricTypeId: fabricTypeId ? parseInt(fabricTypeId) : null,
+                        ProcessId: parseInt(pid)
+                    });
+                });
+            }
+        }
+    });
+
+
+    $(document).on('click', '#BtnSavePreviewbtn', function () {
         $('#loader-pms').show();
         var EditData = { NoOfCopies: 1, printType: "preview" }
 
@@ -230,17 +447,23 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on('click', '.btn-delete', async function () {
+        var response = await Common.askConfirmation();
+        if (response == true) {
+            var OutWardId = $(this).data('id');
+            Common.ajaxCall("GET", "/Productions/DeleteOutWardDetails", { OutWardId: parseInt(OutWardId) }, function (response) {
+                if (response.status) {
+                    Common.successMsg(response.message);
+
+                    var fnData = Common.getDateFilter('dateDisplay2');
+                    Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
+                }
+            }, null);
+        }
+    });
 });
 
-function CanvasOpenFirstShowingOutWard() {
-    $('#OutWardCanvas').addClass('show');
-    $('#collapse1').collapse('show');
-    $('#collapse2, #collapse3, #collapse4, #collapse5').collapse('hide');
-    $('#OutWardCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
-    $('html, body').animate({
-        scrollTop: $('#OutWardCanvas').offset().top
-    }, 'fast');
-}
 function GetOutwardSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
@@ -267,91 +490,700 @@ function GetOutwardSuccess(response) {
     }
 }
 
-function duplicateFabric() {
-    let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.DynamicRowProcessing').length;
-    var DynamicLableNo = rowadd + 1;
+function GetOutwardNotNullSuccess(response) {
+    if (!response.status) return;
 
-    var htmlRow = `
-        <div class="row DynamicRowProcessing">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
-                <label class="DynamicLable">Fabric Details ${DynamicLableNo}</label>
-            </div>
-            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Fabric<span id="Asterisk">*</span></label>
-                    <select class="form-control FabricType" id="FabricType${numberIncr}" name="FabricType${numberIncr}" required> 
-                    </select>
+    var data = JSON.parse(response.data);
+
+    // --- Populate header fields ---
+    const header = data[0][0];
+    $('#OutwardDate').val(header.Date);
+    $('#OutwardNo').val(header.OutwardNo);
+    $('#PackingSlipNo').val(header.PackingSlipNo);
+    $('#OutWardBy').val(header.OutWardedBy);
+    $('#OutWardTo').val(header.OutWardTo);
+    $('#NoofFabric').val(header.NoOfFabric);
+    $('#TotalQty').val(header.TotalQty);
+    $('#TotalRolls').val(header.TotalRolls);
+    $('#VehicleNO').val(header.VehicleNo);
+    $('#DriverName').val(header.DriverName);
+    $('#OutWardStatus').val(header.OutWardStatusId);
+    $('#InwardNo').val(header.InwardId);
+
+    // --- Bind ShipTo dropdown and addresses ---
+    Common.ajaxCall("GET", "/Productions/GetOutWardTypeContactDetails", { OutwardType: parseInt(header.OutWardTo) }, function (responseOutWardType) {
+        if (responseOutWardType.status) {
+            Common.bindDropDownSuccess(responseOutWardType.data, "ShipToId");
+            Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: parseInt(header.ShipFrom) }, function (responsePlantDetails) {
+                if (responsePlantDetails.status) {
+                    $('#ShipFromId').val(header.ShipFrom);
+                    ShipFromAddress(responsePlantDetails);
+                    $('#ShipToId').val(header.ShipTo);
+                    ShipToAddress(response);
+                }
+            }, null);
+        } else {
+            ShipFromAddressClear();
+        }
+    },null);
+
+    Inventory.toggleField(header.Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable", "HideNotesLable");
+    Inventory.toggleFieldForAttachment(data[3][0]?.AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
+    Inventory.bindAttachments(data[3]);
+
+    const outwardRows = data[1];
+    const processMapping = data[2];
+
+    let fabricGroup = {};
+    let mappingLookup = {};
+    let renderRowTracker = {};
+
+    processMapping.forEach(m => {
+        let key = `${m.FabricTypeId}_${m.RowNo}`;
+        if (!mappingLookup[key]) mappingLookup[key] = [];
+        mappingLookup[key].push(m);
+    });
+
+    outwardRows.forEach((item, index) => {
+        let uid = `row_${index}_${Date.now()}`;
+
+        let WidthHTML = WidthDropdown[0].map(w => `<option value="${w.WidthId}" ${item.Width == w.WidthId ? 'selected' : ''}>${w.Width}</option>`).join('');
+        let FabricHTML = FabricTypeDropdown[0].map(f => `<option value="${f.FabricTypeId}" ${item.FabricTypeId == f.FabricTypeId ? 'selected' : ''}>${f.FabricTypeName}</option>`).join('');
+
+        if (!renderRowTracker[item.FabricTypeId]) renderRowTracker[item.FabricTypeId] = 1;
+        else renderRowTracker[item.FabricTypeId]++;
+
+        let currentRowNo = renderRowTracker[item.FabricTypeId];
+        let lookupKey = `${item.FabricTypeId}_${currentRowNo}`;
+
+        let mapped = mappingLookup[lookupKey] || [];
+
+        let processIds = mapped.map(x => x.ProcessId).join(",");
+        let processMappingId = mapped.length ? mapped[0].OutwardFabricProcessMappingId : "";
+
+        let isFirstRowOfFabric = !fabricGroup[item.FabricTypeId];
+
+        let html = `
+            <tr class="${isFirstRowOfFabric ? 'dynamic-item-row' : 'dynamic-item-row_Second'}" 
+                data-id="${uid}" 
+                data-rowno="${currentRowNo}">
+
+                <td class="sno"></td> 
+                <td>
+                    ${isFirstRowOfFabric ? `<select class="form-control FabricSelect">${FabricHTML}</select>` : ""}
+                    <label class="outwardFabricId d-none">${item.OutwardFabricId}</label>
+                </td>
+
+                <td data-id="${processIds}">
+                    <label class="OutwardFabricProcessMappingId d-none">${processMappingId}</label>
+                    <input type="text" class="form-control processRoute" value="${item.ProcessCount}" readonly>
+                </td>
+
+                <td><input class="form-control DiaInput" value="${item.Dia}"></td>
+                <td><input class="form-control GsmInput" value="${item.GSM}"></td>
+                <td><input class="form-control QtyInput" value="${item.Qty}"></td>
+                <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td>
+                <td><select class="form-control WidthSelect">${WidthHTML}</select></td>
+
+                <td style="text-align:center">
+                    ${isFirstRowOfFabric ? `<button id="dyanmicplusbtn" class="btn AddStockBtn AddFabric" type="button"><i class="fas fa-plus" id="AddButton"></i></button>` : ""}
+                    <button id="RemoveButton" class="btn DynrowRemove removeRowBtn" type="button">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        if (isFirstRowOfFabric) {
+            $("#AddItemButtonRow").before(html);
+            fabricGroup[item.FabricTypeId] = uid;
+        } else {
+            $(`tr[data-id='${fabricGroup[item.FabricTypeId]}']`).after(html);
+        }
+    });
+
+    updateSerialNumbers();
+    refreshProductDropdowns(".FabricSelect");
+}
+
+
+function GetInwardNotNullSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+        //Inventory.toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "HideNotesLable");
+        //Inventory.toggleFieldForAttachment(data[2][0].AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
+        //Inventory.bindAttachments(data[2]);
+
+        $('.dynamic-item-row').remove();
+        $('.dynamic-item-row_Second').remove();
+
+        const InwardRows = data[1];
+        const processMapping = data[2];
+
+        let fabricGroup = {};
+        let mappingLookup = {};
+        let renderRowTracker = {};
+
+        processMapping.forEach(m => {
+            let key = `${m.FabricTypeId}_${m.RowNo}`;
+            if (!mappingLookup[key]) mappingLookup[key] = [];
+            mappingLookup[key].push(m);
+        });
+
+        InwardRows.forEach((item, index) => {
+            let uid = `row_${index}_${Date.now()}`;
+
+            let WidthHTML = WidthDropdown[0].map(w => `<option value="${w.WidthId}" ${item.Width == w.WidthId ? 'selected' : ''}>${w.Width}</option>`).join('');
+            let FabricHTML = FabricTypeDropdown[0].map(f => `<option value="${f.FabricTypeId}" ${item.FabricTypeId == f.FabricTypeId ? 'selected' : ''}>${f.FabricTypeName}</option>`).join('');
+
+            if (!renderRowTracker[item.FabricTypeId]) renderRowTracker[item.FabricTypeId] = 1;
+            else renderRowTracker[item.FabricTypeId]++;
+
+            let currentRowNo = renderRowTracker[item.FabricTypeId];
+            let lookupKey = `${item.FabricTypeId}_${currentRowNo}`;
+
+            let mapped = mappingLookup[lookupKey] || [];
+
+            let processIds = mapped.map(x => x.ProcessId).join(",");
+            let processMappingId = mapped.length ? mapped[0].InwardFabricProcessMappingId : "";
+
+            let isFirstRowOfFabric = !fabricGroup[item.FabricTypeId];
+
+            let html = `
+                <tr class="${isFirstRowOfFabric ? 'dynamic-item-row' : 'dynamic-item-row_Second'}" 
+                    data-id="${uid}" 
+                    data-rowno="${currentRowNo}">
+
+                    <td class="sno"></td> 
+                    <td>
+                        ${isFirstRowOfFabric ? `<select class="form-control FabricSelect">${FabricHTML}</select>` : ""}
+                        <label class="InwardFabricId d-none">${item.InwardFabricId || ''}</label>
+                    </td>
+
+                    <td data-id="${processIds}">
+                        <label class="InwardFabricProcessMappingId d-none">${processMappingId || ''}</label>
+                        <input type="text" class="form-control processRoute" value="${item.ProcessCount}" readonly>
+                    </td>
+
+                    <td><input class="form-control DiaInput" value="${item.Dia}"></td>
+                    <td><input class="form-control GsmInput" value="${item.GSM}"></td>
+                    <td><input class="form-control QtyInput" value="${item.Qty}"></td>
+                    <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td>
+                    <td><select class="form-control WidthSelect">${WidthHTML}</select></td>
+
+                    <td style="text-align:center">
+                        ${isFirstRowOfFabric ? `<button id="dyanmicplusbtn" class="btn AddStockBtn AddFabric" type="button"><i class="fas fa-plus" id="AddButton"></i></button>` : ""}
+                        <button id="RemoveButton" class="btn DynrowRemove removeRowBtn" type="button">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+            if (isFirstRowOfFabric) {
+                $("#AddItemButtonRow").before(html);
+                fabricGroup[item.FabricTypeId] = uid;
+            } else {
+                $(`tr[data-id='${fabricGroup[item.FabricTypeId]}']`).after(html);
+            }
+        });
+
+        updateSerialNumbers();
+        refreshProductDropdowns(".FabricSelect");
+    }
+}
+
+
+let isShipToEditing = false;
+
+$('#ShipToEdit').on('click', function (e) {
+    e.preventDefault();
+
+    const fields = ['ShipToAddress', 'ShipToCity', 'ShipToContactNumber', 'ShipToPlaceOfSupply'];
+
+    if (!isShipToEditing) {
+        fields.forEach(id => {
+            const $label = $('#' + id);
+            const val = $label.text().trim();
+            const inputId = 'edit_' + id;
+
+            if (!$('#' + inputId).length) {
+                $label.after(`<input type="text" id="${inputId}" class="form-control edit-field mt-1" value="${val === '-' ? '' : val}">`);
+            }
+        });
+
+        $('#ShipToAddress, #ShipToCity, #ShipToContactNumber, #ShipToPlaceOfSupply').hide();
+        $('#ShipToEdit i').removeClass('fa-pencil-alt').addClass('fa-save').attr('title', 'Save Shipping Address');
+
+        isShipToEditing = true;
+
+    } else {
+        fields.forEach(id => {
+            const $label = $('#' + id);
+            const $input = $('#edit_' + id);
+            const val = $input.val().trim() || '-';
+
+            $label.text(val);
+            $input.remove();
+        });
+
+        $('#ShipToAddress, #ShipToCity, #ShipToContactNumber, #ShipToPlaceOfSupply').show();
+        $('#ShipToEdit i').removeClass('fa-save').addClass('fa-pencil-alt').attr('title', 'Edit Shipping Address');
+
+        isShipToEditing = false;
+    }
+});
+
+function duplicateFabric() { 
+    let uid = Math.random().toString(36).substring(2);
+
+    var defaultOption = '<option value="">--Select--</option>';
+    var FabricTypeSelectOptions = "";
+    if (FabricTypeDropdown != null && FabricTypeDropdown.length > 0 && FabricTypeDropdown[0].length > 0) {
+        FabricTypeSelectOptions = FabricTypeDropdown[0].map(function (FabricTypeId) {
+            return `<option value="${FabricTypeId.FabricTypeId}">${FabricTypeId.FabricTypeName}</option>`;
+        }).join('');
+    }
+
+    let html = `
+        <tr class="dynamic-item-row" data-id="${uid}">
+            <td class="sno"></td> 
+            <td>
+                <lable class="outwardFabricId d-none"></lable>
+                <select class="form-control FabricSelect" id="Fabric_${uid}" name="Fabric_${uid}">
+                    ${defaultOption}${FabricTypeSelectOptions}
+                </select>
+            </td> 
+            <td data-id="">
+                 <lable class="OutwardFabricProcessMappingId d-none"></lable>
+                <input type="text" class="form-control processRoute" id="ProcessTypeId${uid}" name="ProcessTypeId${uid}"" placeholder="Click Here" required readonly>
+            </td> 
+            <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
+            <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
+            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
+            <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" required oninput="Common.allowOnlyNumberLength(this,3)" ></td> 
+            <td>
+                <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
+                </select>
+            </td> 
+            <td style="text-align: center;">
+                <button id="dyanmicplusbtn" class="btn AddStockBtn AddFabric" type="button">
+                    <i class="fas fa-plus" id="AddButton"></i>
+                </button>
+                <button id="RemoveButton" class="btn DynrowRemove removeRowBtn" type="button">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+        </tr>
+    `;
+
+    $("#AddItemButtonRow").before(html);
+     
+    Common.bindDropDown("Width_" + uid, 'Width');
+    updateSerialNumbers();
+    refreshProductDropdowns(".FabricSelect");
+}
+
+$(document).on("click", ".AddFabric", function () {
+    let mainRow = $(this).closest(".dynamic-item-row");
+    let childSecondRows = mainRow.nextUntil(".dynamic-item-row", ".dynamic-item-row_Second");
+
+    let insertAfter; 
+    if (childSecondRows.length > 0) {
+        insertAfter = childSecondRows.last();
+    } else {
+        insertAfter = mainRow;
+    } 
+    addNewFabricRow(insertAfter);
+});
+
+function addNewFabricRow(afterRow) {
+    let uid = Math.random().toString(36).substring(2);
+
+    let newRow = `
+        <tr class="dynamic-item-row_Second" data-id="${uid}">
+            <td class="sno"></td> 
+            <td><lable class="outwardFabricId d-none"></lable></td> 
+            <td data-id="">
+                 <lable class="OutwardFabricProcessMappingId d-none"></lable>
+                 <input type="text" class="form-control processRoute" id="ProcessTypeId${uid}" name="ProcessTypeId${uid}"" placeholder="Click Here" required readonly>
+            </td> 
+            <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
+            <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
+            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
+            <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" required oninput="Common.allowOnlyNumberLength(this,3)" ></td> 
+            <td>
+                <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
+                </select>
+            </td> 
+            <td style="text-align: end;padding-right: 21px;">
+                <button class="btn DynrowRemove removeRowBtn" type="button">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
+        </tr>
+    `;
+
+    Common.bindDropDown("Width_" + uid, 'Width');
+    $(afterRow).after(newRow);
+
+    updateSerialNumbers();
+}
+
+function updateSerialNumbers() {
+    let count = 0;
+    $("#OutWardTableBody .dynamic-item-row").each(function (i) {
+
+        $(this).find(".sno").text(i + 1);
+        if ($(this).find("select.FabricSelect").length > 0) {
+            count++;
+        }
+    });
+
+    $("#NoofFabric").val(count);
+    calculateGsmNoOfRollTotal();
+}
+
+$(document).on("click", ".removeRowBtn", function () {
+    let row = $(this).closest("tr");
+    let isParentRow = row.hasClass("dynamic-item-row");
+    let isChildRow = row.hasClass("dynamic-item-row_Second");
+
+    if (isChildRow) {
+        row.remove();
+        updateSerialNumbers();
+        calculateGsmNoOfRollTotal();
+        refreshProductDropdowns(".FabricSelect");
+        return;
+    }
+    if (isParentRow) {
+
+        row.nextUntil(".dynamic-item-row", ".dynamic-item-row_Second").remove();
+
+        if ($(".dynamic-item-row").length > 1) {
+            row.remove();
+        } else {
+            row.find("input,select").val("");
+        }
+
+        updateSerialNumbers();
+        calculateGsmNoOfRollTotal();
+        refreshProductDropdowns(".FabricSelect");
+        return;
+    }
+});
+
+$(document).on('input', '.QtyInput, .RollsInput', function () {
+    calculateGsmNoOfRollTotal();
+});
+
+function calculateGsmNoOfRollTotal() {
+    let totalGsm = 0;
+    let totalNoOfRoll = 0;
+
+    $(".QtyInput").each(function () {
+        let value = parseFloat($(this).val());
+        if (!isNaN(value)) {
+            totalGsm += value;
+        }
+    });
+    $(".RollsInput").each(function () {
+        let value = parseFloat($(this).val());
+        if (!isNaN(value)) {
+            totalNoOfRoll += value;
+        }
+    });
+
+    $("#TotalQty").val(totalGsm.toFixed(2));
+    $("#TotalRolls").val(totalNoOfRoll.toFixed(2));
+}
+
+/* ================= ===================== Common Function ================== ============ ========== */
+$(document).on('click', '#AddNotesLable', function () {
+    $('#AddNotes').show();
+    $('#AddNotesLable').hide();
+    $('#HideNotesLable').show();
+});
+$(document).on('click', '#HideNotesLable', function () {
+    $('#AddNotes').hide();
+    $('#AddNotesLable').show();
+    $('#HideNotesLable').hide();
+});
+$(document).on('click', '#AddAttachLable', function () {
+    $('#AddAttachment').show();
+    $('#AddAttachLable').hide();
+    $('#HideAttachlable').show();
+});
+$(document).on('click', '#HideAttachlable', function () {
+    $('#AddAttachment').hide();
+    $('#AddAttachLable').show();
+    $('#HideAttachlable').hide();
+});
+
+//=============================================SHORTCUTS==============================================
+
+$(document).keydown(function (event) {
+
+    // Handling Alt + p
+    if (event.altKey && event.key === 'p') {
+        event.preventDefault();
+        $('#BtnSavePreviewbtn').click();
+    }
+
+    // Handling Ctrl + s
+    if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        $('#BtnSave').click();
+    }
+
+    // Handling alt + c
+    if (event.altKey && event.key === 'c') {
+        event.preventDefault();
+        $('#BtnCancel').click();
+    }
+});
+
+//-----------------------------------------------------------------------------Top Static Column-------------------------------------------------------------/
+function ShipFromAddress(DataSet) {
+    var data = JSON.parse(DataSet.data);
+    $("#ShipFromColumn #ShipFromAddress").text(data[0][0].PlantAddress || '');
+    $("#ShipFromColumn #ShipFromContactNumber").text(data[0][0].PlantContactNo || '');
+    $("#ShipFromColumn #ShipFromState").text(data[0][0].PlantState);
+
+    var city = data[0][0].PlantCity || '';
+    var zipCode = data[0][0].PlantZipCode || '';
+
+    var cityName = city && zipCode ? city + " - " + zipCode : city + zipCode;
+    $("#ShipFromColumn #ShipFromCity").text(cityName || '');
+}
+
+function ShipFromAddressClear() {
+    $("#ShipFromColumn #ShipFromAddress").text('');
+    $("#ShipFromColumn #ShipFromCity").text('');
+    $("#ShipFromColumn #ShipFromContactNumber").text('');
+    $("#ShipFromColumn #ShipFromState").text('');
+}
+
+function ShipToAddress(DataSet) {
+    var data = JSON.parse(DataSet.data);
+    $("#ShipToColumn #ShipToAddress").text(data[0][0].Address || '');
+    $("#ShipToColumn #ShipToCity").text(data[0][0].City || '');
+    $("#ShipToColumn #ShipToContactNumber").text(data[0][0].ContactNumber || '');
+    $("#ShipToColumn #ShipToPlaceOfSupply").text(data[0][0].State || '');
+
+    $('.ShipTo-edit').show();
+}
+
+function ShipToAddressClear() {
+    $("#ShipToColumn #ShipToAddress").text('');
+    $("#ShipToColumn #ShipToCity").text('');
+    $("#ShipToColumn #ShipToContactNumber").text('');
+    $("#ShipToColumn #ShipToPlaceOfSupply").text('');
+    $('#ShipToAddress, #ShipToCity, #ShipToContactNumber, #ShipToPlaceOfSupply').show();
+    $('#edit_ShipToAddress, #edit_ShipToCity, #edit_ShipToContactNumber, #edit_ShipToPlaceOfSupply').hide();
+    $('#ShipToEdit i').removeClass('fa-save').addClass('fa-pencil-alt').attr('title', 'Edit Shipping Address');
+    $('.ShipTo-edit').hide();
+}
+
+
+
+/*------------------------------------------------------------------------------Dynamic Pop-------------------------------------------------------------------*/
+let selectedProcessInput = null;
+
+$(document).on('click', '.processRoute', function () {
+    const $row = $(this).closest('tr');
+    selectedProcessInput = $(this);
+
+    let storedIds = $row.find('td[data-id]').attr('data-id');
+    let selectedIds = storedIds ? storedIds.split(',').map(Number) : [];
+
+    $('#ProcessModal').remove();
+
+    let html = `
+    <div class="modal fade show" id="ProcessModal" style="display:flex;align-items:center;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header d-flex align-items-center justify-content-between">
+                    <h2>Select Processes</h2>
+                    <span id="ProcessPopupClose" class="close" style="cursor:pointer;font-size:30px">×</span>
                 </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Width<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control Width" placeholder="Ex: 30" id="Width${numberIncr}" name="Width${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                <div class="modal-body">
+                    <div id="ProcessCheckboxContainer" class="row g-2"></div>
                 </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>GSM<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control GSM" placeholder="Ex: 200" id="GSM${numberIncr}" name="GSM${numberIncr}" required />
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>OutWard Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 40" id="OutWardQuantity${numberIncr}" name="OutWardQuantity${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                </div>
-            </div>
-            <div class="col-md-3 col-lg-3 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>No Of Roll<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control RollCount" placeholder="Ex: 100" id="RollCount${numberIncr}" name="RollCount${numberIncr}" required />
-                </div>
-            </div> 
-            <div class="col-md-9 col-lg-9 col-sm-6 col-6">
-                <div class="form-group">
-                    <label>Remarks</label>
-                    <textarea class="form-control Remarks" id="Remarks${numberIncr}" name="Remarks${numberIncr}" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3 col-3 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
-                <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
-                    <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-primary btn-sm d-none" id="SaveProcessBtn">Save</button>
                 </div>
             </div>
         </div>
-    `;
-    $('#FormProcessing').append(htmlRow);
+    </div>`;
 
-    var FabricTypeId = "FabricType" + numberIncr;
-    Common.bindDropDown(FabricTypeId, 'FabricType');
+    $('body').append(html);
 
-    updateRemoveButtons();
-}
+    ProcessTypeDropdown[0].forEach(p => {
+        $('#ProcessCheckboxContainer').append(`
+            <div class="col-md-6 col-6 checkDiv">
+                <input type="checkbox" class="ProcessCheck me-2" data-id="${p.ProcessTypeId}" value="${p.ProcessTypeName}" id="Process_${p.ProcessTypeId}">
+                <label for="Process_${p.ProcessTypeId}" class="checkbox-label">${p.ProcessTypeName}</label>
+            </div>
+        `);
+    });
 
-function updateRowLabels() {
-    $('.DynamicRowProcessing').each(function (index) {
-        $(this).find('.DynamicLable').text('Fabric Details ' + (index + 1));
+    if (selectedIds.length > 0) {
+        $('.ProcessCheck').each(function () {
+            $(this).prop('checked', selectedIds.includes($(this).data('id')));
+        });
+    }
+
+    toggleSaveButton();
+
+    $('#ProcessPopupClose').click(function () {
+        $('#ProcessModal').remove();
+    });
+
+    $(document).on('change', '.ProcessCheck', function () {
+        toggleSaveButton();
+    });
+
+    function toggleSaveButton() {
+        $('#SaveProcessBtn').toggleClass('d-none', $('.ProcessCheck:checked').length === 0);
+    }
+
+    $('#SaveProcessBtn').click(function () {
+        const selectedCheckedIds = $('.ProcessCheck:checked').map(function () { return $(this).data('id'); }).get();
+
+        const selectedCount = selectedCheckedIds.length;
+        selectedProcessInput.val(selectedCount);
+
+        $row.find('td[data-id]').attr('data-id', selectedCheckedIds.join(','));
+        $('#ProcessModal').remove();
+    });
+});
+
+//------------------------------Attachment------------------------
+
+$(document).on('click', '#deletefile', function () {
+    var listItem = $(this).closest('li');
+    var fileText = listItem.find('span').text();
+    var attachmentid = parseInt($(this).attr('attachmentid'));
+    var src = $(this).attr('src');
+    var moduleRefId = $(this).attr('ModuleRefId');
+    deletedFiles.push({
+        AttachmentId: attachmentid,
+        ModuleName: "OutWard",
+        ModuleRefId: parseInt(moduleRefId),
+        AttachmentFileName: fileText,
+        AttachmentFilePath: src
+    });
+    $(listItem).remove();
+});
+
+function getExistFiles() {
+
+    var existitem = $('#ExistselectedFiles li');
+    $.each(existitem, function (index, value) {
+
+        var fileText = $(value).find('span').text();
+        var attachmentid = parseInt($(value).find('.delete-buttonattach').attr('attachmentid'));
+        var src = $(value).find('.delete-buttonattach').attr('src');
+        var moduleRefId = $(value).find('.delete-buttonattach').attr('ModuleRefId');
+        existFiles.push({
+            AttachmentId: attachmentid,
+            ModuleName: "OutWard",
+            ModuleRefId: parseInt(moduleRefId),
+            AttachmentFileName: fileText,
+            AttachmentFilePath: src
+        });
     });
 }
 
-function updateRemoveButtons() {
-    var rows = $('.DynamicRowProcessing');
-    rows.each(function (index) {
-        var removeButtonDiv = $(this).find('.thiswillshow');
-        if (rows.length == 1) {
-            removeButtonDiv.css('display', 'none');
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const selectedFiles = document.getElementById('selectedFiles');
+    selectedFiles.innerHTML = '';
+    fileInput.addEventListener('change', (e) => {
+
+        const files = e.target.files;
+        for (var i = 0; i < files.length; i++) {
+            formDataMultiple.append('files[]', files[i]);
+        }
+
+        if (files.length > 0) {
+            preview.style.display = 'block';
+
+
+            for (const file of files) {
+                const fileItem = document.createElement('li');
+                const fileName = document.createElement('span');
+                const downloadButton = document.createElement('button');
+                const deleteButton = document.createElement('button');
+                downloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                downloadButton.className = 'download-button';
+                deleteButton.className = 'delete-button';
+
+                downloadButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const blob = new Blob([file]);
+                    const blobURL = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobURL;
+                    a.download = file.name;
+                    a.click();
+                    URL.revokeObjectURL(blobURL);
+                });
+
+                deleteButton.addEventListener('click', () => {
+                    var itemName = $(fileItem).find('span').text();
+                    var newFormData = new FormData();
+                    $.each(formDataMultiple.getAll('files[]'), function (index, value) {
+                        if (value.name !== itemName) {
+                            newFormData.append('files[]', value);
+                        }
+                    });
+                    formDataMultiple = newFormData;
+
+                    fileItem.remove();
+                });
+
+                fileName.textContent = file.name.length > 10 ? file.name.substring(0, 11) + '...' : file.name;
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(downloadButton);
+                fileItem.appendChild(deleteButton);
+                selectedFiles.appendChild(fileItem);
+            }
         } else {
-            removeButtonDiv.css('display', 'block');
+            preview.style.display = 'none';
         }
     });
-}
+}); 
 
-function removeRow(button) {
-    var totalRows = $('.DynamicRowProcessing').length;
-    if (totalRows > 1) {
-        $(button).closest('.DynamicRowProcessing').remove();
-        updateRowLabels();
-        updateRemoveButtons();
-    }
-}
+/*------------------------------------------------------------------Avoid the Duplicate to select----------------------------------------------------------------*/
+
+$(document).on("change", ".FabricSelect", function () {
+
+    const classMap = [".FabricSelect"];
+    const changedClass = classMap.find(c => $(this).hasClass(c.substring(1)));
+    refreshProductDropdowns(changedClass);
+});
+
+function refreshProductDropdowns(selector) {
+
+    let selectedValues = $(selector).map(function () {
+        return $(this).val();
+    }).get().filter(v => v !== "");
+
+    $(selector).each(function () {
+
+        let currentVal = $(this).val();
+
+        $(this).find("option").prop("disabled", false).removeClass("d-none");
+
+        selectedValues.forEach(val => {
+            if (val !== currentVal) {
+                $(this).find(`option[value="${val}"]`).prop("disabled", true).addClass("d-none");
+            }
+        });
+    });
+} 

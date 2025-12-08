@@ -77,7 +77,7 @@ namespace TetroONE.Controllers
         {
             return View();
         }
-         
+
         [HttpGet]
         [Route("GetSample")]
         public IActionResult GetTarget(int? PlantId, int? SampleId, DateTime? FromDate, DateTime? ToDate)
@@ -92,9 +92,13 @@ namespace TetroONE.Controllers
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetSampleDetails]", request);
-            return Json(response); 
+            return Json(response);
         }
-         
+
+
+        //-------------------------------------------------------------------------Inward---------------------------------------------------------------------------------
+
+
         [HttpGet]
         [Route("GetInward")]
         public IActionResult GetInward(int? PlantId, int? InwardId, DateTime? FromDate, DateTime? ToDate)
@@ -110,25 +114,191 @@ namespace TetroONE.Controllers
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetInwardDetails]", request);
             return Json(response);
-
         }
-         
-        [HttpGet]
-        [Route("GetTransactionTypeNoDetails")]
-        public IActionResult GetTransactionTypeNoDetails(int? PlantId, int Transactiontype)
+
+        [HttpPost]
+        [Route("InsertUpdateInwardDetails")]
+        public async Task<IActionResult> InsertUpdateInwardDetails()
         {
-            GetTransactionTypeNoDetails request = new GetTransactionTypeNoDetails()
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            InsertUpdateInwardDetails staticDetails = new InsertUpdateInwardDetails();
+
+            staticDetails = JsonConvert.DeserializeObject<InsertUpdateInwardDetails>(Request.Form["InwardStaticData"]);
+
+            IFormFileCollection file = Request.Form.Files;
+            List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
+            DataTable dtattachment = new DataTable();
+
+            foreach (var item in file)
             {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                PlantId = PlantId,
-                Transactiontype = Transactiontype,
+                var attachment = GetFilePath(item.FileName);
+                lstattachment.Add(new AttachmentDetails()
+                {
+                    AttachmentExactFileName = item.FileName,
+                    AttachmentFileName = attachment.Item1,
+                    AttachmentFilePath = attachment.Item2,
+                    ModuleName = "InWard"
+                });
+            }
+
+            bool isuploaded = await IsClaimAttachmentUploaded(file, lstattachment);
+            foreach (var item in lstattachment)
+            {
+                item.AttachmentFileName = item.AttachmentExactFileName;
+            }
+
+            var exist = Request.Form["Exist"].ToList();
+            if (exist != null && exist.Count > 0)
+            {
+                List<AttachmentDetails> lstexistattachment = ParseFormData(Request.Form["Exist"]);
+                if (lstexistattachment.Any())
+                {
+                    lstattachment.AddRange(lstexistattachment);
+                }
+            }
+            List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstattachment.AddRange(lstdeleteattachment);
+                    lstattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
+                }
+            }
+
+            dtattachment = GenericTetroONE.ToDataTable(lstattachment);
+            dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
+
+            List<InwardFabricDetails>? staticData = JsonConvert.DeserializeObject<List<InwardFabricDetails>?>(Request.Form["InwardFabricDetails"]);
+            DataTable InwardFabricDetails = GenericTetroONE.ToDataTable(staticData);
+
+            List<InwardFabricProcessMappingDetails>? staticData1 = JsonConvert.DeserializeObject<List<InwardFabricProcessMappingDetails>?>(Request.Form["InwardFabricProcessMappingDetails"]);
+            DataTable InwardFabricProcessMappingDetails = GenericTetroONE.ToDataTable(staticData1);
+
+            var spName = string.Empty;
+            if (staticDetails.InWardId != null && staticDetails.InWardId != 0)
+            {
+                spName = "[dbo].[USP_UpdateInWardDetails]";
+            }
+            else
+            {
+                spName = "[dbo].[USP_InsertInWardDetails]";
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(spName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@LoginUserId", _userId);
+                    command.Parameters.AddWithValue("@PlantId", staticDetails.PlantId);
+                    command.Parameters.AddWithValue("@InWardDate", staticDetails.InWardDate);
+                    command.Parameters.AddWithValue("@InWardNo", staticDetails.InWardNo);
+                    command.Parameters.AddWithValue("@PaymentTypeId", staticDetails.PaymentTypeId);
+                    command.Parameters.AddWithValue("@ClientId", staticDetails.ClientId);
+                    command.Parameters.AddWithValue("@ClientDcNumber", staticDetails.ClientDcNumber);
+                    command.Parameters.AddWithValue("@ReceivedFrom", staticDetails.ReceivedFrom);
+                    command.Parameters.AddWithValue("@OldDcNumber", staticDetails.OldDcNumber);
+                    command.Parameters.AddWithValue("@LabOption", staticDetails.LabOption);
+                    command.Parameters.AddWithValue("@VehicleNo", staticDetails.VehicleNo);
+                    command.Parameters.AddWithValue("@ColorId", staticDetails.ColorId);
+                    command.Parameters.AddWithValue("@StorageLocationId", staticDetails.StorageLocationId);
+                    command.Parameters.AddWithValue("@NoofFabric", staticDetails.NoofFabric);
+                    command.Parameters.AddWithValue("@TotalQty", staticDetails.TotalQty);
+                    command.Parameters.AddWithValue("@TotalRolls", staticDetails.TotalRolls);
+                    command.Parameters.AddWithValue("@ReceivedBy", staticDetails.ReceivedBy);
+                    command.Parameters.AddWithValue("@Notes", staticDetails.Notes == null ? (object)DBNull.Value : staticDetails.Notes);
+
+                    command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
+                    command.Parameters.AddWithValue("@TVP_InwardFabricDetails", InwardFabricDetails);
+                    command.Parameters.AddWithValue("@TVP_InwardFabricProcessMappingDetails", InwardFabricProcessMappingDetails);
+
+                    if (staticDetails.InWardId > 0)
+                    {
+                        command.Parameters.AddWithValue("@InWardId", staticDetails.InWardId);
+                        command.Parameters.AddWithValue("@InWardStatusId", staticDetails.InWardStatusId);
+                    }
+
+                    command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
+                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                }
+                connection.Close();
+
+            }
+            if (!response.Status)
+            {
+                foreach (var item in lstattachment)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                                .Replace("..", "").Replace("/", "\\");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            } 
+            return Json(response);
+        }
+          
+        [HttpGet]
+        [Route("DeleteInWardDetails")]
+        public IActionResult DeleteInWardDetails(int InWardId)
+        {
+            DeleteInWardDetails getInWard = new DeleteInWardDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                InWardId = InWardId
             };
 
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetTransactionTypeNoDetails]", request);
-            return Json(response);
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteInWardDetails]", getInWard);
 
+            if (response.Status)
+            {
+                string lst = response.Data.ToString().Substring(1, response.Data.ToString().Length - 2);
+                List<AttachmentDetails> att = new List<AttachmentDetails>();
+                att = JsonConvert.DeserializeObject<List<AttachmentDetails>>(lst);
+
+                if (att != null && att.Count > 0)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot");
+                    foreach (var item in att)
+                    {
+                        if (!string.IsNullOrEmpty(item.AttachmentFilePath))
+                        {
+                            string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                            .Replace("..", "").Replace("/", "\\");
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                System.IO.File.Delete(filePath);
+                            }
+                        }
+                    }
+                }
+            }
+            return Json(response);
         }
-         
+
+        //-------------------------------------------------------------------------Outward---------------------------------------------------------------------------------
+
         [HttpGet]
         [Route("GetOutward")]
         public IActionResult GetOutward(int? PlantId, int? OutWardId, DateTime? FromDate, DateTime? ToDate)
@@ -141,9 +311,9 @@ namespace TetroONE.Controllers
                 FromDate = FromDate.HasValue ? FromDate.Value.AddDays(1) : (DateTime?)null,
                 ToDate = ToDate,
             };
-             
+
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetOutWardDetails]", request);
-            return Json(response); 
+            return Json(response);
         }
 
         [HttpGet]
@@ -158,26 +328,459 @@ namespace TetroONE.Controllers
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetOutWardType_ContactDetails]", request);
             return Json(response);
+        }
 
+        [HttpGet]
+        [Route("GetOutWardTypeClientJobDetails")]
+        public IActionResult GetOutWardTypeClientJobDetails(string ModuleName, int ModuleId)
+        {
+            GetOutWardTypeClientJobDetails request = new GetOutWardTypeClientJobDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                ModuleName = ModuleName,
+                ModuleId = ModuleId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetOutWardType_ClientJobDetails]", request);
+            return Json(response);
+        }
+        
+        [HttpPost]
+        [Route("InsertUpdateOutwardDetails")]
+        public async Task<IActionResult> InsertUpdateOutwardDetails()
+        {
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            InsertUpdateOutwardDetails staticDetails = new InsertUpdateOutwardDetails();
+
+            staticDetails = JsonConvert.DeserializeObject<InsertUpdateOutwardDetails>(Request.Form["OutwardStaticData"]);
+
+            IFormFileCollection file = Request.Form.Files;
+            List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
+            DataTable dtattachment = new DataTable();
+
+            foreach (var item in file)
+            {
+                var attachment = GetFilePath(item.FileName);
+                lstattachment.Add(new AttachmentDetails()
+                {
+                    AttachmentExactFileName = item.FileName,
+                    AttachmentFileName = attachment.Item1,
+                    AttachmentFilePath = attachment.Item2,
+                    ModuleName = "OutWard"
+                });
+            }
+
+            bool isuploaded = await IsClaimAttachmentUploaded(file, lstattachment);
+            foreach (var item in lstattachment)
+            {
+                item.AttachmentFileName = item.AttachmentExactFileName;
+            }
+
+            var exist = Request.Form["Exist"].ToList();
+            if (exist != null && exist.Count > 0)
+            {
+                List<AttachmentDetails> lstexistattachment = ParseFormData(Request.Form["Exist"]);
+                if (lstexistattachment.Any())
+                {
+                    lstattachment.AddRange(lstexistattachment);
+                }
+            }
+            List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstattachment.AddRange(lstdeleteattachment);
+                    lstattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
+                }
+            }
+
+            dtattachment = GenericTetroONE.ToDataTable(lstattachment);
+            dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
+
+            List<OutWardFabricDetails>? OutwardFabric = JsonConvert.DeserializeObject<List<OutWardFabricDetails>?>(Request.Form["OutwardFabricDetails"]);
+            DataTable OutWardFabricDetails = GenericTetroONE.ToDataTable(OutwardFabric);
+
+            List<OutwardFabricProcessMappingDetails>? OutwardFabricProcess = JsonConvert.DeserializeObject<List<OutwardFabricProcessMappingDetails>?>(Request.Form["OutwardFabricProcessMappingDetails"]);
+            DataTable OutwardFabricProcessMappingDetails = GenericTetroONE.ToDataTable(OutwardFabricProcess);
+
+            var spName = string.Empty;
+            if (staticDetails.OutWardId != null && staticDetails.OutWardId != 0)
+            {
+                spName = "[dbo].[USP_UpdateOutWardDetails]";
+            }
+            else
+            {
+                spName = "[dbo].[USP_InsertOutWardDetails]";
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(spName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@LoginUserId", _userId);
+                    command.Parameters.AddWithValue("@OutwardDate", staticDetails.OutwardDate);
+                    command.Parameters.AddWithValue("@OutwardNo", staticDetails.OutwardNo);
+                    command.Parameters.AddWithValue("@OutWardTo", staticDetails.OutWardTo); 
+                    command.Parameters.AddWithValue("@PackingSlipNo", staticDetails.PackingSlipNo); 
+                    command.Parameters.AddWithValue("@ShipFrom", staticDetails.ShipFrom);
+                    command.Parameters.AddWithValue("@ShipTo", staticDetails.ShipTo);
+                    command.Parameters.AddWithValue("@ShipToAddress", staticDetails.ShipToAddress);
+                    command.Parameters.AddWithValue("@ShipToCity", staticDetails.ShipToCity);
+                    command.Parameters.AddWithValue("@ShiptoMobileNo", staticDetails.ShiptoMobileNo);
+                    command.Parameters.AddWithValue("@ShipToPlaceOfSupply", staticDetails.ShipToPlaceOfSupply);
+                    command.Parameters.AddWithValue("@OutWardedBy", staticDetails.OutWardedBy);
+                    command.Parameters.AddWithValue("@NoofFabric", staticDetails.NoofFabric);
+                    command.Parameters.AddWithValue("@TotalQty", staticDetails.TotalQty);
+                    command.Parameters.AddWithValue("@TotalRolls", staticDetails.TotalRolls);
+                    command.Parameters.AddWithValue("@Notes", staticDetails.Notes == null ? (object)DBNull.Value : staticDetails.Notes);
+                    command.Parameters.AddWithValue("@VehicleNo", staticDetails.VehicleNo);
+                    command.Parameters.AddWithValue("@DriverName", staticDetails.DriverName);
+                    command.Parameters.AddWithValue("@InwardId", staticDetails.InwardId == null ? (object)DBNull.Value : staticDetails.InwardId);
+                    command.Parameters.AddWithValue("@PlantId", staticDetails.PlantId);
+
+                    command.Parameters.AddWithValue("@TVP_OutwardFabricDetails", OutWardFabricDetails);
+                    command.Parameters.AddWithValue("@TVP_OutwardFabricProcessMappingDetails", OutwardFabricProcessMappingDetails); 
+                    command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
+
+                    if (staticDetails.OutWardId > 0)
+                    {
+                        command.Parameters.AddWithValue("@OutWardId", staticDetails.OutWardId);
+                        command.Parameters.AddWithValue("@OutWardStatusId", staticDetails.OutWardStatusId);
+                    }
+
+                    command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
+                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                }
+                connection.Close(); 
+            }
+            if (!response.Status)
+            {
+                foreach (var item in lstattachment)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                                .Replace("..", "").Replace("/", "\\");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
+            return Json(response);
         }
          
         [HttpGet]
+        [Route("DeleteOutWardDetails")]
+        public IActionResult DeleteOutWardDetails(int OutWardId)
+        {
+            DeleteOutwardDetails getOutWard = new DeleteOutwardDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                OutWardId = OutWardId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteOutWardDetails]", getOutWard);
+
+            if (response.Status)
+            {
+                string lst = response.Data.ToString().Substring(1, response.Data.ToString().Length - 2);
+                List<AttachmentDetails> att = new List<AttachmentDetails>();
+                att = JsonConvert.DeserializeObject<List<AttachmentDetails>>(lst);
+
+                if (att != null && att.Count > 0)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot");
+                    foreach (var item in att)
+                    {
+                        if (!string.IsNullOrEmpty(item.AttachmentFilePath))
+                        {
+                            string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                            .Replace("..", "").Replace("/", "\\");
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                System.IO.File.Delete(filePath);
+                            }
+                        }
+                    }
+                }
+            }
+            return Json(response);
+        }
+
+        //-------------------------------------------------------------------------ProductionPlan---------------------------------------------------------------------------------
+
+        [HttpGet]
         [Route("GetProductionPlan")]
-        public IActionResult GetProductionPlan(int? TypeId, int? ProductionPlanId, DateTime? FromDate, DateTime? ToDate)
+        public IActionResult GetProductionPlan(int? PlantId, int? TypeId, int? ProductionPlanId, DateTime? FromDate, DateTime? ToDate)
         {
             GetProductionPlan request = new GetProductionPlan()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
                 TypeId = TypeId,
+                PlantId = PlantId,
                 ProductionPlanId = ProductionPlanId == 0 ? null : ProductionPlanId,
                 FromDate = FromDate.HasValue ? FromDate.Value.AddDays(1) : (DateTime?)null,
                 ToDate = ToDate,
             };
 
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductionPlanDetails_HotCode]", request);
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductionPlanDetails]", request);
             return Json(response);
         }
-         
+
+        [HttpGet]
+        [Route("GetFabricDetailsProductionPlan")]
+        public IActionResult GetFabricDetailsProductionPlan(int PlantId, int? IsUpdate, decimal? KG, string? Color)
+        {
+            GetFabricDetailsProductionPlan request = new GetFabricDetailsProductionPlan()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                PlantId = PlantId,
+                IsUpdate = IsUpdate,
+                KG = KG,
+                Color = Color,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetFabricDetails_ProductionPlan]", request);
+            return Json(response);
+        }
+        
+        [HttpPost]
+        [Route("InsertUpdateProductionPlanDetails")]
+        public async Task<IActionResult> InsertUpdateProductionPlanDetails()
+        {
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            InsertUpdateProductionPlanDetails staticDetails = new InsertUpdateProductionPlanDetails();
+
+            staticDetails = JsonConvert.DeserializeObject<InsertUpdateProductionPlanDetails>(Request.Form["ProductionPlanStaticData"]);
+
+            IFormFileCollection file = Request.Form.Files;
+            List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
+            DataTable dtattachment = new DataTable();
+            
+            foreach (var item in file)
+            {
+                var attachment = GetFilePath(item.FileName);
+                lstattachment.Add(new AttachmentDetails()
+                {
+                    AttachmentExactFileName = item.FileName,
+                    AttachmentFileName = attachment.Item1,
+                    AttachmentFilePath = attachment.Item2,
+                    ModuleName = "ProductionPlan"
+                });
+            }
+
+            bool isuploaded = await IsClaimAttachmentUploaded(file, lstattachment);
+            foreach (var item in lstattachment)
+            {
+                item.AttachmentFileName = item.AttachmentExactFileName;
+            }
+
+            var exist = Request.Form["Exist"].ToList();
+            if (exist != null && exist.Count > 0)
+            {
+                List<AttachmentDetails> lstexistattachment = ParseFormData(Request.Form["Exist"]);
+                if (lstexistattachment.Any())
+                {
+                    lstattachment.AddRange(lstexistattachment);
+                }
+            }
+            List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstattachment.AddRange(lstdeleteattachment);
+                    lstattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
+                }
+            }
+
+            dtattachment = GenericTetroONE.ToDataTable(lstattachment);
+            dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
+
+            List<ProductionPlanFabricDetails>? ProductionPlanFabricDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanFabricDetails>?>(Request.Form["ProductionPlanFabricDetails"]);
+            DataTable ProductionPlanFabricDetails = GenericTetroONE.ToDataTable(ProductionPlanFabricDetails1);
+              
+            List<ProductionPlanFabricProcessMappingDetails>? ProductionPlanFabricProcessMappingDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanFabricProcessMappingDetails>?>(Request.Form["ProductionPlanFabricProcessMappingDetails"]);
+            DataTable ProductionPlanFabricProcessMappingDetails = GenericTetroONE.ToDataTable(ProductionPlanFabricProcessMappingDetails1);
+              
+            List<ProductionPlanDyeRequirementDetails>? ProductionPlanDyeRequirementDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanDyeRequirementDetails>?>(Request.Form["ProductionPlanDyeRequirementDetails"]);
+            DataTable ProductionPlanDyeRequirementDetails = GenericTetroONE.ToDataTable(ProductionPlanDyeRequirementDetails1);
+              
+            List<ProductionPlanChemicalRequirementDetails>? ProductionPlanChemicalRequirementDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanChemicalRequirementDetails>?>(Request.Form["ProductionPlanChemicalRequirementDetails"]);
+            DataTable ProductionPlanChemicalRequirementDetails = GenericTetroONE.ToDataTable(ProductionPlanChemicalRequirementDetails1);
+            
+            var spName = string.Empty;
+            if (staticDetails.ProductionPlanId != null && staticDetails.ProductionPlanId != 0)
+            {
+                spName = "[dbo].[USP_UpdateProductionPlanDetails]";
+            }
+            else
+            {
+                spName = "[dbo].[USP_InsertProductionPlanDetails]";
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(spName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@LoginUserId", _userId);
+                    command.Parameters.AddWithValue("@PlantId", staticDetails.PlantId);
+                    command.Parameters.AddWithValue("@ProductionNo", staticDetails.ProductionNo);
+                    command.Parameters.AddWithValue("@ProductionDate", staticDetails.ProductionDate);
+                    command.Parameters.AddWithValue("@TotalWeight", staticDetails.TotalWeight);
+                    command.Parameters.AddWithValue("@ColorId", staticDetails.ColorId);
+                    command.Parameters.AddWithValue("@MachineId", staticDetails.MachineId);
+                    command.Parameters.AddWithValue("@ProductionPlanStatusId", staticDetails.ProductionPlanStatusId);
+                    command.Parameters.AddWithValue("@Comments", staticDetails.Comments);
+                    command.Parameters.AddWithValue("@PreparedBy", staticDetails.PreparedBy);
+
+                    command.Parameters.AddWithValue("@TVP_ProductionPlanFabricDetails", ProductionPlanFabricDetails);
+                    command.Parameters.AddWithValue("@TVP_ProductionPlanFabricProcessMappingDetails", ProductionPlanFabricProcessMappingDetails);
+                    command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
+
+                    if (staticDetails.ProductionPlanId > 0)
+                    {
+                        command.Parameters.AddWithValue("@ProductionPlanId", staticDetails.ProductionPlanId);
+                        command.Parameters.AddWithValue("@LoadingDateTime", staticDetails.LoadingDateTime);
+                        command.Parameters.AddWithValue("@UnLoadingDateTime", staticDetails.UnLoadingDateTime);
+                        command.Parameters.AddWithValue("@TVP_ProductionPlanDyeRequirementDetails", ProductionPlanDyeRequirementDetails);
+                        command.Parameters.AddWithValue("@TVP_ProductionPlanChemicalRequirementDetails", ProductionPlanChemicalRequirementDetails);
+                    }
+
+                    command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
+                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                }
+                connection.Close();
+            }
+            if (!response.Status)
+            {
+                foreach (var item in lstattachment)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                                .Replace("..", "").Replace("/", "\\");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteProductionPlanDetails")]
+        public IActionResult DeleteProductionPlanDetails(int ProductionPlanId)
+        {
+            DeleteProductionPlanDetails getOutWard = new DeleteProductionPlanDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductionPlanId = ProductionPlanId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteProductionPlanDetails]", getOutWard);
+
+            if (response.Status)
+            {
+                string lst = response.Data.ToString().Substring(1, response.Data.ToString().Length - 2);
+                List<AttachmentDetails> att = new List<AttachmentDetails>();
+                att = JsonConvert.DeserializeObject<List<AttachmentDetails>>(lst);
+
+                if (att != null && att.Count > 0)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot");
+                    foreach (var item in att)
+                    {
+                        if (!string.IsNullOrEmpty(item.AttachmentFilePath))
+                        {
+                            string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                            .Replace("..", "").Replace("/", "\\");
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                System.IO.File.Delete(filePath);
+                            }
+                        }
+                    }
+                }
+            }
+            return Json(response);
+        }
+
+        //-------------------------------------------------------------------------ProductionPlan---------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Route("GetProductionLogDetails")]
+        public IActionResult GetProductionLogDetails(int? PlantId, int? ProductionPlanId, int? ProductionLogId, DateTime? FromDate, DateTime? ToDate)
+        {
+            GetProductionLogDetails request = new GetProductionLogDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                PlantId = PlantId,
+                ProductionPlanId = ProductionPlanId == 0 ? null : ProductionPlanId,
+                ProductionLogId = ProductionLogId == 0 ? null : ProductionLogId,
+                FromDate = FromDate.HasValue ? FromDate.Value.AddDays(1) : (DateTime?)null,
+                ToDate = ToDate,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductionLogDetails]", request);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertUpdateProductionLog")]
+        public IActionResult InsertUpdateProductionLog([FromBody] InsertUpdateProductionLog request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            //string[] Exculuted = (request.ProductionLogId != null)
+            //    ? new string[] { "" }
+            //    : new string[] { "MasterInfoId" };
+
+            string storedProcedure = "[dbo].[USP_UpdateProductionLogDetails]";
+
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request);
+            return Json(response);
+        }
+
         [HttpGet]
         [Route("OutwardPrint")]
         public IActionResult OutwardPrint(int NoOfCopies, string printType)
@@ -265,6 +868,57 @@ namespace TetroONE.Controllers
         //        return File(fileBytes, "application/pdf", "QRCode.pdf");
         //    }
         //}
+
+
+
+
+        private (string, string) GetFilePath(string reqfilename)
+        {
+            string guid = Guid.NewGuid().ToString();
+
+            string relativePath = Path.Combine("TetroOne");
+            string fileName = guid + "@@" + reqfilename;
+            string relativeFilePath = "..\\" + relativePath + "\\" + fileName;
+            relativeFilePath = relativeFilePath.Replace("\\", "/");
+            return (fileName, relativeFilePath);
+        }
+
+        private async Task<bool> IsClaimAttachmentUploaded(IFormFileCollection file, List<AttachmentDetails> lstattachment)
+        {
+            bool isuploaded = false;
+
+            foreach (var item in file)
+            {
+                var filenameInfo = lstattachment.FirstOrDefault(x => x.AttachmentExactFileName == item.FileName);
+                if (filenameInfo != null)
+                {
+                    var filename = filenameInfo.AttachmentFileName;
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    var filePath = Path.Combine(directoryPath, filename);
+
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await item.CopyToAsync(stream);
+                    }
+                }
+            }
+            isuploaded = true;
+
+            return isuploaded;
+        }
+
+        private List<AttachmentDetails> ParseFormData(string formData)
+        {
+            List<AttachmentDetails> existList = JsonConvert.DeserializeObject<List<AttachmentDetails>>(formData);
+            return existList;
+
+        }
+
 
     }
 }

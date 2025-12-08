@@ -2695,6 +2695,32 @@
             });
         });
     },
+     
+    bindDropDownSuccessProcessType: function (response, controlid) { 
+        if (response != null) {
+            var dataValue = response;
+            $('#' + controlid).empty();
+            if (dataValue.length > 0) {
+                var valueproperty = Object.keys(dataValue[0])[0];
+                var textproperty = Object.keys(dataValue[0])[1];
+                $('#' + controlid).append($('<option>', {
+                    value: '',
+                    text: '--Select--',
+                }));
+                $.each(dataValue, function (index, item) {
+                    $('#' + controlid).append($('<option>', {
+                        value: item[valueproperty],
+                        text: item[textproperty],
+                    }));
+                });
+            } else {
+                $('#' + controlid).append($('<option>', {
+                    value: '',
+                    text: '--Select--',
+                }));
+            }
+        }
+    },
 }
 
 

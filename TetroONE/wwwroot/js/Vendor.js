@@ -197,8 +197,7 @@ $(document).on('click', '#AddVendor', function () {
     } else {
         $("#VendorCanvas").css("width", "39%");
     }
-    CanvasOpenFirstShowingVendor();
-    vendorId = 0;
+    CanvasOpenFirstShowingVendor(); 
     $("#VendorHeader").text('Add Vendor Details');
     $('#fadeinpage').addClass('fadeoverlay');
     $("#FormVendor")[0].reset();
@@ -221,6 +220,13 @@ $(document).on('click', '#AddVendor', function () {
     $("input[name='products']").prop("checked", false);
     $('#loader-pms').hide(); 
 
+    deletedFiles = [];
+    existFiles = [];
+    formDataMultiple = new FormData();
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
+
+    vendorId = 0;
     $('#TransactionsHide').hide();
 
     Common.ajaxCall("GET", "/Contact/GetProductListVendor", { ModuleName: "Vendor" }, ProductListSuccess, null);
@@ -247,6 +253,13 @@ $(document).on('click', '.btn-edit', function () {
     $("#VendorHeader").text('Edit Vendor Details');
     $('#SaveVendor').text('Update').addClass('btn-update').removeClass('btn-success'); 
     $('#IsActiveHide').show();
+
+    deletedFiles = [];
+    existFiles = [];
+    formDataMultiple = new FormData();
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
+
     vendorId = $(this).data('id');
     var franchiseId = parseInt($('#UserFranchiseMappingId').val());
     Common.ajaxCall("GET", "/Contact/GetVendorID", { VendorId: vendorId }, editSuccess, null);

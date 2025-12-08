@@ -16,6 +16,101 @@
         margin-bottom: 10px;
     }
 
+    .DynPageRow-Div {
+        border: 1px solid #c7c7c7;
+    }
+
+    .DynmicTableRow {
+        border-right: 1px solid #c7c7c7;
+        border-left: 1px solid #c7c7c7;
+        border-bottom: 1px solid #c7c7c7;
+    }
+
+    .Dynthead tr th {
+        height: 50px;
+        background-color: #a3c1df !important;
+        color: #001d3a;
+        border-color: #dbdbdb !important;
+        white-space: nowrap;
+        align-content: center;
+    }
+
+    .AdddiscountLable {
+        background: no-repeat;
+        border: none;
+        color: #007bff;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .addterms-Attchbg {
+        background: #e4edf5;
+        padding: 10px 10px 10px 10px;
+        border-radius: 5px;
+    }
+
+    textarea.form-controltext {
+        display: block;
+        width: 100%;
+        /* height: calc(7.25rem + 2px); */
+        font-size: 13px;
+        padding: .375rem .75rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15sease-in-out, box-shadow .15sease-in-out;
+        margin-bottom: 1rem;
+    }
+
+    .Statuscolumn {
+        background-color: #e4edf5;
+        border-top: 1px solid #c7c7c7;
+        /* margin-top: 10px; */
+    }
+
+    .quickbillbtn-outline {
+        color: #1c3c5c;
+        background-color: #a3c1df;
+        /* background-image: linear-gradient(to right, #c4c2ff, #7c78f7); */
+        background-repeat: no-repeat;
+        border-color: #5b7d9e;
+        transition: all 0.6sease;
+        font-size: 12px !important;
+        font-weight: 700;
+    }
+
+    .summary-label {
+        font-weight: bold;
+        margin-top: 0px;
+        font-size: 16px;
+        color: #001224;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+    }
+
+    #FabricTotal, #QtyTotal, #NoOfRollsTotal {
+        font-size: .875rem !important;
+        text-align: center !important;
+    }
+
+    .DynrowRemove {
+        background: none;
+        color: red;
+        transition: background 0.3sease, border-color 0.3sease, box-shadow 0.3sease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        font-size: 12px;
+        border: 1px solid red;
+        width: 30px;
+        border-radius: 50%;
+        height: 30px;
+        padding: 4px;
+        margin-top: 1px;
+    }
 </style>
 
 <div class="row quick-db m-b-5">
@@ -175,115 +270,93 @@
     </div>
 </div>
 
+<div id="InWardModal" class="modal" data-bs-loader-pms="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ModalHeading">InWard Details</h2>
+                <span id="InWardClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
 
-<div id="InWardCanvas" class="offcanvas-container">
-    <div class="offcanvas-header d-flex align-items-center justify-content-between">
-        <h2 id="InWardHeader">Add New InWard</h2>
-        <span id="CloseCanvas" class="close"
-              style="font-size:30px;cursor:pointer;color:white;"
-              title="Close">&times;</span>
-    </div>
-    <div class="offcanvas-body">
-        <div class="row">
-            <div class="col-12">
-                <div class="accordion" id="styleAccordion1">
-                    <div class="accordion-header">
-                        <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapseOne1">
-                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                                    <strong class="text-white">
-                                        InWard Info
-                                    </strong>
-                                    <i class="fas fa-angle-down text-white"></i>
-                                </p>
-                            </a>
-                        </h2>
-                    </div>
-                    <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#styleAccordion1">
-                        <div id="Styleenterydetalis" class="card-body">
-                            <form id="FormInWard">
-                                <div class="row">
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div class="px-3" id="ProductionPlanTopHeadbind">
+                    <div class="row DynPageRow-Div">
+                        <div class="col-lg-12 col-md-12 col-sm-6 col-12" id="ShippingColumn" style="position: relative;">
+                            <form id="TopStatic">
+                                <div class="row mt-2 mb-2">
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Inward No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: IN/NO/001" id="InwardNo" name="InwardNo" maxlength="50" required disabled />
+                                            <input type="text" class="form-control" placeholder="Ex: IN/NO/001" id="InWardNo" name="InWardNo" maxlength="50" required disabled />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Inward Date<span id="Asterisk">*</span></label>
                                             <input type="date" class="form-control" id="InwardDate" name="InwardDate" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Payment<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PaymentTypeId" name="PaymentTypeId" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Client<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ClientId" name="ClientId"></select>
+                                            <select class="form-control" id="ClientId" name="ClientId" required></select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Client DC No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" id="ClientDCNo" name="ClientDCNo" placeholder="CLIENT/DC/009" required />
+                                            <input type="text" class="form-control" id="ClientDcNumber" name="ClientDcNumber" placeholder="CLIENT/DC/009" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Transaction Type</label>
-                                            <select class="form-control" id="TransactionId" name="TransactionId" required>
+                                            <label>Received From<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ReceivedFrom" name="ReceivedFrom" required>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Transaction No</label>
-                                            <select class="form-control" id="TransactionNo" name="TransactionNo" required>
+                                            <label>Old DC No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" id="OldDcNumber" name="OldDcNumber" placeholder="REF/DC/014" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Lab Option<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: 12" id="LabOption" name="LabOption" maxlength="50" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Vehicle No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: TN36KS8055" id="VehicleNo" name="VehicleNo" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Color<span id="Asterisk">*</span></label>
+                                            <select class="form-control Color" id="ColorId" name="ColorId" required>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Reference DC No</label>
-                                            <input type="text" class="form-control" id="ReferenceDCNo" name="ReferenceDCNo" placeholder="REF/DC/014" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Vehicle No</label>
-                                            <input type="text" class="form-control" placeholder="Ex: TN36KS8055" id="VehicleNO" name="VehicleNO" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Received By<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ReceivedBy" name="ReceivedBy">
+                                            <label>Storage Location<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="StorageLocationId" name="StorageLocationId" required="">
                                                 <option value="">--Select--</option>
-                                                <option value="1">RAGHURAMAN GOBINATHAN</option>
-                                                <option value="2">KARTHIKEYANI</option>
-                                                <option value="3">MITHRAN</option>
-                                                <option value="6">DEXY</option>
-                                                <option value="34">INDRASENAN</option>
-                                                <option value="109">KAVINESH RAJASEKAR</option>
+                                                <option value="1">A</option>
+                                                <option value="2">B</option>
+                                                <option value="3">C</option>
+                                                <option value="4">D</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-sm-6 col-6" id="InWardStatusDiv">
-                                        <div class="form-group">
-                                            <label>InWard Status<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="InWardStatusId" name="InWardStatusId" required>
-                                                <option value="">--Select--</option>
-                                                <option value="1">Draft</option>
-                                                <option value="2">Approved</option>
-                                                <option value="3">Sent</option>
-                                                <option value="4">Accepted</option>
-                                                <option value="5">Cancelled</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-lg-12 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Remarks</label>
-                                            <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -291,61 +364,169 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                <!--Dynmic table-->
+                <div class="px-3" id="MainPurchaseOrderPopTable">
+                    <div class="row DynmicTableRow">
+                        <div class="container-fluid mt-2">
+                            <div class="Purchasetable-container">
+                                <div class="Purchasetable-scroll">
+                                    <form id="TableInputs">
+                                        <table class="table table-bordered" id="POProductTable">
+                                            <thead class="Dynthead">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Fabric<span style="visibility: hidden;">1111111111111111</span></th>
+                                                    <th>Process<span style="visibility: hidden;">1111</span></th>
+                                                    <th>Dia<span style="visibility: hidden;">11111</span></th>
+                                                    <th>GSM<span style="visibility: hidden;">11111</span></th>
+                                                    <th>Qty<span style="visibility: hidden;">11111</span></th>
+                                                    <th>NoOfRolls<span style="visibility: hidden;">11111</span></th>
+                                                    <th>Width<span style="visibility: hidden;">111111</span></th>
+                                                    <th style="text-align: center;">
+                                                        Action<span style="visibility: hidden;">1</span><span>
+                                                            <button id="dyanmicplusbtn" class="btn AddStockBtn" type="button" onclick="duplicateFabric(this)">
+                                                                <i class="fas fa-plus" id="AddButton"></i>
+                                                            </button>
+                                                        </span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="InwardTableBody" class="Dyntbody">
 
-            <div class="col-12">
-                <div class="accordion" id="styleAccordion2">
-                    <div class="accordion-header">
-                        <h2 id="Styleentery" class="mb-0 Styleentery">
-                            <a data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapseTwo2">
-                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
-                                    <strong class="text-white">
-                                        Fabric Info
-                                    </strong>
-                                    <i class="fas fa-angle-down text-white"></i>
-                                </p>
-                            </a>
-                        </h2>
-                    </div>
-                    <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion2">
-                        <div id="Styleenterydetalis" class="card-body">
-                            <button id="" class="btn AddStockBtn" type="button" onclick="duplicateFabric(this)" style="position: absolute; top: 52px; right: 40px; z-index: 99;">
-                                <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
-                            </button>
-                            <form id="FormProcessing">
-                            </form>
-                            <div class="row attachment">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2" id="Attachrow">
-                                    <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
-                                        <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
-                                            <b>Click Here to Attach your files</b>
-                                            <input type="file" id="fileInput" multiple="" class="custom-file-input">
-                                        </label>
-                                        <div class="file-preview d-flex justify-content-center" id="preview">
-                                            <div class="attachrow">
-                                                <div class="attachcolumn">
-                                                    <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
-                                                </div>
-                                                <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                <!--Add Item-->
+                                                <tr id="AddItemButtonRow">
+                                                </tr>
+
+                                                <tr id="SubtotalRow" style="background-color: #e4edf5;">
+                                                    <td colspan="4"><div class="summary-label"><a>NoOfFabric</a></div></td>
+                                                    <td style="padding: 4px;" id="FabricTotalDiv"> <input type="text" id="NoofFabric" name="NoofFabric" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td style="padding: 4px;" id="QtyTotalDiv"> <input type="text" id="TotalQty" name="TotalQty" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td style="padding: 4px;" id="NoOfRollsTotalDiv"> <input type="text" id="TotalRolls" name="TotalRolls" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+
+                                                    <td colspan="3"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+                <div class="px-3">
+                    <div class="row DynmicTableRow">
+                        <!--Notes & Terms Column-->
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pt-3 pb-3" style="border-right: 1px solid #c7c7c7;">
+                            <input class="AdddiscountLable px-0" id="AddNotesLable" type="button" value="+ Add Notes" fdprocessedid="vurimd">
 
-    <div class="offcanvas-footer">
-        <div class="col-md-12 col-lg-12">
-            <div class="form-group text-center">
-                <div class="card-action">
-                    <a class="btn btn-success m-r-20 text-white" id="SaveInWard">Save</a>
+                            <div id="AddNotes" style="display: none;">
+                                <div class="addterms-Attchbg mb-2 mt-2">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <label>Notes</label>
+                                                <textarea class="form-controltext" id="Notes" name="Notes" rows="4"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <input class="AdddiscountLable px-0 mb-2" id="HideNotesLable" type="button" value="✖ Hide Notes" style="display: none;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Add Attachment-->
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pt-3 pb-3">
+                            <input class="AdddiscountLable px-0" id="AddAttachLable" type="button" value="+ Add Attachment" fdprocessedid="jzwagr">
+
+                            <div id="AddAttachment" style="display: none;">
+                                <div class="addterms-Attchbg mb-2 mt-2">
+                                    <div class="row">
+                                        <div class="col-12" style="height: 120px;margin-top:5px;">
+                                            <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 120px;">
+                                                <!-- Add a custom button for choosing files -->
+                                                <label class=" d-flex justify-content-center align-content-center mt-3 " style="text-decoration:underline; color:#7D7C7C;cursor: pointer;">
+                                                    <b>Click Here to Attach your files</b>
+                                                    <input type="file" id="fileInput" multiple="" class="custom-file-input valid" aria-invalid="false">
+                                                </label>
+                                                <div class="file-preview d-flex justify-content-center" id="preview" style="display: block;">
+                                                    <div class="attachrow">
+                                                        <div class="attachcolumn">
+                                                            <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                                        </div>
+                                                        <div class="attachcolumn">
+                                                            <ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 attachLableDiv">
+                                            <input class="AdddiscountLable px-0" id="HideAttachlable" type="button" value="✖ Hide Attachment" style="margin-top: 11px; display: none;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Statuscolumn col-12 order-3">
+                            <form id="FormStatus" novalidate="novalidate">
+                                <div class="row" style="margin-top: 5px;">
+                                    <div class="col-lg-3 col-md-3 col-6 ">
+                                        <div class="form-group" style="visibility: hidden;">
+                                            <label>Mode Of Transport<span id="Asterisk">*</span></label>
+                                            <select id="ModeOfTrafxgfgnsferId" name="ModeOfTrafgfgnsferId" class="form-control">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-6">
+                                        <div class="form-group" id="DivModeOfTransport" style="display: none;">
+                                            <label>Mode Of Transport<span id="Asterisk">*</span></label>
+                                            <select id="ModeOfTransferId" name="ModeOfTransferId" class="form-control" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Company Vehicle</option>
+                                                <option value="2">Private Logistics</option>
+                                                <option value="3">Others</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-6" id="emptyDiv">
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-6">
+                                        <div class="form-group">
+                                            <label>Received By<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ReceivedBy" name="ReceivedBy" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6" id="InWardStatusIdDiv">
+                                        <div class="form-group">
+                                            <label>Status<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="InWardStatusId" name="InWardStatusId" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="button-container d-lg-flex d-block justify-content-center">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="BtnSave">
+                                <i class="fas fa-save mr-1"></i>
+                                <span>Save</span><span class="shortcut-key">[ Ctrl+S ]</span>
+                            </button>
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="BtnCancel">
+                                <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -356,3 +537,4 @@
 </script>
 
 <script src="~/js/inward.js"></script>
+<script src="~/js/Inventory.js"></script>

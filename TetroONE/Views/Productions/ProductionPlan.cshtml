@@ -158,7 +158,7 @@
     </div>
 </div>
 
-<ul class="nav nav-tabs pl-2 mt-2" id="myTab" role="tablist">
+<ul class="nav nav-tabs pl-2 mt-2" id="MainTab" role="tablist">
     <li class="nav-item" role="presentation">
         <a class="nav-link navbar-tab titleForHeaderProductTab active this" id="ProductionPlanData-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Production Plan</a>
     </li>
@@ -213,45 +213,33 @@
                                     <div class="col-lg-2 col-md-2 col-sm-6 col-6" id="TotalWeightDiv">
                                         <div class="form-group">
                                             <label>Total Weight<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" id="TotalWeight" name="TotalWeight" placeholder="Ex: 890 KG" required>
+                                            <input type="text" class="form-control" id="TotalWeight" name="TotalWeight" placeholder="Ex: 890 KG" required disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="ColourDiv">
                                         <div class="form-group">
-                                            <label>Colour<span id="Asterisk">*</span></label>
-                                            <select class="form-control Color" id="Color" name="Color">
-                                                <option value="">--Select--</option>
-                                                <option value="1">14-0002 TCX</option>
-                                                <option value="2">15-4101 TCX</option>
-                                                <option value="3">17-1578 TCX</option>
-                                                <option value="4">17-1564 TCX</option>
-                                                <option value="5">19-4052 TCX</option>
+                                            <label>Color<span id="Asterisk">*</span></label>
+                                            <select class="form-control Color" id="ColorId" name="ColorId" disabled>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="MachineDiv">
                                         <div class="form-group">
                                             <label>Machine<span id="Asterisk">*</span></label>
-                                            <select class="form-control Machine" id="Machine" name="Machine">
-                                                <option value="">--Select--</option>
-                                                <option value="1">JET-1</option>
-                                                <option value="2">JET-2</option>
-                                                <option value="3">JET-3</option>
-                                                <option value="4">JET-4</option>
-                                                <option value="5">JET-5</option>
+                                            <select class="form-control Machine" id="MachineId" name="MachineId" disabled>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="LoadingDateTimeDiv">
                                         <div class="form-group">
                                             <label>LoadingDate Time<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control dateTimePicker" id="UnLoadingDateTime" name="UnLoadingDateTime" readonly>
+                                            <input type="text" class="form-control dateTimePicker" id="LoadingDateTime" name="LoadingDateTime" readonly required>
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="UnLoadingDateTimeDiv">
                                         <div class="form-group">
                                             <label>UnLoadingDate Time<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control dateTimePicker" id="UnLoadingDateTime" name="UnLoadingDateTime" readonly>
+                                            <input type="text" class="form-control dateTimePicker" id="UnLoadingDateTime" name="UnLoadingDateTime" readonly required>
                                         </div>
                                     </div>
                                 </div>
@@ -264,41 +252,43 @@
                     <div class="row DynmicTableRow">
                         <div class="container-fluid mt-2">
                             <div class="Purchasetable-container">
-                                <div class="Purchasetable-scroll">
-                                    <table class="table table-bordered" id="ProductionPlanProductTable">
-                                        <thead class="Dynthead">
-                                            <tr>
-                                                <th>S.No</th>
-                                                <th>Lot No<span style="visibility: hidden;">11111</span></th>
-                                                <th>Colour<span style="visibility: hidden;">11111</span></th>
-                                                <th>Fabric Type<span style="visibility: hidden;">1111</span></th>
-                                                <th>GSM<span style="visibility: hidden;">1111</span></th>
-                                                <th>Width<span style="visibility: hidden;">1111</span></th>
-                                                <th>Quantity<span style="visibility: hidden;">1</span></th>
-                                                <th>Process<span style="visibility: hidden;">1</span></th>
-                                                <th>Remarks<span style="visibility: hidden;">111111111111111111111111111</span></th>
-                                                <th style="width: 65px;">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="ProductionPlanProductTablebody" class="Dyntbody">
+                                <form id="TableInputs">
+                                    <div class="Purchasetable-scroll">
+                                        <table class="table table-bordered" id="ProductionPlanProductTable">
+                                            <thead class="Dynthead">
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Lot No<span style="visibility: hidden;">11111</span></th>
+                                                    <th>Colour<span style="visibility: hidden;">11111</span></th>
+                                                    <th>Fabric Type<span style="visibility: hidden;">1111</span></th>
+                                                    <th>GSM<span style="visibility: hidden;">1111</span></th>
+                                                    <th>Width<span style="visibility: hidden;">1111</span></th>
+                                                    <th>Quantity<span style="visibility: hidden;">1</span></th>
+                                                    <th>Process<span style="visibility: hidden;">1</span></th>
+                                                    <th>Remarks<span style="visibility: hidden;">111111111111111111111111111</span></th>
+                                                    <th style="width: 65px;">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ProductionPlanProductTablebody" class="Dyntbody">
 
-                                            <!--Add Item-->
-                                            <tr id="AddItemButtonRow">
-                                                <td colspan="10" class="add-item">
-                                                    <div class="add-item">
-                                                        <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                <!--Add Item-->
+                                                <tr id="AddItemButtonRow">
+                                                    <td colspan="10" class="add-item">
+                                                        <div class="add-item">
+                                                            <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
 
-                                            <tr id="SubtotalRow" style="border-top: 2px solid white !important;">
-                                                <td colspan="10" class="p-2">
-                                                    <div class="summary-label"><a class="mr-3" id="RawMetarialInfo">+ RawMaterial Info</a><a id="ChemicalInfo">+ Chemical Info</a></div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                <tr id="SubtotalRow" style="border-top: 2px solid white !important;">
+                                                    <td colspan="10" class="p-2">
+                                                        <div class="summary-label"><a class="mr-3" id="RawMetarialInfo">+ RawMaterial Info</a><a id="ChemicalInfo">+ Chemical Info</a></div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -377,18 +367,9 @@
                         <div class="Statuscolumn col-12 order-3">
                             <form id="FormStatus" novalidate="novalidate">
                                 <div class="row" style="margin-top: 5px;">
-                                    <div class="col-lg-3 col-md-3 col-6 ">
-                                        <div class="form-group" style="visibility: hidden;">
-                                            <label>Mode Of Transport<span id="Asterisk">*</span></label>
-                                            <select id="ModeOfTrafxgfgnsferId" name="ModeOfTrafgfgnsferId" class="form-control">
-                                            </select>
-                                        </div>
+                                    <div class="col-lg-3 col-md-3 col-6" id="emptyDiv">
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-6">
-                                        <div class="form-group" id="DivModeOfTransport" style="display: none;">
-                                            <label>Mode Of Transport<span id="Asterisk">*</span></label>
-                                            <select id="ModeOfTransferId" name="ModeOfTransferId" class="form-control" required=""><option value="">--Select--</option><option value="1">Company Vehicle</option><option value="2">Private Logistics</option><option value="3">Others</option></select>
-                                        </div>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-6">
                                     </div>
@@ -399,15 +380,15 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2 col-md-2 col-6">
+                                    <div class="col-lg-2 col-md-2 col-6" id="ProductionPlanStatusIdDiv">
                                         <div class="form-group" id="">
                                             <label>Status<span id="Asterisk">*</span></label>
-                                            <select id="TransferStatusId" name="TransferStatusId" class="form-control" required="" fdprocessedid="ld5kwd"><option value="">--Select--</option><option value="1">Requested</option></select>
+                                            <select id="ProductionPlanStatusId" name="ProductionPlanStatusId" class="form-control" required>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-
+                            </form> 
                         </div>
                     </div>
                 </div>
@@ -417,18 +398,18 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="button-container d-lg-flex d-block justify-content-center">
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="PurchaseOrderSaveBtn">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanSaveBtn">
                                 <i class="fas fa-save mr-1"></i>
                                 <span>Save</span><span class="shortcut-key">[ Ctrl+S ]</span>
                             </button>
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPordersaveprintbtn">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlansaveprintbtn">
                                 <i class="fas fa-print mr-1"></i> <span> Save &amp; Print</span><span class="shortcut-key">[ Alt + P ]</span>
                             </button>
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnPreviewPorder">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanPreviewPorder">
                                 <i class="fas fa-eye mr-1"></i> <span>Preview</span><span class="shortcut-key">[ Alt + V ]</span>
                             </button>
 
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnsharePorder" data-bs-toggle="modal" data-bs-target="#emailModal">
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="btnshareProductionPlan" data-bs-toggle="modal" data-bs-target="#emailModal">
                                 <i class="fas fa-share"></i> <span>Share</span><span class="shortcut-key">[ Alt + H ]</span>
                             </button>
                             <!-- Dropdown Menu -->
@@ -470,7 +451,7 @@
 </div>
 
 <div id="ProductionPlanAddItemModal" class="modal" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
                 <h2 id="">Add Item</h2>
@@ -492,13 +473,15 @@
                             <table class="table table-bordered mb-0" id="ProductionPlanAddItemTable">
                                 <thead class="Additemthead">
                                     <tr>
+                                        <th scope="col">Machine</th>
                                         <th scope="col">Customer</th>
                                         <th scope="col">Lot No</th>
                                         <th scope="col">Colour</th>
                                         <th scope="col">Fabric Type</th>
                                         <th scope="col">GSM</th>
                                         <th scope="col">Width</th>
-                                        <th scope="col">Quantity</th>
+                                        <th scope="col">FabricQty</th>
+                                        <th scope="col">InWardQty</th>
                                         <th scope="col">Avail Quantity</th>
                                     </tr>
                                 </thead>
@@ -537,7 +520,7 @@
             </div>
             <div class="modal-footer w-100" style="text-align: center;align-items: center !important;align-content: center;display: block;">
                 <div>
-                    <button type="button" id="BtnAddRawMaterial" class="btn mr-2" style="background-color: green; color:white">Save</button>
+                    @* <button type="button" id="BtnAddRawMaterial" class="btn mr-2" style="background-color: green; color:white">Save</button> *@
                     <button type="button" id="RawMaterialClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -546,19 +529,29 @@
 </div>
 
 <div id="ChemicalModal" class="modal" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-te">
+    <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
                 <h2 id="">Chemical Details</h2>
                 <span id="ChemicalClose" class="close d-none" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
             </div>
             <div class="modal-body" style="max-height: 73vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
-                <div id="ChemicalDynamic">
+                <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link navbar-tab titleForHeaderPopRawMatrialTab active this" id="Pre-Treatment-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Pre-Treatment</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link navbar-tab titleForHeaderPopRawMatrialTab" id="After-Treatment-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">After-Treatment</a>
+                    </li>
+                </ul>
+                <div id="ChemicalDynamic-Pre">
+                </div>
+                <div id="ChemicalDynamic-After">
                 </div>
             </div>
             <div class="modal-footer w-100" style="text-align: center;align-items: center !important;align-content: center;display: block;">
                 <div>
-                    <button type="button" id="BtnAddChemical" class="btn mr-2" style="background-color: green; color:white">Save</button>
+                    @* <button type="button" id="BtnAddChemical" class="btn mr-2" style="background-color: green; color:white">Save</button> *@
                     <button type="button" id="ChemicalClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -603,6 +596,4 @@
 
 <script src="~/assets/js/mdtimepicker.js"></script>
 <script src="~/js/productionplan.js"></script>
-
-
-
+<script src="~/js/Inventory.js"></script> 
