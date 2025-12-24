@@ -173,9 +173,9 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@BranchName", staticDetails.BranchName);
                     command.Parameters.AddWithValue("@AccountType", staticDetails.AccountType);
                     command.Parameters.AddWithValue("@AccountName", staticDetails.AccountName);
-                    command.Parameters.AddWithValue("@AccountNumber", staticDetails.AccountNumber);
-                    command.Parameters.AddWithValue("@MaxCreditLimit", staticDetails.MaxCreditLimit);
-                    command.Parameters.AddWithValue("@CurrentCreditLimit", staticDetails.CurrentCreditLimit);
+                    command.Parameters.AddWithValue("@AccountNumber", staticDetails.AccountNumber); 
+                    command.Parameters.AddWithValue("@MaxCreditLimit", staticDetails.MaxCreditLimit == null ? (object)DBNull.Value : staticDetails.MaxCreditLimit);
+                    command.Parameters.AddWithValue("@CurrentCreditLimit", staticDetails.CurrentCreditLimit == null ? (object)DBNull.Value : staticDetails.CurrentCreditLimit);
 
                     command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails);
                     command.Parameters.AddWithValue("@TVP_VendorProductMappingDetails", ProductMappingDetails);
@@ -371,8 +371,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@CreditLimit", staticDetails.CreditLimit);
                     command.Parameters.AddWithValue("@CurrentCreditLimit", staticDetails.CurrentCreditLimit);
                     command.Parameters.AddWithValue("@Remark", staticDetails.Remark);
-
-
+                     
                     command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails);
                     command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
 

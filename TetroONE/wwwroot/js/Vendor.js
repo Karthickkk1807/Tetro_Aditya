@@ -283,9 +283,10 @@ function editSuccess(response) {
         Common.bindData(data[0]);
         Common.bindData(data[1]);
         $('#Email').val(data[0][0].Email);
-        $('#ContactNumber').val(data[0][0].ContactNumber);
-
+        $('#ContactNumber').val(data[0][0].ContactNumber); 
         $('#State').val(data[0][0].StateId);
+
+        Common.renderRatingStars(data[0][0].Ratings, "RatingStars");
 
         var htmlDynamicProduct = '';
 
@@ -420,8 +421,7 @@ function editSuccess(response) {
 
         var columns = Common.bindColumn(data[3], ['PurchaseRequestId', 'Status_Color']);
         bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'PurchaseRequestId', '151px', true);
-
-
+         
         updateRemoveButtons();
     }
 }

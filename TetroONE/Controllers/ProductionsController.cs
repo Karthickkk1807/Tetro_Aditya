@@ -658,11 +658,13 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@ColorId", staticDetails.ColorId);
                     command.Parameters.AddWithValue("@MachineId", staticDetails.MachineId);
                     command.Parameters.AddWithValue("@ProductionPlanStatusId", staticDetails.ProductionPlanStatusId);
-                    command.Parameters.AddWithValue("@Comments", staticDetails.Comments);
+                    command.Parameters.AddWithValue("@Comments", staticDetails.Comments == null ? (object)DBNull.Value : staticDetails.Comments); 
                     command.Parameters.AddWithValue("@PreparedBy", staticDetails.PreparedBy);
 
                     command.Parameters.AddWithValue("@TVP_ProductionPlanFabricDetails", ProductionPlanFabricDetails);
                     command.Parameters.AddWithValue("@TVP_ProductionPlanFabricProcessMappingDetails", ProductionPlanFabricProcessMappingDetails);
+                    command.Parameters.AddWithValue("@TVP_ProductionPlanDyeRequirementDetails", ProductionPlanDyeRequirementDetails);
+                    command.Parameters.AddWithValue("@TVP_ProductionPlanChemicalRequirementDetails", ProductionPlanChemicalRequirementDetails);
                     command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
 
                     if (staticDetails.ProductionPlanId > 0)
@@ -670,8 +672,6 @@ namespace TetroONE.Controllers
                         command.Parameters.AddWithValue("@ProductionPlanId", staticDetails.ProductionPlanId);
                         command.Parameters.AddWithValue("@LoadingDateTime", staticDetails.LoadingDateTime);
                         command.Parameters.AddWithValue("@UnLoadingDateTime", staticDetails.UnLoadingDateTime);
-                        command.Parameters.AddWithValue("@TVP_ProductionPlanDyeRequirementDetails", ProductionPlanDyeRequirementDetails);
-                        command.Parameters.AddWithValue("@TVP_ProductionPlanChemicalRequirementDetails", ProductionPlanChemicalRequirementDetails);
                     }
 
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;

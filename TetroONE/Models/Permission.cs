@@ -20,13 +20,25 @@
 		public string? Description { get; set; }
 		public string? Comments { get; set; }
 	}
+	 
+	public class GetCompOff
+    {
+		public int LoginUserId { get; set; }
+		public int? CompOffId { get; set; }
+	}
 
-
-
-
-
-
-
-
+	public class InserUpdatetCompensatoryOff
+	{
+		public int LoginUserId { get; set; }
+		public int? CompOffId { get; set; }
+		public int? EmployeeId { get; set; }
+		public DateTime? CompensatoryOffDate { get; set; }
+		public bool? IsHalfDay { get; set; }
+		public decimal? NoOfDays { get; set; }
+		public decimal? AvlCompOff { get; set; } 
+		public string? CompOffDescription { get; set; }
+		public int? CompOffStatusId { get; set; }
+		public string? Comments { get; set; } 
+	}
 
 }

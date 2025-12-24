@@ -2,7 +2,7 @@
 var InWardId = 0;
 var WidthDropdown = [];
 var FabricTypeDropdown = [];
-var ProcessTypeDropdown = [];
+var ProcessTypeDropdown = []; 
 var deletedFiles = [];
 var existFiles = [];
 var formDataMultiple = new FormData();
@@ -127,6 +127,8 @@ $(document).ready(async function () {
         Common.removevalidation('TopStatic');
         Common.removevalidation('FormStatus');
 
+        $('#PaymentTypeId').val('2');
+        $('#ReceivedBy').val(LoginUserId);
         $('#emptyDiv').removeClass('col-lg-2 col-md-2 col-6').addClass('col-lg-4 col-md-4 col-6');
         $('#InWardStatusIdDiv').hide();
 
@@ -143,6 +145,8 @@ $(document).ready(async function () {
 
         $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
         $('#AddAttachLable, #AddNotesLable').show();
+        $('#Notes').val('');
+
         $('.modal-body').animate({ scrollTop: 0 }, 300);
         $('#InWardModal').show();
     });
@@ -221,27 +225,53 @@ $(document).ready(async function () {
                 let row = $(this);
                 let currentRowFabricVal = row.find(".FabricSelect").val();
 
+                // ---- IDENTIFY PARENT OR CHILD ROW ----
                 if (row.hasClass("dynamic-item-row")) {
                     currentGroupRowNo = 1;
                     parentFabricTypeId = currentRowFabricVal;
-                    row.find(".FabricSelect").val(parentFabricTypeId);
-
-                } else if (row.hasClass("dynamic-item-row_Second")) {
+                }
+                else if (row.hasClass("dynamic-item-row_Second")) {
                     currentGroupRowNo++;
                 }
 
+                // ---- GET InwardFabricId ----
                 let InwardFabricId = row.find(".InwardFabricId").text().trim();
-
-                let InwardFabricProcessMappingId = row.find(".InwardFabricProcessMappingId").text().trim();
-
-                pushFabricMapping(row, InwardFabricId, parentFabricTypeId, currentGroupRowNo);
-
-                if (InwardFabricId === "" || InwardFabricId === null) {
+                if (!InwardFabricId) {
                     InwardFabricId = row.prevAll(".dynamic-item-row").first().find(".InwardFabricId").text().trim();
                 }
 
-                appendProcessMapping(row, InwardFabricId, parentFabricTypeId, InwardFabricProcessMappingId, currentGroupRowNo);
+                let InwardFabricProcessMappingId = row.find(".InwardFabricProcessMappingId").text().trim();
+
+                // ---- PUSH FABRIC MAPPING ROW DATA ----
+                FabricMapping.push({
+                    InwardFabricId: InwardFabricId ? parseInt(InwardFabricId) : null,
+                    FabricId: parseInt(parentFabricTypeId) || null,
+                    ProcessCount: row.find(".Process").val()?.length || 0,
+                    Dia: parseFloat(row.find(".DiaInput").val()) || null,
+                    GSM: parseFloat(row.find(".GsmInput").val()) || null,
+                    Qty: parseFloat(row.find(".QtyInput").val()) || null,
+                    NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
+                    Width: parseInt(row.find(".WidthSelect").val()) || null,
+                    InWardId: InWardId > 0 ? parseInt(InWardId) : null,
+                    RowNo: currentGroupRowNo,
+                });
+
+                // ---- PROCESS MAPPING ----
+                let processIds = row.find(".Process").val(); // ← Select2 multi values
+                if (processIds && processIds.length > 0) {
+                    processIds.forEach(pid => {
+                        FabricProcessMapping.push({
+                            RowNo: currentGroupRowNo,
+                            InwardFabricProcessMappingId: InwardFabricProcessMappingId ? parseInt(InwardFabricProcessMappingId) : null,
+                            InwardFabricId: InwardFabricId ? parseInt(InwardFabricId) : null,
+                            FabricTypeId: parentFabricTypeId ? parseInt(parentFabricTypeId) : null,
+                            ProcessId: parseInt(pid)
+                        });
+                    });
+                }
+
             });
+
 
             formDataMultiple.append("InwardStaticData", JSON.stringify(objvalue));
             formDataMultiple.append("InwardFabricDetails", JSON.stringify(FabricMapping));
@@ -273,40 +303,6 @@ $(document).ready(async function () {
                     Common.errorMsg(response.message);
                 }
             });
-
-            function pushFabricMapping(row, fabricId, fabricTypeId, rowNo) {
-
-                FabricMapping.push({
-                    InwardFabricId: fabricId ? parseInt(fabricId) : null,
-                    FabricId: parseInt(fabricTypeId) || null,
-                    ProcessCount: parseInt(row.find(".processRoute").val()) || null,
-                    Dia: parseFloat(row.find(".DiaInput").val()) || null,
-                    GSM: parseFloat(row.find(".GsmInput").val()) || null,
-                    Qty: parseFloat(row.find(".QtyInput").val()) || null,
-                    NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
-                    Width: parseInt(row.find(".WidthSelect").val()) || null,
-                    InWardId: InWardId > 0 ? parseInt(InWardId) : null,
-                    RowNo: rowNo,
-                });
-            }
-
-            function appendProcessMapping(row, InwardFabricId, fabricTypeId, InwardFabricProcessMappingId, rowNo) {
-
-                let processData = row.find("td[data-id]").attr("data-id");
-                if (!processData) return;
-
-                let ids = processData.split(',').map(x => parseInt(x.trim()));
-
-                ids.forEach(pid => {
-                    FabricProcessMapping.push({
-                        RowNo: rowNo,
-                        InwardFabricProcessMappingId: InwardFabricProcessMappingId ? parseInt(InwardFabricProcessMappingId) : null,
-                        InwardFabricId: InwardFabricId ? parseInt(InwardFabricId) : null,
-                        FabricTypeId: fabricTypeId ? parseInt(fabricTypeId) : null,
-                        ProcessId: parseInt(pid)
-                    });
-                });
-            }
         }
     });
 
@@ -352,97 +348,113 @@ function GetInwardSuccess(response) {
 }
 
 function GetInwardNotNullSuccess(response) {
-    if (response.status) {
-        var data = JSON.parse(response.data);
-        Common.bindData(data[0]);
+    if (!response.status) return;
 
-        Inventory.toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "HideNotesLable");
-        Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
-        Inventory.bindAttachments(data[3]);
+    var data = JSON.parse(response.data);
 
-        $('.dynamic-item-row').remove();
-        $('.dynamic-item-row_Second').remove();
+    Common.bindData(data[0]);
 
-        const InwardRows = data[1];
-        const processMapping = data[2];
+    Inventory.toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "HideNotesLable");
+    Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
+    Inventory.bindAttachments(data[3]);
+     
+    $('.dynamic-item-row, .dynamic-item-row_Second').remove();
 
-        let fabricGroup = {};
-        let mappingLookup = {};
-        let renderRowTracker = {};
+    const InwardRows = data[1];
+    const processMapping = data[2];
 
-        processMapping.forEach(m => {
-            let key = `${m.FabricTypeId}_${m.RowNo}`;
-            if (!mappingLookup[key]) mappingLookup[key] = [];
-            mappingLookup[key].push(m);
-        });
+    let fabricFirstRowTracker = {};
+    let rowCountTracker = {};
+    let processLookup = {};
+     
+    processMapping.forEach(p => {
+        let key = `${p.FabricTypeId}_${p.RowNo}`;
+        if (!processLookup[key]) processLookup[key] = [];
+        processLookup[key].push(p);
+    });
 
-        InwardRows.forEach((item, index) => {
-            let uid = `row_${index}_${Date.now()}`;
+    InwardRows.forEach((item, index) => {
+         
+        if (!rowCountTracker[item.FabricTypeId]) rowCountTracker[item.FabricTypeId] = 1;
+        else rowCountTracker[item.FabricTypeId]++;
 
-            let WidthHTML = WidthDropdown[0].map(w => `<option value="${w.WidthId}" ${item.Width == w.WidthId ? 'selected' : ''}>${w.Width}</option>`).join('');
-            let FabricHTML = FabricTypeDropdown[0].map(f => `<option value="${f.FabricTypeId}" ${item.FabricTypeId == f.FabricTypeId ? 'selected' : ''}>${f.FabricTypeName}</option>`).join('');
+        let currentRowNo = rowCountTracker[item.FabricTypeId];
+        let lookupKey = `${item.FabricTypeId}_${currentRowNo}`;
+         
+        let mappedProcesses = processLookup[lookupKey] || [];
+        let selectedProcesses = mappedProcesses.map(x => x.ProcessId);
+        let processMappingId = mappedProcesses.length ? mappedProcesses[0].InwardFabricProcessMappingId : "";
+         
+        let uid = `row_${item.FabricTypeId}_${currentRowNo}_${Date.now()}`;
+         
+        let isParentRow = currentRowNo === 1;
+         
+        let FabricHTML = FabricTypeDropdown[0].map(f => `
+            <option value="${f.FabricTypeId}" ${f.FabricTypeId == item.FabricTypeId ? 'selected' : ''}>
+                ${f.FabricTypeName}
+            </option>
+        `).join('');
+         
+        let WidthHTML = WidthDropdown[0].map(w => `
+            <option value="${w.WidthId}" ${item.Width == w.WidthId ? 'selected' : ''}>${w.Width}</option>
+        `).join('');
+         
+        let rowHTML = `
+        <tr class="${isParentRow ? 'dynamic-item-row' : 'dynamic-item-row_Second'}"
+            data-id="${uid}" data-rowno="${currentRowNo}"> 
+            <td class="sno"></td> 
+            <td>
+                ${isParentRow ? `<select class="form-control FabricSelect">${FabricHTML}</select>` : ""}
+                <label class="InwardFabricId d-none">${item.InwardFabricId || ''}</label>
+            </td> 
+            <td>
+                <label class="InwardFabricProcessMappingId d-none">${processMappingId || ''}</label> 
+                <select multiple class="select2 Process" data-coreui-search="true" required>
+                    ${ProcessTypeDropdown[0].map(p =>
+                        `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
+                            ${p.ProcessTypeName}
+                        </option>`
+                    ).join('')}
+                </select>
+            </td> 
+            <td><input class="form-control DiaInput" value="${item.Dia || ''}"></td>
+            <td><input class="form-control GsmInput" value="${item.GSM || ''}"></td>
+            <td><input class="form-control QtyInput" value="${item.Qty || ''}"></td>
+            <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td> 
+            <td><select class="form-control WidthSelect">${WidthHTML}</select></td> 
+            <td style="text-align:center">
+                ${isParentRow ?
+                    `<button class="btn AddStockBtn AddFabric"><i class="fas fa-plus"></i></button>`
+                    : ""
+                }
+                <button class="btn DynrowRemove removeRowBtn"><i class="fas fa-trash-alt"></i></button>
+            </td>
+        </tr>`;
+         
+        if (isParentRow) {
+            $("#AddItemButtonRow").before(rowHTML);
+        } else {
+            let parentRow = $(`tr.dynamic-item-row[data-id*="row_${item.FabricTypeId}_1"]`);
+            parentRow.last().after(rowHTML);
+        }
+    });
+     
+    $(".Process").select2({
+        theme: 'bootstrap4',
+        placeholder: '-- Select Process --',
+        allowClear: true,
+        closeOnSelect: false,
+        width: 'style',
+    });
 
-            if (!renderRowTracker[item.FabricTypeId]) renderRowTracker[item.FabricTypeId] = 1;
-            else renderRowTracker[item.FabricTypeId]++;
-
-            let currentRowNo = renderRowTracker[item.FabricTypeId];
-            let lookupKey = `${item.FabricTypeId}_${currentRowNo}`;
-
-            let mapped = mappingLookup[lookupKey] || [];
-
-            let processIds = mapped.map(x => x.ProcessId).join(",");
-            let processMappingId = mapped.length ? mapped[0].InwardFabricProcessMappingId : "";
-
-            let isFirstRowOfFabric = !fabricGroup[item.FabricTypeId];
-
-            let html = `
-                <tr class="${isFirstRowOfFabric ? 'dynamic-item-row' : 'dynamic-item-row_Second'}" 
-                    data-id="${uid}" 
-                    data-rowno="${currentRowNo}">
-
-                    <td class="sno"></td> 
-                    <td>
-                        ${isFirstRowOfFabric ? `<select class="form-control FabricSelect">${FabricHTML}</select>` : ""}
-                        <label class="InwardFabricId d-none">${item.InwardFabricId || ''}</label>
-                    </td>
-
-                    <td data-id="${processIds}">
-                        <label class="InwardFabricProcessMappingId d-none">${processMappingId || ''}</label>
-                        <input type="text" class="form-control processRoute" value="${item.ProcessCount}" readonly>
-                    </td>
-
-                    <td><input class="form-control DiaInput" value="${item.Dia}"></td>
-                    <td><input class="form-control GsmInput" value="${item.GSM}"></td>
-                    <td><input class="form-control QtyInput" value="${item.Qty}"></td>
-                    <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td>
-                    <td><select class="form-control WidthSelect">${WidthHTML}</select></td>
-
-                    <td style="text-align:center">
-                        ${isFirstRowOfFabric ? `<button id="dyanmicplusbtn" class="btn AddStockBtn AddFabric" type="button"><i class="fas fa-plus" id="AddButton"></i></button>` : ""}
-                        <button id="RemoveButton" class="btn DynrowRemove removeRowBtn" type="button">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-
-            if (isFirstRowOfFabric) {
-                $("#AddItemButtonRow").before(html);
-                fabricGroup[item.FabricTypeId] = uid;
-            } else {
-                $(`tr[data-id='${fabricGroup[item.FabricTypeId]}']`).after(html);
-            }
-        });
-
-        updateSerialNumbers();
-        refreshProductDropdowns(".FabricSelect");
-    }
+    updateSerialNumbers();
+    refreshProductDropdowns(".FabricSelect");
 }
 
-function duplicateFabric() { 
+function duplicateFabric() {
     let uid = Math.random().toString(36).substring(2);
 
-    var defaultOption = '<option value="">--Select--</option>'; 
+    var defaultOption = '<option value="">--Select--</option>';
     var FabricTypeSelectOptions = "";
     if (FabricTypeDropdown != null && FabricTypeDropdown.length > 0 && FabricTypeDropdown[0].length > 0) {
         FabricTypeSelectOptions = FabricTypeDropdown[0].map(function (FabricTypeId) {
@@ -459,9 +471,10 @@ function duplicateFabric() {
                 </select>
                 <label class="InwardFabricId d-none"></label>
             </td> 
-             <td data-id="">
+            <td data-id=""> 
                 <label class="InwardFabricProcessMappingId d-none"></label>
-                 <input type="text" class="form-control processRoute" id="ProcessTypeId${uid}" name="ProcessTypeId${uid}"" placeholder="Click Here" required readonly>
+                <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
+                </select>
             </td> 
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
@@ -482,13 +495,26 @@ function duplicateFabric() {
         </tr>
     `;
 
-    Common.bindDropDown("Width_" + uid, 'Width');
+    bindDropDownWidth("Width_" + uid, "Width", function () {
+        $("#Width_" + uid).val(2).trigger("change");
+    });
+
+    Common.bindDropDownMulti("Process_" + uid, 'ProcessType');
+
     $("#AddItemButtonRow").before(html);
 
-    updateSerialNumbers(); 
+    $("#Process_" + uid).select2({
+        theme: 'bootstrap4',
+        placeholder: '-- Select Process --',
+        allowClear: true,
+        closeOnSelect: false,
+        width: 'style',
+    });
+
+    updateSerialNumbers();
     refreshProductDropdowns(".FabricSelect");
 }
- 
+
 $(document).on("click", ".AddFabric", function () {
     let mainRow = $(this).closest(".dynamic-item-row");
     let childSecondRows = mainRow.nextUntil(".dynamic-item-row", ".dynamic-item-row_Second");
@@ -501,7 +527,7 @@ $(document).on("click", ".AddFabric", function () {
     }
     addNewFabricRow(insertAfter);
 });
- 
+
 function addNewFabricRow(afterRow) {
 
     let uid = Math.random().toString(36).substring(2);
@@ -512,7 +538,8 @@ function addNewFabricRow(afterRow) {
             <td><label class="InwardFabricId d-none"></label></lable></td> 
              <td data-id="">
                  <label class="InwardFabricProcessMappingId d-none"></label>
-                 <input type="text" class="form-control processRoute" id="ProcessTypeId${uid}" name="ProcessTypeId${uid}"" placeholder="Click Here" required readonly>
+                 <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
+                 </select>
             </td> 
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
@@ -530,12 +557,25 @@ function addNewFabricRow(afterRow) {
         </tr>
     `;
 
-    Common.bindDropDown("Width_" + uid, 'Width');
+    bindDropDownWidth("Width_" + uid, "Width", function () {
+        $("#Width_" + uid).val(2).trigger("change");
+    });
+
+    Common.bindDropDownMulti("Process_" + uid, 'ProcessType');
+
     $(afterRow).after(newRow);
 
-    updateSerialNumbers(); 
+    $("#Process_" + uid).select2({
+        theme: 'bootstrap4',
+        placeholder: '-- Select Process --',
+        allowClear: true,
+        closeOnSelect: false,
+        width: 'style',
+    });
+
+    updateSerialNumbers();
 }
- 
+
 function updateSerialNumbers() {
     let count = 0;
     $("#InwardTableBody .dynamic-item-row").each(function (i) {
@@ -816,7 +856,7 @@ $(document).on('click', '.processRoute', function () {
         $('#ProcessModal').remove();
     });
 });
- 
+
 
 /*------------------------------------------------------------------Avoid the Duplicate to select----------------------------------------------------------------*/
 
@@ -834,9 +874,7 @@ function refreshProductDropdowns(selector) {
     }).get().filter(v => v !== "");
 
     $(selector).each(function () {
-
         let currentVal = $(this).val();
-
         $(this).find("option").prop("disabled", false).removeClass("d-none");
 
         selectedValues.forEach(val => {
@@ -844,5 +882,31 @@ function refreshProductDropdowns(selector) {
                 $(this).find(`option[value="${val}"]`).prop("disabled", true).addClass("d-none");
             }
         });
+    });
+}
+
+function bindDropDownWidth(id, moduleName, callback) {
+
+    var request = {
+        moduleName: moduleName
+    };
+
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status == true) {
+                Common.bindDropDownSuccess(response.data, id);
+                if (typeof callback === "function") {
+                    callback();
+                }
+            }
+        },
+        error: function (response) {
+            console.log("Dropdown bind error", response);
+        }
     });
 }

@@ -1,6 +1,8 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     string data = Convert.ToString(TempData["UserAccess"]);
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Enquiry, Context.Session);
+    var EmployeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
 }
 
 <link href="~/css/enquiry.css" rel="stylesheet" />
@@ -296,7 +298,7 @@
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                         <div class="form-group" id="Comments" name="Comments">
-                                            <label for="commentsTextarea" style="margin-bottom: 2px;">Comments<span id="Asterisk">*</span></label>
+                                            <label for="commentsTextarea" style="margin-bottom: 2px;">Comments</label>
                                             <textarea class="form-controltext" id="commentsTextarea" rows="2" autocomplete="off" maxlength="250"
                                                       oninput="Common.allowAllCharacters(this,150)" required></textarea>
                                         </div>
@@ -410,6 +412,7 @@
 
 <script>
     var access = @Html.Raw(Json.Serialize(access));
+    var EmployeeId = @EmployeeId;
 </script>
 
 <script>

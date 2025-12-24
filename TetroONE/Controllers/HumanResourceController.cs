@@ -72,14 +72,13 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("Get")]
-        public IActionResult Get(int? EmployeeTypeId, int? EmployeeId, int FranchiseId)
+        public IActionResult Get(int? EmployeeTypeId, int? EmployeeId)
         {
             GetEmployee Get = new GetEmployee()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
                 EmployeeId = EmployeeId,
                 EmployeeTypeId = EmployeeTypeId,
-                FranchiseId = FranchiseId
             };
 
             response = GenericTetroONE.GetData(_connectionString, "USP_GetEmployeeDetails", Get);
@@ -280,18 +279,17 @@ namespace TetroONE.Controllers
                 }
 
                 return Json(response);
-            }
-
+            } 
         }
-
+        
         [HttpGet]
         [Route("GetAutoGenerateId")]
-        public IActionResult GetAutoGenerateId(int? FranchiseId, int? EmployeeTypeId)
+        public IActionResult GetAutoGenerateId(int? PlantId, int? EmployeeTypeId)
         {
             GetAutoGenerateId Get = new GetAutoGenerateId()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                FranchiseId = FranchiseId,
+                PlantId = PlantId,
                 EmployeeTypeId = EmployeeTypeId
             };
 
@@ -355,34 +353,6 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
-        [HttpGet]
-        [Route("GetAttendanceEmployee")]
-        public IActionResult GetAttendanceEmployee(int EmployeeId, DateTime FromDate, DateTime ToDate, DateTime? PunchDate)
-        {
-            int? empId = null;
-            if (EmployeeId == 0)
-            {
-                empId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
-            }
-            else
-            {
-                empId = EmployeeId;
-            }
-            GetAttendanceEmployee Get = new GetAttendanceEmployee()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-
-                EmployeeId = empId,
-                FromDate = FromDate.AddDays(1),
-                ToDate = ToDate,
-                Punchdate = PunchDate,
-            };
-
-            string[] exclude = { "EmployeeTypeId" };
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_Employee_HotCode]", Get, exclude);
-            return Json(response);
-        }
-
         //[HttpGet]
         //[Route("GetAttendanceEmployee")]
         //public IActionResult GetAttendanceEmployee(int EmployeeId, DateTime FromDate, DateTime ToDate, DateTime? PunchDate)
@@ -407,72 +377,95 @@ namespace TetroONE.Controllers
         //    };
 
         //    string[] exclude = { "EmployeeTypeId" };
-        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_Employee]", Get, exclude);
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_Employee_HotCode]", Get, exclude);
         //    return Json(response);
         //}
 
-		[HttpGet]
-		[Route("GetAttendanceMyTeam")]
-		public IActionResult GetAttendanceMyTeam(int EmployeeId, DateTime FromDate, DateTime ToDate, DateTime? PunchDate)
-		{
-			int? empId = null;
-			if (EmployeeId == 0)
-			{
-				empId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
-			}
-			else
-			{
-				empId = EmployeeId;
-			}
-			GetAttendanceEmployee Get = new GetAttendanceEmployee()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        [HttpGet]
+        [Route("GetAttendanceEmployee")]
+        public IActionResult GetAttendanceEmployee(int EmployeeId, DateTime FromDate, DateTime ToDate, DateTime? PunchDate)
+        {
+            int? empId = null;
+            if (EmployeeId == 0)
+            {
+                empId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
+            }
+            else
+            {
+                empId = EmployeeId;
+            }
+            GetAttendanceEmployee Get = new GetAttendanceEmployee()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 
-				EmployeeId = empId,
-				FromDate = FromDate.AddDays(1),
-				ToDate = ToDate,
-				Punchdate = PunchDate,
-			};
+                EmployeeId = empId,
+                FromDate = FromDate.AddDays(1),
+                ToDate = ToDate,
+                Punchdate = PunchDate,
+            };
 
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_MyTeam_HotCode]", Get);
-			return Json(response);
-		}
+            string[] exclude = { "EmployeeTypeId" };
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_Employee]", Get, exclude);
+            return Json(response);
+        }
 
+        //[HttpGet]
+        //[Route("GetAttendanceMyTeam")]
+        //public IActionResult GetAttendanceMyTeam(int EmployeeId, DateTime FromDate, DateTime ToDate, DateTime? PunchDate)
+        //{
+        //	int? empId = null;
+        //	if (EmployeeId == 0)
+        //	{
+        //		empId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
+        //	}
+        //	else
+        //	{
+        //		empId = EmployeeId;
+        //	}
+        //	GetAttendanceEmployee Get = new GetAttendanceEmployee()
+        //	{
+        //		LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 
-		//[HttpGet]
-		//[Route("GetAttendanceMyTeam")]
-		//public IActionResult GetAttendanceMyTeam(int EmployeeId, DateTime FromDate, DateTime ToDate, DateTime? PunchDate)
-		//{
-		//	int? empId = null;
-		//	if (EmployeeId == 0)
-		//	{
-		//		empId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
-		//	}
-		//	else
-		//	{
-		//		empId = EmployeeId;
-		//	}
-		//	GetAttendanceEmployee Get = new GetAttendanceEmployee()
-		//	{
-		//		LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //		EmployeeId = empId,
+        //		FromDate = FromDate.AddDays(1),
+        //		ToDate = ToDate,
+        //		Punchdate = PunchDate,
+        //	};
 
-		//		EmployeeId = empId,
-		//		FromDate = FromDate.AddDays(1),
-		//		ToDate = ToDate,
-		//		Punchdate = PunchDate,
-		//	};
-
-		//	response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_MyTeam]", Get);
-		//	return Json(response);
-		//}
-
-
+        //	response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_MyTeam_HotCode]", Get);
+        //	return Json(response);
+        //}
 
 
+        [HttpGet]
+        [Route("GetAttendanceMyTeam")]
+        public IActionResult GetAttendanceMyTeam(int EmployeeId, DateTime FromDate, DateTime ToDate, DateTime? PunchDate)
+        {
+            int? empId = null;
+            if (EmployeeId == 0)
+            {
+                empId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData).Value);
+            }
+            else
+            {
+                empId = EmployeeId;
+            }
+            GetAttendanceEmployee Get = new GetAttendanceEmployee()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
 
+                EmployeeId = empId,
+                FromDate = FromDate.AddDays(1),
+                ToDate = ToDate,
+                Punchdate = PunchDate,
+            };
 
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_MyTeam]", Get);
+            return Json(response);
+        }
+         
 
-		[HttpGet]
+        [HttpGet]
         [Route("GetAttendanceInOut")]
         public IActionResult GetAttendanceInOut()
         {
@@ -516,24 +509,6 @@ namespace TetroONE.Controllers
         }
 
 
-        [HttpGet]
-        [Route("GetAttendanceAdmin")]
-        public IActionResult GetAttendanceAdmin(int EmployeeId, DateTime FromDate, DateTime ToDate, int PunchDate, int? EmployeeTypeId)
-        {
-            GetAttendanceAdmin Get = new GetAttendanceAdmin()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                EmployeeId = EmployeeId == 0 ? null : EmployeeId,
-                FromDate = FromDate.AddDays(1),
-                ToDate = ToDate,
-                PunchDate = PunchDate == 0 ? null : PunchDate,
-                EmployeeTypeId = EmployeeTypeId
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_Admin_HotCode]", Get);
-            return Json(response);
-        }
-
         //[HttpGet]
         //[Route("GetAttendanceAdmin")]
         //public IActionResult GetAttendanceAdmin(int EmployeeId, DateTime FromDate, DateTime ToDate, int PunchDate, int? EmployeeTypeId)
@@ -548,9 +523,27 @@ namespace TetroONE.Controllers
         //        EmployeeTypeId = EmployeeTypeId
         //    };
 
-        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_Admin]", Get);
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_Admin_HotCode]", Get);
         //    return Json(response);
         //}
+
+        [HttpGet]
+        [Route("GetAttendanceAdmin")]
+        public IActionResult GetAttendanceAdmin(int EmployeeId, DateTime FromDate, DateTime ToDate, int PunchDate, int? EmployeeTypeId)
+        {
+            GetAttendanceAdmin Get = new GetAttendanceAdmin()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                EmployeeId = EmployeeId == 0 ? null : EmployeeId,
+                FromDate = FromDate.AddDays(1),
+                ToDate = ToDate,
+                PunchDate = PunchDate == 0 ? null : PunchDate,
+                EmployeeTypeId = EmployeeTypeId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_Admin]", Get);
+            return Json(response);
+        }
 
         [HttpGet]
         [Route("GetManualAttendance")]
@@ -893,8 +886,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteLoanDetails]", Get);
             return Json(response);
         }
-
-
+         
         [HttpGet]
         [Route("GetClaim")]
         public IActionResult GetClaim(int ClaimId)

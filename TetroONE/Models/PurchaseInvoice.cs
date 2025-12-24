@@ -142,64 +142,38 @@ namespace TetroONE.Models
     public class PurchaseBillPrint
     {
         public string? CompanyName { get; set; }
-        public string? CompanyLogo { get; set; }
-        public string? CompanyAddress { get; set; }
-        public string? CompanyCity { get; set; }
-        public string? CompanyCountry { get; set; }
-        public string? CompanyGSTNumber { get; set; }
-        public string? CompanyWebsite { get; set; }
-        public string? CompanyEmail { get; set; }
-        public string? CompanyContactNumber { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Phone { get; set; }
+        public string? PFCodeNo { get; set; }
+        public string? ESICodeNo { get; set; }
+        public string? Email { get; set; }
+        public string? GSTin { get; set; }
+        public string? MSMERegistrationNo { get; set; }
 
-        public string? AccountName { get; set; }
-        public string? BankName { get; set; }
-        public string? BranchName { get; set; }
-        public string? AccountNumber { get; set; }
-        public string? IFSCCode { get; set; }
-        public string? UPIId { get; set; }
+        public string? ToName { get; set; }
+        public string? ToAddress1 { get; set; }
+        public string? ToAddress2 { get; set; }
+        public string? GST { get; set; }
+         
+        public string? PINo { get; set; }
+        public string? PIDate { get; set; }
+        public string? PONo { get; set; }
+        public string? VendorBillNo { get; set; }
+         
+        public string? IGSTPer { get; set; }
+        public string? CGSTPer { get; set; }
+        public string? SGSTPer { get; set; }
+        public string? IGSTValue { get; set; }
+        public string? CGSTValue { get; set; }
+        public string? SGSTValue { get; set; }
 
-        public string? PurchaseBillNumber { get; set; }
-        public string? PurchaseBillDate { get; set; }
-        public string? OriginalInvoiceNumber { get; set; }
-        public string? PurchaseOrderNumber { get; set; }
+        public string? TermsConditions { get; set; }
+        public string? RoundOff { get; set; }
+        public string? NetAmount { get; set; }
 
-
-        public string? VendorName { get; set; }
-        public string? VendorAddress { get; set; }
-        public string? VendorCity { get; set; }
-        public string? VendorZipCode { get; set; }
-        public string? VendorState { get; set; }
-        public string? VendorCountry { get; set; }
-        public string? VendorContact { get; set; }
-        public string? VendorGSTNumber { get; set; }
-
-        public string? AltName { get; set; }
-        public string? AltAddress { get; set; }
-        public string? AltCity { get; set; }
-        public string? StateName { get; set; }
-        public string? AltContactNumber { get; set; }
-
-        public string? TotalProduct { get; set; }
-        public string? TotalDiscount { get; set; }
-        public string? CGST { get; set; }
-        public string? SGST { get; set; }
-        public string? SubTotal { get; set; }
-
-        public string? RoundOffValue { get; set; }
-        public string? GrantTotal { get; set; }
-
-        public string? Amount_InWords { get; set; }
-
-        public string? TaxableAmount { get; set; }
-        public string? TermsandConditions { get; set; }
-        public string? Notes { get; set; }
-        public string? BackroundColour { get; set; }
-        public string? TextColour { get; set; }
-        public string? Signature { get; set; }
-        public DataTable ProductItemTable { get; set; }
-        public DataTable OtherChargesTable { get; set; }
-        public DataTable OtherChargesTaxTable { get; set; }
-        public DataTable ProductItemTableNew { get; set; }
+        public string? RupeesInWords { get; set; } 
+        public DataTable ProductItemData { get; set; }
 
     }
 

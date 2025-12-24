@@ -193,16 +193,13 @@ namespace TetroONE.Controllers
 				//TransportDocNo = SaleDetailsStatic.TransportDocNo,
 				//TransportDocDate = SaleDetailsStatic.TransportDocDate,
 				//VehicleNumber = SaleDetailsStatic.VehicleNumber,
-				//VehicleType = SaleDetailsStatic.VehicleType,
-
+				//VehicleType = SaleDetailsStatic.VehicleType, 
 				//DocumentType = SaleDetailsStatic.DocumentType,
 				//SupplyType = SaleDetailsStatic.SupplyType,
 				//TransactionType = SaleDetailsStatic.TransactionType,
-				//DispatchAddressId = SaleDetailsStatic.DispatchAddressId,
-
+				//DispatchAddressId = SaleDetailsStatic.DispatchAddressId, 
 				//ShippingAddressId = SaleDetailsStatic.ShippingAddressId,
-
-
+				 
 
 				TVP_Sale_ProductMappingDetails = dtproductData,
 				TVP_PurchaseSaleOtherChargesMappingDetails = dtOtherChargesData,
@@ -453,7 +450,6 @@ namespace TetroONE.Controllers
 				}
 			}
 		}
-
 		 
         [HttpGet]
         [Route("SaleOrderPrint")]
@@ -508,6 +504,59 @@ namespace TetroONE.Controllers
             return Json(new { status = true, message = "" });
         }
 
+        [HttpGet]
+        [Route("QuotationPrint")]
+        public IActionResult QuotationPrint(int NoOfCopies, string printType)
+        {
+            PDFQuotation pdfService = new PDFQuotation();
+            byte[] pdfContent = pdfService.QuotationPrintPDF(NoOfCopies);
+
+            switch (printType?.ToLower())
+            {
+                case "mail":
+                    var base64PdfContent = Convert.ToBase64String(pdfContent);
+                    return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
+
+                case "download":
+                    return File(pdfContent, "application/pdf", "TaxInvoice.pdf");
+
+                case "preview":
+                    var customFileName = "Kavinesh Developer Testing";
+                    Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
+                    return File(pdfContent, "application/pdf");
+
+                case "print":
+                    return File(pdfContent, "application/pdf");
+
+                case "whatsapp":
+                    string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                    string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
+
+                    if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                    string fileName = "TaxInvoice_" + Guid.NewGuid() + ".pdf";
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    try
+                    {
+                        System.IO.File.WriteAllBytes(filePath, pdfContent);
+                        string fileUrlPath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
+                        return Json(new { status = true, message = $"PDF saved successfully.", data = fileUrlPath });
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(new { status = false, message = "Error saving PDF: " + ex.Message });
+                    }
+
+                default:
+                    return Json(new { status = false, message = "Invalid print type selected." });
+            }
+
+            // ⭐ FINAL REQUIRED RETURN
+            return Json(new { status = true, message = "" });
+        }
+
 
         [HttpGet]
 		[Route("GetCreditLimitDetails")]
@@ -515,13 +564,11 @@ namespace TetroONE.Controllers
 		{
 			GetCreditLimitDetails request = new GetCreditLimitDetails()
 			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-
+				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value), 
 				ModuleId = ModuleId,
 				IsEdit = IsEdit,
 				ClientId = clientId,
-				FranchiseId = FranchiseId
-
+				FranchiseId = FranchiseId 
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetCreditLimitDetails]", request);

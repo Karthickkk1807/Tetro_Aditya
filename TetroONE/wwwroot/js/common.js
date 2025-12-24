@@ -2721,6 +2721,30 @@
             }
         }
     },
+    // Client, Vendor, JobWorker to bind the *****************
+    renderRatingStars: function (ratingStr, targetDivId) {
+        var ratingValue = parseFloat(ratingStr.split("/")[0]);
+
+        var fullStars = Math.floor(ratingValue);
+        var halfStar = ratingValue % 1 >= 0.5 ? 1 : 0;
+        var emptyStars = 5 - fullStars - halfStar;
+
+        var starsHtml = '<div style="display:flex; gap:2px;">' +
+            '<span style="margin-top: -4px;font-size: 14px;color: black;">Ratings : </span>';
+
+        for (var i = 0; i < fullStars; i++) {
+            starsHtml += '<i class="fas fa-star" style="color:#f1c40f;"></i>';
+        }
+        if (halfStar) {
+            starsHtml += '<i class="fas fa-star-half-alt" style="color:#f1c40f;"></i>';
+        }
+        for (var i = 0; i < emptyStars; i++) {
+            starsHtml += '<i class="far fa-star" style="color:#f1c40f;"></i>';
+        }
+        starsHtml += '</div>';
+
+        $('#' + targetDivId).html(starsHtml);
+    },
 }
 
 

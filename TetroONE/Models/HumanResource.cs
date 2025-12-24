@@ -7,10 +7,8 @@ namespace TetroONE.Models
         public int LoginUserId { get; set; }
         public int? EmployeeTypeId { get; set; }
         public int? EmployeeId { get; set; }
-        public int? FranchiseId { get; set; }
     }
-
-
+     
     public class InsertEmployee
     {
         public int LoginUserId { get; set; }
@@ -33,7 +31,7 @@ namespace TetroONE.Models
         public DateTime? DateOfBirth { get; set; }
         public int? ReligionId { get; set; }
         public int? MaritalStatusId { get; set; }
-        public string? AadharNo { get; set; }
+        public string? AadhaarNo { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
@@ -45,8 +43,8 @@ namespace TetroONE.Models
         public DateTime? ExpiryDate { get; set; }
         public int PayTypeId { get; set; }
         public decimal CTC { get; set; }
-        public decimal AccPayment { get; set; }
-        public decimal CashPayment { get; set; }
+        public decimal AccAmount { get; set; }
+        public decimal CashAmount { get; set; }
         public int PayGroupId { get; set; }
         public bool IsPFApplicable { get; set; }
         public string? UANNumber { get; set; }
@@ -57,7 +55,7 @@ namespace TetroONE.Models
         public string? ESINumber { get; set; }
         public string? ESIEmployeeContribution { get; set; }
         public string? ESIEmployerContribution { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public int UserTypeId { get; set; }
         public int UserGroupId { get; set; }
         public bool IsLoginUser { get; set; }
@@ -238,15 +236,14 @@ namespace TetroONE.Models
         public string ModuleName { get; set; }
 
     }
-
-
-
+     
     public class GetAutoGenerateId
     {
         public int LoginUserId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public int? EmployeeTypeId { get; set; }
     }
+
     public class GetReportingPerson
     {
         public int LoginUserId { get; set; }

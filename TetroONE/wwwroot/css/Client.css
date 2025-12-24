@@ -12,7 +12,7 @@
     width: 500px;
 }
 
-#ClientTable, #FranchiseTable, #ShopTable {
+#ClientTable, #Managetable {
     width: 100% !important;
 }
 

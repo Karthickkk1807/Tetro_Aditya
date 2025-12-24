@@ -34,13 +34,13 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetEnquiry")]
-        public IActionResult GetEnquiry(int FranchiseId, DateTime? FromDate, DateTime? ToDate)
+        public IActionResult GetEnquiry(int PlantId, DateTime? FromDate, DateTime? ToDate)
         {
             GetEnquiry getInfo = new GetEnquiry()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
                 EnquiryId = null,
-                FranchiseId = FranchiseId,
+                PlantId = PlantId,
                 FromDate = FromDate?.AddDays(1),
                 ToDate = ToDate,
             };
@@ -102,7 +102,7 @@ namespace TetroONE.Controllers
                     EnquiryLookUpDate = InsertEnquiryDetailsStatic.EnquiryLookUpDate,
                     EnquiryIsForwardOption = InsertEnquiryDetailsStatic.EnquiryIsForwardOption,
                     ForwardEmpId = InsertEnquiryDetailsStatic.ForwardEmpId,
-                    FranchiseId = InsertEnquiryDetailsStatic.FranchiseId,
+                    PlantId = InsertEnquiryDetailsStatic.PlantId,
                     TVP_AttachmentDetails = dtattachment
 
                 };
@@ -145,13 +145,13 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetPopupEnquiryDetails")]
-        public IActionResult GetPopupEnquiryDetails(int enquiryId, int FranchiseId, DateTime? FromDate, DateTime? ToDate)
+        public IActionResult GetPopupEnquiryDetails(int enquiryId, int PlantId, DateTime? FromDate, DateTime? ToDate)
         {
             GetEnquiry getInfo = new GetEnquiry()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
                 EnquiryId = enquiryId,
-                FranchiseId = FranchiseId,
+                PlantId = PlantId,
                 FromDate = FromDate,
                 ToDate = ToDate
             };
@@ -298,24 +298,22 @@ namespace TetroONE.Controllers
                 throw;
             }
         }
-
-
+         
         [HttpGet]
         [Route("DeleteEnquiry")]
-        public IActionResult DeleteClient(int enquiryId, int FranchiseId)
+        public IActionResult DeleteClient(int enquiryId, int PlantId)
         {
             DeleteEnquiry request = new DeleteEnquiry()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
                 EnquiryId = enquiryId,
-                FranchiseId = FranchiseId
+                PlantId = PlantId
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteEnquiryDetails]", request);
             return Json(response);
         }
-
-
+         
         private (string, string) GetFilePath(string reqfilename)
         {
             string guid = Guid.NewGuid().ToString();

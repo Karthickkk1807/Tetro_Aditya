@@ -226,8 +226,13 @@ $(document).ready(function () {
         Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, function (response) {
             if (response.status) {
                 var data = JSON.parse(response.data);
-                var columns = Common.bindColumn(data[0], ['MappingManageStockId', '']);
-                
+
+                $('#ProductName').text(data[0][0].ProductName);
+                $('#OpeningStock').text(data[0][0].OpeningStock);
+                $('#ClosingStock').text(data[0][0].ClosingStock);
+                $('#TotalInward').text(data[0][0].TotalInward);
+                $('#TotalOutward').text(data[0][0].TotalOutward);
+
                 $('#EditManageStockDynamic').empty('');
                 var html = ` 
                 <div class="table-responsive">
@@ -236,9 +241,9 @@ $(document).ready(function () {
                 </div>
                 `;
                 $('#EditManageStockDynamic').append(html);
-
-
-                bindTableEditManageStock('EditManageStockTable', data[0], columns, '330px');
+                 
+                var columns = Common.bindColumn(data[1], ['MappingManageStockId', '']);
+                bindTableEditManageStock('EditManageStockTable', data[1], columns, '330px');
             }
         }, null);
     });
