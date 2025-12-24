@@ -115,7 +115,7 @@ $(document).ready(async function () {
 
         $('#Process').prop('disabled', false);
 
-        $('#SaveProductionLog').hide();
+        //$('#SaveProductionLog').hide();
 
         Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: parseInt(productionPlanId), ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogNotNullSuccess, null);
     });
@@ -154,7 +154,7 @@ $(document).ready(async function () {
                 $('#Remarks').val(data[0][0].Remarks || '');
                 $('#Status').val(data[0][0].ProductionLogStatusId || '');
 
-                $('#SaveProductionLog').show(); 
+                //$('#SaveProductionLog').show(); 
             }
         }, null);
     });
@@ -171,16 +171,37 @@ $(document).ready(async function () {
         }
     });
        
-    $(document).on('change', '#Process', function () {
-        let selectedValue = Number($(this).val());
-        let allowedIds = ArrayProcessTypeId.map(x => x.ProcessTypeId);
+    //$(document).on('change', '#Process', function () {
+    //    let selectedValue = Number($(this).val());
+    //    let allowedIds = ArrayProcessTypeId.map(x => x.ProcessTypeId);
 
-        if (allowedIds.includes(selectedValue)) {
-            $('#SaveProductionLog').hide();
-        } else {
-            $('#SaveProductionLog').show();
-        }
-    });
+    //    if (allowedIds.includes(selectedValue)) {
+    //        $('#SaveProductionLog').hide();
+    //    } else {
+    //        $('#SaveProductionLog').show();
+    //    }
+    //});
+
+    //$(document).on('change', '#Process', function () {
+    //    let selectedText = $('#Process option:selected').text().trim();
+    //    let table = $('#TransactionsInfoTable').DataTable();
+    //    let processExists = false;
+
+    //    table.rows().every(function () {
+    //        let rowData = this.data();
+    //        let processText = rowData[1].trim();
+    //        if (processText === selectedText) {
+    //            processExists = true;
+    //            return false;
+    //        }
+    //    });
+
+    //    if (processExists) {
+    //        $('#SaveProductionLog').hide();
+    //    } else {
+    //        $('#SaveProductionLog').show();
+    //    }
+    //});
 });
 
 function GetProductionLogSuccess(response) {
@@ -246,7 +267,7 @@ function GetProductionLogNotNullSuccess(response) {
 
         $("#QRCode").html("");
         
-        //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/QRCodePop?ProductionPlanId=" + productionPlanId;
+        //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/QRCodePop?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
         var scanUrl = "https://localhost:44366/ProductionQRCode/QRCodePop" + "?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
 
         new QRCode(document.getElementById("QRCode"), {
@@ -263,7 +284,7 @@ function GetProductionLogReload(response) {
         Common.successMsg(response.message);
         $("#ProductionLogCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
-        $('#SaveProductionLog').hide();
+        //$('#SaveProductionLog').hide();
 
         var fnData = Common.getDateFilter('dateDisplay2');
         Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);

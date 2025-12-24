@@ -1,12 +1,12 @@
 ﻿var ForwardEmpDropdown = [];
 let ForwardEmpDropdownVal = [];
-var FranchiseId = 0;
+var PlantMappingId = 0;
 var enquiryId = 0;
 
 $(document).ready(function () {
-    FranchiseId = parseInt(localStorage.getItem('FranchiseId'));
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
     $('.backdrop').show();
-    initialize(FranchiseId);
+    initialize(PlantMappingId);
     $('.Error-Showing-Lable').hide();
     $('#HideEnquiryStatus').hide();
     var currentrow = $('.isLookUp');
@@ -25,7 +25,7 @@ $(document).ready(function () {
     $('#queryTextarea').css('height', '33px');
 });
 
-async function initialize(FranchiseId) {
+async function initialize(PlantMappingId) {
 
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
@@ -41,7 +41,7 @@ async function initialize(FranchiseId) {
         $('#increment-month-btn2').show();
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Enquiry/GetEnquiry", { FranchiseId: parseInt(FranchiseId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, EnquirySuccess, null);
+        Common.ajaxCall("GET", "/Enquiry/GetEnquiry", { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, EnquirySuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
@@ -53,7 +53,7 @@ async function initialize(FranchiseId) {
         }
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Enquiry/GetEnquiry", { FranchiseId: parseInt(FranchiseId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, EnquirySuccess, null);
+        Common.ajaxCall("GET", "/Enquiry/GetEnquiry", { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, EnquirySuccess, null);
     });
 
     function updateMonthDisplay(date) {
@@ -72,7 +72,7 @@ async function initialize(FranchiseId) {
         var fromDate = $('#FromDate').val();
         $('#ToDate').attr('min', fromDate);
         if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
-            Common.ajaxCall("GET", "/Enquiry/GetEnquiry", { FranchiseId: parseInt(FranchiseId), FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTime('ToDate').toISOString() }, EnquirySuccess, null);
+            Common.ajaxCall("GET", "/Enquiry/GetEnquiry", { PlantId: parseInt(PlantMappingId), FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTime('ToDate').toISOString() }, EnquirySuccess, null);
         }
     });
 
@@ -83,7 +83,7 @@ async function initialize(FranchiseId) {
 
         let displayedDate = new Date(currentYear, currentMonth)
         updateMonthDisplay(displayedDate);
-        var EditDataId = { FranchiseId: parseInt(FranchiseId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString()};
+        var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
         Common.ajaxCall("GET", "/Enquiry/GetEnquiry", EditDataId, EnquirySuccess, null);
     });
 
@@ -94,7 +94,7 @@ async function initialize(FranchiseId) {
     });
 
     var fnData = Common.getDateFilter('dateDisplay2');
-    Common.ajaxCall("GET", "/Enquiry/GetEnquiry", { FranchiseId: parseInt(FranchiseId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, EnquirySuccess, null);
+    Common.ajaxCall("GET", "/Enquiry/GetEnquiry", { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, EnquirySuccess, null);
 
     Common.bindDropDown('AttendantId', 'Attendant');
     Common.bindDropDown('EnquiryStatusId', 'EnquiryStatus');
@@ -108,12 +108,11 @@ async function initialize(FranchiseId) {
     Common.bindDropDownSuccess(ContactPersonDropdownVal, 'ContactPerson');
     ContactPersonDropdown = JSON.parse(ContactPersonDropdownVal);
 
-    $('#enquiryTable').on('click', '.btn-delete', async function () {
-        var FranchiseId = parseInt($("#UserFranchiseMappingId").val());
+    $('#enquiryTable').on('click', '.btn-delete', async function () { 
         var response = await Common.askConfirmation();
         if (response == true) {
             var enquiryId = $(this).data('id');
-            Common.ajaxCall("GET", "/Enquiry/DeleteEnquiry", { EnquiryId: enquiryId, FranchiseId: FranchiseId }, EnquiryReload, null);
+            Common.ajaxCall("GET", "/Enquiry/DeleteEnquiry", { EnquiryId: enquiryId, PlantId: PlantMappingId }, EnquiryReload, null);
         }
     });
 }
@@ -142,14 +141,9 @@ function EnquirySuccess(response) {
 
 function EnquiryReload(response) {
     if (response.status) {
-        Common.successMsg(response.message);
-        var FranchiseId = parseInt($("#UserFranchiseMappingId").val());
-        var editDataId = {
-            FranchiseId: FranchiseId
-        }
-
+        Common.successMsg(response.message);  
         var fnData = Common.getDateFilter('dateDisplay2');
-        var EditDataId = { FranchiseId: parseInt(FranchiseId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+        var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
         Common.ajaxCall("GET", "/Enquiry/GetEnquiry", EditDataId, EnquirySuccess, null);
     }
     else {
@@ -184,7 +178,6 @@ $(document).on('click', '#customBtn_enquiryTable', function () {
     $('#EnquiryIsLookUp').prop('checked', false);
     $('#EnquiryLookUpDate').closest('.form-group').hide();
     $('#insertIsLookUp').css('margin-top', '33px');
-
     $('#EnquiryIsForwardOption').prop('checked', false);
     $('#ForwardEmpId').closest('.form-group').hide();
     $('#insertForward').css('margin-top', '33px');
@@ -201,15 +194,26 @@ $(document).on('click', '#customBtn_enquiryTable', function () {
     //Common.SetMinDate('#EnquiryLookUpDate');
     //Common.SetMaxDate('#EnquiryDate');
 
-    var FranchiseId = parseInt($("#UserFranchiseMappingId").val());
-    var EditDataId = { ModuleName: 'Enquiry', FranchiseId: FranchiseId };
+    var currentDate = new Date();
+    var formattedDate = currentDate.toISOString().slice(0, 10);
+    $('#EnquiryDate').val(formattedDate);
+    $('#EnquiryDate').attr('max', formattedDate);
+    $('#EnquiryLookUpDate').attr('min', formattedDate);
+
+    $('#AttendantId').val(EmployeeId).trigger('change');
+    $('#EnquiryTypeId').val(1);
+     
+    var EditDataId = { ModuleName: 'Enquiry', PlantId: PlantMappingId };
 
     Common.ajaxCall("GET", "/Common/GetAutoGenerate", EditDataId, function (response) {
         Common.AutoGenerateNumberGet(response, "EnquiryNo", "EnquiryNo");
     });
-
 });
 
+$(document).on('click', '#EnquiryDate', function () {
+    var $thisVal = $(this).val();
+    $('#EnquiryLookUpDate').attr('min', $thisVal);
+});
 
 $(document).on('click', '#InsertEquiry', function () {
 
@@ -243,7 +247,7 @@ $(document).on('click', '#InsertEquiry', function () {
         EnquiryLookUpDate: $('#EnquiryLookUpDate').is(':checked') ? "" : lookUpDate,
         EnquiryIsForwardOption: $('#EnquiryIsForwardOption').is(':checked'),
         ForwardEmpId: $('#EnquiryIsForwardOption').is(':checked') ? parseInt($('#ForwardEmpId').val()) : 0,
-        FranchiseId: parseInt($("#UserFranchiseMappingId").val())
+        PlantId: parseInt($("#UserFranchiseMappingId").val())
     };
 
     if (insertEnquiryForm) {
@@ -261,11 +265,10 @@ $(document).on('click', '#InsertEquiry', function () {
             success: function (response) {
                 if (response.status) {
                     formDataMultiple = new FormData();
-                    Common.successMsg(response.message);
-                    var FranchiseId = parseInt($("#UserFranchiseMappingId").val());
+                    Common.successMsg(response.message); 
 
                     var fnData = Common.getDateFilter('dateDisplay2');
-                    var EditDataId = { FranchiseId: parseInt(FranchiseId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+                    var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
                     Common.ajaxCall("GET", "/Enquiry/GetEnquiry", EditDataId, EnquirySuccess, null);
                     $('#InsertEnquiryInfo').modal('hide');
                     $('#selectedFiles,#ExistselectedFiles').empty('');
@@ -563,10 +566,9 @@ $('#enquiryTable').on('click', '.btn-edit', function () {
 
     //Common.SetMinDate('#EnquiryLookUpDate');
 
-    enquiryId = $(this).data('id');
-    var FranchiseId = parseInt($("#UserFranchiseMappingId").val());
+    enquiryId = $(this).data('id'); 
 
-    var EditDataId = { EnquiryId: enquiryId, ReturnType: null, FranchiseId: FranchiseId };
+    var EditDataId = { EnquiryId: enquiryId, ReturnType: null, PlantId: PlantMappingId };
     Common.ajaxCall("GET", "/Enquiry/GetPopupEnquiryDetails", EditDataId, EnquiryGetNotNull, null);
 
     $('.accordion-collapse').hide();
@@ -860,7 +862,7 @@ $(document).on('click', '#UpdateEquiry', function (e) {
             EnquiryLookUpDate: $('#EnquiryLookUpDate').is(':checked') ? "" : lookUpDate,
             EnquiryIsForwardOption: $('#EnquiryIsForwardOption').is(':checked'),
             ForwardEmpId: $('#EnquiryIsForwardOption').is(':checked') ? parseInt($('#ForwardEmpId').val()) : 0,
-            FranchiseId: parseInt($("#UserFranchiseMappingId").val())
+            PlantId: PlantMappingId
         };
 
         var EnquiryFollowupDetailsArray = [];
@@ -950,11 +952,9 @@ $(document).on('click', '#UpdateEquiry', function (e) {
             success: function (response) {
                 if (response.status) {
                     Common.successMsg(response.message);
-                    $('#InsertEnquiryForm').modal('hide');
-                    var FranchiseId = parseInt($("#UserFranchiseMappingId").val());
-
+                    $('#InsertEnquiryForm').modal('hide');  
                     var fnData = Common.getDateFilter('dateDisplay2');
-                    var EditDataId = { FranchiseId: parseInt(FranchiseId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+                    var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
                     Common.ajaxCall("GET", "/Enquiry/GetEnquiry", EditDataId, EnquirySuccess, null);
 
                     $('#selectedFiles,#ExistselectedFiles').empty('');
@@ -1471,8 +1471,7 @@ function bindTableEnquiry(tableid, data, columns, actionTarget, editcolumn, scro
         Common.autoAdjustColumns(table1);
     }, 100);
 }
-
-
+ 
 $('.accordion-header').on('click', function () {
     var $offcanvas = $(this).closest('.offcanvas-container');
     var $accordion = $(this).closest('.accordion');

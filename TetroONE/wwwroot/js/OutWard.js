@@ -145,11 +145,32 @@ $(document).ready(async function () {
         $('#AddAttachLable, #AddNotesLable').show();
         $('.ShipTo-edit').hide();
 
+        $('#OutWardBy').val(LoginUserId);
+
         $('#emptyDiv').removeClass('col-lg-2 col-md-2 col-6').addClass('col-lg-4 col-md-4 col-6');
         $('#OutWardStatusIdDiv').hide();
 
         $('.modal-body').animate({ scrollTop: 0 }, 300);
+        $('#ShipFromColumn .row.mt-3, #ShipToColumn .row.mt-3').hide();
+        $('#toggleIconShipFrom').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        $('#toggleIconShipTo').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        $('.ShipTo-edit').hide();
+
         $('#OutWardModal').show();
+    });
+
+    $(document).on('click', '#toggleShipTo, #toggleIconShipTo, #toggleShipFrom, #toggleIconShipFrom', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $rows = $('#ShipFromColumn .row.mt-3, #ShipToColumn .row.mt-3');
+        const isCurrentlyVisible = $rows.is(':visible');
+        $rows.stop(true, true).slideToggle(300);
+
+        $('#toggleIconShipTo, #toggleIconShipFrom').toggleClass('fa-chevron-up fa-chevron-down');
+        $('#ShipFromColumn .BilAddHead, #ShipToColumn .BilAddHead').css('border-bottom', '1px solid #c7c7c7');
+        if (isCurrentlyVisible) $('.ShipTo-edit').hide();
+        else $('.ShipTo-edit').show();
     });
 
     $(document).on('click', '.btn-edit', function () {
@@ -208,7 +229,8 @@ $(document).ready(async function () {
             Common.ajaxCall("GET", "/Productions/GetOutWardTypeContactDetails", EditData,
                 function (response) {
                     if (response.status) {
-                        Common.bindDropDownSuccess(response.data, "ShipToId");
+                        Common.bindDropDownSuccess(response.data, "ShipToId"); 
+                        $('#ShipFromId').val(PlantMappingId).trigger('change');
                         $('#ShipToId').prop('disabled', false);
                         $('#ShipFromId').prop('disabled', false);
                     }
@@ -218,7 +240,7 @@ $(document).ready(async function () {
         }
         else {
             $('#ShipToId').empty().append($('<option>', { value: '', text: '--Select--', }));
-            $('#ShipFromId, #ShipToId').val('').trigger('change'); 
+            $('#ShipFromId, #ShipToId').val('').trigger('change');
             $('#ShipToId').prop('disabled', true);
             $('#ShipFromId').prop('disabled', true);
         }
@@ -259,11 +281,11 @@ $(document).ready(async function () {
         }
     });
 
-    $(document).on('click', '#BtnSave', function () { 
-        if ($(".ShipToedit-icon i.fas.fa-save:visible").length > 0) { 
+    $(document).on('click', '#BtnSave', function () {
+        if ($(".ShipToedit-icon i.fas.fa-save:visible").length > 0) {
             Common.warningMsg('Please Save the Ship To Address before Proceeding.');
             return false;
-        }  
+        }
         if ($("#TopStatic").valid() && $("#FormShipping").valid() && $("#FormShipTo").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
             $('#loader-pms').show();
             getExistFiles();
@@ -299,30 +321,51 @@ $(document).ready(async function () {
             var parentFabricTypeId = null;
 
             $("#OutWardTableBody .dynamic-item-row, #OutWardTableBody .dynamic-item-row_Second").each(function () {
-
                 let row = $(this);
                 let currentRowFabricVal = row.find(".FabricSelect").val();
 
+                // ---- IDENTIFY PARENT OR CHILD ROW ----
                 if (row.hasClass("dynamic-item-row")) {
                     currentGroupRowNo = 1;
                     parentFabricTypeId = currentRowFabricVal;
                     row.find(".FabricSelect").val(parentFabricTypeId);
-
                 } else if (row.hasClass("dynamic-item-row_Second")) {
                     currentGroupRowNo++;
                 }
 
+                // ---- GET OutwardFabricId ----
                 let OutwardFabricId = row.find(".outwardFabricId").text().trim();
-
-                let OutwardFabricProcessMappingId = row.find(".OutwardFabricProcessMappingId").text().trim();
-
-                pushFabricMapping(row, OutwardFabricId, parentFabricTypeId, currentGroupRowNo);
-
-                if (OutwardFabricId === "" || OutwardFabricId === null) {
+                if (!OutwardFabricId) {
                     OutwardFabricId = row.prevAll(".dynamic-item-row").first().find(".outwardFabricId").text().trim();
                 }
 
-                appendProcessMapping(row, OutwardFabricId, parentFabricTypeId, OutwardFabricProcessMappingId, currentGroupRowNo);
+                let OutwardFabricProcessMappingId = row.find(".OutwardFabricProcessMappingId").text().trim();
+
+                // ---- PUSH FABRIC MAPPING ROW DATA INLINE ----
+                FabricMapping.push({
+                    OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
+                    FabricTypeId: parseInt(parentFabricTypeId) || null,
+                    ProcessCount: row.find(".Process").val()?.length || 0,
+                    Dia: parseFloat(row.find(".DiaInput").val()) || null,
+                    GSM: parseFloat(row.find(".GsmInput").val()) || null,
+                    Qty: parseFloat(row.find(".QtyInput").val()) || null,
+                    NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
+                    Width: parseInt(row.find(".WidthSelect").val()) || null,
+                    OutwardId: OutWardId > 0 ? parseInt(OutWardId) : null,
+                    RowNo: currentGroupRowNo,
+                });
+
+                // ---- PUSH PROCESS MAPPING INLINE ----
+                let selectedProcessIds = row.find("select.Process").val() || [];
+                selectedProcessIds.forEach(pid => {
+                    FabricProcessMapping.push({
+                        RowNo: currentGroupRowNo,
+                        OutwardFabricProcessMappingId: OutwardFabricProcessMappingId ? parseInt(OutwardFabricProcessMappingId) : null,
+                        OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
+                        FabricTypeId: parentFabricTypeId ? parseInt(parentFabricTypeId) : null,
+                        ProcessId: parseInt(pid)
+                    });
+                });
             });
 
             formDataMultiple.append("OutwardStaticData", JSON.stringify(objvalue));
@@ -356,41 +399,7 @@ $(document).ready(async function () {
                 error: function (response) {
                     Common.errorMsg(response.message);
                 }
-            });
-
-            function pushFabricMapping(row, fabricId, fabricTypeId, rowNo) {
-
-                FabricMapping.push({
-                    OutwardFabricId: fabricId ? parseInt(fabricId) : null,
-                    FabricTypeId: parseInt(fabricTypeId) || null,
-                    ProcessCount: parseInt(row.find(".processRoute").val()) || null,
-                    Dia: parseFloat(row.find(".DiaInput").val()) || null,
-                    GSM: parseFloat(row.find(".GsmInput").val()) || null,
-                    Qty: parseFloat(row.find(".QtyInput").val()) || null,
-                    NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
-                    Width: parseInt(row.find(".WidthSelect").val()) || null,
-                    OutwardId: OutWardId > 0 ? parseInt(OutWardId) : null,
-                    RowNo: rowNo,
-                });
-            }
-
-            function appendProcessMapping(row, OutwardFabricId, fabricTypeId, OutwardFabricProcessMappingId, rowNo) {
-
-                let processData = row.find("td[data-id]").attr("data-id");
-                if (!processData) return;
-
-                let ids = processData.split(',').map(x => parseInt(x.trim()));
-
-                ids.forEach(pid => {
-                    FabricProcessMapping.push({
-                        RowNo: rowNo,
-                        OutwardFabricProcessMappingId: OutwardFabricProcessMappingId ? parseInt(OutwardFabricProcessMappingId) : null,
-                        OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
-                        FabricTypeId: fabricTypeId ? parseInt(fabricTypeId) : null,
-                        ProcessId: parseInt(pid)
-                    });
-                });
-            }
+            }); 
         }
     });
 
@@ -491,11 +500,9 @@ function GetOutwardSuccess(response) {
 }
 
 function GetOutwardNotNullSuccess(response) {
-    if (!response.status) return;
+    if (!response.status) return;  
+    var data = JSON.parse(response.data); 
 
-    var data = JSON.parse(response.data);
-
-    // --- Populate header fields ---
     const header = data[0][0];
     $('#OutwardDate').val(header.Date);
     $('#OutwardNo').val(header.OutwardNo);
@@ -509,8 +516,7 @@ function GetOutwardNotNullSuccess(response) {
     $('#DriverName').val(header.DriverName);
     $('#OutWardStatus').val(header.OutWardStatusId);
     $('#InwardNo').val(header.InwardId);
-
-    // --- Bind ShipTo dropdown and addresses ---
+     
     Common.ajaxCall("GET", "/Productions/GetOutWardTypeContactDetails", { OutwardType: parseInt(header.OutWardTo) }, function (responseOutWardType) {
         if (responseOutWardType.status) {
             Common.bindDropDownSuccess(responseOutWardType.data, "ShipToId");
@@ -525,7 +531,7 @@ function GetOutwardNotNullSuccess(response) {
         } else {
             ShipFromAddressClear();
         }
-    },null);
+    }, null);
 
     Inventory.toggleField(header.Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable", "HideNotesLable");
     Inventory.toggleFieldForAttachment(data[3][0]?.AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
@@ -537,7 +543,7 @@ function GetOutwardNotNullSuccess(response) {
     let fabricGroup = {};
     let mappingLookup = {};
     let renderRowTracker = {};
-
+     
     processMapping.forEach(m => {
         let key = `${m.FabricTypeId}_${m.RowNo}`;
         if (!mappingLookup[key]) mappingLookup[key] = [];
@@ -555,36 +561,34 @@ function GetOutwardNotNullSuccess(response) {
 
         let currentRowNo = renderRowTracker[item.FabricTypeId];
         let lookupKey = `${item.FabricTypeId}_${currentRowNo}`;
-
         let mapped = mappingLookup[lookupKey] || [];
 
-        let processIds = mapped.map(x => x.ProcessId).join(",");
         let processMappingId = mapped.length ? mapped[0].OutwardFabricProcessMappingId : "";
+        let selectedProcessIds = mapped.map(x => x.ProcessId.toString()) || [];
 
         let isFirstRowOfFabric = !fabricGroup[item.FabricTypeId];
-
+         
         let html = `
-            <tr class="${isFirstRowOfFabric ? 'dynamic-item-row' : 'dynamic-item-row_Second'}" 
-                data-id="${uid}" 
-                data-rowno="${currentRowNo}">
-
+            <tr class="${isFirstRowOfFabric ? 'dynamic-item-row' : 'dynamic-item-row_Second'}" data-id="${uid}" data-rowno="${currentRowNo}"> 
                 <td class="sno"></td> 
                 <td>
                     ${isFirstRowOfFabric ? `<select class="form-control FabricSelect">${FabricHTML}</select>` : ""}
                     <label class="outwardFabricId d-none">${item.OutwardFabricId}</label>
-                </td>
-
-                <td data-id="${processIds}">
+                </td> 
+                <td>
                     <label class="OutwardFabricProcessMappingId d-none">${processMappingId}</label>
-                    <input type="text" class="form-control processRoute" value="${item.ProcessCount}" readonly>
-                </td>
-
+                    <select multiple class="form-control Process" required>
+                        ${ProcessTypeDropdown[0].map(p => `
+                            <option value="${p.ProcessTypeId}" ${selectedProcessIds.includes(p.ProcessTypeId.toString()) ? 'selected' : ''}>
+                                ${p.ProcessTypeName}
+                            </option>`).join('')}
+                    </select> 
+                </td> 
                 <td><input class="form-control DiaInput" value="${item.Dia}"></td>
                 <td><input class="form-control GsmInput" value="${item.GSM}"></td>
                 <td><input class="form-control QtyInput" value="${item.Qty}"></td>
                 <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td>
-                <td><select class="form-control WidthSelect">${WidthHTML}</select></td>
-
+                <td><select class="form-control WidthSelect">${WidthHTML}</select></td> 
                 <td style="text-align:center">
                     ${isFirstRowOfFabric ? `<button id="dyanmicplusbtn" class="btn AddStockBtn AddFabric" type="button"><i class="fas fa-plus" id="AddButton"></i></button>` : ""}
                     <button id="RemoveButton" class="btn DynrowRemove removeRowBtn" type="button">
@@ -603,16 +607,20 @@ function GetOutwardNotNullSuccess(response) {
     });
 
     updateSerialNumbers();
-    refreshProductDropdowns(".FabricSelect");
+    refreshProductDropdowns(".FabricSelect"); 
+    $(".Process").select2({
+        theme: 'bootstrap4',
+        placeholder: '-- Select Process --',
+        allowClear: true,
+        closeOnSelect: false,
+        width: 'style',
+    });
 }
 
 
 function GetInwardNotNullSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
-        //Inventory.toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "HideNotesLable");
-        //Inventory.toggleFieldForAttachment(data[2][0].AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
-        //Inventory.bindAttachments(data[2]);
 
         $('.dynamic-item-row').remove();
         $('.dynamic-item-row_Second').remove();
@@ -623,7 +631,7 @@ function GetInwardNotNullSuccess(response) {
         let fabricGroup = {};
         let mappingLookup = {};
         let renderRowTracker = {};
-
+         
         processMapping.forEach(m => {
             let key = `${m.FabricTypeId}_${m.RowNo}`;
             if (!mappingLookup[key]) mappingLookup[key] = [];
@@ -641,36 +649,34 @@ function GetInwardNotNullSuccess(response) {
 
             let currentRowNo = renderRowTracker[item.FabricTypeId];
             let lookupKey = `${item.FabricTypeId}_${currentRowNo}`;
-
             let mapped = mappingLookup[lookupKey] || [];
 
-            let processIds = mapped.map(x => x.ProcessId).join(",");
             let processMappingId = mapped.length ? mapped[0].InwardFabricProcessMappingId : "";
+            let selectedProcessIds = mapped.map(x => x.ProcessId.toString()) || [];
 
             let isFirstRowOfFabric = !fabricGroup[item.FabricTypeId];
-
+             
             let html = `
-                <tr class="${isFirstRowOfFabric ? 'dynamic-item-row' : 'dynamic-item-row_Second'}" 
-                    data-id="${uid}" 
-                    data-rowno="${currentRowNo}">
-
+                <tr class="${isFirstRowOfFabric ? 'dynamic-item-row' : 'dynamic-item-row_Second'}" data-id="${uid}" data-rowno="${currentRowNo}"> 
                     <td class="sno"></td> 
                     <td>
                         ${isFirstRowOfFabric ? `<select class="form-control FabricSelect">${FabricHTML}</select>` : ""}
                         <label class="InwardFabricId d-none">${item.InwardFabricId || ''}</label>
-                    </td>
-
-                    <td data-id="${processIds}">
+                    </td> 
+                    <td>
                         <label class="InwardFabricProcessMappingId d-none">${processMappingId || ''}</label>
-                        <input type="text" class="form-control processRoute" value="${item.ProcessCount}" readonly>
-                    </td>
-
+                        <select multiple class="form-control Process" required>
+                            ${ProcessTypeDropdown[0].map(p => `
+                                <option value="${p.ProcessTypeId}" ${selectedProcessIds.includes(p.ProcessTypeId.toString()) ? 'selected' : ''}>
+                                    ${p.ProcessTypeName}
+                                </option>`).join('')}
+                        </select> 
+                    </td> 
                     <td><input class="form-control DiaInput" value="${item.Dia}"></td>
                     <td><input class="form-control GsmInput" value="${item.GSM}"></td>
                     <td><input class="form-control QtyInput" value="${item.Qty}"></td>
                     <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td>
-                    <td><select class="form-control WidthSelect">${WidthHTML}</select></td>
-
+                    <td><select class="form-control WidthSelect">${WidthHTML}</select></td> 
                     <td style="text-align:center">
                         ${isFirstRowOfFabric ? `<button id="dyanmicplusbtn" class="btn AddStockBtn AddFabric" type="button"><i class="fas fa-plus" id="AddButton"></i></button>` : ""}
                         <button id="RemoveButton" class="btn DynrowRemove removeRowBtn" type="button">
@@ -689,11 +695,17 @@ function GetInwardNotNullSuccess(response) {
         });
 
         updateSerialNumbers();
-        refreshProductDropdowns(".FabricSelect");
+        refreshProductDropdowns(".FabricSelect"); 
+        $(".Process").select2({
+            theme: 'bootstrap4',
+            placeholder: '-- Select Process --',
+            allowClear: true,
+            closeOnSelect: false,
+            width: 'style',
+        }); 
     }
 }
-
-
+ 
 let isShipToEditing = false;
 
 $('#ShipToEdit').on('click', function (e) {
@@ -734,7 +746,7 @@ $('#ShipToEdit').on('click', function (e) {
     }
 });
 
-function duplicateFabric() { 
+function duplicateFabric() {
     let uid = Math.random().toString(36).substring(2);
 
     var defaultOption = '<option value="">--Select--</option>';
@@ -756,7 +768,8 @@ function duplicateFabric() {
             </td> 
             <td data-id="">
                  <lable class="OutwardFabricProcessMappingId d-none"></lable>
-                <input type="text" class="form-control processRoute" id="ProcessTypeId${uid}" name="ProcessTypeId${uid}"" placeholder="Click Here" required readonly>
+                 <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
+                 </select>
             </td> 
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
@@ -777,9 +790,22 @@ function duplicateFabric() {
         </tr>
     `;
 
+    bindDropDownWidth("Width_" + uid, "Width", function () {
+        $("#Width_" + uid).val(2).trigger("change");
+    });
+
+    Common.bindDropDownMulti("Process_" + uid, 'ProcessType');
+
     $("#AddItemButtonRow").before(html);
-     
-    Common.bindDropDown("Width_" + uid, 'Width');
+
+    $("#Process_" + uid).select2({
+        theme: 'bootstrap4',
+        placeholder: '-- Select Process --',
+        allowClear: true,
+        closeOnSelect: false,
+        width: 'style',
+    });
+
     updateSerialNumbers();
     refreshProductDropdowns(".FabricSelect");
 }
@@ -788,12 +814,12 @@ $(document).on("click", ".AddFabric", function () {
     let mainRow = $(this).closest(".dynamic-item-row");
     let childSecondRows = mainRow.nextUntil(".dynamic-item-row", ".dynamic-item-row_Second");
 
-    let insertAfter; 
+    let insertAfter;
     if (childSecondRows.length > 0) {
         insertAfter = childSecondRows.last();
     } else {
         insertAfter = mainRow;
-    } 
+    }
     addNewFabricRow(insertAfter);
 });
 
@@ -806,7 +832,8 @@ function addNewFabricRow(afterRow) {
             <td><lable class="outwardFabricId d-none"></lable></td> 
             <td data-id="">
                  <lable class="OutwardFabricProcessMappingId d-none"></lable>
-                 <input type="text" class="form-control processRoute" id="ProcessTypeId${uid}" name="ProcessTypeId${uid}"" placeholder="Click Here" required readonly>
+                 <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
+                 </select>
             </td> 
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
@@ -824,9 +851,22 @@ function addNewFabricRow(afterRow) {
         </tr>
     `;
 
-    Common.bindDropDown("Width_" + uid, 'Width');
+    bindDropDownWidth("Width_" + uid, "Width", function () {
+        $("#Width_" + uid).val(2).trigger("change");
+    });
+
+    Common.bindDropDownMulti("Process_" + uid, 'ProcessType');
+
     $(afterRow).after(newRow);
 
+    $("#Process_" + uid).select2({
+        theme: 'bootstrap4',
+        placeholder: '-- Select Process --',
+        allowClear: true,
+        closeOnSelect: false,
+        width: 'style',
+    });
+     
     updateSerialNumbers();
 }
 
@@ -1157,7 +1197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             preview.style.display = 'none';
         }
     });
-}); 
+});
 
 /*------------------------------------------------------------------Avoid the Duplicate to select----------------------------------------------------------------*/
 
@@ -1187,3 +1227,29 @@ function refreshProductDropdowns(selector) {
         });
     });
 } 
+
+function bindDropDownWidth(id, moduleName, callback) {
+
+    var request = {
+        moduleName: moduleName
+    };
+
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status == true) {
+                Common.bindDropDownSuccess(response.data, id);
+                if (typeof callback === "function") {
+                    callback();
+                }
+            }
+        },
+        error: function (response) {
+            console.log("Dropdown bind error", response);
+        }
+    });
+}

@@ -60,7 +60,31 @@ var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.V
         top: 0;
         z-index: 2;
         background: #a3c1df;
-    } 
+    }
+
+    .info-row {
+        display: flex;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .info-colon {
+        margin: 0 5px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .info-value {
+        flex: 1;
+        text-align: left;
+        color: #888888;
+        margin-top: 0px;
+    }
+
+    .info-label-ProductDetails {
+        width: 100px;
+        font-weight: 600;
+    }
 </style>
 
 
@@ -244,8 +268,8 @@ var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.V
                 <span id="ManageStockClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
             </div>
 
-            <div class="modal-body" style="max-height: 80vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;"> 
-                 <div class="row">
+            <div class="modal-body" style="max-height: 80vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6 col-6 d-flex justify-content-start">
                         <div class="form-group">
                             <div id="reportrange"
@@ -265,6 +289,51 @@ var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.V
                             </button>
                         </div>
                     </div>
+                    <div class="col-12" style="white-space: nowrap;">
+                        <div id="ProductNameDiv" class="info-row">
+                            <div class="info-label-ProductDetails">Product Name</div>
+                            <div class="info-colon">:</div>
+                            <div class="info-value">
+                                <a id="ProductName" name="ProductName"></a>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="col-6">
+                        <div id="OpeningStockDiv" class="info-row">
+                            <div class="info-label-ProductDetails">Opening Stock</div>
+                            <div class="info-colon">:</div>
+                            <div class="info-value">
+                                <a id="OpeningStock" name="OpeningStock"></a>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="col-6">
+                        <div id="ClosingStockDiv" class="info-row">
+                            <div class="info-label-ProductDetails">Closing Stock</div>
+                            <div class="info-colon">:</div>
+                            <div class="info-value">
+                                <a id="ClosingStock" name="OpeningStock"></a>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="col-6">
+                        <div id="TotalInwardDiv" class="info-row">
+                            <div class="info-label-ProductDetails">Total Inward</div>
+                            <div class="info-colon">:</div>
+                            <div class="info-value">
+                                <a id="TotalInward" name="TotalInward"></a>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="col-6">
+                        <div id="TotalOutwardDiv" class="info-row">
+                            <div class="info-label-ProductDetails">Total Outward</div>
+                            <div class="info-colon">:</div>
+                            <div class="info-value">
+                                <a id="TotalOutward" name="TotalOutward"></a>
+                            </div>
+                        </div>
+                    </div> 
                 </div>
                 <div class="" id="EditManageStockDynamic">
                     <div class="table-responsive">

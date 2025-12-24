@@ -174,7 +174,7 @@ $(document).ready(function () {
             objvalue.IsESIApplicable = $('#IsESIApplicable').is(':checked');
             objvalue.UANNumber = $('#UANNumber').val();
             objvalue.PFNumber = $('#PFNumber').val();
-            objvalue.FranchiseId = parseInt(localStorage.getItem('FranchiseId'));
+            objvalue.PlantId = parseInt(localStorage.getItem('FranchiseId'));
 
             objvalue.UserTypeId = Common.parseInputValue('UserTypeId');
             objvalue.UserGroupId = Common.parseInputValue('UserGroupId');
@@ -183,7 +183,6 @@ $(document).ready(function () {
             if (objvalue.EmployeeImage == undefined) {
                 objvalue.EmployeeImage = null;
             }
-
 
             let fileDetails = [];
             let existFile = [];
@@ -520,9 +519,9 @@ $(document).ready(function () {
     $('#EmployeeTypeId').on('change', function () {
         var employeeType = $(this).val();
         //$('.employee-avatar-upload .avatar-edit input + label').css('top', '-5px');
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+        var PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
         if (employeeType != "" && nonEditable) {
-            Common.ajaxCall("GET", "/HumanResource/GetAutoGenerateId", { FranchiseId: FranchiseMappingId, EmployeeTypeId: parseInt(employeeType) }, function (response) {
+            Common.ajaxCall("GET", "/HumanResource/GetAutoGenerateId", { PlantId: PlantMappingId, EmployeeTypeId: parseInt(employeeType) }, function (response) {
                 if (response.status) {
                     var data = JSON.parse(response.data);
                     $('#EmployeeCompanyId').val(data[0][0].EmployeeCompanyId);
@@ -548,14 +547,14 @@ $(document).ready(function () {
         if ($('#EmployeeTypeId option:selected').text() == "Permanent") {
             $('#IsLoginUser').prop({ checked: true, disabled: true });
             $('#IsInsuranceApplicableDiv,#InsuranceNumberDiv,#InsuranceDateDiv,#ExpiryDateDiv,#ESIDetailsDiv,#PFDetailsDiv').show();
-            $('#AccPayment').prop('disabled', false).val('');
+            $('#AccAmount').prop('disabled', false).val('');
             $('#IsLoginUserdiv').hide();
 
         } else {
 
             $('#IsLoginUser').prop({ checked: false, disabled: true });
             $('#IsInsuranceApplicableDiv,#InsuranceNumberDiv,#InsuranceDateDiv,#ExpiryDateDiv,#ESIDetailsDiv,#PFDetailsDiv').hide();
-            $('#AccPayment').prop('disabled', true).val(0);
+            $('#AccAmount').prop('disabled', true).val(0);
             $('#IsLoginUserdiv').hide();
         }
     });
@@ -598,9 +597,9 @@ $(document).ready(function () {
         let employeeType = $('#EmployeeTypeId').val();
 
         if (employeeType === '1') {
-            $('#CashPayment').prop('disabled', false);
+            $('#CashAmount').prop('disabled', false);
         } else {
-            $('#CashPayment').prop('disabled', true).val($(this).val());
+            $('#CashAmount').prop('disabled', true).val($(this).val());
         }
     });
 
@@ -611,16 +610,16 @@ $(document).ready(function () {
         //$('#ExpiryDate').val(insuranceDate);
     });
 
-    $('#CashPayment, #AccPayment').on('input', function () {
-        var cashPaymentValue = parseFloat($('#CashPayment').val()) || 0;
-        var accPaymentValue = parseFloat($('#AccPayment').val()) || 0;
+    $('#CashAmount, #AccAmount').on('input', function () {
+        var cashPaymentValue = parseFloat($('#CashAmount').val()) || 0;
+        var accPaymentValue = parseFloat($('#AccAmount').val()) || 0;
         var ctcValue = parseFloat($('#CTC').val()) || 0;
 
         var totalPayment = cashPaymentValue + accPaymentValue;
 
         if (totalPayment > ctcValue) {
-            $('#CashPayment').val(ctcValue / 2);
-            $('#AccPayment').val(ctcValue / 2);
+            $('#CashAmount').val(ctcValue / 2);
+            $('#AccAmount').val(ctcValue / 2);
         }
     });
 

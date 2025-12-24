@@ -266,26 +266,22 @@ namespace TetroONE.Controllers
             }
             return Json(response);
         }
-
-
+         
         [HttpGet]
         [Route("PurchaseBillPrint")]
-        public IActionResult PurchaseBillPrint(int ModuleId, int ContactId, int NoOfCopies, string printType, int FranchiseId)
+        public IActionResult PurchaseBillPrint(int ModuleId, int NoOfCopies, string printType)
         {
             _employeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("[dbo].[USP_GetPrintDetails]", connection))
+                using (SqlCommand command = new SqlCommand("[dbo].[USP_GetPrintPDFDetails]", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@LoginUserId", _employeeId);
                     command.Parameters.AddWithValue("@ModuleName", "PurchaseBill");
                     command.Parameters.AddWithValue("@ModuleId", ModuleId);
-                    command.Parameters.AddWithValue("@ContactId", ContactId);
-                    command.Parameters.AddWithValue("@FranchiseId", FranchiseId);
-
 
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
@@ -296,7 +292,7 @@ namespace TetroONE.Controllers
                         adapter.Fill(ds);
                     }
 
-                    if (ds.Tables.Count >= 5)
+                    if (ds.Tables.Count >= 7)
                     {
                         DataTable dt1 = ds.Tables[0];
                         DataTable dt2 = ds.Tables[1];
@@ -306,77 +302,51 @@ namespace TetroONE.Controllers
                         DataTable dt6 = ds.Tables[5];
                         DataTable dt7 = ds.Tables[6];
 
-
                         // Check if dt1 has rows
                         if (dt1.Rows.Count > 0)
                         {
                             var data = new PurchaseBillPrint
                             {
                                 CompanyName = dt1.Rows[0]["CompanyName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyName"]) : null,
-                                CompanyLogo = dt1.Rows[0]["CompanyLogo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyLogo"]) : null,
-                                CompanyAddress = dt1.Rows[0]["CompanyAddress"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyAddress"]) : null,
-                                CompanyCity = dt1.Rows[0]["CompanyCity"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyCity"]) : null,
-                                CompanyCountry = dt1.Rows[0]["CompanyCountry"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyCountry"]) : null,
-                                CompanyGSTNumber = dt1.Rows[0]["CompanyGSTNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyGSTNumber"]) : null,
-                                CompanyWebsite = dt1.Rows[0]["Website"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Website"]) : null,
-                                CompanyEmail = dt1.Rows[0]["Email"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Email"]) : null,
-                                CompanyContactNumber = dt1.Rows[0]["ContactNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["ContactNumber"]) : null,
+                                Address1 = dt1.Rows[0]["Address1"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Address1"]) : null,
+                                Address2 = dt1.Rows[0]["Address2"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Address2"]) : null,
+                                Phone = dt1.Rows[0]["Phone"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Phone"]) : null,
+                                PFCodeNo = dt1.Rows[0]["PFCodeNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["PFCodeNo"]) : null,
+                                ESICodeNo = dt1.Rows[0]["ESICodeNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["ESICodeNo"]) : null,
+                                Email = dt1.Rows[0]["Email"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Email"]) : null,
+                                GSTin = dt1.Rows[0]["GSTin"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["GSTin"]) : null,
+                                MSMERegistrationNo = dt1.Rows[0]["MSMERegistrationNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["MSMERegistrationNo"]) : null,
 
-                                PurchaseBillNumber = dt2.Rows[0]["PurchaseBillNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["PurchaseBillNo"]) : null,
-                                PurchaseBillDate = dt2.Rows[0]["PurchaseBillDate"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["PurchaseBillDate"]) : null,
-                                OriginalInvoiceNumber = dt2.Rows[0]["OriginalInvoiceNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["OriginalInvoiceNo"]) : null,
-                                PurchaseOrderNumber = dt2.Rows[0]["PurchaseOrderNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["PurchaseOrderNo"]) : null,
+                                ToName = dt2.Rows[0]["ToName"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["ToName"]) : null,
+                                ToAddress1 = dt2.Rows[0]["ToAddress1"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["ToAddress1"]) : null,
+                                ToAddress2 = dt2.Rows[0]["ToAddress2"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["ToAddress2"]) : null,
+                                GST = dt2.Rows[0]["GST"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["GST"]) : null,
 
-                                AccountName = dt1.Rows[0]["AccountName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["AccountName"]) : null,
-                                BankName = dt1.Rows[0]["BankName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["BankName"]) : null,
-                                BranchName = dt1.Rows[0]["BranchName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["BranchName"]) : null,
-                                AccountNumber = dt1.Rows[0]["AccountNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["AccountNumber"]) : null,
-                                IFSCCode = dt1.Rows[0]["IFSCCode"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["IFSCCode"]) : null,
-                                UPIId = dt1.Rows[0]["UPIId"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["UPIId"]) : null,
+                                PINo = dt3.Rows[0]["PINo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["PINo"]) : null,
+                                PIDate = dt3.Rows[0]["PIDate"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["PIDate"]) : null,
+                                PONo = dt3.Rows[0]["PONo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["PONo"]) : null,
+                                VendorBillNo = dt3.Rows[0]["VendorBillNo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["VendorBillNo"]) : null,
 
-                                VendorName = dt1.Rows[0]["VendorName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorName"]) : null,
-                                VendorAddress = dt1.Rows[0]["VendorAddress"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorAddress"]) : null,
-                                VendorCity = dt1.Rows[0]["VendorCity"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorCity"]) : null,
-                                VendorZipCode = dt1.Rows[0]["VendorZipCode"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorZipCode"]) : null,
-                                VendorState = dt1.Rows[0]["VendorState"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorState"]) : null,
-                                VendorCountry = dt1.Rows[0]["VendorCountry"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorCountry"]) : null,
-                                VendorContact = dt1.Rows[0]["VendorContactNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorContactNumber"]) : null,
-                                VendorGSTNumber = dt1.Rows[0]["VendorGSTNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["VendorGSTNumber"]) : null,
+                                IGSTPer = dt5.Rows[0]["IGSTPer"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["IGSTPer"]) : null,
+                                CGSTPer = dt5.Rows[0]["CGSTPer"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["CGSTPer"]) : null,
+                                SGSTPer = dt5.Rows[0]["SGSTPer"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["SGSTPer"]) : null,
+                                IGSTValue = dt5.Rows[0]["IGSTValue"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["IGSTValue"]) : null,
+                                CGSTValue = dt5.Rows[0]["CGSTValue"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["CGSTValue"]) : null,
+                                SGSTValue = dt5.Rows[0]["SGSTValue"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["SGSTValue"]) : null,
+                                 
+                                TermsConditions = dt6.Rows[0]["TermsConditions"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["TermsConditions"]) : null,
+                                RoundOff = dt6.Rows[0]["RoundOff"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["RoundOff"]) : null,
+                                NetAmount = dt6.Rows[0]["NetAmount"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["NetAmount"]) : null,
 
-                                //AltName = dt1.Rows[0]["AltName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["AltName"]) : null,
-                                //AltAddress = dt1.Rows[0]["AltAddress"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["AltAddress"]) : null,
-                                //AltCity = dt1.Rows[0]["AltCity"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["AltCity"]) : null,
-                                //StateName = dt1.Rows[0]["StateName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["StateName"]) : null,
-                                //AltContactNumber = dt1.Rows[0]["AltContactNumber"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["AltContactNumber"]) : null,
+                                RupeesInWords = dt7.Rows[0]["RupeesInWords"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["RupeesInWords"]) : null,
 
-                                //TotalProduct = dt4.Rows[0]["Total Products"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["Total Products"]) : null,
-                                //TotalDiscount = dt4.Rows[0]["TotalDiscount"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["TotalDiscount"]) : null,
-                                //CGST = dt4.Rows[0]["CGST"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["CGST"]) : null,
-                                //SGST = dt4.Rows[0]["SGST"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["SGST"]) : null,
-                                //SubTotal = dt4.Rows[0]["SubTotal"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["SubTotal"]) : null,
-
-                                RoundOffValue = dt4.Rows[0]["RoundOffValue"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["RoundOffValue"]) : null,
-                                GrantTotal = dt4.Rows[0]["GrantTotal"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["GrantTotal"]) : null,
-                                Amount_InWords = dt6.Rows[0]["Amount_InWords"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["Amount_InWords"]) : null,
-                                TermsandConditions = dt7.Rows[0]["TermsAndCondition"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["TermsAndCondition"]) : null,
-                                Notes = dt7.Rows[0]["Notes"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["Notes"]) : null,
-                                Signature = dt7.Rows[0]["Signature"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["Signature"]) : null,
-
-                                //BackroundColour = dt10.Rows[0]["BackroundColour"] != DBNull.Value ? Convert.ToString(dt10.Rows[0]["BackroundColour"]) : null,
-                                //TextColour = dt10.Rows[0]["TextColour"] != DBNull.Value ? Convert.ToString(dt10.Rows[0]["TextColour"]) : null,
-
-
-                                OtherChargesTable = dt5,
-
-                                ProductItemTable = dt3,
-
+                                ProductItemData = dt4,
                             };
-
 
                             PDFPurchaseBill pdfService = new PDFPurchaseBill();
                             byte[] pdfContent = null;
 
-                            pdfContent = pdfService.PurchaseBillPrintNew(data, NoOfCopies);
+                            pdfContent = pdfService.PurchaseBillPrint(NoOfCopies, data);
 
                             switch (printType.ToLower())
                             {
@@ -446,61 +416,6 @@ namespace TetroONE.Controllers
                 }
             }
         }
-
-
-        [HttpGet]
-        [Route("PurchaseIvnoicePrint")]
-        public IActionResult PurchaseOrderPrint(int NoOfCopies, string printType)
-        {
-            PDFPurchaseBill pdfService = new PDFPurchaseBill();
-            byte[] pdfContent = pdfService.PurchaseBillAdithiyaPrintNew(NoOfCopies);
-
-            switch (printType?.ToLower())
-            {
-                case "mail":
-                    var base64PdfContent = Convert.ToBase64String(pdfContent);
-                    return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
-
-                case "download":
-                    return File(pdfContent, "application/pdf", "PurchaseBill.pdf");
-
-                case "preview":
-                    var customFileName = "Kavinesh Developer Testing";
-                    Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
-                    return File(pdfContent, "application/pdf");
-
-                case "print":
-                    return File(pdfContent, "application/pdf");
-
-                case "whatsapp":
-                    string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                    string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
-
-                    if (!Directory.Exists(folderPath))
-                        Directory.CreateDirectory(folderPath);
-
-                    string fileName = "PurchaseOrder_" + Guid.NewGuid() + ".pdf";
-                    string filePath = Path.Combine(folderPath, fileName);
-
-                    try
-                    {
-                        System.IO.File.WriteAllBytes(filePath, pdfContent);
-                        string fileUrlPath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
-                        return Json(new { status = true, message = $"PDF saved successfully.", data = fileUrlPath });
-                    }
-                    catch (Exception ex)
-                    {
-                        return Json(new { status = false, message = "Error saving PDF: " + ex.Message });
-                    }
-
-                default:
-                    return Json(new { status = false, message = "Invalid print type selected." });
-            }
-
-            // ⭐ FINAL REQUIRED RETURN
-            return Json(new { status = true, message = "" });
-        }
-
 
         [HttpPost]
         [Route("GetProductQC")]

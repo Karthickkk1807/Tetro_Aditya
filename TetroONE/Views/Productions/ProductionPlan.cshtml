@@ -1,5 +1,7 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.ProductionPlan, Context.Session);
+    var LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
 }
 
 <link href="~/assets/css/mdtimepicker.css" rel="stylesheet" />
@@ -226,7 +228,7 @@
                                     <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="MachineDiv">
                                         <div class="form-group">
                                             <label>Machine<span id="Asterisk">*</span></label>
-                                            <select class="form-control Machine" id="MachineId" name="MachineId" disabled>
+                                            <select class="form-control Machine" id="MachineId" name="MachineId">
                                             </select>
                                         </div>
                                     </div>
@@ -258,14 +260,14 @@
                                             <thead class="Dynthead">
                                                 <tr>
                                                     <th>S.No</th>
-                                                    <th>Lot No<span style="visibility: hidden;">11111</span></th>
-                                                    <th>Colour<span style="visibility: hidden;">11111</span></th>
+                                                    <th>Lot No<span style="visibility: hidden;">1111</span></th>
+                                                    <th>Colour<span style="visibility: hidden;">111</span></th>
                                                     <th>Fabric Type<span style="visibility: hidden;">1111</span></th>
-                                                    <th>GSM<span style="visibility: hidden;">1111</span></th>
-                                                    <th>Width<span style="visibility: hidden;">1111</span></th>
-                                                    <th>Quantity<span style="visibility: hidden;">1</span></th>
-                                                    <th>Process<span style="visibility: hidden;">1</span></th>
-                                                    <th>Remarks<span style="visibility: hidden;">111111111111111111111111111</span></th>
+                                                    <th>GSM<span style="visibility: hidden;">1</span></th>
+                                                    <th>Width<span style="visibility: hidden;">1</span></th>
+                                                    <th>Qty (KG)<span style="visibility: hidden;">1</span></th>
+                                                    <th>Process<span style="visibility: hidden;">111111111111111111111111111111111111111111111</span></th>
+                                                    @* <th>Remarks<span style="visibility: hidden;">111111111111111111111111111</span></th> *@
                                                     <th style="width: 65px;">Action</th>
                                                 </tr>
                                             </thead>
@@ -388,7 +390,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </form> 
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -515,12 +517,14 @@
                 <span id="RawMaterialClose" class="close d-none" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
             </div>
             <div class="modal-body" style="max-height: 73vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
-                <div id="RawMaterialDynamic">
-                </div>
+                <form id="FormRawMaterialDynamic">
+                    <div id="RawMaterialDynamic">
+                    </div>
+                </form>
             </div>
             <div class="modal-footer w-100" style="text-align: center;align-items: center !important;align-content: center;display: block;">
                 <div>
-                    @* <button type="button" id="BtnAddRawMaterial" class="btn mr-2" style="background-color: green; color:white">Save</button> *@
+                    <button type="button" id="BtnAddRawMaterial" class="btn mr-2" style="background-color: green; color:white">Save</button>
                     <button type="button" id="RawMaterialClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -544,14 +548,16 @@
                         <a class="nav-link navbar-tab titleForHeaderPopRawMatrialTab" id="After-Treatment-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">After-Treatment</a>
                     </li>
                 </ul>
-                <div id="ChemicalDynamic-Pre">
-                </div>
-                <div id="ChemicalDynamic-After">
-                </div>
+                <form id="FromChemicalDynamic">
+                    <div id="ChemicalDynamic-Pre">
+                    </div>
+                    <div id="ChemicalDynamic-After">
+                    </div>
+                </form>
             </div>
             <div class="modal-footer w-100" style="text-align: center;align-items: center !important;align-content: center;display: block;">
                 <div>
-                    @* <button type="button" id="BtnAddChemical" class="btn mr-2" style="background-color: green; color:white">Save</button> *@
+                    <button type="button" id="BtnAddChemical" class="btn mr-2" style="background-color: green; color:white">Save</button>
                     <button type="button" id="ChemicalClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -561,6 +567,7 @@
 
 <script>
     var access = @Html.Raw(Json.Serialize(access));
+    var LoginUserId = @LoginUserId;
 </script>
 
 @* For Date Time Picker *@

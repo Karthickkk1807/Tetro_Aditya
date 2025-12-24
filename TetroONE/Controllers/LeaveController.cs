@@ -41,7 +41,7 @@ namespace TetroONE.Controllers
         {
             request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-            string[] Exculuted = { "LeaveId", "LeaveStatusId", "Comments" };
+            string[] Exculuted = { "LeaveId", "LeaveStatusId", "Comments", "LeaveTypeId" };
             if (request.LeaveId == null)
                 response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertLeaveDetails]", request, Exculuted);
             else

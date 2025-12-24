@@ -1,5 +1,5 @@
 ﻿var productId = 0;
-var PlantId = 0;
+var PlantMappingId = 0;
 var PlantDropdown = [];
 var ProducTab = 0;
 var titleForHeaderProductTab = "";
@@ -14,15 +14,18 @@ $(document).ready(async function () {
 
     titleForHeaderProductTab = "Raw Material";
 
-    var PlantMappingId = parseInt(localStorage.getItem('PlantId'));
-    var productTypeId = 1;
-    Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId) }, ProductSuccess, null);
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId')); 
+    Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ProductSuccess, null);
     Common.bindDropDownParent('PrimaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('SecondaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('ProductTypeId', 'ProductInfoForm', 'ProductType');
     Common.bindDropDownParent('ProductCategoryId', 'ProductInfoForm', 'ProductCategory');
     Common.bindDropDownParent('ProductFlavourId', 'ProductInfoForm', 'ProductFlavour');
-    $('#ProcessBtnhide').show();
+    Common.bindDropDownParent('TaxInfoId', 'ProductInfoForm', 'TaxInfo');
+
+    $('#ProcessBtnhide').show(); 
+    $('#ManPowerInfoBtn').hide();
+    $('#RawMaterialInfoBtn').hide();
 
     var UnitDropDownData = await Common.bindDropDownSync('Unit');
     UnitDropDown = JSON.parse(UnitDropDownData);
@@ -45,7 +48,7 @@ $(document).ready(async function () {
             TranistProductDropDown = [data[0]];
         }
     }, null);
-
+     
     $("#FormProductPlantData").validate({
         errorPlacement: function (error, element) {
             if (element.hasClass("select2-hidden-accessible")) {
@@ -148,14 +151,15 @@ $(document).ready(async function () {
         objvalue.ProductSubCategoryId = Common.parseInputValue('ProductSubCategoryId') || null; 
         objvalue.PrimaryUnitId = Common.parseInputValue('PrimaryUnitId') || null;
         objvalue.SecondaryUnitId = Common.parseInputValue('SecondaryUnitId') || null;
+        objvalue.TaxInfoId = Common.parseInputValue('TaxInfoId') || null;
         objvalue.ConvertionValue = Common.parseFloatInputValue('ConvertionValue') || null;
         objvalue.PrimaryPrice = Common.parseFloatInputValue('PrimaryPrice') || null;
         objvalue.SecondaryPrice = Common.parseFloatInputValue('SecondaryPrice') || null;
         objvalue.ReOrderLevel = Common.parseFloatInputValue('ReOrderLevel') || null;
-        objvalue.CGST = Common.parseFloatInputValue('CGST') || null;
-        objvalue.SGST = Common.parseFloatInputValue('SGST') || null;
-        objvalue.IGST = Common.parseFloatInputValue('IGST') || null;
-        objvalue.CESS = Common.parseFloatInputValue('CESS') || null;
+        //objvalue.CGST = Common.parseFloatInputValue('CGST') || null;
+        //objvalue.SGST = Common.parseFloatInputValue('SGST') || null;
+        //objvalue.IGST = Common.parseFloatInputValue('IGST') || null;
+        //objvalue.CESS = Common.parseFloatInputValue('CESS') || null;
 
         var PlantData = [];
         var ClosestDiv = $('#BindPlantDyanimcData .PlantDetailsMappingInfo');
@@ -215,20 +219,35 @@ $(document).ready(async function () {
                            <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductTable"></table>
                         </div>
                      </div>`;
-            $('#ProductDynamic').append(html);
-            var PlantMappingId = parseInt(localStorage.getItem('PlantId'));
+            $('#ProductDynamic').append(html); 
             //$('.QcMappingHide').show();
             $('#ProcessBtnhide').show();
             $('#AddProduct').show();
-            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId) }, ProductSuccess, null);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ProductSuccess, null);
         }
         else if (titleForHeaderProductTab == "Un-Processed") {
             $('#ProcessBtnhide').hide();
             $('#AddProduct').hide();
+            $('#ProductDynamic').empty('');
+            var html = `<div class="col-sm-12 p-0">
+                        <div class="table-responsive">
+                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductTable"></table>
+                        </div>
+                     </div>`;
+            $('#ProductDynamic').append(html); 
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(2) }, ProductSuccess, null);
         }
         else if (titleForHeaderProductTab == "Processed") {
             $('#ProcessBtnhide').hide();
             $('#AddProduct').hide();
+            $('#ProductDynamic').empty('');
+            var html = `<div class="col-sm-12 p-0">
+                        <div class="table-responsive">
+                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductTable"></table>
+                        </div>
+                     </div>`;
+            $('#ProductDynamic').append(html);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(3) }, ProductSuccess, null);
         }
     });
 
@@ -904,11 +923,15 @@ function ProductSuccess(response) {
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
+            var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
+            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', true, access);
         } else if (activeTabText.includes("Processed")) {
             $('#CounterImage1').prop('src', '/assets/moduleimages/inventory/fgproducticon_1.svg');
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
+            var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
+            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', true, access);
         }
 
         $('#loader-pms').hide();
@@ -934,7 +957,7 @@ function ProductInsertUpdateSuccess(response) {
 
         var PassingData = {};
         if (titleForHeaderProductTab == "Raw Material") {
-            PassingData = { PlantId: parseInt(PlantMappingId) }
+            PassingData = { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }
             $('#ProcessBtnhide').show();
             Common.ajaxCall("GET", "/Product/GetProduct", PassingData, ProductSuccess, null);
         } else if (titleForHeaderProductTab == "Un-Processed") {
@@ -1026,8 +1049,7 @@ function EditProductSuccess(response) {
             });
         });
 
-        if (data[0][0].productSubCategoryId) {
-
+        if (data[0][0].productSubCategoryId) { 
             Common.ajaxCall("Post", "/Common/GetDropDownNotNull", JSON.stringify({ MasterInfoId: data[0][0].ProductCategoryId, ModuleName: "ProductSubCategory" }), function (response) {
                 if (response.status) {
                     $('#ProductSubCategoryId').empty();
@@ -1039,10 +1061,8 @@ function EditProductSuccess(response) {
         else {
             $('#ProductInfoForm #ProductSubCategoryId').empty().append('<option value="">-- Select --</option>');
         }
-
     }
-    updateRemoveButtons();
-
+    updateRemoveButtons(); 
     $('#loader-pms').hide();
 }
 
@@ -1263,7 +1283,6 @@ function bindTableProduct(tableid, data, columns, actionTarget, editcolumn, scro
     var isTetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
     var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
 
-    var primaryStockIndex = columns.findIndex(column => column.data === "PrimaryStock");
     var secondaryStockIndex = columns.findIndex(column => column.data === "SecondaryStock");
 
     if (isAction == true && data != null && data.length > 0 && !isTetroONEnocount && (access.update || access.delete)) {
@@ -1273,20 +1292,6 @@ function bindTableProduct(tableid, data, columns, actionTarget, editcolumn, scro
     }
 
     var renderColumn = [
-        {
-            "targets": primaryStockIndex,
-            render: function (data, type, row, meta) {
-                if (type === 'display' && row.StockInHand_Colour != null && row.StockInHand_Colour.length > 0) {
-                    var dataText = row.PrimaryStock;
-                    let data = dataText.split(/ (.+)/);
-
-                    var statusColor = row.StockInHand_Colour.toLowerCase();
-
-                    return '<div>' + '<span style="color:' + statusColor + ';width: 99px;font-size: 12px;height: 20px;">' + data[0] + '</span>' + '<span>' + ' ' + data[1] + '</span>' + '</div>'
-                }
-                return data;
-            }
-        },
         {
             "targets": secondaryStockIndex,
             render: function (data, type, row, meta) {

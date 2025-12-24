@@ -144,7 +144,7 @@ $(document).ready(async function () {
 
         $('#LoadingDateTimeDiv').hide();
         $('#UnLoadingDateTimeDiv').hide();
-        $('#SubtotalRow').hide();
+        //$('#SubtotalRow').hide();
 
         $("#QRCode").html("");
 
@@ -159,12 +159,18 @@ $(document).ready(async function () {
 
         const today = new Date().toISOString().split('T')[0];
         $("#BatchDate").val(today);
-        $('#MachineId').prop('disabled', true);
+
+        $("#PreparedBy").val(LoginUserId);
+        //$('#MachineId').prop('disabled', true);
 
         Common.ajaxCall("GET", "/Common/GetAutoGenerate", { ModuleName: 'ProductionPlan', PlantId: PlantMappingId }, function (response) {
             Common.AutoGenerateNumberGet(response, "BatchNo", "ProductionNo");
         });
 
+        $('#AddAttachment, #AddNotes').show();
+        $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
+
+        $('.modal-body').animate({ scrollTop: 0 }, 300);
         $('#ProductionPlanModal').show();
     });
 
@@ -173,9 +179,11 @@ $(document).ready(async function () {
 
         Common.removevalidation('TopStatic');
         Common.removevalidation('FormStatus');
-         
-        $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
-        $('#AddAttachLable, #AddNotesLable').show();
+
+        //$('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
+        //$('#AddAttachLable, #AddNotesLable').show();
+        $('#AddAttachment, #AddNotes').show();
+        $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
 
         //$('.Status-Div').show();
         $('.Status-Div').hide();
@@ -191,10 +199,7 @@ $(document).ready(async function () {
         $('.AddedRow').remove();
         $('.RowOfChemical-After').remove();
         $('.RowOfChemical-Pre').remove();
-        duplicateRowChemicalPre();
-        duplicateRowChemicalAfter();
         $('.RawMetarial').remove();
-        duplicateRowRawMetarial();
         $('#ChemicalDynamic-Pre').show();
         $('#ChemicalDynamic-After').hide();
 
@@ -203,17 +208,18 @@ $(document).ready(async function () {
 
         $('#LoadingDateTimeDiv').show();
         $('#UnLoadingDateTimeDiv').show();
-        $('#SubtotalRow').show();
+        //$('#SubtotalRow').show();
 
         $("#QRCode").html("");
 
         const today = new Date().toISOString().split('T')[0];
         $("#BatchDate").val(today);
-        $('#MachineId').prop('disabled', false);
+        //$('#MachineId').prop('disabled', false);
 
         var fnData = Common.getDateFilter('dateDisplay2');
         Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: parseInt(ProductionPlanId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanNotNullSuccess, null);
 
+        $('.modal-body').animate({ scrollTop: 0 }, 300);
         $('#ProductionPlanModal').show();
     });
 
@@ -327,13 +333,14 @@ $(document).ready(async function () {
             };
 
             var ProductionPlanFabricDetails = [];
+            var ProductionPlanFabricProcessMappingDetails = [];
 
-            $('#ProductionPlanProductTablebody .AddedRow').each(function () {
+            $('#ProductionPlanProductTablebody .AddedRow').each(function (rowIndex) {
 
                 var $rowTable = $(this);
                 var productionplanfabricid = $rowTable.data('productionplanfabricid-id');
                 var inwardFabricId = $rowTable.data('inwardfabricid-id');
-
+                 
                 var FabricDetails = {
                     ProductionPlanFabricId: productionplanfabricid ? parseInt(productionplanfabricid) : null,
                     InwardId: parseInt($rowTable.find('.lotNo').parent().data('id')) || null,
@@ -347,26 +354,14 @@ $(document).ready(async function () {
                 };
 
                 ProductionPlanFabricDetails.push(FabricDetails);
-            });
-
-            var ProductionPlanFabricProcessMappingDetails = [];
-
-            $('#ProductionPlanProductTablebody .AddedRow').each(function (rowIndex) {
-
-                var $rowTable = $(this);
-
-                var productionplanfabricprocessmappingId = $rowTable.data('productionplanfabricprocessmappingid-id');
-                var productionplanfabricid = $rowTable.data('productionplanfabricid-id');
-
-                var processIdsStr = $rowTable.find('.processRoute').data('id') || "";
-                var processIds = processIdsStr.toString().split(',').map(x => parseInt(x.trim()));
-
-                processIds.forEach(pid => {
+                 
+                var selectedProcessIds = $rowTable.find('.Process').val() || [];
+                selectedProcessIds.forEach(pid => {
                     var FabricProcessMappingDetails = {
-                        ProductionPlanFabricProcessMappingId: productionplanfabricprocessmappingId ? parseInt(productionplanfabricprocessmappingId) : null,
+                        ProductionPlanFabricProcessMappingId: $rowTable.data('productionplanfabricprocessmappingid-id') ? parseInt($rowTable.data('productionplanfabricprocessmappingid-id')) : null,
                         ProductionPlanFabricId: productionplanfabricid ? parseInt(productionplanfabricid) : null,
                         RowNo: rowIndex + 1,
-                        ProcessTypeId: pid
+                        ProcessTypeId: parseInt(pid)
                     };
                     ProductionPlanFabricProcessMappingDetails.push(FabricProcessMappingDetails);
                 });
@@ -473,10 +468,10 @@ $(document).ready(async function () {
     });
 
     $("#LoadingDateTime").on("change", function () {
-        let loadTime = $(this).val(); 
+        let loadTime = $(this).val();
         let unloadPicker = $("#UnLoadingDateTime")[0]._flatpickr;
         unloadPicker.set("minDate", loadTime);
-        //$("#UnLoadingDateTime").val(loadTime);
+        $("#UnLoadingDateTime").val('');
     });
 });
 
@@ -501,7 +496,7 @@ function GetProductionPlanSuccess(response) {
             `;
         $('#MainGrid').append(html);
 
-        var columns = Common.bindColumn(data[1], ['ProductionPlanId', 'Status_Color']);
+        var columns = Common.bindColumn(data[1], ['ProductionPlanId', 'Status_Color', 'StatusColor']);
         if (titleForHeaderProductTab == "Production Plan") {
             bindTable('ProductionPlanTable', data[1], columns, -1, 'ProductionPlanId', '350px', true, access);
             $(".dataTables_scrollBody").css("max-height", "350px");
@@ -544,9 +539,16 @@ function GetProductionPlanNotNullSuccess(response) {
 
                 if (AlreadyAddedIds.includes(item.InwardFabricId.toString())) return;
                 AlreadyAddedIds.push(item.InwardFabricId.toString());
+                 
+                const processes = data[2].filter(p => p.ProductionPlanFabricId == item.ProductionPlanFabricId);
+                const selectedProcessIds = processes.map(p => p.ProcessTypeId);
+
+                const processDropdownOptions = ProcessTypeDropdown[0].map(p =>
+                    `<option value="${p.ProcessTypeId}" ${selectedProcessIds.includes(p.ProcessTypeId) ? 'selected' : ''}>${p.ProcessTypeName}</option>`
+                ).join('');
 
                 const newRow = `
-                <tr class="AddedRow" data-productionplanfabricid-id="${item.ProductionPlanFabricId}" data-inwardfabricid-id="${item.InwardFabricId}" data-productionplanfabricprocessmappingId-id=""> 
+                <tr class="AddedRow" data-productionplanfabricid-id="${item.ProductionPlanFabricId}" data-inwardfabricid-id="${item.InwardFabricId}"> 
                     <td></td> 
                     <td data-id="${item.InwardId}">
                         <input type="text" class="form-control lotNo" value="${item.InwardNo}" disabled>
@@ -561,9 +563,10 @@ function GetProductionPlanNotNullSuccess(response) {
                     <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
                     <td><input type="number" class="form-control qty" value="${item.Quantity || ''}" required></td> 
                     <td>
-                        <input type="text" class="form-control processRoute" placeholder="Click" required data-id="" id="processRoute${numberIncr}" name="processRoute${numberIncr}" required value="${item.ProcessCount || ''}">
+                        <select multiple class="form-control Process" id="processRoute${numberIncr}" name="processRoute${numberIncr}">
+                            ${processDropdownOptions}
+                        </select>
                     </td> 
-                    <td><textarea class="form-control Remarks" placeholder="Ex: Type Querys">${item.Comments ?? ""}</textarea></td> 
                     <td>
                         <button class="btn DynremoveBtn DynrowRemove" type="button" data-id="${item.InwardFabricId}">
                             <i class="fas fa-trash-alt"></i>
@@ -573,21 +576,19 @@ function GetProductionPlanNotNullSuccess(response) {
                 `;
 
                 $("#ProductionPlanProductTablebody #AddItemButtonRow").before(newRow);
-
-                const processes = data[2].filter(p => p.ProductionPlanFabricId == item.ProductionPlanFabricId);
-                const processTypeIds = processes.map(p => p.ProcessTypeId).join(", ");
-                const mappingIds = processes.map(p => p.ProductionPlanFabricProcessMappingId).join(", ");
-
-                const $lastRow = $("#ProductionPlanProductTablebody #AddItemButtonRow").prev("tr.AddedRow");
-
-                $lastRow.find(".processRoute").attr("data-id", processTypeIds);
-                $lastRow.attr("data-productionplanfabricprocessmappingId-id", mappingIds);
+                $(".Process").select2({
+                    theme: 'bootstrap4',
+                    placeholder: '-- Select Process --',
+                    allowClear: true,
+                    closeOnSelect: false,
+                    width: 'style',
+                });
             });
 
             RenumberRows();
         }
 
-        if (data[4] && data[4].length > 0) {
+        if (data[4] && data[4].length > 0 && data[4][0].ProductionPlanChemicalRequirementId != null) {
             // Clear existing rows
             $('#ChemicalDynamic-Pre').html('');
             $('#ChemicalDynamic-After').html('');
@@ -599,10 +600,18 @@ function GetProductionPlanNotNullSuccess(response) {
                     createChemicalRow('After', item); // After-Treatment
                 }
             });
+        } else {
+            $('.RowOfChemical-After').remove();
+            $('.RowOfChemical-Pre').remove();
+            duplicateRowChemicalPre();
+            duplicateRowChemicalAfter();
         }
 
-        if (data[3] && data[3].length > 0) {
+        if (data[3] && data[3].length > 0 && data[3][0].DyeId != null) {
             bindRawMaterialRows(data[3]);
+        } else {
+            $('.RawMetarial').remove();
+            duplicateRowRawMetarial();
         }
 
         $("#QRCode").html("");
@@ -622,9 +631,11 @@ function GetProductionPlanNotNullSuccess(response) {
             width: 120,
             height: 120
         });
+
+        $('#AddAttachment, #AddNotes').show();
+        $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
     }
 }
-
 
 function bindRawMaterialRows(rawArray) {
 
@@ -660,14 +671,14 @@ function bindRawMaterialRows(rawArray) {
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="DyeClass">Dye%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye_${randomId}" name="Dye_${randomId}" value="${item.PercentageOfDye}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" />
+                    <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye_${randomId}" name="Dye_${randomId}" value="${item.PercentageOfDye}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
                 </div>
             </div>
 
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="TotalDyeQtyClass">TotalDyeQty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty_${randomId}" name="TotalDyeQty_${randomId}" value="${item.TotalQty}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" />
+                    <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty_${randomId}" name="TotalDyeQty_${randomId}" value="${item.TotalQty}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required/>
                 </div>
             </div>
 
@@ -723,13 +734,13 @@ function createChemicalRow(rowType, chemicalData) {
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" value="${chemicalData.GPL}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" value="${chemicalData.GPL}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
                 </div>
             </div>
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" value="${chemicalData.TotalQty}" oninput="Common.allowOnlyNumberLength(this,3)"/>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" value="${chemicalData.TotalQty}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
                 </div>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
@@ -757,8 +768,17 @@ function LoadPopupItems(allItems) {
 
     allItems.forEach((item, index) => {
         let uniqueId = `ItemId-${item.InwardFabricId}`;
+
+        let fabricQty = item.FabricQty;
+        let matches = fabricQty.match(/^([\d,]+\.?\d*)\s*(\w+)$/);
+        let qtyValue;
+
+        if (matches) {
+            qtyValue = matches[1];
+        }
+
         const row = `
-            <tr class="AddItemRow">
+            <tr class="AddItemRow" data-id="${item.ProcessList}">
                 <td>
                     <div class="d-flex align-items-center">
                         <input type="checkbox" class="mr-2 ItemCheckbox" id="${uniqueId}">
@@ -773,8 +793,11 @@ function LoadPopupItems(allItems) {
                 <td><label class="Width mb-0">${item.Width}</label></td>
                 <td><label class="FabricQty mb-0">${item.FabricQty}</label></td>
                 <td><label class="FabricQty mb-0">${item.InWardQty}</label></td> 
-                <td>
-                    <input type="text" class="form-control AvailableQuantity" value="${item.FabricQty}">
+                <td> 
+                    <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;width: 100px;">
+                        <input type="text" class="form-control AvailableQuantity" value="${qtyValue}">
+                        <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size: 12px;width: 29px;height: 26px;"> KG </button>
+                    </div>
                 </td>
             </tr>
         `;
@@ -789,16 +812,28 @@ $(document).on('change', '.ItemCheckbox', function () {
     const $row = $(this).closest("tr");
     const $tbody = $("#ProductionPlanAddItem-table-body");
 
-    if (this.checked) {
+    if (this.checked) { 
+        let $lastChecked = $tbody.find('.ItemCheckbox:checked').not(this).last().closest('tr');
+
         $row.fadeOut(200, function () {
             $row.detach();
-            $tbody.prepend($row);
+            if ($lastChecked.length) { 
+                $lastChecked.after($row);
+            } else { 
+                $tbody.prepend($row);
+            }
             $row.fadeIn(300);
         });
-    } else {
+    } else { 
+        let $lastChecked = $tbody.find('.ItemCheckbox:checked').last().closest('tr');
+
         $row.fadeOut(200, function () {
             $row.detach();
-            $tbody.append($row);
+            if ($lastChecked.length) {
+                $lastChecked.after($row);
+            } else {
+                $tbody.prepend($row);
+            }
             $row.fadeIn(300);
         });
     }
@@ -817,7 +852,8 @@ $(document).on('change', '.ItemCheckbox', function () {
         Width: $row.find(".Width").text() || '',
         Quantity: parseFloat($row.find(".Quantity").text()) || 0,
         AvailableQuantity: parseFloat($row.find(".AvailableQuantity").val()) || 0,
-        IsChecked: $(this).prop("checked")
+        ProcessList: $row.data('id'),
+        IsChecked: $(this).prop("checked"), 
     };
 
     if (itemObj.IsChecked) {
@@ -931,6 +967,7 @@ $(document).on("click", "#BtnAdd", function () {
                     GSM: $(this).find('.GSM').text(),
                     Width: $(this).find('.Width').text(),
                     AvailableQuantity: $(this).find('.AvailableQuantity').val(),
+                    ProcessList: $(this).data('id')
                 };
 
                 if (!AddedItems.find(item => item.LotNo === rowData.LotNo)) {
@@ -940,8 +977,9 @@ $(document).on("click", "#BtnAdd", function () {
 
             ItemListAdd.forEach(item => {
 
-                if (AlreadyAddedIds.includes(item.ItemId.toString())) return;
+                let uid = Math.random().toString(36).substring(2);
 
+                if (AlreadyAddedIds.includes(item.ItemId.toString())) return; 
                 AlreadyAddedIds.push(item.ItemId.toString());
 
                 let numberIncr = Math.random().toString(36).substring(2);
@@ -955,8 +993,10 @@ $(document).on("click", "#BtnAdd", function () {
                         <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
                         <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
                         <td><input type="number" class="form-control qty" value="${item.AvailableQuantity}" required></td>
-                        <td><input type="text" class="form-control processRoute" placeholder="Click" processRoute${numberIncr}" name="processRoute${numberIncr}" required></td>
-                        <td><textarea class="form-control Remarks" placeholder="Ex: Type Querys"></textarea></td>
+                        <td>
+                            <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
+                            </select>
+                        </td>
                         <td>
                             <button class="btn DynremoveBtn DynrowRemove" type="button" data-id="${item.ItemId}">
                                 <i class="fas fa-trash-alt"></i>
@@ -964,8 +1004,15 @@ $(document).on("click", "#BtnAdd", function () {
                         </td>
                     </tr>
                 `;
-
+                 
                 $("#AddItemButtonRow").before(newRow);
+                  
+                let mappedProcesses = [];
+                if (item.ProcessList) {
+                    mappedProcesses = item.ProcessList.split(',').map(p => p.trim());
+                }
+                 
+                bindDropDownMultiProcess("Process_" + uid, 'ProcessType', mappedProcesses);
             });
 
             $("#QRCode").html("");
@@ -1152,21 +1199,156 @@ $(document).on('click', '.processRoute', function () {
 
 
 $(document).on('click', '#RawMetarialInfo', function () {
+    var TableLenthDynamicRow = $('.AddedRow').length;
+    if (TableLenthDynamicRow == 0) {
+        Common.warningMsg('Choose Atleast One Product');
+        $('#loader-pms').hide();
+        return false;
+    }
     $('#RawMaterialModal').show();
 });
 
 $(document).on('click', '#RawMaterialClose', function () {
     $('#RawMaterialModal').hide();
+    $('#FormRawMaterialDynamic').find('input, select, textarea').each(function () {
+        $(this).removeClass('error');
+    });
 });
 
 $(document).on('click', '#ChemicalInfo', function () {
     $('#ChemicalModal .navbar-tab').first().trigger('click');
+    var TableLenthDynamicRow = $('.AddedRow').length;
+    if (TableLenthDynamicRow == 0) {
+        Common.warningMsg('Choose Atleast One Product');
+        $('#loader-pms').hide();
+        return false;
+    }
     $('#ChemicalModal').show();
 });
 
 $(document).on('click', '#ChemicalClose', function () {
     $('#ChemicalModal .navbar-tab').first().trigger('click');
     $('#ChemicalModal').hide();
+    $('#FromChemicalDynamic').find('input, select, textarea').each(function () {
+        $(this).removeClass('error');
+    });
+});
+
+$(document).on('click', '#BtnAddRawMaterial', function () {
+    var isValid = true;
+
+    $('#FormRawMaterialDynamic .RawMetarial').each(function () {
+        $(this).find('input, select').each(function () {
+            if (!this.checkValidity()) {
+                isValid = false;
+                $(this).addClass('error');
+            } else {
+                $(this).removeClass('error');
+            }
+        });
+    });
+
+    if (isValid) {
+        $('#RawMaterialModal').hide();
+        Common.successMsg("RawMetarial Details are Save Successfully.");
+    } else {
+        Common.errorMsg("Please fill all required fields.");
+    }
+});
+
+$(document).on('click', '#BtnAddChemical', function () {
+    var isPreValid = true;
+    var isPreFilled = false;
+
+    $('#ChemicalDynamic-Pre .RowOfChemical-Pre').each(function () {
+        var rowFilled = false;
+
+        $(this).find('input, select').each(function () {
+            if ($(this).val() !== "") {
+                rowFilled = true;
+            }
+
+            if (!this.checkValidity()) {
+                isPreValid = false;
+                $(this).addClass('error');
+            } else {
+                $(this).removeClass('error');
+            }
+        });
+
+        if (rowFilled) {
+            isPreFilled = true;
+        }
+    });
+
+    var isAfterValid = true;
+    var isAfterFilled = false;
+
+    $('#ChemicalDynamic-After .RowOfChemical-After:visible').each(function () {
+        var rowFilled = false;
+
+        $(this).find('input, select').each(function () {
+            if ($(this).val() !== "") {
+                rowFilled = true;
+            }
+
+            if (!this.checkValidity()) {
+                isAfterValid = false;
+                $(this).addClass('error');
+            } else {
+                $(this).removeClass('error');
+            }
+        });
+
+        if (rowFilled) {
+            isAfterFilled = true;
+        }
+    });
+
+    if (isPreValid && isAfterValid && isPreFilled && isAfterFilled) {
+        $('#ChemicalModal').hide();
+        Common.successMsg("Chemical Details are Save Successfully.");
+    } else {
+        Common.errorMsg("Please fill all required fields in both tabs.");
+    }
+});
+
+function calculateDyeQty($row) {
+    var dyePercent = parseFloat($row.find('.Dye').val()) || 0;
+    var totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+    var totalDyeQty = (totalWeight * dyePercent) / 100;
+    $row.find('.TotalDyeQty').val(totalDyeQty.toFixed(2));
+}
+
+$('#RawMaterialDynamic').on('input', '.Dye', function () {
+    var $row = $(this).closest('.RawMetarial');
+    calculateDyeQty($row);
+});
+
+$('#TotalWeight').on('input', function () {
+    $('#RawMaterialDynamic .RawMetarial').each(function () {
+        calculateDyeQty($(this));
+    });
+    $('#ChemicalDynamic-Pre .row, #ChemicalDynamic-After .row').each(function () {
+        calculateQty($(this));
+    });
+});
+
+function calculateQty($row) {
+    var totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+    var gplPercent = parseFloat($row.find('input[id^="GPL"]').val()) || 0;
+    var qty = (totalWeight * gplPercent) / 100;
+    $row.find('input[id^="Qty"]').val(qty.toFixed(3));
+}
+
+$('#ChemicalDynamic-Pre').on('input', 'input[id^="GPL"]', function () {
+    var $row = $(this).closest('.row');
+    calculateQty($row);
+});
+
+$('#ChemicalDynamic-After').on('input', 'input[id^="GPL"]', function () {
+    var $row = $(this).closest('.row');
+    calculateQty($row);
 });
 
 function duplicateRowChemicalPre() {
@@ -1196,13 +1378,13 @@ function duplicateRowChemicalPre() {
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
                 </div>
             </div>
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)"/>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
                 </div>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
@@ -1275,13 +1457,13 @@ function duplicateRowChemicalAfter() {
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
                 </div>
             </div>
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)"/>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
                 </div>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
@@ -1354,13 +1536,13 @@ function duplicateRowRawMetarial() {
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="DyeClass">Dye%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye${numberIncr}" name="Dye${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                    <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye${numberIncr}" name="Dye${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
                 </div>
             </div>
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="TotalDyeQtyClass">TotalDyeQty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty${numberIncr}" name="TotalDyeQty${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
+                    <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty${numberIncr}" name="TotalDyeQty${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required/>
                 </div>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
@@ -1422,6 +1604,7 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
     var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
 
     var StatusColumnIndex = columns.findIndex(column => column.data === "Status");
+    var MachineColumnIndex = columns.findIndex(column => column.data === "MachineName");
 
     if (isAction == true && data != null && data.length > 0 && !isTetroONEnocount && (access.update || access.delete)) {
         columns.push({
@@ -1447,6 +1630,21 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
             }
         }
     ];
+
+    if (MachineColumnIndex !== -1) {
+        renderColumn.push({
+            targets: MachineColumnIndex,
+            render: function (data, type, row) {
+                if (type === 'display') {
+                    var dataText = row.MachineName;
+                    var statusColor = row.StatusColor.toLowerCase();
+                    return `<span style="color:${statusColor}; font-weight:600;">${dataText}</span>`;
+                }
+                return data;
+            }
+        });
+    }
+
     if (access.update || access.delete) {
         renderColumn.push(
             {
@@ -1677,20 +1875,86 @@ document.addEventListener('DOMContentLoaded', () => {
             preview.style.display = 'none';
         }
     });
-}); 
- 
-function SetDateFroLoadingAndUnLoading() { 
+});
+
+function SetDateFroLoadingAndUnLoading() {
     let loadingPicker = document.querySelector("#LoadingDateTime")._flatpickr;
-    let unloadingPicker = document.querySelector("#UnLoadingDateTime")._flatpickr; 
+    let unloadingPicker = document.querySelector("#UnLoadingDateTime")._flatpickr;
     let now = new Date();
     loadingPicker.setDate(now);
     unloadingPicker.setDate(now);
-     
+
     $("#LoadingDateTime").off("change").on("change", function () {
         let selectedTime = $(this).val();
-         
-        $("#UnLoadingDateTime").val(selectedTime);
-         
         unloadingPicker.set("minDate", selectedTime);
+    });
+    $("#UnLoadingDateTime").val('');
+}
+
+
+//=============================================SHORTCUTS==============================================
+
+$(document).keydown(function (event) {
+    // Handling Alt + p
+    if (event.altKey && event.key === 'p') {
+        event.preventDefault();
+        $('#ProductionPlansaveprintbtn').click();
+    }
+
+    // Handling alt + v
+    if (event.altKey && event.key === 'v') {
+        event.preventDefault();
+        $('#ProductionPlanPreviewPorder').click();
+    }
+
+    // Handling Ctrl + s
+    if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        $('#ProductionPlanSaveBtn').click();
+    }
+
+    // Handling alt + h
+    if (event.altKey && event.key === 'h') {
+        event.preventDefault();
+        $('#btnshareProductionPlan').click();
+    }
+
+    // Handling alt + c
+    if (event.altKey && event.key === 'c') {
+        event.preventDefault();
+        $('#ProductionPlanCancelBtn').click();
+    }``
+});
+
+function bindDropDownMultiProcess(id, moduleName, preSelectValues = []) {
+    var request = { moduleName: moduleName };
+
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status === true) {
+                Common.bindDropDownMultiSuccess(response.data, id); 
+                if (preSelectValues.length > 0) {
+                    let $select = $("#" + id);
+                    $select.val(preSelectValues).trigger('change');
+                    $select.select2({
+                        theme: 'bootstrap4',
+                        placeholder: '-- Select Process --',
+                        allowClear: true,
+                        closeOnSelect: false,
+                        width: 'style',
+                    });
+                }
+            } else {
+                console.error("Error: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Ajax error:", error);
+        },
     });
 }

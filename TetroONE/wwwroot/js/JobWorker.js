@@ -244,6 +244,8 @@ function editSuccess(response) {
         var data = JSON.parse(response.data);
         Common.bindData(data[0]);
 
+        Common.renderRatingStars(data[0][0].Ratings, "RatingStars");
+
         if (data[0][0].IsActive == true)
             $('#FormJobWorker #IsActive').prop('checked', true);
         else

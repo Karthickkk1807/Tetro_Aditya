@@ -158,6 +158,16 @@ $(document).ready(async function () {
         $("#PurchaseInvoiceModal .modal-body").animate({ scrollTop: 0 }, "fast");
     });
 
+    $(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $rows = $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3');
+        const isCurrentlyVisible = $rows.is(':visible');
+        $rows.stop(true, true).slideToggle(300);
+        $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+        $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead').css('border-bottom', '1px solid #c7c7c7');
+    });
+
     $(document).on('click', '#PurchaseInvoiceCancelBtn, #PurchaseinvoiceClose', function () {
         $('#PurchaseInvoiceModal').hide();
     });
@@ -169,6 +179,7 @@ $(document).ready(async function () {
     $(document).on('click', '#AddVendorLable', function () {
         VendorAlignmentOpen();
         $('#BillFrom').val('1').trigger('change');
+        $('#AlternativeCompanyAddress').val(PlantMappingId).trigger('change');
     });
 
     $(document).on('change', '#VendorColumn #Vendor', async function () {
@@ -180,6 +191,7 @@ $(document).ready(async function () {
             var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
             if (response !== null) {
                 BillToAddress(response);
+                $('#AlternativeCompanyAddress').val(PlantMappingId).trigger('change');
                 updateGSTVisibility('#VendorStateName', '#StateName');
             }
             if (BillToId != "" || BillToId != null) {
@@ -290,8 +302,33 @@ $(document).ready(async function () {
         updateSelectedItemCount();
     });
 
+
     $(document).on('click', '#PurchaseInvoiceSaveBtn', function () {
 
+        savePurchaseInvoice(function () {
+            $("#PurchaseInvoiceModal").hide();
+
+            var fnData = Common.getDateFilter('dateDisplay2');
+            Common.ajaxCall(
+                "GET",
+                "/PurchaseInvoice/GetPurchaseBill",
+                {
+                    PlantId: parseInt(PlantMappingId),
+                    PurchaseBillId: null,
+                    FromDate: fnData.startDate.toISOString(),
+                    ToDate: fnData.endDate.toISOString()
+                },
+                GetPurchaseInvoiceSuccess,
+                null
+            );
+        });
+
+    });
+
+
+    function savePurchaseInvoice(callback) {
+
+        // ===== ALL YOUR VALIDATION CODE STAYS SAME =====
         getExistFiles();
 
         var RightSideHeaderFormIsValid = $("#FormRightSideHeader").validate().form();
@@ -300,6 +337,7 @@ $(document).ready(async function () {
         var StatusFormIsValid = $("#FormStatus").validate().form();
         var BillFromIsValid = $("#FormBillFrom").validate().form();
         var TaxdiscountFormIsValid = $('#frmtaxdiscountothers').validate().form();
+
         if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid || !TaxdiscountFormIsValid) {
             $('#PurchaseInvoiceSaveBtn-error').insertAfter('#statusError');
             $('#Vendor-error').insertAfter('.vendorerror');
@@ -360,7 +398,7 @@ $(document).ready(async function () {
             //var productInfo = JSON.parse(productInfoStr);
 
             var productDetail = {
-                PurchaseOrderProductMappingId: PurchaseBillProductMappingId == 0 ? null : parseInt(PurchaseBillProductMappingId),
+                PurchaseProductMappingId: PurchaseBillProductMappingId == 0 ? null : parseInt(PurchaseBillProductMappingId),
                 ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null,
                 ProductId: parseInt(productId),
                 PurchasePrice: Common.parseFloatValue($rowTable.find('.SellingPrice').val()),
@@ -417,12 +455,13 @@ $(document).ready(async function () {
                 if (response.status) {
                     formDataMultiple = new FormData();
                     Common.successMsg(response.message);
-                    $("#PurchaseInvoiceModal").hide();
-                    var fnData = Common.getDateFilter('dateDisplay2');
-                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseBill", { PlantId: parseInt(PlantMappingId), PurchaseBillId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseInvoiceSuccess, null);
-                }
-                else {
-                    formDataMultiple = new FormData();
+
+                    // 🔑 IMPORTANT: return PurchaseBillId
+                    if (callback) {
+                        var dataId = JSON.parse(response.data);
+                        callback(dataId[0][0].PurchaseBillId);
+                    }
+                } else {
                     Common.errorMsg(response.message);
                 }
             },
@@ -430,7 +469,150 @@ $(document).ready(async function () {
                 Common.errorMsg(response.message);
             }
         });
-    });
+    }
+
+
+    //$(document).on('click', '#PurchaseInvoiceSaveBtn', function () {
+
+    //    getExistFiles();
+
+    //    var RightSideHeaderFormIsValid = $("#FormRightSideHeader").validate().form();
+    //    var ShippingFormIsValid = $("#FormShipping").validate().form();
+    //    var VendorFormIsValid = $("#FormVendor").validate().form();
+    //    var StatusFormIsValid = $("#FormStatus").validate().form();
+    //    var BillFromIsValid = $("#FormBillFrom").validate().form();
+    //    var TaxdiscountFormIsValid = $('#frmtaxdiscountothers').validate().form();
+    //    if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid || !TaxdiscountFormIsValid) {
+    //        $('#PurchaseInvoiceSaveBtn-error').insertAfter('#statusError');
+    //        $('#Vendor-error').insertAfter('.vendorerror');
+    //        $('#AlternativeCompanyAddress-error').insertAfter('.AlternativeCompanyError');
+    //        $('#loader-pms').hide();
+    //        return false;
+    //    }
+
+    //    var vendorInput = $('#Vendor').val();
+
+    //    if (vendorInput == '') {
+    //        Common.warningMsg('Click + Add Vendor and Fill the Input');
+    //        $('#loader-pms').hide();
+    //        return false;
+    //    }
+
+    //    var TableLenthDynamicRow = $('.ProductTableRow').length;
+    //    if (TableLenthDynamicRow == 0) {
+    //        Common.warningMsg('Choose Atleast One Product');
+    //        $('#loader-pms').hide();
+    //        return false;
+    //    }
+
+    //    var PurchaseBillDetailsStatic;
+    //    var vendorId = $('#Vendor').val();
+    //    var alternativeCompanyAddress = $('#AlternativeCompanyAddress').val();
+
+    //    var PIStatusId = $('#PurchaseInvoiceStatusId option:selected').text();
+    //    PIStatusId = (PIStatusId == '-- Select --') ? null : $('#PurchaseInvoiceStatusId').val();
+
+    //    PurchaseBillDetailsStatic = {
+    //        PurchaseBillId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null,
+    //        VendorId: parseInt(vendorId),
+    //        BillFromPlantId: parseInt($('#BillFrom').val()),
+    //        PlantId: PlantMappingId || null,
+    //        ShipToPlantId: parseInt(alternativeCompanyAddress),
+    //        PurchaseBillNo: $('#InvoiceNo').val(),
+    //        PurchaseBillDate: $('#InvoiceDate').val(),
+    //        PurchaseOrderId: $('#PurchaseOrderNo').val(),
+
+    //        OriginalInvoiceNo: $('#InvoiceNoOriginal').val(),
+    //        SubTotal: parseFloat($('#Subtotal').val() || 0.00),
+    //        RoundOffValue: parseFloat($('#roundOff').val() || 0.00),
+    //        GrantTotal: parseFloat($('#GrantTotal').val() || 0.00),
+    //        BalanceAmount: parseFloat($('#BalanceAmount').val() || 0.00),
+    //        Notes: $('#AddNotesText').val(),
+    //        TermsAndCondition: $('#TermsAndCondition').val(),
+    //        PurchaseBillStatusId: parseInt(PIStatusId),
+    //    };
+
+    //    var PurchaseBillProductMappingDetails = [];
+
+    //    $('#PIProductTablebody .ProductTableRow').each(function () {
+    //        var $rowTable = $(this);
+    //        var productId = $rowTable.data('product-id');
+    //        //var productInfoStr = $rowTable.attr('data-product-info');
+    //        var PurchaseBillProductMappingId = $rowTable.attr('data-productmapping-id');
+    //        //var productInfo = JSON.parse(productInfoStr);
+
+    //        var productDetail = {
+    //            PurchaseProductMappingId: PurchaseBillProductMappingId == 0 ? null : parseInt(PurchaseBillProductMappingId),
+    //            ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null,
+    //            ProductId: parseInt(productId),
+    //            PurchasePrice: Common.parseFloatValue($rowTable.find('.SellingPrice').val()),
+    //            Quantity: Common.parseFloatValue($rowTable.find('.TableRowQty').val() || 0),
+    //            UnitId: parseInt($rowTable.find('.ForBindtableProductUnit').val()),
+    //            ProductDescription: $rowTable.find('.descriptiontdtext').val(),
+    //            SubTotal: Common.parseFloatValue($rowTable.find('.SubTotalQty').val()),
+    //            CGST_Percentage: Common.parseFloatValue($rowTable.find('.CGST input').val().replace('%', '').trim()),
+    //            CGST_Value: Common.parseFloatValue($rowTable.find('.CGST .CGSTAmount').text().trim()),
+    //            SGST_Percentage: Common.parseFloatValue($rowTable.find('.SGST input').val().replace('%', '').trim()),
+    //            SGST_Value: Common.parseFloatValue($rowTable.find('.SGST .SGSTAmount').text().trim()),
+    //            IGST_Percentage: Common.parseFloatValue($rowTable.find('.IGST input').val().replace('%', '').trim()),
+    //            IGST_Value: Common.parseFloatValue($rowTable.find('.IGST .IGSTAmount').text().trim()),
+    //            CESS_Percentage: Common.parseFloatValue($rowTable.find('.CESS input').val().replace('%', '').trim()),
+    //            CESS_Value: Common.parseFloatValue($rowTable.find('.CESS .CESSAmount').text().trim()),
+    //            TotalAmount: Common.parseFloatValue($rowTable.find('.Total input').val()),
+    //        };
+    //        PurchaseBillProductMappingDetails.push(productDetail);
+    //    });
+
+    //    var PurchaseBillOtherChargesMappingDetails = [];
+    //    var PurhInvoiceOtherChargesMappingDetails = $("#dynamicBindRow .dynamicBindRow");
+
+    //    $.each(PurhInvoiceOtherChargesMappingDetails, function (index, value) {
+    //        var PurchaseSaleOtherChargesMappingId = $(value).find('.dynamicBindRow').attr('data-OtherChargeMapping-id') || null;
+    //        var ispercentageval = $(value).find("input[type='radio']").attr("name");
+    //        var oid = $(value).find('.taxandothers').val();
+    //        if (oid != undefined) {
+    //            PurchaseBillOtherChargesMappingDetails.push({
+    //                PurchaseSaleOtherChargesMappingId: PurchaseSaleOtherChargesMappingId == '' ? null : parseInt(PurchaseSaleOtherChargesMappingId),
+    //                OtherChargesId: parseInt($(value).find('.taxandothers').val() || 0),
+    //                OtherChargesType: $(value).find('.taxandothers').attr('OtherChargesType'),
+    //                IsPercentage: $(value).find("input[name='" + ispercentageval + "']:checked").val() === "1",
+    //                Value: parseFloat($(value).find('.OtherValueInsert').val() || 0),
+    //                OtherChargeValue: parseFloat($(value).find('.otherChargeValue').val() || 0),
+    //                ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null
+    //            });
+    //        }
+    //    });
+
+    //    formDataMultiple.append("PurchaseBillDetailsStatic", JSON.stringify(PurchaseBillDetailsStatic));
+    //    formDataMultiple.append("PurchaseBillProductMappingDetails", JSON.stringify(PurchaseBillProductMappingDetails));
+    //    formDataMultiple.append("PurchaseBillOtherChargesMappingDetails", JSON.stringify(PurchaseBillOtherChargesMappingDetails));
+    //    formDataMultiple.append("ExistFiles", JSON.stringify(existFiles));
+    //    formDataMultiple.append("DeletedFiles", JSON.stringify(deletedFiles));
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/PurchaseInvoice/InsertUpdatePurchaseBill",
+    //        data: formDataMultiple,
+    //        contentType: false,
+    //        processData: false,
+    //        success: function (response) {
+    //            if (response.status) {
+    //                formDataMultiple = new FormData();
+    //                Common.successMsg(response.message);
+    //                $("#PurchaseInvoiceModal").hide();
+    //                var fnData = Common.getDateFilter('dateDisplay2');
+    //                Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseBill", { PlantId: parseInt(PlantMappingId), PurchaseBillId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseInvoiceSuccess, null);
+    //            }
+    //            else {
+    //                formDataMultiple = new FormData();
+    //                Common.errorMsg(response.message);
+    //            }
+    //        },
+    //        error: function (response) {
+    //            Common.errorMsg(response.message);
+    //        }
+    //    });
+    //});
 
     $(document).on('change', '#PurchaseOrderNo', function () {
         var $thisVal = $(this).val();
@@ -490,8 +672,8 @@ $(document).ready(async function () {
     $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
         if (response == true) {
-            var EditPurchaseBillId = $(this).data('id');
-            Common.ajaxCall("GET", "/PurchaseInvoice/DeletePurchaseOrderDetails", { PurchaseBillId: parseInt(EditPurchaseBillId) }, function (response) {
+            EditPurchaseBillId = $(this).data('id');
+            Common.ajaxCall("GET", "/PurchaseInvoice/DeletePurchaseBillDetails", { PurchaseBillId: parseInt(EditPurchaseBillId) }, function (response) {
                 response = response.status ? Common.successMsg(response.message) : Common.errorMsg(response.message);
                 var fnData = Common.getDateFilter('dateDisplay2');
                 Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseBill", { PlantId: parseInt(PlantMappingId), PurchaseBillId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseInvoiceSuccess, null);
@@ -522,8 +704,42 @@ $(document).ready(async function () {
             if ($checkbox.prop('checked')) {
                 var ProductId = $row.find('.ProductId').text().trim();
                 var ProductName = $row.find('.ProductName').text().trim();
-                var SecondaryPrice = parseFloat($row.find('.SellingPrice').text().trim()) || 0;
-                SecondaryPrice = SecondaryPrice.toFixed(2);
+                //var SecondaryPrice = parseFloat($row.find('.SellingPrice').text().trim()) || 0;
+                //SecondaryPrice = SecondaryPrice.toFixed(2);
+
+                var productInfoStr = $row.attr('data-product-info');
+                var productInfo = {};
+
+                try {
+                    productInfo = JSON.parse(productInfoStr.replace(/&quot;/g, '"'));
+                } catch (e) {
+                    console.error("Failed to parse productInfo for ProductId:", ProductId, e);
+                    return;
+                }
+
+                productInfo.PrimaryPrice = parseFloat(productInfo.PrimaryPrice) || 0;
+                productInfo.SecondaryPrice = parseFloat(productInfo.SecondaryPrice) || 0;
+
+                var $unitSelect = $row.find('select.unit-dropdown-select');
+
+                var selectedIndex = $unitSelect.prop("selectedIndex");  // 0 or 1
+
+                var option0 = $unitSelect.find("option").eq(0).val() || "";
+                var option1 = $unitSelect.find("option").eq(1).val() || "";
+
+                var PrimaryPrice = productInfo.PrimaryPrice;
+                var SecondaryPrice = productInfo.SecondaryPrice;
+
+                var SelectedPrice;
+
+                if (option0 === option1) {
+                    SelectedPrice = PrimaryPrice;
+                }
+                else {
+                    SelectedPrice = selectedIndex === 0 ? PrimaryPrice : SecondaryPrice;
+                }
+
+                SelectedPrice = SelectedPrice.toFixed(2);
 
                 var QtyProductAdd = $row.find('.QtyProductAdd').val().trim() || 1;
                 var defaultDescription = ProductName;
@@ -696,25 +912,30 @@ $(document).ready(async function () {
     });
 
     $(document).on('click', '#btnPordersaveprintbtn', function () {
-        $('#loader-pms').show();
-        var EditData = { NoOfCopies: 1, printType: "preview" }
 
-        $.ajax({
-            url: '/PurchaseInvoice/PurchaseIvnoicePrint',
-            method: 'GET',
-            data: EditData,
-            xhrFields: {
-                responseType: 'blob'
-            },
-            success: function (response) {
-                var printType = "Preview";
-                $('#ShareDropdownitems').css('display', 'none');
-                var blob = new Blob([response], { type: 'application/pdf' });
-                var blobUrl = URL.createObjectURL(blob);
-                if (printType == "Preview") {
-                    var newTab = window.open();
-                    if (newTab) {
-                        newTab.document.write(`
+        $('#loader-pms').show();
+
+        savePurchaseInvoice(function (purchaseBillId) {
+            var EditData = {
+                ModuleId: purchaseBillId,
+                NoOfCopies: 1,
+                printType: "preview"
+            };
+
+            $.ajax({
+                url: '/PurchaseInvoice/PurchaseBillPrint',
+                method: 'GET',
+                data: EditData,
+                xhrFields: { responseType: 'blob' },
+                success: function (response) {
+                    var printType = "Preview";
+                    $('#ShareDropdownitems').css('display', 'none');
+                    var blob = new Blob([response], { type: 'application/pdf' });
+                    var blobUrl = URL.createObjectURL(blob);
+                    if (printType == "Preview") {
+                        var newTab = window.open();
+                        if (newTab) {
+                            newTab.document.write(`
                                               <html>
                                               <head><title>Purchase Bill Preview</title></head>
                                               <body style="margin:0;">
@@ -722,31 +943,84 @@ $(document).ready(async function () {
                                               </body>
                                               </html>
                                           `);
-                        newTab.document.close();
+                            newTab.document.close();
+                        }
+                    } else if (printType == "Download") {
+                        var link = document.createElement('a');
+                        link.href = blobUrl;
+                        link.download = 'Purchase Bill.pdf';
+                        link.click();
+                    } else if (printType == "Print") {
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = blobUrl;
+                        document.body.appendChild(iframe);
+                        iframe.contentWindow.print();
                     }
-
-                } else if (printType == "Download") {
-                    var link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = 'Purchase Order.pdf';
-                    link.click();
-                } else if (printType == "Print") {
-                    var iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = blobUrl;
-                    document.body.appendChild(iframe);
-                    iframe.contentWindow.print();
+                    $('#loader-pms').hide();
+                },
+                error: function () {
+                    $('#loader-pms').hide();
+                    Common.errorMsg("Print failed");
                 }
-                $('#loader-pms').hide();
-                /* Print*/
-
-            },
-            error: function () {
-                $('#loader-pms').hide();
-                Common.errorMsg(response.message);
-            }
+            });
         });
+
     });
+
+
+    //$(document).on('click', '#btnPordersaveprintbtn', function () {
+    //    $('#loader-pms').show();
+    //    var EditData = { ModuleId : parseInt(EditPurchaseBillId), NoOfCopies: 1, printType: "preview" }
+
+    //    $.ajax({
+    //        url: '/PurchaseInvoice/PurchaseBillPrint',
+    //        method: 'GET',
+    //        data: EditData,
+    //        xhrFields: {
+    //            responseType: 'blob'
+    //        },
+    //        success: function (response) {
+    //            var printType = "Preview";
+    //            $('#ShareDropdownitems').css('display', 'none');
+    //            var blob = new Blob([response], { type: 'application/pdf' });
+    //            var blobUrl = URL.createObjectURL(blob);
+    //            if (printType == "Preview") {
+    //                var newTab = window.open();
+    //                if (newTab) {
+    //                    newTab.document.write(`
+    //                                          <html>
+    //                                          <head><title>Purchase Bill Preview</title></head>
+    //                                          <body style="margin:0;">
+    //                                              <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+    //                                          </body>
+    //                                          </html>
+    //                                      `);
+    //                    newTab.document.close();
+    //                }
+
+    //            } else if (printType == "Download") {
+    //                var link = document.createElement('a');
+    //                link.href = blobUrl;
+    //                link.download = 'Purchase Order.pdf';
+    //                link.click();
+    //            } else if (printType == "Print") {
+    //                var iframe = document.createElement('iframe');
+    //                iframe.style.display = 'none';
+    //                iframe.src = blobUrl;
+    //                document.body.appendChild(iframe);
+    //                iframe.contentWindow.print();
+    //            }
+    //            $('#loader-pms').hide();
+    //            /* Print*/
+
+    //        },
+    //        error: function () {
+    //            $('#loader-pms').hide();
+    //            Common.errorMsg(response.message);
+    //        }
+    //    });
+    //});
 });
 
 async function PurchaseBillGetNotNull(response) {
@@ -806,13 +1080,25 @@ async function PurchaseBillGetNotNull(response) {
         $('#InvoiceNoOriginal').val(data[1][0].OriginalInvoiceNo);
         $('#InvoiceNo').val(data[1][0].PurchaseBillNo);
 
-
         var EditDataId = { ModuleName: 'PurchaseBill', ModuleId: parseInt(EditPurchaseBillId) }
         Common.ajaxCall("GET", "/Common/GetInventoryStatusDetails", EditDataId, function (response) {
             if (response.status);
             Common.bindDropDownSuccess(response.data, "PurchaseInvoiceStatusId");
             $('#PurchaseInvoiceStatusId').val(data[1][0].PurchaseBillStatusId);
         }, null);
+
+        Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
+        Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
+        Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
+
+        Inventory.bindAttachments(data[3]);
+    } else {
+
+        Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
+        Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
+        Inventory.toggleFieldForAttachment(data[2][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
+
+        Inventory.bindAttachments(data[2]);
     }
 
     bindProductRowsInNotNull(data[0], data[1][0].VendorStateName, data[1][0].PlantStateName);
@@ -820,12 +1106,6 @@ async function PurchaseBillGetNotNull(response) {
     if (PurchaseOrderNOData) {
         OtherChangesNotNull(data[2]);
     }
-
-    Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
-    Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
-    Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
-
-    Inventory.bindAttachments(data[3]);
 }
 
 function ajaxAsync(method, url, data) {
@@ -1395,6 +1675,9 @@ function VendorAlignmentOpen() {
     $('#POColumn').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-4 col-md-12 col-sm-12 col-12');
 
     $('#PurchaseOrderDateDiv').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
+    $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3').stop(true, true).slideToggle(300);
+    $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+
     //if (!TriggerValues) {
     //    Common.bindDropDownParent('BillFrom', 'FormBillFrom', 'BillFrom');
     //    Common.bindDropDownParent('Vendor', 'FormVendor', 'Vendor');
@@ -1468,7 +1751,7 @@ function bindHeaderNormal() {
         <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="VendorColumn" style="position: relative; display: none;">
             <form id="FormVendor" novalidate="novalidate">
                 <div class="row BilAddHead px-1">
-                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 mt-3 px-1">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 px-1" style="margin-top: 12px;">
                         <div class="d-flex">
                             <h2 class="mb-0">Bill To<span id="Asterisk">*</span></h2>
                         </div>
@@ -1479,8 +1762,7 @@ function bindHeaderNormal() {
                             </select>
                         </div>
                     </div>
-                </div>
-
+                </div> 
             </form>
             <div class="row mt-3">
                 <div class="col-12">
@@ -1555,16 +1837,20 @@ function bindHeaderNormal() {
         <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="ShippingColumn" style="position: relative; display: none;">
             <form id="FormShipping" novalidate="novalidate">
                 <div class="row BilAddHead">
-                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 mt-3 px-1">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 px-1" style="margin-top: 12px;">
                         <div class="d-flex">
                             <h2 class="mb-0">Ship To<span id="Asterisk">*</span></h2>
                         </div>
                     </div>
-                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1" id="">
+                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1">
                         <div class="form-group mb-0 AlternativeCompanyError">
                             <select class="form-control" id="AlternativeCompanyAddress" name="AlternativeCompanyAddress" required>
                             </select>
                         </div>
+                    </div>
+                    <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-6 my-2 px-1" id="">
+                        <input type="button" id="toggleShipTo" class="btn btn-link p-0" value="" />
+                        <i class="fas fa-chevron-down" id="toggleIconShipTo" style="cursor: pointer;font-size: large;color: blue;margin-top: 4px;"></i>
                     </div>
                 </div>
             </form>
@@ -1650,8 +1936,8 @@ function bindHeaderNormal() {
 
                     <div class="col-lg-4 col-md-6 col-6" id="OriginalInvoiceNoDiv">
                         <div class="form-group">
-                            <label>Original Invoice No<span id="Asterisk">*</span></label>
-                            <input type="text" class="form-control" id="InvoiceNoOriginal" maxlength="16" name="InvoiceNoOriginal" placeholder="Original Invoice No" autocomplete="off" fdprocessedid="eb1wt7" required>
+                            <label>Vendor Invoice No<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" id="InvoiceNoOriginal" maxlength="16" name="InvoiceNoOriginal" placeholder="Vendor Invoice No" autocomplete="off" fdprocessedid="eb1wt7" required>
                         </div>
                     </div> 
                 </div>
@@ -1782,25 +2068,25 @@ $(document).keydown(function (event) {
     // Handling alt + v
     if (event.altKey && event.key === 'v') {
         event.preventDefault();
-        $('#btnPreviewPorder').click();
+        $('#btnPreviewPInvoicebtn').click();
     }
 
     // Handling Ctrl + s
     if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
-        $('#PurchaseOrderSaveBtn').click();
+        $('#PurchaseInvoiceSaveBtn').click();
     }
 
     // Handling alt + h
     if (event.altKey && event.key === 'h') {
         event.preventDefault();
-        $('#btnsharePorder').click();
+        $('#btnsharePInvoice').click();
     }
 
     // Handling alt + c
     if (event.altKey && event.key === 'c') {
         event.preventDefault();
-        $('#PurchaseOrderCancelBtn').click();
+        $('#PurchaseInvoiceCancelBtn').click();
     }
 });
 

@@ -136,6 +136,7 @@ $(document).ready(async function () {
         });
 
         $('#SaveQuotation').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
+        $('#PrintQuotation').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
     });
 
     $(document).on('click', '.btn-edit', function () {
@@ -155,6 +156,7 @@ $(document).ready(async function () {
         $('#CreatedByDiv').show(); 
         CanvasOpenFirstShowingQuotation();
         $('#SaveQuotation').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
+        $('#PrintQuotation').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
 
         var fnData = Common.getDateFilter('dateDisplay2');
         Common.ajaxCall("GET", "/Sale/GetQuotation", { PlantId: parseInt(PlantMappingId), QuotationId: QuotationId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, QuotationNotNullSuccess, null);
@@ -242,6 +244,59 @@ $(document).ready(async function () {
             var QuotationId = $(this).data('id');
             Common.ajaxCall("GET", "/Sale/DeleteQuotationDetails", { QuotationId: QuotationId }, QuotationInsertUpdateSuccess, null);
         }
+    });
+
+    $(document).on('click', '#PrintQuotation', function () {
+        $('#loader-pms').show();
+        var EditData = { NoOfCopies: 1, printType: "preview" }
+
+        $.ajax({
+            url: '/Sale/QuotationPrint',
+            method: 'GET',
+            data: EditData,
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (response) {
+                var printType = "Preview";
+                $('#ShareDropdownitems').css('display', 'none');
+                var blob = new Blob([response], { type: 'application/pdf' });
+                var blobUrl = URL.createObjectURL(blob);
+                if (printType == "Preview") {
+                    var newTab = window.open();
+                    if (newTab) {
+                        newTab.document.write(`
+                                              <html>
+                                              <head><title>Quotation Preview</title></head>
+                                              <body style="margin:0;">
+                                                  <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                                              </body>
+                                              </html>
+                                          `);
+                        newTab.document.close();
+                    }
+
+                } else if (printType == "Download") {
+                    var link = document.createElement('a');
+                    link.href = blobUrl;
+                    link.download = 'Quotation.pdf';
+                    link.click();
+                } else if (printType == "Print") {
+                    var iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = blobUrl;
+                    document.body.appendChild(iframe);
+                    iframe.contentWindow.print();
+                }
+                $('#loader-pms').hide();
+                /* Print*/
+
+            },
+            error: function () {
+                $('#loader-pms').hide();
+                Common.errorMsg(response.message);
+            }
+        });
     });
 });
 
@@ -335,7 +390,7 @@ function QuotationNotNullSuccess(response) {
                     </div>
                     <div class="col-md-2 col-lg-3 col-sm-5 col-5 ColorClassDiv">
                         <div class="form-group">
-                            <label class="ColorClass">Pantone Code<span id="Asterisk">*</span></label>
+                            <label class="ColorClass">Color<span id="Asterisk">*</span></label>
                             <select class="form-control Color" id="Color${numberIncr}" name="Color${numberIncr}" required>
                                 ${defaultOption}${ColorSelectOptions}
                             </select>
@@ -344,13 +399,13 @@ function QuotationNotNullSuccess(response) {
                     <div class="col-md-2 col-lg-2 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv">
                         <div class="form-group">
                             <label class="ProposedPriceClass">Proposed Price<span id="Asterisk">*</span></label>
-                            <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required value="${ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                            <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required value="${ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
                         </div>                                                                                                                                                
                     </div>                                                                                                                                                    
                     <div class="col-md-3 col-lg-3 col-sm-3 col-3 pl-3 ApprovedPriceClassDiv">                                                                                 
                         <div class="form-group">                                                                                                                              
                             <label class="ApprovedPriceClass">Approved Price</label>                                                              
-                            <input type="text" class="form-control ApprovedPrice" placeholder="Ex: 10000/-" id="ApprovedPrice${numberIncr}" name="ApprovedPrice${numberIncr}" value="${ApprovedPrice || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                            <input type="text" class="form-control ApprovedPrice" placeholder="Ex: 10000/-" id="ApprovedPrice${numberIncr}" name="ApprovedPrice${numberIncr}" value="${ApprovedPrice || ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-3 col-3 thiswillColorshow p-0 mt--1" style="display: ${rowadd == 0 ? 'none' : 'block'}">
@@ -401,13 +456,13 @@ function QuotationNotNullSuccess(response) {
                     <div class="col-md-3 col-lg-3 col-sm-3 col-3 pl-0 pr-0 ProposedPriceClassProcessDiv">
                         <div class="form-group">
                             <label class="ProposedPriceProcess">Proposed Price<span id="Asterisk">*</span></label>
-                            <input type="text" class="form-control ProcessProposedPrice" placeholder="Ex: 12000/-" id="ProcessProposedPrice${numberIncr}" name="ProcessProposedPrice${numberIncr}" required value="${ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                            <input type="text" class="form-control ProcessProposedPrice" placeholder="Ex: 12000/-" id="ProcessProposedPrice${numberIncr}" name="ProcessProposedPrice${numberIncr}" required value="${ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
                         </div>
                     </div>
                     <div class="col-md-3 col-lg-3 col-sm-3 col-3 ApprovedPriceProcessDiv">
                         <div class="form-group">
                             <label class="ApprovedPriceProcess">Approved Price</label>
-                            <input type="text" class="form-control ProcessApprovedPrice" placeholder="Ex: 10000/-" id="ProcessApprovedPrice${numberIncr}" name="ProcessApprovedPrice${numberIncr}" value="${ApprovedPrice || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                            <input type="text" class="form-control ProcessApprovedPrice" placeholder="Ex: 10000/-" id="ProcessApprovedPrice${numberIncr}" name="ProcessApprovedPrice${numberIncr}" value="${ApprovedPrice || ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-3 col-3 thiswillProcessshow mt--1 p-0" style="display: ${rowadd == 0 ? 'none' : 'block'}"> 
@@ -457,7 +512,7 @@ function duplicateRowColor() {
         </div>
         <div class="col-md-2 col-lg-3 col-sm-5 col-5 ColorClassDiv">
             <div class="form-group">
-                <label class="ColorClass">Pantone Code<span id="Asterisk">*</span></label>
+                <label class="ColorClass">Color<span id="Asterisk">*</span></label>
                 <select class="form-control Color" id="Color${numberIncr}" name="Color${numberIncr}" required>
                     ${defaultOption}${ColorSelectOptions}
                 </select>
@@ -466,13 +521,13 @@ function duplicateRowColor() {
         <div class="col-md-2 col-lg-2 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv">
             <div class="form-group">
                 <label class="ProposedPriceClass">Proposed Price<span id="Asterisk">*</span></label>
-                <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
             </div>                                                                                                                                                
         </div>                                                                                                                                                    
         <div class="col-md-3 col-lg-3 col-sm-3 col-3 pl-3 ApprovedPriceClassDiv">                                                                                 
             <div class="form-group">                                                                                                                              
                 <label class="ApprovedPriceClass">Approved Price</label>                                                              
-                <input type="text" class="form-control ApprovedPrice" placeholder="Ex: 10000/-" id="ApprovedPrice${numberIncr}" name="ApprovedPrice${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                <input type="text" class="form-control ApprovedPrice" placeholder="Ex: 10000/-" id="ApprovedPrice${numberIncr}" name="ApprovedPrice${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
             </div>
         </div>
         <div class="col-lg-1 col-md-1 col-sm-3 col-3 thiswillColorshow p-0 mt--1" style="display: ${rowadd == 0 ? 'none' : 'block'}">
@@ -554,13 +609,13 @@ function duplicateRowProcess() {
         <div class="col-md-3 col-lg-3 col-sm-3 col-3 pl-0 pr-0 ProposedPriceClassProcessDiv">
             <div class="form-group">
                 <label class="ProposedPriceProcess">Proposed Price<span id="Asterisk">*</span></label>
-                <input type="text" class="form-control ProcessProposedPrice" placeholder="Ex: 12000/-" id="ProcessProposedPrice${numberIncr}" name="ProcessProposedPrice${numberIncr}" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                <input type="text" class="form-control ProcessProposedPrice" placeholder="Ex: 12000/-" id="ProcessProposedPrice${numberIncr}" name="ProcessProposedPrice${numberIncr}" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
             </div>
         </div>
         <div class="col-md-3 col-lg-3 col-sm-3 col-3 ApprovedPriceProcessDiv">
             <div class="form-group">
                 <label class="ApprovedPriceProcess">Approved Price</label>
-                <input type="text" class="form-control ProcessApprovedPrice" placeholder="Ex: 10000/-" id="ProcessApprovedPrice${numberIncr}" name="ProcessApprovedPrice${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"/>
+                <input type="text" class="form-control ProcessApprovedPrice" placeholder="Ex: 10000/-" id="ProcessApprovedPrice${numberIncr}" name="ProcessApprovedPrice${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
             </div>
         </div>
         <div class="col-lg-1 col-md-1 col-sm-3 col-3 thiswillProcessshow mt--1 p-0" style="display: ${rowadd == 0 ? 'none' : 'block'}"> 

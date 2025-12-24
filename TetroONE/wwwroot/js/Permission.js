@@ -199,32 +199,22 @@ function PermissionSuccess(response) {
 
         $('#permissionTblCol').html('<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PermissionTable"></table>');
 
-        //$("#CounterTextBox1").text(CounterBox[0]);
-        //$("#CounterTextBox2").text(CounterBox[1]);
-        //$("#CounterTextBox3").text(CounterBox[2]);
-        //$("#CounterTextBox4").text(CounterBox[3]);
+        $("#CounterTextBox1").text(CounterBox[0]);
+        $("#CounterTextBox2").text(CounterBox[1]);
+        $("#CounterTextBox3").text(CounterBox[2]);
+        $("#CounterTextBox4").text(CounterBox[3]);
 
-        //$('#CounterValBox1').text(data[0][0][CounterBox[0]]);
-        //$('#CounterValBox2').text(data[0][0][CounterBox[1]]);
-        //$('#CounterValBox3').text(data[0][0][CounterBox[2]]);
-        //$('#CounterValBox4').text(data[0][0][CounterBox[3]]);
-         
-        $("#CounterTextBox1").text('Total');
-        $("#CounterTextBox2").text('Requested');
-        $("#CounterTextBox3").text('Approved');
-        $("#CounterTextBox4").text('Rejected');
-
-        $('#CounterValBox1').text('113');
-        $('#CounterValBox2').text('25');
-        $('#CounterValBox3').text('59');
-        $('#CounterValBox4').text('29');
-
+        $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
+        $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
+        $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
+        $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
         var columns = Common.bindColumn(data[1], ['PermissionId', 'Status_Color']);
         Common.bindTable('PermissionTable', data[1], columns, -1, 'PermissionId', '330px', true, accessPermission);
 
         $('#permissionTblCol').show();
         $('#leaveTblCol').hide();
+        $('#CompOffTblCol').hide();
     }
 }
 

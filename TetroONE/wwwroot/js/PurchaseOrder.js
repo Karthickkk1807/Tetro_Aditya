@@ -142,6 +142,16 @@ $(document).ready(function () {
         $("#PurchaseOrderModal .modal-body").animate({ scrollTop: 0 }, "fast");
     });
 
+    $(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $rows = $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3');
+        const isCurrentlyVisible = $rows.is(':visible');
+        $rows.stop(true, true).slideToggle(300);
+        $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+        $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead').css('border-bottom', '1px solid #c7c7c7');
+    });
+
     $(document).on('click', '#PurchaseOrderCancelBtn, #PurchaseOrderClose', function () {
         $('#PurchaseOrderModal').hide();
     });
@@ -153,6 +163,7 @@ $(document).ready(function () {
     $(document).on('click', '#AddVendorLable', function () {
         VendorAlignmentOpen();
         $('#BillFrom').val('1').trigger('change');
+        $('#AlternativeCompanyAddress').val(PlantMappingId).trigger('change');
     });
 
     $(document).on('change', '#VendorColumn #Vendor', async function () {
@@ -161,14 +172,14 @@ $(document).ready(function () {
             $('#POProductTablebody .ProductTableRow').remove();
             ClearInputs(); // Clear inputs
 
-            var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
-            if (response !== null) {
-                BillToAddress(response);
-                updateGSTVisibility('#VendorStateName', '#StateName');
-            }
             if (BillToId != "" || BillToId != null) {
-                updateGSTVisibility('#VendorStateName', '#StateName');
-            } else {
+                var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
+                if (response !== null) {
+                    BillToAddress(response);
+                    updateGSTVisibility('#VendorStateName', '#StateName');
+                }
+            }
+            else {
                 BillToAddressClear();
             }
         }
@@ -268,7 +279,32 @@ $(document).ready(function () {
         updateSelectedItemCount();
     });
 
+
     $(document).on('click', '#PurchaseOrderSaveBtn', function () {
+
+        savePurchaseOrder(function () {
+
+            $("#PurchaseOrderModal").hide();
+
+            var fnData = Common.getDateFilter('dateDisplay2');
+            Common.ajaxCall(
+                "GET",
+                "/PurchaseOrder/GetPurchaseOrder",
+                {
+                    PlantId: parseInt(PlantMappingId),
+                    PurchaseOrderId: null,
+                    FromDate: fnData.startDate.toISOString(),
+                    ToDate: fnData.endDate.toISOString()
+                },
+                GetPurchaseOrderSuccess,
+                null
+            );
+        });
+
+    });
+
+
+    function savePurchaseOrder(callback) {
 
         getExistFiles();
 
@@ -277,12 +313,9 @@ $(document).ready(function () {
         var VendorFormIsValid = $("#FormVendor").validate().form();
         var StatusFormIsValid = $("#FormStatus").validate().form();
         var BillFromIsValid = $("#FormBillFrom").validate().form();
+
         if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid) {
-            $('#PurchaseOrderStatusId-error').insertAfter('#statusError');
-            $('#Vendor-error').insertAfter('.vendorerror');
-            $('#AlternativeCompanyAddress-error').insertAfter('.AlternativeCompanyError');
-            $('#loader-pms').hide();
-            return false;
+            return;
         }
 
         var vendorInput = $('#Vendor').val();
@@ -367,15 +400,18 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (response) {
+
                 if (response.status) {
                     formDataMultiple = new FormData();
                     Common.successMsg(response.message);
-                    $("#PurchaseOrderModal").hide();
-                    var fnData = Common.getDateFilter('dateDisplay2');
-                    Common.ajaxCall("GET", "/PurchaseOrder/GetPurchaseOrder", { PlantId: parseInt(PlantMappingId), PurchaseOrderId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseOrderSuccess, null);
-                }
-                else {
-                    formDataMultiple = new FormData();
+
+                    // 🔑 Return PurchaseOrderId
+                    if (callback) {
+                        var dataId = JSON.parse(response.data);
+                        callback(dataId[0][0].PurchaseOrderId);
+                    }
+
+                } else {
                     Common.errorMsg(response.message);
                 }
             },
@@ -383,7 +419,125 @@ $(document).ready(function () {
                 Common.errorMsg(response.message);
             }
         });
-    });
+
+
+    }
+    //$(document).on('click', '#PurchaseOrderSaveBtn', function () {
+
+    //    getExistFiles();
+
+    //    var RightSideHeaderFormIsValid = $("#FormRightSideHeader").validate().form();
+    //    var ShippingFormIsValid = $("#FormShipping").validate().form();
+    //    var VendorFormIsValid = $("#FormVendor").validate().form();
+    //    var StatusFormIsValid = $("#FormStatus").validate().form();
+    //    var BillFromIsValid = $("#FormBillFrom").validate().form();
+    //    if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid) {
+    //        $('#PurchaseOrderStatusId-error').insertAfter('#statusError');
+    //        $('#Vendor-error').insertAfter('.vendorerror');
+    //        $('#AlternativeCompanyAddress-error').insertAfter('.AlternativeCompanyError');
+    //        $('#loader-pms').hide();
+    //        return false;
+    //    }
+
+    //    var vendorInput = $('#Vendor').val();
+
+    //    if (vendorInput == '') {
+    //        Common.warningMsg('Click + Add Vendor and Fill the Input');
+    //        $('#loader-pms').hide();
+    //        return false;
+    //    }
+
+    //    var TableLenthDynamicRow = $('.ProductTableRow').length;
+    //    if (TableLenthDynamicRow == 0) {
+    //        Common.warningMsg('Choose Atleast One Product');
+    //        $('#loader-pms').hide();
+    //        return false;
+    //    }
+
+    //    var PurchaseOrderDetailsStatic;
+    //    var vendorId = $('#Vendor').val();
+    //    var alternativeCompanyAddress = $('#AlternativeCompanyAddress').val();
+
+    //    var POStatusId = $('#PurchaseOrderStatusId option:selected').text();
+    //    POStatusId = (POStatusId == '-- Select --') ? null : $('#PurchaseOrderStatusId').val();
+
+    //    PurchaseOrderDetailsStatic = {
+    //        PurchaseOrderId: EditPurchaseId > 0 ? EditPurchaseId : null,
+    //        VendorId: parseInt(vendorId),
+    //        BillFromPlantId: parseInt($('#BillFrom').val()),
+    //        ShipToPlantId: parseInt(alternativeCompanyAddress),
+    //        PlantId: PlantMappingId || null,
+    //        PurchaseOrderNo: $('#PurchaseOrderNumber').val(),
+    //        PurchaseOrderDate: $('#PurchaseOrderDate').val(),
+    //        ExpectedDeliveryDate: $('#ExpectedDeliveryDate').val(),
+    //        SubTotal: parseFloat($('#Subtotal').val() || 0.00),
+    //        RoundOffValue: parseFloat($('#roundOff').val() || 0.00),
+    //        GrantTotal: parseFloat($('#GrantTotal').val() || 0.00),
+    //        Notes: $('#AddNotesText').val(),
+    //        TermsAndCondition: $('#TermsAndCondition').val(),
+    //        PurchaseOrderStatusId: parseInt(POStatusId),
+    //    };
+
+    //    var PurchaseOrderProductMappingDetails = [];
+
+    //    $('#POProductTablebody .ProductTableRow').each(function () {
+    //        var $rowTable = $(this);
+    //        var productId = $rowTable.data('product-id');
+    //        //var productInfoStr = $rowTable.attr('data-product-info');
+    //        var PurchaseOrderProductMappingId = $rowTable.attr('data-productmapping-id');
+    //        //var productInfo = JSON.parse(productInfoStr);
+
+    //        var productDetail = {
+    //            PurchaseOrderProductMappingId: PurchaseOrderProductMappingId == null ? null : parseInt(PurchaseOrderProductMappingId),
+    //            ModuleId: EditPurchaseId > 0 ? EditPurchaseId : null,
+    //            ProductId: parseInt(productId),
+    //            PurchasePrice: Common.parseFloatValue($rowTable.find('.SellingPrice').val()),
+    //            Quantity: Common.parseFloatValue($rowTable.find('.TableRowQty').val() || 0),
+    //            UnitId: parseInt($rowTable.find('.ForBindtableProductUnit').val()),
+    //            ProductDescription: $rowTable.find('.descriptiontdtext').val(),
+    //            SubTotal: Common.parseFloatValue($rowTable.find('.SubTotalQty').val()),
+    //            CGST_Percentage: Common.parseFloatValue($rowTable.find('.CGST input').val().replace('%', '').trim()),
+    //            CGST_Value: Common.parseFloatValue($rowTable.find('.CGST .CGSTAmount').text().trim()),
+    //            SGST_Percentage: Common.parseFloatValue($rowTable.find('.SGST input').val().replace('%', '').trim()),
+    //            SGST_Value: Common.parseFloatValue($rowTable.find('.SGST .SGSTAmount').text().trim()),
+    //            IGST_Percentage: Common.parseFloatValue($rowTable.find('.IGST input').val().replace('%', '').trim()),
+    //            IGST_Value: Common.parseFloatValue($rowTable.find('.IGST .IGSTAmount').text().trim()),
+    //            CESS_Percentage: Common.parseFloatValue($rowTable.find('.CESS input').val().replace('%', '').trim()),
+    //            CESS_Value: Common.parseFloatValue($rowTable.find('.CESS .CESSAmount').text().trim()),
+    //            TotalAmount: Common.parseFloatValue($rowTable.find('.Total input').val()),
+    //        };
+    //        PurchaseOrderProductMappingDetails.push(productDetail);
+    //    });
+
+    //    formDataMultiple.append("PurchaseOrderDetailsStatic", JSON.stringify(PurchaseOrderDetailsStatic));
+    //    formDataMultiple.append("PurchaseOrderProductMappingDetails", JSON.stringify(PurchaseOrderProductMappingDetails));
+    //    formDataMultiple.append("ExistFiles", JSON.stringify(existFiles));
+    //    formDataMultiple.append("DeletedFiles", JSON.stringify(deletedFiles));
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/PurchaseOrder/InsertUpdatePurchaseOrder",
+    //        data: formDataMultiple,
+    //        contentType: false,
+    //        processData: false,
+    //        success: function (response) {
+    //            if (response.status) {
+    //                formDataMultiple = new FormData();
+    //                Common.successMsg(response.message);
+    //                $("#PurchaseOrderModal").hide();
+    //                var fnData = Common.getDateFilter('dateDisplay2');
+    //                Common.ajaxCall("GET", "/PurchaseOrder/GetPurchaseOrder", { PlantId: parseInt(PlantMappingId), PurchaseOrderId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseOrderSuccess, null);
+    //            }
+    //            else {
+    //                formDataMultiple = new FormData();
+    //                Common.errorMsg(response.message);
+    //            }
+    //        },
+    //        error: function (response) {
+    //            Common.errorMsg(response.message);
+    //        }
+    //    });
+    //});
 
     $(document).on('click', '.btn-edit', function () {
 
@@ -428,7 +582,7 @@ $(document).ready(function () {
     $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
         if (response == true) {
-            var EditPurchaseBillId = $(this).data('id');
+            EditPurchaseId = $(this).data('id');
             Common.ajaxCall("GET", "/PurchaseOrder/DeletePurchaseOrderDetails", { PurchaseOrderId: parseInt(EditPurchaseId) }, function (response) {
                 response = response.status ? Common.successMsg(response.message) : Common.errorMsg(response.message);
                 var fnData = Common.getDateFilter('dateDisplay2');
@@ -460,8 +614,42 @@ $(document).ready(function () {
             if ($checkbox.prop('checked')) {
                 var ProductId = $row.find('.ProductId').text().trim();
                 var ProductName = $row.find('.ProductName').text().trim();
-                var SecondaryPrice = parseFloat($row.find('.SellingPrice').text().trim()) || 0;
-                SecondaryPrice = SecondaryPrice.toFixed(2);
+                //var SecondaryPrice = parseFloat($row.find('.SellingPrice').text().trim()) || 0;
+                //SecondaryPrice = SecondaryPrice.toFixed(2);
+
+                var productInfoStr = $row.attr('data-product-info');
+                var productInfo = {};
+
+                try {
+                    productInfo = JSON.parse(productInfoStr.replace(/&quot;/g, '"'));
+                } catch (e) {
+                    console.error("Failed to parse productInfo for ProductId:", ProductId, e);
+                    return;
+                }
+
+                productInfo.PrimaryPrice = parseFloat(productInfo.PrimaryPrice) || 0;
+                productInfo.SecondaryPrice = parseFloat(productInfo.SecondaryPrice) || 0;
+
+                var $unitSelect = $row.find('select.unit-dropdown-select');
+
+                var selectedIndex = $unitSelect.prop("selectedIndex");  // 0 or 1
+
+                var option0 = $unitSelect.find("option").eq(0).val() || "";
+                var option1 = $unitSelect.find("option").eq(1).val() || "";
+
+                var PrimaryPrice = productInfo.PrimaryPrice;
+                var SecondaryPrice = productInfo.SecondaryPrice;
+
+                var SelectedPrice;
+
+                if (option0 === option1) {
+                    SelectedPrice = PrimaryPrice;
+                }
+                else {
+                    SelectedPrice = selectedIndex === 0 ? PrimaryPrice : SecondaryPrice;
+                }
+
+                SelectedPrice = SelectedPrice.toFixed(2);
 
                 var QtyProductAdd = $row.find('.QtyProductAdd').val().trim() || 1;
                 var defaultDescription = ProductName;
@@ -532,7 +720,7 @@ $(document).ready(function () {
                             <textarea class="form-control mt-2 descriptiontdtext" placeholder="Description">${defaultDescription}</textarea>
                         </td>
                         <td data-label="Selling Price">
-                            <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" />
+                            <input type="text" class="form-control SellingPrice" value="${SelectedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" />
                         </td>
                         <td data-label="QTY">
                             <div class="input-group" style="width: 124px;">
@@ -632,7 +820,7 @@ $(document).ready(function () {
 
     $(document).on('click', '#btnSalePreviewbtn', function () {
         $('#loader-pms').show();
-        var EditData = { NoOfCopies: 1, printType: "preview" }
+        var EditData = { ModuleId: parseInt(purchaseOrderId), NoOfCopies: 1, printType: "preview" }
 
         $.ajax({
             url: '/Sale/SaleOrderPrint',
@@ -659,7 +847,6 @@ $(document).ready(function () {
                                           `);
                         newTab.document.close();
                     }
-
                 } else if (printType == "Download") {
                     var link = document.createElement('a');
                     link.href = blobUrl;
@@ -674,7 +861,6 @@ $(document).ready(function () {
                 }
                 $('#loader-pms').hide();
                 /* Print*/
-
             },
             error: function () {
                 $('#loader-pms').hide();
@@ -682,18 +868,25 @@ $(document).ready(function () {
             }
         });
     });
-     
-    $(document).on('click', '#btnPordersaveprintbtn', function () {
-        $('#loader-pms').show();
-        var EditData = { NoOfCopies: 1, printType: "preview" }
+
+   $(document).on('click', '#btnPordersaveprintbtn', function () {
+
+    $('#loader-pms').show();
+
+    savePurchaseOrder(function (purchaseOrderId) {
+
+        var EditData = {
+            ModuleId: parseInt(purchaseOrderId), // 🔥 Correct ID
+            NoOfCopies: 1,
+            printType: "preview"
+        };
 
         $.ajax({
             url: '/PurchaseOrder/PurchaseOrderPrint',
             method: 'GET',
             data: EditData,
-            xhrFields: {
-                responseType: 'blob'
-            },
+            xhrFields: { responseType: 'blob' },
+
             success: function (response) {
                 var printType = "Preview";
                 $('#ShareDropdownitems').css('display', 'none');
@@ -712,7 +905,6 @@ $(document).ready(function () {
                                           `);
                         newTab.document.close();
                     }
-
                 } else if (printType == "Download") {
                     var link = document.createElement('a');
                     link.href = blobUrl;
@@ -726,19 +918,20 @@ $(document).ready(function () {
                     iframe.contentWindow.print();
                 }
                 $('#loader-pms').hide();
-                /* Print*/
-
             },
+
             error: function () {
                 $('#loader-pms').hide();
-                Common.errorMsg(response.message);
+                Common.errorMsg("Print failed");
             }
         });
     });
 
+});
+
     $(document).on('change', '#PurchaseOrderDate', function () {
         var selectedDate = $(this).val();
-        $('#ExpectedDeliveryDate').attr('min', selectedDate); 
+        $('#ExpectedDeliveryDate').attr('min', selectedDate);
         $('#ExpectedDeliveryDate').val(selectedDate);
     });
 });
@@ -778,7 +971,7 @@ async function PurchaseOrderGetNotNull(response) {
     }
 
     $('#PurchaseOrderDate').val(data[1][0].PurchaseOrderDate.split('T')[0]);
-    $('#ExpectedDeliveryDate').attr('min', data[1][0].PurchaseOrderDate.split('T')[0]).val(data[1][0].ExpectedDeliveryDate.split('T')[0]);  
+    $('#ExpectedDeliveryDate').attr('min', data[1][0].PurchaseOrderDate.split('T')[0]).val(data[1][0].ExpectedDeliveryDate.split('T')[0]);
 
     Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
     Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
@@ -1292,6 +1485,9 @@ function VendorAlignmentOpen() {
     $('#RequestNoDiv').removeClass('col-lg-4 col-md-6 col-sm-6 col-6').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
     $('#POColumn').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-4 col-md-12 col-sm-12 col-12');
     $("#ShipToLocation").prop('disabled', false);
+
+    $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3').stop(true, true).slideToggle(300);
+    $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
 }
 
 function VendorAlignmentClose() {
@@ -1356,18 +1552,20 @@ function bindHeaderNormal() {
          <!--VendorColumn-->
          <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="VendorColumn" style="position: relative; display: none;">
              <form id="FormVendor" novalidate="novalidate">
-                 <div class="row BilAddHead mt-2">
-                     <div class="info-row" style="align-items: center;">
-                         <div class="info-label-Purchase">Bill To<span id="Asterisk">*</span></div>
-                         <div class="info-colon"></div>
-                         <div class="">
-                             <div class="form-group mb-0 mr-2 vendorerror" style="width: 190px;">
-                                 <select class="form-control" id="Vendor" name="Vendor" required>
-                                 </select>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
+
+                <div class="row BilAddHead px-1">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 px-1">
+                        <div class="d-flex">
+                            <h2 class="mb-0">Bill To<span id="Asterisk">*</span></h2>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1 overraphide" id="">
+                        <div class="form-group mb-0 vendorerror">
+                            <select class="form-control" id="Vendor" required>
+                            </select>
+                        </div>
+                    </div>
+                </div> 
              </form>
              <div class="row mt-3">
                  <div class="col-12">
@@ -1440,19 +1638,24 @@ function bindHeaderNormal() {
 
          <!--ShippingColumn-->
          <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="ShippingColumn" style="position: relative; display: none;">
-             <form id="FormShipping" novalidate="novalidate">
-                 <div class="row BilAddHead mt-2">
-                     <div class="info-row" style="align-items: center;">
-                         <div class="info-label-Purchase">Ship To<span id="Asterisk">*</span></div>
-                         <div class="info-colon"></div>
-                         <div class="">
-                             <div class="form-group mb-0 mr-2 AlternativeCompanyError" style="width: 190px;">
-                                 <select class="form-control" id="AlternativeCompanyAddress" name="AlternativeCompanyAddress" required>
-                                 </select>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
+             <form id="FormShipping" novalidate="novalidate"> 
+                <div class="row BilAddHead">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 px-1">
+                        <div class="d-flex">
+                            <h2 class="mb-0">Ship To<span id="Asterisk">*</span></h2>
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1" id="">
+                        <div class="form-group mb-0 AlternativeCompanyError">
+                            <select class="form-control" id="AlternativeCompanyAddress" name="AlternativeCompanyAddress" required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-6 my-2 px-1" id="">
+                        <input type="button" id="toggleShipTo" class="btn btn-link p-0" value="" />
+                        <i class="fas fa-chevron-down" id="toggleIconShipTo" style="cursor: pointer;font-size: large;color: blue;"></i>
+                    </div> 
+                </div> 
              </form>
 
              <div class="row mt-3">

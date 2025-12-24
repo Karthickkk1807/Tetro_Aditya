@@ -32,11 +32,12 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetProduct")]
-        public IActionResult GetProduct(int PlantId)
+        public IActionResult GetProduct(int PlantId, int ProductTypeId)
         {
             GetProduct GetProduct = new GetProduct()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductTypeId = ProductTypeId,
                 ProductId = null,
                 PlantId = PlantId,
             };
@@ -46,11 +47,12 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetProductId")]
-        public IActionResult GetProductId(int ProductId, int PlantId)
+        public IActionResult GetProductId(int ProductId, int PlantId, int ProductTypeId)
         {
             GetProduct GetProduct = new GetProduct()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductTypeId = ProductTypeId,
                 ProductId = ProductId,
                 PlantId = PlantId
             };

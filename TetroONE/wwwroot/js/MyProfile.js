@@ -650,12 +650,7 @@ function UserEditSuccess(response) {
         setTimeout(function () {
             $('#ContactId').val(data[0][0].ContactId);
         }, 300);
-
-        if (data[2][0].DepartmentId != null) {
-            var SelectedValues = data[2].map(item => item.DepartmentId.toString());
-            $('#DepartmentDetailsId').val(SelectedValues).trigger('change');
-        }
-
+         
         var htmlDynamicFranchise = "";
         if (data[1][0].PlantId != null && data[1][0].PlantId != "") {
             $.each(data[1], function (index, Plant) {

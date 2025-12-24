@@ -68,14 +68,14 @@
                             <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                 <div class="form-group">
                                     <label>Process<span id="Asterisk">*</span></label>
-                                    <select class="form-control ProcessStage" id="Process" name="Process" required>  
+                                    <select class="form-control ProcessStage" id="Process" name="Process" required>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                 <div class="form-group">
                                     <label>Quantity<span id="Asterisk">*</span></label>
-                                    <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="Quantity" name="Quantity" required />
+                                    <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="Quantity" name="Quantity" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" />
                                 </div>
                             </div>
                             <div class="col-md-12 col-lg-12 col-sm-12 col-12">

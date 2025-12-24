@@ -12,7 +12,7 @@
 }
 
 .DynrowRemove {
-    margin-top: 17px !important;
+    margin-top: -2px !important
 }
 
 #MainGrid {
@@ -169,3 +169,12 @@ textarea.form-controltext {
     border: 1px dashed #999;
     margin-bottom: 6px;
 }*/
+
+.select2-selection__choice {
+    /* background: #baffff !important; */
+    background: aliceblue !important;
+}
+
+.select2-container--bootstrap4.select2-container--multiple .select2-selection {
+    cursor: pointer !important;
+}
