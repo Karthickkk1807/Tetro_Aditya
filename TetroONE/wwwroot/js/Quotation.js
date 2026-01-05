@@ -3,13 +3,14 @@ var PlantMappingId = 0;
 var ColorDropdown = [];
 var ProcessDropdown = [];
 var FabricDropdown = [];
+var formDataMultiple = new FormData();
 
 /* -------------------------- Initial Load Event -------------------------------------- */
 $(document).ready(async function () {
 
     Common.bindDropDown('ClientId', 'Client');
     Common.bindDropDown('CreatedBy', 'SampleReceivedBy');
-     
+
     var colorDropdown = await Common.bindDropDownSync('Color');
     ColorDropdown = JSON.parse(colorDropdown);
 
@@ -19,7 +20,7 @@ $(document).ready(async function () {
     var fabricDropdown = await Common.bindDropDownSync('FabricType');
     FabricDropdown = JSON.parse(fabricDropdown);
 
-    var todayDate = new Date().toISOString().split('T')[0]; 
+    var todayDate = new Date().toISOString().split('T')[0];
     $('#QuotationDate').attr('max', todayDate);
 
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
@@ -124,6 +125,13 @@ $(document).ready(async function () {
         var currentDate = new Date();
         var formattedDate = currentDate.toISOString().slice(0, 10);
         $('#QuotationDate').val(formattedDate);
+        $('#ReMarks').attr('rows', 1);
+
+        deletedFiles = [];
+        existFiles = [];
+        formDataMultiple = new FormData();
+        $('#selectedFiles').empty();
+        $('#ExistselectedFiles').empty();
 
         QuotationId = 0;
 
@@ -153,7 +161,15 @@ $(document).ready(async function () {
         $("#QuotationHeader").text('Edit Quotation Details');
 
         Common.removevalidation('FormQuotation');
-        $('#CreatedByDiv').show(); 
+        $('#ReMarks').attr('rows', 5);
+
+        deletedFiles = [];
+        existFiles = [];
+        formDataMultiple = new FormData();
+        $('#selectedFiles').empty();
+        $('#ExistselectedFiles').empty();
+
+        $('#CreatedByDiv').show();
         CanvasOpenFirstShowingQuotation();
         $('#SaveQuotation').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
         $('#PrintQuotation').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
@@ -167,14 +183,16 @@ $(document).ready(async function () {
         $('#fadeinpage').removeClass('fadeoverlay');
     });
 
-    $(document).on('click', '#SaveQuotation', async function () {
-        var IsValidOfProduct1 = $("#FormQuotation").valid();
+    function saveQuotation(callback, options = {}) {
+        const showSuccessMsg = options.showSuccessMsg !== false; // default = true
 
-        if (!IsValidOfProduct1) {
+        if (!$("#FormQuotation").valid()) {
             return false;
         }
-        var DataQuotation = JSON.parse(JSON.stringify(jQuery('#FormQuotation').serializeArray()));
 
+        getExistFiles();
+
+        var DataQuotation = $('#FormQuotation').serializeArray();
         var objvalue = {};
         $.each(DataQuotation, function (index, item) {
             objvalue[item.name] = item.value;
@@ -182,63 +200,108 @@ $(document).ready(async function () {
 
         objvalue.QuotationId = parseInt(QuotationId) || null;
         objvalue.PlantId = parseInt(PlantMappingId) || null;
-
-        objvalue.QuotationNo = $('#QuotationNo').val(); 
-
+        objvalue.QuotationNo = $('#QuotationNo').val();
         objvalue.ClientId = Common.parseInputValue('ClientId') || null;
         objvalue.QuotationStatusId = Common.parseInputValue('QuotationStatusId') || null;
-
         objvalue.QuotationDate = $('#QuotationDate').val() || null;
         objvalue.ValidTo = $('#ValidTo').val() || null;
 
-        var ColorDetails = [];
-        var ClosestDiv = $('.DynamicColorList .ColorListRow');
-        $.each(ClosestDiv, function (index, values) {
-            var QuotationColorMappingId = $(values).find('.ColorListMappingId').text();
-            var FabricId = $(values).find('.FabricType').val();
-            var ColorId = $(values).find('.Color').val();
-            var ProposedPrice = $(values).find('.ProposedPrice').val() || null;
-            var ApprovedPrice = $(values).find('.ApprovedPrice').val() || null;
-            ColorDetails.push({
-                QuotationColorMappingId: parseInt(QuotationColorMappingId) || null,
-                QuotationId: parseInt(QuotationId) || null,
-                FabricId: parseInt(FabricId) || null,
-                ColorId: parseInt(ColorId) || null,
-                ProposedPrice: parseFloat(ProposedPrice) || null,
-                ApprovedPrice: parseFloat(ApprovedPrice) || null,
+        // ===== Color Details =====
+        var QuotationColorMappingDetails = [];
+        $('.DynamicColorList .ColorListRow').each(function () {
+            var row = $(this);
+            QuotationColorMappingDetails.push({
+                QuotationColorMappingId: parseInt(row.find('.ColorListMappingId').text()) || null,
+                QuotationId: objvalue.QuotationId,
+                FabricId: parseInt(row.find('.FabricType').val()) || null,
+                ColorId: parseInt(row.find('.Color').val()) || null,
+                ProposedPrice: parseFloat(row.find('.ProposedPrice').val()) || null,
+                ApprovedPrice: parseFloat(row.find('.ApprovedPrice').val()) || null
             });
         });
+        objvalue.QuotationColorMappingDetails = QuotationColorMappingDetails;
 
-        objvalue.QuotationColorMappingDetails = ColorDetails;
-
-        var QuotationProcessTypeDetails = [];
-        var ClosestDiv = $('.DynamicProcessList .ProcessListRow');
-        $.each(ClosestDiv, function (index, values) {
-            var QuotationProcessTypeMappingId = $(values).find('.ProcessTypeMappingId').text();
-            var ProcessTypeId = $(values).find('.ProcessTypeId').val();
-            var ProposedPrice = $(values).find('.ProcessProposedPrice').val() || null;
-            var ApprovedPrice = $(values).find('.ProcessApprovedPrice').val() || null;
-            QuotationProcessTypeDetails.push({
-                QuotationProcessTypeMappingId: parseInt(QuotationProcessTypeMappingId) || null,
-                ProcessTypeId: parseInt(ProcessTypeId) || null,
-                ProposedPrice: parseFloat(ProposedPrice) || null,
-                ApprovedPrice: parseFloat(ApprovedPrice) || null,
-                QuotationId: parseInt(QuotationId) || null
+        // ===== Process Type Details =====
+        var QuotationProcessTypeMappingDetails = [];
+        $('.DynamicProcessList .ProcessListRow').each(function () {
+            var row = $(this);
+            QuotationProcessTypeMappingDetails.push({
+                QuotationProcessTypeMappingId: parseInt(row.find('.ProcessTypeMappingId').text()) || null,
+                ProcessTypeId: parseInt(row.find('.ProcessTypeId').val()) || null,
+                ProposedPrice: parseFloat(row.find('.ProcessProposedPrice').val()) || null,
+                ApprovedPrice: parseFloat(row.find('.ProcessApprovedPrice').val()) || null,
+                QuotationId: objvalue.QuotationId
             });
         });
+        objvalue.QuotationProcessTypeMappingDetails = QuotationProcessTypeMappingDetails;
 
-        objvalue.QuotationColorMappingDetails = ColorDetails;
-        objvalue.QuotationProcessTypeMappingDetails = QuotationProcessTypeDetails;
+        $('#loader-pms').show();
 
-        $('#loader-pms').hide();
-        try {
-            await Common.ajaxCall("POST", "/Sale/InsertUpdateQuotationDetails", JSON.stringify(objvalue), QuotationInsertUpdateSuccess, null);
-        } catch (error) {
-            console.error("Error Saving Quotation:", error);
-        }
+        formDataMultiple.append("QuotationData", JSON.stringify(objvalue));
+        formDataMultiple.append("QuotationColorMappingDetails", JSON.stringify(QuotationColorMappingDetails));
+        formDataMultiple.append("QuotationProcessTypeMappingDetails", JSON.stringify(QuotationProcessTypeMappingDetails));
+        formDataMultiple.append("Exist", JSON.stringify(existFiles));
+        formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
+
+        $.ajax({
+            type: "POST",
+            url: "/Sale/InsertUpdateQuotationDetails",
+            data: formDataMultiple,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.status) {
+                    if (showSuccessMsg) {
+                        Common.successMsg(response.message);
+                    }
+
+                    if (callback) {
+                        var data = JSON.parse(response.data);
+
+                        deletedFiles = [];
+                        existFiles = [];
+                        formDataMultiple = new FormData();
+                        $('#selectedFiles').empty();
+                        $('#ExistselectedFiles').empty();
+
+                        callback(data[0][0].QuotationId);
+                    }
+                } else {
+                    Common.errorMsg(response.message);
+                    formDataMultiple = new FormData();
+                }
+            },
+            function(error) {
+                $('#loader-pms').hide();
+                console.error("Error saving quotation:", error);
+                Common.errorMsg("Failed to save quotation");
+            }
+        });
+    }
+
+    $(document).on('click', '#SaveQuotation', function () {
+        saveQuotation(function (quotationId) {
+            $("#QuotationCanvas").css("width", "0%");
+            $('#fadeinpage').removeClass('fadeoverlay');
+            $('#loader-pms').hide();
+
+            var fnData = Common.getDateFilter('dateDisplay2');
+            Common.ajaxCall(
+                "GET",
+                "/Sale/GetQuotation",
+                {
+                    PlantId: parseInt(PlantMappingId),
+                    QuotationId: null,
+                    FromDate: fnData.startDate.toISOString(),
+                    ToDate: fnData.endDate.toISOString()
+                },
+                GetQuotationSuccess,
+                null
+            );
+        });
     });
-     
-    $(document).on('click', '.btn-delete', async function () { 
+
+    $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
         if (response == true) {
             var QuotationId = $(this).data('id');
@@ -248,55 +311,90 @@ $(document).ready(async function () {
 
     $(document).on('click', '#PrintQuotation', function () {
         $('#loader-pms').show();
-        var EditData = { NoOfCopies: 1, printType: "preview" }
 
-        $.ajax({
-            url: '/Sale/QuotationPrint',
-            method: 'GET',
-            data: EditData,
-            xhrFields: {
-                responseType: 'blob'
-            },
-            success: function (response) {
-                var printType = "Preview";
-                $('#ShareDropdownitems').css('display', 'none');
-                var blob = new Blob([response], { type: 'application/pdf' });
-                var blobUrl = URL.createObjectURL(blob);
-                if (printType == "Preview") {
-                    var newTab = window.open();
-                    if (newTab) {
-                        newTab.document.write(`
-                                              <html>
-                                              <head><title>Quotation Preview</title></head>
-                                              <body style="margin:0;">
-                                                  <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-                                              </body>
-                                              </html>
-                                          `);
-                        newTab.document.close();
-                    }
+        saveQuotation(function (quotationId) {
 
-                } else if (printType == "Download") {
-                    var link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = 'Quotation.pdf';
-                    link.click();
-                } else if (printType == "Print") {
-                    var iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = blobUrl;
-                    document.body.appendChild(iframe);
-                    iframe.contentWindow.print();
-                }
+            if (!quotationId) {
                 $('#loader-pms').hide();
-                /* Print*/
-
-            },
-            error: function () {
-                $('#loader-pms').hide();
-                Common.errorMsg(response.message);
+                Common.errorMsg("Quotation ID not found");
+                return;
             }
+
+            var EditData = {
+                ModuleId: parseInt(quotationId),
+                NoOfCopies: 1,
+                printType: "Preview"
+            };
+
+            $.ajax({
+                url: '/Sale/QuotationPrint',
+                method: 'GET',
+                data: EditData,
+                xhrFields: { responseType: 'blob' },
+                success: function (response) {
+                    var blob = new Blob([response], { type: 'application/pdf' });
+                    var blobUrl = URL.createObjectURL(blob);
+
+                    var printType = EditData.printType;
+
+                    if (printType === "Preview") {
+                        var newTab = window.open();
+                        if (newTab) {
+                            newTab.document.write(`
+                            <html>
+                            <head><title>Quotation Preview</title></head>
+                            <body style="margin:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
+                            newTab.document.close();
+                        } else {
+                            Common.warningMsg("Popup blocked. Please allow popups.");
+                        }
+
+                    } else if (printType === "Download") {
+                        var link = document.createElement('a');
+                        link.href = blobUrl;
+                        link.download = 'Quotation.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                    } else if (printType === "Print") {
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = blobUrl;
+                        document.body.appendChild(iframe);
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+                        };
+                    }
+                    $('#loader-pms').hide();
+                },
+                error: function () {
+                    $('#loader-pms').hide();
+                    Common.errorMsg("Print failed");
+                }
+            });
+
+        }, {
+            showSuccessMsg: false // ❌ disable save success toast when printing
         });
+    });
+    
+    $(document).on("change", ".FabricType", function () {
+
+        const classMap = [".FabricType"];
+        const changedClass = classMap.find(c => $(this).hasClass(c.substring(1)));
+        refreshProductDropdowns(changedClass);
+    });
+
+    $(document).on("change", ".ProcessTypeId", function () {
+
+        const classMap = [".ProcessTypeId"];
+        const changedClass = classMap.find(c => $(this).hasClass(c.substring(1)));
+        refreshProductProcessTypedowns(changedClass);
     });
 });
 
@@ -398,14 +496,14 @@ function QuotationNotNullSuccess(response) {
                     </div>
                     <div class="col-md-2 col-lg-2 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv">
                         <div class="form-group">
-                            <label class="ProposedPriceClass">Proposed Price<span id="Asterisk">*</span></label>
-                            <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required value="${ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
+                            <label class="ProposedPriceClass">Proposed (₹)<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required value="${ProposedPrice.toFixed(2)}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
                         </div>                                                                                                                                                
                     </div>                                                                                                                                                    
                     <div class="col-md-3 col-lg-3 col-sm-3 col-3 pl-3 ApprovedPriceClassDiv">                                                                                 
                         <div class="form-group">                                                                                                                              
-                            <label class="ApprovedPriceClass">Approved Price</label>                                                              
-                            <input type="text" class="form-control ApprovedPrice" placeholder="Ex: 10000/-" id="ApprovedPrice${numberIncr}" name="ApprovedPrice${numberIncr}" value="${ApprovedPrice || ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
+                            <label class="ApprovedPriceClass">Approved (₹)<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control ApprovedPrice" placeholder="Ex: 10000/-" id="ApprovedPrice${numberIncr}" name="ApprovedPrice${numberIncr}" value="${(ApprovedPrice || ProposedPrice).toFixed(2)}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required/>
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-3 col-3 thiswillColorshow p-0 mt--1" style="display: ${rowadd == 0 ? 'none' : 'block'}">
@@ -418,10 +516,10 @@ function QuotationNotNullSuccess(response) {
                 $('.DynamicColorList').append(htmlRow);
             });
             updateRemoveButtonsColor();
-        } 
+        }
 
         if (data[2][0].QuotationProcessTypeMappingId != null && data[2][0].QuotationProcessTypeMappingId != "") {
-             
+
             $('.DynamicProcessList').empty();
 
             $.each(data[2], function (index, QuotationProcess) {
@@ -431,7 +529,7 @@ function QuotationNotNullSuccess(response) {
                 var QuotationColorMappingId = QuotationProcess.QuotationProcessTypeMappingId;
                 var ProcessDDTypeId = QuotationProcess.ProcessTypeId;
                 var ProposedPrice = QuotationProcess.ProposedPrice;
-                var ApprovedPrice = QuotationProcess.ApprovedPrice; 
+                var ApprovedPrice = QuotationProcess.ApprovedPrice;
 
                 var defaultOption = '<option value="">--Select--</option>';
 
@@ -440,7 +538,7 @@ function QuotationNotNullSuccess(response) {
                     var isSelected = ProcessTypeId.ProcessTypeId == ProcessDDTypeId ? 'selected' : '';
                     return `<option value="${ProcessTypeId.ProcessTypeId}" ${isSelected}>${ProcessTypeId.ProcessTypeName}</option>`;
                 }).join('');
-                 
+
 
                 var htmlRow = `
                 <div class="row ProcessListRow">
@@ -455,14 +553,14 @@ function QuotationNotNullSuccess(response) {
                     </div>
                     <div class="col-md-3 col-lg-3 col-sm-3 col-3 pl-0 pr-0 ProposedPriceClassProcessDiv">
                         <div class="form-group">
-                            <label class="ProposedPriceProcess">Proposed Price<span id="Asterisk">*</span></label>
-                            <input type="text" class="form-control ProcessProposedPrice" placeholder="Ex: 12000/-" id="ProcessProposedPrice${numberIncr}" name="ProcessProposedPrice${numberIncr}" required value="${ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
+                            <label class="ProposedPriceProcess">Proposed (₹)<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control ProcessProposedPrice" placeholder="Ex: 12000/-" id="ProcessProposedPrice${numberIncr}" name="ProcessProposedPrice${numberIncr}" required value="${ProposedPrice.toFixed(2)}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
                         </div>
                     </div>
                     <div class="col-md-3 col-lg-3 col-sm-3 col-3 ApprovedPriceProcessDiv">
                         <div class="form-group">
-                            <label class="ApprovedPriceProcess">Approved Price</label>
-                            <input type="text" class="form-control ProcessApprovedPrice" placeholder="Ex: 10000/-" id="ProcessApprovedPrice${numberIncr}" name="ProcessApprovedPrice${numberIncr}" value="${ApprovedPrice || ProposedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
+                            <label class="ApprovedPriceProcess">Approved (₹)<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control ProcessApprovedPrice" placeholder="Ex: 10000/-" id="ProcessApprovedPrice${numberIncr}" name="ProcessApprovedPrice${numberIncr}" value="${(ApprovedPrice || ProposedPrice).toFixed(2)}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required/>
                         </div>
                     </div>
                     <div class="col-lg-1 col-md-1 col-sm-3 col-3 thiswillProcessshow mt--1 p-0" style="display: ${rowadd == 0 ? 'none' : 'block'}"> 
@@ -475,9 +573,74 @@ function QuotationNotNullSuccess(response) {
                 $('.DynamicProcessList').append(htmlRow);
             });
             updateRemoveButtonsProcess();
-        } 
+        }
+
+        $('#ExistselectedFiles, #selectedFiles').empty("");
+        var ulElement = $('#ExistselectedFiles');
+        $.each(data[3], function (index, file) {
+            if (file.AttachmentId != null) {
+                var truncatedFileName = file.AttachmentFileName.length > 10 ? file.AttachmentFileName.substring(0, 10) + '...' : file.AttachmentFileName;
+                var liElement = $('<li>');
+                var spanElement = $('<span>').text(truncatedFileName);
+                var downloadLink = $('<a>').addClass('download-link')
+                    .attr('href', file.AttachmentFilePath)
+                    .attr('download', file.AttachmentFileName)
+                    .html('<i class="fas fa-download"></i>');
+
+                var deleteButton = $('<a>').attr({
+                    'src': file.AttachmentFilePath,
+                    'AttachmentId': file.AttachmentId,
+                    'ModuleRefId': file.ModuleRefId,
+                    'id': 'deletefile'
+                }).addClass('delete-buttonattach').html('<i class="fas fa-trash"></i>');
+
+                liElement.append(spanElement);
+                liElement.append(downloadLink);
+                liElement.append(deleteButton);
+                ulElement.append(liElement);
+            }
+        });
     }
 }
+
+
+function refreshProductDropdowns(selector) {
+
+    let selectedValues = $(selector).map(function () {
+        return $(this).val();
+    }).get().filter(v => v !== "");
+
+    $(selector).each(function () {
+        let currentVal = $(this).val();
+        $(this).find("option").prop("disabled", false).removeClass("d-none");
+
+        selectedValues.forEach(val => {
+            if (val !== currentVal) {
+                $(this).find(`option[value="${val}"]`).prop("disabled", true).addClass("d-none");
+            }
+        });
+    });
+}
+
+
+function refreshProductProcessTypedowns(selector) {
+
+    let selectedValues = $(selector).map(function () {
+        return $(this).val();
+    }).get().filter(v => v !== "");
+
+    $(selector).each(function () {
+        let currentVal = $(this).val();
+        $(this).find("option").prop("disabled", false).removeClass("d-none");
+
+        selectedValues.forEach(val => {
+            if (val !== currentVal) {
+                $(this).find(`option[value="${val}"]`).prop("disabled", true).addClass("d-none");
+            }
+        });
+    });
+}
+
 
 function duplicateRowColor() {
     let numberIncr = Math.random().toString(36).substring(2);
@@ -520,13 +683,13 @@ function duplicateRowColor() {
         </div>
         <div class="col-md-2 col-lg-2 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv">
             <div class="form-group">
-                <label class="ProposedPriceClass">Proposed Price<span id="Asterisk">*</span></label>
+                <label class="ProposedPriceClass">Proposed (₹)<span id="Asterisk">*</span></label>
                 <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
             </div>                                                                                                                                                
         </div>                                                                                                                                                    
         <div class="col-md-3 col-lg-3 col-sm-3 col-3 pl-3 ApprovedPriceClassDiv">                                                                                 
             <div class="form-group">                                                                                                                              
-                <label class="ApprovedPriceClass">Approved Price</label>                                                              
+                <label class="ApprovedPriceClass">Approved (₹)<span id="Asterisk">*</span></label>
                 <input type="text" class="form-control ApprovedPrice" placeholder="Ex: 10000/-" id="ApprovedPrice${numberIncr}" name="ApprovedPrice${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
             </div>
         </div>
@@ -555,8 +718,8 @@ function duplicateRowColor() {
     }
 
     updateRemoveButtonsColor();
+    refreshProductDropdowns(".FabricType");
 }
-
 function updateRemoveButtonsColor() {
     var rows = $('.ColorListRow');
 
@@ -579,6 +742,7 @@ function removeRowColor(button) {
     if (totalRows > 1) {
         $(button).closest('.ColorListRow').remove();
         updateRemoveButtonsColor();
+        refreshProductDropdowns(".FabricType");
     }
 }
 
@@ -608,14 +772,14 @@ function duplicateRowProcess() {
         </div>
         <div class="col-md-3 col-lg-3 col-sm-3 col-3 pl-0 pr-0 ProposedPriceClassProcessDiv">
             <div class="form-group">
-                <label class="ProposedPriceProcess">Proposed Price<span id="Asterisk">*</span></label>
+                <label class="ProposedPriceProcess">Proposed (₹)<span id="Asterisk">*</span></label>
                 <input type="text" class="form-control ProcessProposedPrice" placeholder="Ex: 12000/-" id="ProcessProposedPrice${numberIncr}" name="ProcessProposedPrice${numberIncr}" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
             </div>
         </div>
         <div class="col-md-3 col-lg-3 col-sm-3 col-3 ApprovedPriceProcessDiv">
             <div class="form-group">
-                <label class="ApprovedPriceProcess">Approved Price</label>
-                <input type="text" class="form-control ProcessApprovedPrice" placeholder="Ex: 10000/-" id="ProcessApprovedPrice${numberIncr}" name="ProcessApprovedPrice${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
+                <label class="ApprovedPriceProcess">Approved (₹)<span id="Asterisk">*</span></label>
+                <input type="text" class="form-control ProcessApprovedPrice" placeholder="Ex: 10000/-" id="ProcessApprovedPrice${numberIncr}" name="ProcessApprovedPrice${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required/>
             </div>
         </div>
         <div class="col-lg-1 col-md-1 col-sm-3 col-3 thiswillProcessshow mt--1 p-0" style="display: ${rowadd == 0 ? 'none' : 'block'}"> 
@@ -639,6 +803,7 @@ function duplicateRowProcess() {
         $('.ApprovedPriceProcessDiv').show();
     }
     updateRemoveButtonsProcess();
+    refreshProductProcessTypedowns(".ProcessTypeId");
 }
 
 function updateRemoveButtonsProcess() {
@@ -661,6 +826,7 @@ function removeRowProcess(button) {
     if (totalRows > 1) {
         $(button).closest('.ProcessListRow').remove();
         updateRemoveButtonsProcess();
+        refreshProductProcessTypedowns(".ProcessTypeId");
     }
 }
 
@@ -673,3 +839,103 @@ function CanvasOpenFirstShowingQuotation() {
         scrollTop: $('#QuotationCanvas').offset().top
     }, 'fast');
 }
+
+//==============================================Attachment============================================//
+
+$(document).on('click', '#deletefile', function () {
+    var listItem = $(this).closest('li');
+    var fileText = listItem.find('span').text();
+    var attachmentid = parseInt($(this).attr('attachmentid'));
+    var src = $(this).attr('src');
+    var moduleRefId = $(this).attr('ModuleRefId');
+    deletedFiles.push({
+        AttachmentId: attachmentid,
+        ModuleName: "Quotation",
+        ModuleRefId: parseInt(moduleRefId),
+        AttachmentFileName: fileText,
+        AttachmentFilePath: src
+    });
+    $(listItem).remove();
+});
+
+function getExistFiles() {
+
+    var existitem = $('#ExistselectedFiles li');
+    $.each(existitem, function (index, value) {
+
+        var fileText = $(value).find('span').text();
+        var attachmentid = parseInt($(value).find('.delete-buttonattach').attr('attachmentid'));
+        var src = $(value).find('.delete-buttonattach').attr('src');
+        var moduleRefId = $(value).find('.delete-buttonattach').attr('ModuleRefId');
+        existFiles.push({
+            AttachmentId: attachmentid,
+            ModuleName: "Quotation",
+            ModuleRefId: parseInt(moduleRefId),
+            AttachmentFileName: fileText,
+            AttachmentFilePath: src
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const selectedFiles = document.getElementById('selectedFiles');
+    selectedFiles.innerHTML = '';
+    fileInput.addEventListener('change', (e) => {
+
+        const files = e.target.files;
+        for (var i = 0; i < files.length; i++) {
+            formDataMultiple.append('files[]', files[i]);
+        }
+
+        if (files.length > 0) {
+            preview.style.display = 'block';
+
+
+            for (const file of files) {
+                const fileItem = document.createElement('li');
+                const fileName = document.createElement('span');
+                const downloadButton = document.createElement('button');
+                const deleteButton = document.createElement('button');
+                downloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+                downloadButton.className = 'download-button';
+                deleteButton.className = 'delete-button';
+
+                downloadButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const blob = new Blob([file]);
+                    const blobURL = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobURL;
+                    a.download = file.name;
+                    a.click();
+                    URL.revokeObjectURL(blobURL);
+                });
+
+                deleteButton.addEventListener('click', () => {
+                    var itemName = $(fileItem).find('span').text();
+                    var newFormData = new FormData();
+                    $.each(formDataMultiple.getAll('files[]'), function (index, value) {
+                        if (value.name !== itemName) {
+                            newFormData.append('files[]', value);
+                        }
+                    });
+                    formDataMultiple = newFormData;
+
+                    fileItem.remove();
+                });
+
+                fileName.textContent = file.name.length > 10 ? file.name.substring(0, 11) + '...' : file.name;
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(downloadButton);
+                fileItem.appendChild(deleteButton);
+                selectedFiles.appendChild(fileItem);
+            }
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+});

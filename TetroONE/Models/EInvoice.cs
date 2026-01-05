@@ -18,9 +18,9 @@
         public string? docdate { get; set; }
         public string? CnlRsn { get; set; }
         public string? CnlRem { get; set; }
-        public string? date { get; set; }
-
+        public string? date { get; set; } 
     }
+
     public class GetTokenResponse
     {
         public string TokenExpiry { get; set; }

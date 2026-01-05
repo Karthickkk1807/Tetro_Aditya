@@ -110,11 +110,10 @@
     </div>
 </div>
 
-
 <div class="Date-SearchColumn justify-content-end">
     <div class="month-piker" id="ProcessBtnhide">
-        <a class="btn  m-r-5 text-white" id="ManPowerInfoBtn">ManPower Info</a>
-        <a class="btn  m-r-5 text-white" id="RawMaterialInfoBtn">RawMaterial Info</a>
+        <a class="btn m-r-5 text-white d-none" id="ManPowerInfoBtn">ManPower Info</a>
+        <a class="btn m-r-5 text-white d-none" id="RawMaterialInfoBtn">RawMaterial Info</a>
     </div>
 
     <div class="d-flex">
@@ -142,7 +141,6 @@
         </div>
     </div>
 </div>
-
 
 <ul class="nav nav-tabs pl-2 mt-2" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
@@ -231,14 +229,14 @@
                                             <textarea rows="1" cols="50" id="ProductDescription" name="ProductDescription" autocomplete="off" maxlength="500" class="form-control" placeholder="Description"></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-6">
                                         <div class="form-group">
                                             <label>Primary Unit<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="PrimaryUnitId" name="PrimaryUnitId" required>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-6">
                                         <div class="form-group">
                                             <label>Secondary Unit<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="SecondaryUnitId" name="SecondaryUnitId" required>
@@ -260,31 +258,49 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
+                                    <div class="col-md-3 col-lg-3 col-sm-3 col-6">
                                         <div class="form-group">
-                                            <label>Primary Price<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control PrimaryPrice" id="PrimaryPrice" name="PrimaryPrice" placeholder="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" required>
+                                            <label>Primary Price</label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;font-size:12px; width: 29px;"> ₹ </button>
+                                                <input type="text" class="form-control PrimaryPrice" id="PrimaryPrice" name="PrimaryPrice" placeholder="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" required>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
+
+                                    <div class="col-md-3 col-lg-3 col-sm-3 col-6">
                                         <div class="form-group">
-                                            <label>Secondary Price<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control SecondaryPrice" id="SecondaryPrice" name="SecondaryPrice" placeholder="0" value="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" disabled required>
+                                            <label>Secondary Price</label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;font-size:12px; width: 29px;"> ₹ </button>
+                                                <input type="text" class="form-control SecondaryPrice" id="SecondaryPrice" name="SecondaryPrice" placeholder="0" value="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" disabled required>
+                                            </div>
                                         </div>
-                                    </div> 
-                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4">
+                                    </div>
+                                     
+                                    <div class="col-md-4 col-lg-4 col-sm-4 col-6">
                                         <div class="form-group">
-                                            <label>Reorder Level<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control ReOrderLevel" id="ReOrderLevel" name="ReOrderLevel" placeholder="Ex : 3590" autocomplete="off" required>
+                                            <label>Reorder Level</label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <input type="text" class="form-control ReOrderLevel" id="ReOrderLevel" name="ReOrderLevel" placeholder="Ex : 350" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required>
+                                                <button id="ReorderLevelSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:12px; width: 48px;"> Unit </button>
+                                            </div>
                                         </div>
-                                    </div> 
-                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-4">
+                                    </div>
+                                      
+                                    <div class="col-md-4 col-lg-4 col-sm-4 col-6">
                                         <div class="form-group">
                                             <label>GST %<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="TaxInfoId" name="TaxInfoId" required>
                                             </select>
                                         </div>
                                     </div>  
+                                    <div class="col-md-4 col-lg-4 col-sm-4 col-6 justify-content-center" style="margin-top: 27px; display: flex;" id="IsDefaultHide">
+                                        <div class="form-group">
+                                            <input type="checkbox" id="IsDefault" name="IsDefault">
+                                            <label for="IsDefault"> Is Default </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>

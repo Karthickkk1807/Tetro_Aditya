@@ -64,7 +64,7 @@ $(document).ready(function () {
         $('#ContactId').empty().append('<option value="">-- Select --</option>');
         $('#DepartmentDetailsId').val('').trigger('change');
         Common.bindDropDownMulti('DepartmentDetailsId', 'Department');
-        Common.bindDropDownParent('UserTypeId', 'ManageUserForm', 'UserType');
+        bindDropDownParentAdd('UserTypeId', 'ManageUserForm', 'UserType');
         $('#BindPlantDataProfile').empty('');
         ignoreUserTypeChangeEvent = false;
         Common.ajaxCall("GET", "/Myprofile/GetPlant", null, PlantSuccessMyProfile, null);
@@ -587,7 +587,7 @@ function PlantSuccessMyProfile(response) {
                 htmlDynamicPlant += `
                 <div class="col-md-6 col-lg-6 col-sm-6 col-4 mt-2">
                     <lable class="PlantMappingId d-none"></lable>
-                    <input type="checkbox" data-id="${PlantId}" name="products" id="product-${PlantId}">
+                    <input type="checkbox" data-id="${PlantId}" name="products" checked id="product-${PlantId}">
                     <label for="product-${PlantId}" class="checkbox-label">${PlantName}</label>
                 </div>
             `;
@@ -650,6 +650,11 @@ function UserEditSuccess(response) {
         setTimeout(function () {
             $('#ContactId').val(data[0][0].ContactId);
         }, 300);
+
+        if (data[2][0].DepartmentId != null) {
+            var SelectedValues = data[2].map(item => item.DepartmentId.toString());
+            $('#DepartmentDetailsId').val(SelectedValues).trigger('change');
+        }
          
         var htmlDynamicFranchise = "";
         if (data[1][0].PlantId != null && data[1][0].PlantId != "") {
@@ -741,7 +746,7 @@ $(document).on('change', '#ManageUserForm #UserTypeId', function () {
             $('#imagePreview').attr('src', '/assets/commonimages/user.png');
         }
         $('#ClientVendorhide').hide();
-        //$('#DepartmentManageUserhide').show();
+        $('#DepartmentManageUserhide').show();
         $('.LableName').text('');
     }
     else if (thisVal == 2) {
@@ -754,6 +759,7 @@ $(document).on('change', '#ManageUserForm #UserTypeId', function () {
         var ValueOfContactDropDown = parseInt(thisVal);
         getvalContactDetailsResponse(ValueOfContactDropDown);
         //$('#ClientVendorhide').hide();
+        $('#DepartmentManageUserhide').hide();
         //$('#DepartmentManageUserhide').show();
         //$('.LableName').text('');
     }
@@ -891,3 +897,47 @@ $("#ManageUserForm").validate({
         },
     }
 });
+
+function bindDropDownParentAdd(id, parent, moduleName) {
+    var request = {
+        moduleName: moduleName
+    };
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status == true) {
+                bindParentDropDownSuccessAdd(response.data, id, parent);
+            }
+        },
+        error: function (response) {
+
+        },
+    });
+}
+function bindParentDropDownSuccessAdd(response, controlid, parent) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0 && !dataValue[0].hasOwnProperty('TetroONEnocount')) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $('#' + parent + ' #' + controlid).empty();
+            $('#' + parent + ' #' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+            $.each(dataValue, function (index, item) {
+                $('#' + parent + ' #' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+        }
+
+        $('#UserTypeId').val('1').trigger('change');
+    }
+}

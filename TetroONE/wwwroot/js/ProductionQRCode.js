@@ -11,6 +11,8 @@ $(document).ready(function () {
 
     Common.ajaxCall("GET", "/ProductionQRCode/GetProductionLogDetailsMob", { ProductionPlanId: ProductionPlanId }, GetQRCodeSuccess, null);
 
+    $('.processBtn').hide();
+
     if (sessionStorage.getItem("QRCodeSaved") === "true") {
         $('#ProductionQRCodeModal').hide();
         $('.ThankYouContant').css('display', 'flex');
@@ -26,15 +28,42 @@ $(document).ready(function () {
     $('#TotalWeight').val('290 KG');
     $('#Colour').val('14-0002 TCX');
     $('#Machine').val('JET-2');
+     
+    $('#Quantity').on('input', function () {
+        var quantityValue = parseFloat($(this).val().replace(/[^\d.]/g, ''));
+        var totalWeightValue = parseFloat($('#TotalWeight').val().replace(/[^\d.]/g, ''));
+
+        if (!isNaN(quantityValue) && !isNaN(totalWeightValue)) {
+            if (quantityValue > totalWeightValue) {
+                Common.warning('Quantity cannot be greater than Total Weight!');
+                $(this).val(totalWeightValue);
+            }
+        }
+    });
+     
+    $(document).on('change', '#Process', function () {
+        $('.processBtn').hide();
+        var selectedVal = $(this).val();
+
+        if (selectedVal === '') {
+            return;
+        }
+        var statusName = $('#Process option:selected').data('statusname');
+        if (statusName === 'Started') {
+            $('.processBtn[data-status="Started"]').show();
+        } else {
+            $('.processBtn[data-status="Finished"]').show();
+        }
+    });
 
     $(document).on('click', '#SaveProductionQRCode', async function () {
         var statusId = $(this).data("status");
 
         let message;
-        if (statusId == 3) {
+        if (statusId == 'Started') {
             message = "Are you sure you want to mark this production as Started?";
-        } else if (statusId == 4) {
-            message = "Are you sure you want to mark this production as Completed?";
+        } else if (statusId == 'Finished') {
+            message = "Are you sure you want to mark this production as Finished?";
         } else {
             message = `Confirm action: ${statusText}?`;
         }
@@ -46,13 +75,18 @@ $(document).ready(function () {
 
         if ($("#FormProductionQRCode").valid()) {
             var objvalue = {};
+
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('UserId');
+
+            objvalue.LoginUserId = parseInt(userId);
             objvalue.ProductionPlanId = ProductionPlanId != 0 ? parseInt(ProductionPlanId) : null;
             objvalue.ProductionLogId = ProductionLogId != 0 ? parseInt(ProductionLogId) : null;
             objvalue.PlantId = parseInt(PlantMappingId);
 
             objvalue.ProcessTypeId = parseInt($('#Process').val());
             objvalue.Quantity = parseFloat($('#Quantity').val());
-            objvalue.ProductionLogStatusId = parseInt(statusId);
+            objvalue.ProductionLogStatusId = statusId == 'Started' ? parseInt(4) : statusId == 'Finished' ? parseInt(5) : 0;
             objvalue.Remarks = $('#Remark').val();
 
             Common.ajaxCall("POST", "/ProductionQRCode/InsertUpdateProductionLogMob", JSON.stringify(objvalue), function (response) {
@@ -84,16 +118,17 @@ function GetQRCodeSuccess(response) {
 
         $('#BatchNo').val(data[0][0].ProductionNo);
         $('#BatchDate').val(data[0][0].ProductionDate);
-        $('#TotalWeight').val(data[0][0].TotalWeight);
+        $('#TotalWeight').val(Number(data[0][0].TotalWeight).toFixed(3));
         $('#Colour').val(data[0][0].Color);
         $('#Machine').val(data[0][0].Machine);
         $('#Status').val(data[0][0].ProductionLogStatusId);
 
-        $('#Quantity').val(data[1][0].Quantity);
+        //$('#Quantity').val(data[1][0].Quantity);
         $('#Remark').val(data[2][0].Remarks);
         ProductionLogId = data[2][0].ProductionLogId;
 
-        Common.bindDropDownSuccessProcessType(data[2], "Process");
+        //Common.bindDropDownSuccessProcessType(data[2], "Process");
+        bindDropDownSuccessProcessType(data[2], "Process");
     }
 }
 
@@ -101,25 +136,27 @@ function bindDropDownSuccessProcessType(response, controlid) {
 
     if (response != null) {
         var dataValue = response;
-        $('#' + controlid).empty();
-        if (dataValue.length > 0) {
+        var $ddl = $('#' + controlid);
+
+        $ddl.empty();
+
+        if (dataValue.length > 0 && response[0].ProcessTypeId != null) {
             var valueproperty = Object.keys(dataValue[0])[0];
             var textproperty = Object.keys(dataValue[0])[1];
-            $('#' + controlid).append($('<option>', {
-                value: '',
-                text: '--Select--',
-            }));
+
             $.each(dataValue, function (index, item) {
-                $('#' + controlid).append($('<option>', {
+                $ddl.append($('<option>', {
                     value: item[valueproperty],
-                    text: item[textproperty],
-                }));
+                    text: item[textproperty]
+                }).attr('data-StatusName', item.StatusName));
             });
         } else {
-            $('#' + controlid).append($('<option>', {
+            $ddl.append($('<option>', {
                 value: '',
-                text: '--Select--',
+                text: 'ProcessCompleted'
             }));
         }
+
+        $ddl.prop('selectedIndex', 0).trigger('change');
     }
 }

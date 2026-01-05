@@ -193,8 +193,10 @@ namespace TetroONE.Models
         public string? ProductionNo { get; set; }
         public DateTime? ProductionDate { get; set; }
         public decimal? TotalWeight { get; set; }
-        public int? ColorId { get; set; }
+        public int? ColorId { get; set; } 
         public int? MachineId { get; set; }
+        public int? MLR { get; set; }
+        public int? WaterLevel { get; set; }
         public string? LoadingDateTime { get; set; }
         public string? UnLoadingDateTime { get; set; }
         public int? ProductionPlanStatusId { get; set; }
@@ -235,6 +237,7 @@ namespace TetroONE.Models
     {
         public int? ProductionPlanDyeRequirementId { get; set; }
         public int? DyeId { get; set; }
+        public int? DyeType { get; set; }
         public decimal? PercentageOfDye { get; set; }
         public decimal? TotalQty { get; set; }
         public int? ProductionPlanId { get; set; }
@@ -245,6 +248,7 @@ namespace TetroONE.Models
         public int? ProductionPlanChemicalRequirementId { get; set; }
         public int? ProcessType { get; set; }
         public int? ChemicalId { get; set; }
+        public int? ChemicalType { get; set; }
         public decimal? GPL { get; set; }
         public decimal? TotalQty { get; set; }
         public int? ProductionPlanId { get; set; }
@@ -279,5 +283,38 @@ namespace TetroONE.Models
         public string? StartTime { get; set; }
         public string? EndTime { get; set; }
         public string? Remarks { get; set; }
-    }  
+    }
+     
+    public class OutWardPrint
+    {
+        public string? CompanyName { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Phone { get; set; }
+        public string? PFCodeNo { get; set; }
+        public string? ESICodeNo { get; set; }
+        public string? Email { get; set; }
+        public string? GSTin { get; set; }
+        public string? MSMERegistrationNo { get; set; }
+
+        public string? OutwardToName { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? GSTNumber { get; set; }
+
+        public string? DCNo { get; set; }
+        public string? DCDate { get; set; }
+        public string? Time { get; set; }
+        public string? DeliveryTo { get; set; }
+
+        public string? TotalInwardWt { get; set; }
+        public string? TotalOutwardWt { get; set; }
+        public string? AvgLoss { get; set; }
+        public string? DeliveredBy { get; set; }
+        public string? VehicleNo { get; set; }
+        public string? DriverName { get; set; } 
+
+        public DataTable ProductItemData { get; set; }
+    }
+
 }

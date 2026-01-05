@@ -46,6 +46,14 @@
         width: 74px;
     }
 
+    #Clear {
+        border-color: #d5d5d5;
+        margin-top: 7px;
+        margin-left: 75px;
+        background: antiquewhite;
+        font-size: 12px;
+        font-weight: 600;
+    }
 </style>
 
 <div class="row quick-db m-b-5">
@@ -281,7 +289,7 @@
                 <div class="col-md-8 col-lg-8 col-sm-6 col-6">
                     <div class="form-group">
                         <label>Remarks<span id="Asterisk">*</span></label>
-                        <textarea class="form-control" id="Remarks" name="Remarks" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
+                        <textarea class="form-control" id="Remarks" name="Remarks" rows="3" oninput="Common.allowAllCharacters(this,250)" placeholder="Ex: Querys"></textarea>
                     </div>
                 </div>
                 <div class="col-md-4 col-lg-4 col-sm-6 col-6">
@@ -289,8 +297,20 @@
                         <label>Status<span id="Asterisk">*</span></label>
                         <select class="form-control Operator" id="Status" name="Status">
                         </select>
+                        <a class="btn" id="Clear">Clear</a>
                     </div>
                 </div>
+                @* <div class="row g-2">
+                    <div class="col-4 col-md-4">
+                        <select class="form-control Operator" id="Status" name="Status"> 
+                        </select>
+                    </div>
+                    <div class="col-4 col-md-4">
+                        <button type="button" class="btn btn-outline-secondary w-100" id="Clear">
+                            Clear
+                        </button>
+                    </div>
+                </div> *@
                 <div class="col-md-12 col-lg-12 col-sm-12 col-12" id="TransactionsInfo">
                     <div class="table-responsive">
                         <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="TransactionsInfoTable"></table>

@@ -21,7 +21,7 @@ $(document).ready(async function () {
 
     $('.datapiker').show();
 
-    Common.bindDropDownParent('PreparedBy', 'FormStatus', 'SampleReceivedBy');
+    Common.bindDropDownParent('PreparedBy', 'FormStatus', 'ProductionUser');
     Common.bindDropDownParent('ProductionPlanStatusId', 'FormStatus', 'ProductionPlanStatus');
     Common.bindDropDownParent('ColorId', 'TopStatic', 'Color');
     Common.bindDropDownParent('MachineId', 'TopStatic', 'Machine');
@@ -125,7 +125,7 @@ $(document).ready(async function () {
 
         Common.removevalidation('TopStatic');
         Common.removevalidation('FormStatus');
-        $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
+        $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable, #MLRWaterLevelDiv').hide();
         $('#AddAttachLable, #AddNotesLable').show();
 
         $('#SaveProductionPlan').text('Save').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
@@ -139,6 +139,9 @@ $(document).ready(async function () {
         $('#ChemicalDynamic-Pre').show();
         $('#ChemicalDynamic-After').hide();
 
+        $("#ProductionPlanSaveBtn span:first").text("Save");
+        $("#ProductionPlansaveprintbtn span:first").text("Save & Print");
+
         //$('#emptyDiv').removeClass('col-lg-3 col-md-3 col-6').addClass('col-lg-5 col-md-5 col-6');
         //$('#ProductionPlanStatusIdDiv').hide();
 
@@ -147,6 +150,7 @@ $(document).ready(async function () {
         //$('#SubtotalRow').hide();
 
         $("#QRCode").html("");
+        $("#AddNotesText").val('');
 
         ProductionPlanId = 0;
         AlreadyAddedIds = [];
@@ -157,8 +161,19 @@ $(document).ready(async function () {
         $('#selectedFiles').empty();
         $('#ExistselectedFiles').empty();
 
-        const today = new Date().toISOString().split('T')[0];
-        $("#BatchDate").val(today);
+        //const today = new Date().toISOString().split('T')[0];
+        //$("#BatchDate").val(today);
+
+        const now = new Date();
+
+        // Format as "YYYY-MM-DD HH:MM"
+        const formattedDateTime = now.getFullYear() + '-' +
+            String(now.getMonth() + 1).padStart(2, '0') + '-' +
+            String(now.getDate()).padStart(2, '0') + ' ' +
+            String(now.getHours()).padStart(2, '0') + ':' +
+            String(now.getMinutes()).padStart(2, '0');
+
+        $("#BatchDate").val(formattedDateTime);
 
         $("#PreparedBy").val(LoginUserId);
         //$('#MachineId').prop('disabled', true);
@@ -171,6 +186,13 @@ $(document).ready(async function () {
         $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
 
         $('.modal-body').animate({ scrollTop: 0 }, 300);
+        $('#ProductionPlanSaveBtn').show();
+        $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
+            'pointer-events': 'auto',
+            'opacity': 1
+        });
+        $('#PreparedBy').prop('selectedIndex', 1);
+        $('#ProductionPlanPreviewbtn').hide();
         $('#ProductionPlanModal').show();
     });
 
@@ -182,11 +204,13 @@ $(document).ready(async function () {
 
         //$('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
         //$('#AddAttachLable, #AddNotesLable').show();
-        $('#AddAttachment, #AddNotes').show();
+        $('#AddAttachment, #AddNotes, #MLRWaterLevelDiv').show();
         $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
 
-        //$('.Status-Div').show();
-        $('.Status-Div').hide();
+        $("#ProductionPlanSaveBtn span:first").text("Update");
+        $("#ProductionPlansaveprintbtn span:first").text("Update & Print");
+
+        $('.Status-Div').show();
         $('#SaveProductionPlan').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
 
         AlreadyAddedIds = [];
@@ -212,8 +236,8 @@ $(document).ready(async function () {
 
         $("#QRCode").html("");
 
-        const today = new Date().toISOString().split('T')[0];
-        $("#BatchDate").val(today);
+        //const today = new Date().toISOString().split('T')[0];
+        //$("#BatchDate").val(today);
         //$('#MachineId').prop('disabled', false);
 
         var fnData = Common.getDateFilter('dateDisplay2');
@@ -225,6 +249,15 @@ $(document).ready(async function () {
 
     $(document).on('click', '#ProductionPlanClose, #ProductionPlanCancelBtn', function () {
         $('#ProductionPlanModal').hide();
+    });
+
+    $(document).on('input', '#MLR', function () {
+        var $thisVal = $(this).val();
+        if ($thisVal != "") {
+            CalcuWetreLevel();
+        } else {
+            $('#WaterLevel').val('');
+        }
     });
 
     $(document).on('click', '#MainTab .navbar-tab', function () {
@@ -302,6 +335,7 @@ $(document).ready(async function () {
         });
 
         $("#TotalWeight").val(total);
+        CalcuWetreLevel();
     });
 
     $(document).on('click', '#ProductionPlanSaveBtn', function () {
@@ -325,6 +359,8 @@ $(document).ready(async function () {
                 TotalWeight: parseFloat($('#TotalWeight').val()) || null,
                 ColorId: parseInt($('#ColorId').val()) || null,
                 MachineId: parseInt($('#MachineId').val()) || null,
+                MLR: parseInt($('#MLR').val()) || null,
+                WaterLevel: parseInt($('#WaterLevel').val()) || null,
                 LoadingDateTime: $('#LoadingDateTime').val() || null,
                 UnLoadingDateTime: $('#UnLoadingDateTime').val() || null,
                 ProductionPlanStatusId: parseInt($('#ProductionPlanStatusId').val()) || null,
@@ -340,7 +376,7 @@ $(document).ready(async function () {
                 var $rowTable = $(this);
                 var productionplanfabricid = $rowTable.data('productionplanfabricid-id');
                 var inwardFabricId = $rowTable.data('inwardfabricid-id');
-                 
+
                 var FabricDetails = {
                     ProductionPlanFabricId: productionplanfabricid ? parseInt(productionplanfabricid) : null,
                     InwardId: parseInt($rowTable.find('.lotNo').parent().data('id')) || null,
@@ -354,7 +390,7 @@ $(document).ready(async function () {
                 };
 
                 ProductionPlanFabricDetails.push(FabricDetails);
-                 
+
                 var selectedProcessIds = $rowTable.find('.Process').val() || [];
                 selectedProcessIds.forEach(pid => {
                     var FabricProcessMappingDetails = {
@@ -375,10 +411,12 @@ $(document).ready(async function () {
                 var DyeId = $(values).find('.ProductIdRawMaterial').val() || null;
                 var PercentageOfDye = $(values).find('.Dye').val() || null;
                 var TotalQty = $(values).find('.TotalDyeQty').val() || null;
+                var DyeType = $(values).find('.DysType').val() || null;
 
                 ProductionPlanDyeRequirementDetails.push({
                     ProductionPlanDyeRequirementId: parseInt(ProductionPlanDyeRequirementId) || null,
                     DyeId: parseInt(DyeId) || null,
+                    DyeType: parseInt(DyeType) || null,
                     PercentageOfDye: parseFloat(PercentageOfDye) || null,
                     TotalQty: parseFloat(TotalQty) || null,
                     ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
@@ -395,6 +433,7 @@ $(document).ready(async function () {
                     ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
                     ProcessType: 1,
                     ChemicalId: parseInt($row.find('.ProductIdPre').val()) || null,
+                    ChemicalType: parseInt($row.find('.DysType').val()) || null,
                     GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
                     TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
                     ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
@@ -409,6 +448,7 @@ $(document).ready(async function () {
                     ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
                     ProcessType: 2,
                     ChemicalId: parseInt($row.find('.ProductIdAfter').val()) || null,
+                    ChemicalType: parseInt($row.find('.DysType').val()) || null,
                     GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
                     TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
                     ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
@@ -475,6 +515,16 @@ $(document).ready(async function () {
     });
 });
 
+function CalcuWetreLevel() {
+    var $thisVal = $('#MLR').val();
+    if ($thisVal != "") {
+        var MLR = parseFloat($('#MLR').val());
+        var totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+        var Values = MLR * totalWeight
+        $('#WaterLevel').val(Values.toFixed(2));
+    }
+}
+
 function GetProductionPlanSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
@@ -507,7 +557,7 @@ function GetProductionPlanSuccess(response) {
     }
 }
 
-function GetProductionPlanNotNullSuccess(response) {
+async function GetProductionPlanNotNullSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
 
@@ -522,6 +572,28 @@ function GetProductionPlanNotNullSuccess(response) {
         $('#TotalWeight').val(header.TotalWeight);
         $('#UnLoadingDateTime').val(header.UnLoadingDateTime);
         $('#PreparedBy').val(header.PreparedBy);
+        $('#MLR').val(header.MLR);
+        $('#WaterLevel').val(header.WaterLevel);
+
+        if (header.ProductionPlanStatusId == 3) {
+            $('#ProductionPlanSaveBtn').hide();
+            $('#ProductionPlanPreviewbtn').show();
+            $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow').css({
+                'pointer-events': 'none',
+                'opacity': 0.9
+            });
+            $('#SubtotalRow').css({
+                'pointer-events': 'auto',
+                'opacity': 1
+            });
+        } else {
+            $('#ProductionPlanSaveBtn').show();
+            $('#ProductionPlanPreviewbtn').hide();
+            $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
+                'pointer-events': 'auto',
+                'opacity': 1
+            });
+        }
 
         if (header.LoadingDateTime == null || header.LoadingDateTime == '') {
             SetDateFroLoadingAndUnLoading();
@@ -539,7 +611,7 @@ function GetProductionPlanNotNullSuccess(response) {
 
                 if (AlreadyAddedIds.includes(item.InwardFabricId.toString())) return;
                 AlreadyAddedIds.push(item.InwardFabricId.toString());
-                 
+
                 const processes = data[2].filter(p => p.ProductionPlanFabricId == item.ProductionPlanFabricId);
                 const selectedProcessIds = processes.map(p => p.ProcessTypeId);
 
@@ -634,6 +706,12 @@ function GetProductionPlanNotNullSuccess(response) {
 
         $('#AddAttachment, #AddNotes').show();
         $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
+
+        const activityResponse = await ajaxPromise("GET", "/Common/ActivityHistoryDetails", {
+            ModuleName: "ProductionPlan",
+            ModuleId: parseInt(ProductionPlanId)
+        });
+        StatusActivitySuccess(activityResponse);
     }
 }
 
@@ -648,58 +726,69 @@ function bindRawMaterialRows(rawArray) {
         let randomId = Math.random().toString(36).substring(2);
         let isFirstRow = index === 0;
 
-        // Build options dynamically
-        let defaultOption = '<option value="">--Select--</option>';
-        let options = "";
-
-        let DyeHTML = DyeDropdown[0].map(w => `<option value="${w.ProductId}" ${item.DyeId == w.ProductId ? 'selected' : ''}>${w.ProductName}</option>`).join('');
+        // Build Dye dropdown options
+        let DyeHTML = DyeDropdown[0]
+            .map(w => `<option value="${w.ProductId}" ${item.DyeId == w.ProductId ? 'selected' : ''}>${w.ProductName}</option>`)
+            .join('');
 
         let html = `
         <div class="row RawMetarial">
             <label class="ProductionPlanDyeRequirementId d-none">${item.ProductionPlanDyeRequirementId}</label>
 
-            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+            <div class="col-md-5 col-lg-5 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="DyeNameClass">DyeName<span id="Asterisk">*</span></label>
                     <select class="form-control ProductIdRawMaterial ProductId" id="ProductId_${randomId}" name="ProductId_${randomId}" required>
                         <option value="">--Select--</option>
                         ${DyeHTML}
-                    </select> 
+                    </select>
                 </div>
             </div>
 
-            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                 <div class="form-group">
-                    <label class="DyeClass">Dye%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye_${randomId}" name="Dye_${randomId}" value="${item.PercentageOfDye}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
+                    <label class="DyeClass">Value<span id="Asterisk">*</span></label>
+                    <div class="input-group" style="gap:8px;">
+                        <select class="form-control DysType" id="DysType${randomId}" name="DysType${randomId}" required>
+                            <option value="1">GPL</option>
+                            <option value="2">%</option>
+                        </select> 
+                        <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye_${randomId}" name="Dye_${randomId}" value="${item.PercentageOfDye != null ? Number(item.PercentageOfDye).toFixed(3) : ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required />
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="TotalDyeQtyClass">TotalDyeQty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty_${randomId}" name="TotalDyeQty_${randomId}" value="${item.TotalQty}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required/>
+                    <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty_${randomId}" name="TotalDyeQty_${randomId}" value="${item.TotalQty != null ? Number(item.TotalQty).toFixed(3) : ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required />
                 </div>
             </div>
 
             <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
-                <div class="p-1 align-items-center buttonsRow" style="display: ${isFirstRow ? 'block' : 'none'}">
-                    <button class="btn AddStockBtn" type="button" onclick="duplicateRowRawMetarial(this)" style="position: absolute; top: 22px; right: 14px;">
+                <div class="p-1 buttonsRow" style="display:${isFirstRow ? 'block' : 'none'}">
+                    <button class="btn AddStockBtn" type="button" onclick="duplicateRowRawMetarial(this)" style="position:absolute; top:22px; right:14px;">
                         <i class="fas fa-plus" style="color:#000"></i>
                     </button>
                 </div>
 
-                <div class="p-1 align-items-center buttonsRow" style="display: ${isFirstRow ? 'none' : 'block'}">
-                    <button class="btn DynrowRemove RowOfMetarialRemove mt-0" type="button" onclick="removeRowMaterial(this)" style="position:absolute; top:-16px; right:13px;">
+                <div class="p-1 buttonsRow" style="display:${isFirstRow ? 'none' : 'block'}">
+                    <button class="btn DynrowRemove RowOfMetarialRemove" type="button" onclick="removeRowMaterial(this)" style="position:absolute; top:4px; right:13px;">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
+
             </div>
         </div>`;
 
         $("#RawMaterialDynamic").append(html);
-        $("#RawMaterialDynamic select").last().val(item.DyeId);
+
+        // ✅ Bind values safely by ID
+        $(`#DysType${randomId}`).val(item.DyeType);
+        $(`#ProductId_${randomId}`).val(item.DyeId);
+
     });
+
     updateRemoveButtonsRawMetarial();
 }
 
@@ -723,41 +812,56 @@ function createChemicalRow(rowType, chemicalData) {
     let htmlRow = `
         <div class="row RowOfChemical-${rowType}">
             <label class="ProductionPlanChemicalRequirementId d-none">${chemicalData.ProductionPlanChemicalRequirementId}</label>
-            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+            <div class="col-md-5 col-lg-5 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="ProductClass">Product<span id="Asterisk">*</span></label>
                     <select class="form-control ProductSelect${rowType} ProductId${rowType}" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
                         ${defaultOption}${selectOptions}
                     </select>
                 </div>
-            </div>
-            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+            </div> 
+            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                 <div class="form-group">
-                    <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" value="${chemicalData.GPL}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
+                <label class="GPLClass">Value<span id="Asterisk">*</span></label>
+                    <div id="ember325" class="input-group ember-view" style="gap: 8px;">
+                        <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                            <option value="1">GPL</option>
+                            <option value="2">%</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" value="${chemicalData.GPL != null ? Number(chemicalData.GPL).toFixed(3) : ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
+                    </div>
                 </div>
-            </div>
+            </div> 
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" value="${chemicalData.TotalQty}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" value="${chemicalData.TotalQty != null ? Number(chemicalData.TotalQty).toFixed(3) : ''}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
                 </div>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
                 <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
-                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical${rowType}(this)" style="position: absolute; top: 22px; right: 14px;">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical${rowType}Testing(this)" style="position: absolute; top: 22px; right: 14px;">
                         <i class="fas fa-plus" style="color: #000000;"></i>
                     </button>
                 </div>
                 <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
-                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemove${rowType} mt-0" type="button" onclick="removeRowRowChemical${rowType}(this)" style="top: -16px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemove${rowType} mt-0" type="button" onclick="removeRowRowChemical${rowType}(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </div>
         </div>
     `;
 
     $(`#ChemicalDynamic-${rowType}`).append(htmlRow);
-    $(`#ChemicalDynamic-${rowType} select`).last().val(chemicalData.ChemicalId);
+
+    // ✅ Correct product binding
+    $(`#ChemicalDynamic-${rowType} .ProductId${rowType}`)
+        .last()
+        .val(String(chemicalData.ChemicalId));
+
+    // ✅ Correct GPL / % binding
+    $(`#ChemicalDynamic-${rowType} .DysType`)
+        .last()
+        .val(String(chemicalData.ChemicalType));
 
     if (rowType === 'Pre') updateRemoveChemicalPre();
     else updateRemoveChemicalAfter();
@@ -812,19 +916,19 @@ $(document).on('change', '.ItemCheckbox', function () {
     const $row = $(this).closest("tr");
     const $tbody = $("#ProductionPlanAddItem-table-body");
 
-    if (this.checked) { 
+    if (this.checked) {
         let $lastChecked = $tbody.find('.ItemCheckbox:checked').not(this).last().closest('tr');
 
         $row.fadeOut(200, function () {
             $row.detach();
-            if ($lastChecked.length) { 
+            if ($lastChecked.length) {
                 $lastChecked.after($row);
-            } else { 
+            } else {
                 $tbody.prepend($row);
             }
             $row.fadeIn(300);
         });
-    } else { 
+    } else {
         let $lastChecked = $tbody.find('.ItemCheckbox:checked').last().closest('tr');
 
         $row.fadeOut(200, function () {
@@ -853,7 +957,7 @@ $(document).on('change', '.ItemCheckbox', function () {
         Quantity: parseFloat($row.find(".Quantity").text()) || 0,
         AvailableQuantity: parseFloat($row.find(".AvailableQuantity").val()) || 0,
         ProcessList: $row.data('id'),
-        IsChecked: $(this).prop("checked"), 
+        IsChecked: $(this).prop("checked"),
     };
 
     if (itemObj.IsChecked) {
@@ -979,7 +1083,7 @@ $(document).on("click", "#BtnAdd", function () {
 
                 let uid = Math.random().toString(36).substring(2);
 
-                if (AlreadyAddedIds.includes(item.ItemId.toString())) return; 
+                if (AlreadyAddedIds.includes(item.ItemId.toString())) return;
                 AlreadyAddedIds.push(item.ItemId.toString());
 
                 let numberIncr = Math.random().toString(36).substring(2);
@@ -1004,14 +1108,19 @@ $(document).on("click", "#BtnAdd", function () {
                         </td>
                     </tr>
                 `;
-                 
+
                 $("#AddItemButtonRow").before(newRow);
-                  
+
                 let mappedProcesses = [];
-                if (item.ProcessList) {
-                    mappedProcesses = item.ProcessList.split(',').map(p => p.trim());
+
+                if (item.ProcessList !== null && item.ProcessList !== undefined) {
+                    const processStr = String(item.ProcessList);
+
+                    mappedProcesses = processStr.includes(',')
+                        ? processStr.split(',').map(p => p.trim())
+                        : [processStr.trim()];
                 }
-                 
+
                 bindDropDownMultiProcess("Process_" + uid, 'ProcessType', mappedProcesses);
             });
 
@@ -1035,8 +1144,16 @@ $(document).on("click", "#BtnAdd", function () {
 
             RenumberRows();
             UpdateMainTableQuantity();
+            CalcuWetreLevel();
 
             ItemListAdd = [];
+
+            if (AlreadyAddedIds.length > 0) {
+                $('#MLRWaterLevelDiv').show();
+            } else {
+                $('#MLRWaterLevelDiv').hide();
+            }
+
             $("#ProductionPlanAddItemModal").hide();
         }
         else {
@@ -1047,7 +1164,6 @@ $(document).on("click", "#BtnAdd", function () {
 
 
 $(document).on('click', '.DynremoveBtn', function () {
-
     const id = $(this).data("id").toString();
     const row = $(this).closest("tr");
 
@@ -1057,10 +1173,18 @@ $(document).on('click', '.DynremoveBtn', function () {
     let newTotal = totalWeight - qtyVal;
     if (newTotal < 0) newTotal = 0;
     $("#TotalWeight").val(newTotal);
+    CalcuWetreLevel();
 
     row.remove();
     AlreadyAddedIds = AlreadyAddedIds.filter(x => x !== id);
     ItemListAdd = ItemListAdd.filter(x => x.ItemId.toString() !== id);
+
+    if (AlreadyAddedIds.length !== 0) {
+        $('#MLRWaterLevelDiv').show();
+    } else {
+        $('#MLRWaterLevelDiv').hide();
+        $('#MLR').val('');
+    }
 
     RenumberRows();
     UpdateMainTableQuantity();
@@ -1200,11 +1324,18 @@ $(document).on('click', '.processRoute', function () {
 
 $(document).on('click', '#RawMetarialInfo', function () {
     var TableLenthDynamicRow = $('.AddedRow').length;
+    var MLR = $('#MLR').val();
     if (TableLenthDynamicRow == 0) {
         Common.warningMsg('Choose Atleast One Product');
         $('#loader-pms').hide();
         return false;
     }
+
+    if (MLR == "") {
+        Common.warningMsg('Fill the MLR');
+        return false;
+    }
+
     $('#RawMaterialModal').show();
 });
 
@@ -1218,11 +1349,18 @@ $(document).on('click', '#RawMaterialClose', function () {
 $(document).on('click', '#ChemicalInfo', function () {
     $('#ChemicalModal .navbar-tab').first().trigger('click');
     var TableLenthDynamicRow = $('.AddedRow').length;
+    var MLR = $('#MLR').val();
     if (TableLenthDynamicRow == 0) {
         Common.warningMsg('Choose Atleast One Product');
         $('#loader-pms').hide();
         return false;
     }
+
+    if (MLR == "") {
+        Common.warningMsg('Fill the MLR');
+        return false;
+    }
+
     $('#ChemicalModal').show();
 });
 
@@ -1313,95 +1451,237 @@ $(document).on('click', '#BtnAddChemical', function () {
     }
 });
 
-function calculateDyeQty($row) {
-    var dyePercent = parseFloat($row.find('.Dye').val()) || 0;
-    var totalWeight = parseFloat($('#TotalWeight').val()) || 0;
-    var totalDyeQty = (totalWeight * dyePercent) / 100;
-    $row.find('.TotalDyeQty').val(totalDyeQty.toFixed(2));
-}
-
-$('#RawMaterialDynamic').on('input', '.Dye', function () {
-    var $row = $(this).closest('.RawMetarial');
-    calculateDyeQty($row);
+/* Qty change (dynamic rows supported) */
+$(document).on('keyup input change', '#ProductionPlanProductTablebody .qty, #MLR, #TotalWeight', function () {
+    recalculateAll();
 });
 
-$('#TotalWeight').on('input', function () {
+$(document).on('keyup input change', '#RawMaterialDynamic .Dye, #RawMaterialDynamic .DysType', function () {
+    calculateDyeQty($(this).closest('.RawMetarial'));
+});
+
+
+$(document).on('keyup input change', '#ChemicalDynamic-Pre input, #ChemicalDynamic-After input, ' + '#ChemicalDynamic-Pre .DysType, #ChemicalDynamic-After .DysType', function () {
+    let $row = $(this).closest('.RowOfChemical-Pre');
+    if (!$row.length) {
+        $row = $(this).closest('.RowOfChemical-After');
+    }
+
+    calculateChemicalQty($row);
+});
+
+function recalculateAll() {
+    let totalWeight = 0;
+
+    $('#ProductionPlanProductTablebody .qty').each(function () {
+        totalWeight += parseFloat($(this).val()) || 0;
+    });
+
+    $('#TotalWeight').val(totalWeight.toFixed(3));
+
     $('#RawMaterialDynamic .RawMetarial').each(function () {
         calculateDyeQty($(this));
     });
-    $('#ChemicalDynamic-Pre .row, #ChemicalDynamic-After .row').each(function () {
-        calculateQty($(this));
-    });
-});
 
-function calculateQty($row) {
-    var totalWeight = parseFloat($('#TotalWeight').val()) || 0;
-    var gplPercent = parseFloat($row.find('input[id^="GPL"]').val()) || 0;
-    var qty = (totalWeight * gplPercent) / 100;
-    $row.find('input[id^="Qty"]').val(qty.toFixed(3));
+    $('#ChemicalDynamic-Pre .RowOfChemical-Pre, #ChemicalDynamic-After .RowOfChemical-After')
+        .each(function () {
+            calculateChemicalQty($(this));
+        });
 }
 
-$('#ChemicalDynamic-Pre').on('input', 'input[id^="GPL"]', function () {
-    var $row = $(this).closest('.row');
-    calculateQty($row);
-});
+function calculateDyeQty($row) {
 
-$('#ChemicalDynamic-After').on('input', 'input[id^="GPL"]', function () {
-    var $row = $(this).closest('.row');
-    calculateQty($row);
-});
+    if (!$row || !$row.length) return;
 
-function duplicateRowChemicalPre() {
-    let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.RowOfChemical-Pre').length;
+    let dyeValue = parseFloat($row.find('.Dye').val()) || 0;
+    let DysType = $row.find('.DysType').val();
 
-    var PreTreatmentSelectOptions = "";
-    var defaultOption = '<option value="">--Select--</option>';
+    let totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+    let mlr = parseFloat($('#MLR').val()) || 0;
 
-    if (PreTreatmentChemicalProduct != null && PreTreatmentChemicalProduct.length > 0 && PreTreatmentChemicalProduct[0].length > 0) {
-        PreTreatmentSelectOptions = PreTreatmentChemicalProduct[0].map(function (ChemicalId) {
-            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
-        }).join('');
+    let waterLevel = totalWeight * mlr;
+    let totalDyeQty = 0;
+
+    if (DysType == "1") {
+        totalDyeQty = (dyeValue / 1000) * waterLevel;
+    } else {
+        totalDyeQty = (totalWeight * dyeValue) / 100;
     }
 
-    var htmlRow = `
-        <div class="row RowOfChemical-Pre">
-            <label class="ProductionPlanChemicalRequirementId d-none"></label>
-            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
-                <div class="form-group">
-                    <label class="ProductClass">Product<span id="Asterisk">*</span></label>
-                    <select class="form-control ProductSelectPre ProductIdPre" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
-                        ${defaultOption}${PreTreatmentSelectOptions}
-                    </select>
+    $row.find('.TotalDyeQty').val(totalDyeQty.toFixed(3));
+}
+
+function calculateChemicalQty($row) {
+
+    if (!$row || !$row.length) return;
+
+    let value = parseFloat(
+        $row.find('.input-group input[type="text"]').first().val()
+    ) || 0;
+
+    let DysType = $row.find('.DysType').val();
+    let totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+    let mlr = parseFloat($('#MLR').val()) || 0;
+
+    let waterLevel = totalWeight * mlr;
+    let qty = 0;
+
+    if (DysType == "1") {
+        qty = (value / 1000) * waterLevel;
+    } else {
+        qty = (totalWeight * value) / 100;
+    }
+
+    $row.find('input[type="text"]').last().val(qty.toFixed(3));
+}
+
+
+//$(document).on('input change', '#RawMaterialDynamic .Dye, #RawMaterialDynamic .DysType', function () {
+//    calculateDyeQty($(this).closest('.RawMetarial'));
+//});
+
+//$(document).on('input', '#TotalWeight, #MLR, #ProductionPlanProductTablebody .qty', function () { 
+//    $('#RawMaterialDynamic .RawMetarial').each(function () {
+//        calculateDyeQty($(this));
+//    });
+
+//    $('#ChemicalDynamic-Pre .RowOfChemical-Pre, #ChemicalDynamic-After .RowOfChemical-After').each(function () {
+//        calculateChemicalQty($(this));
+//    });
+//});
+
+//$(document).on(
+//    'input',
+//    '#ChemicalDynamic-Pre input[type="text"], #ChemicalDynamic-After input[type="text"]',
+//    function () {
+//        calculateChemicalQty($(this).closest('.RowOfChemical-Pre, .RowOfChemical-After'));
+//    }
+//);
+
+//$(document).on(
+//    'change',
+//    '#ChemicalDynamic-Pre .DysType, #ChemicalDynamic-After .DysType',
+//    function () {
+//        calculateChemicalQty($(this).closest('.RowOfChemical-Pre, .RowOfChemical-After'));
+//    }
+//);
+
+//function calculateDyeQty($row) {
+
+//    var dyeValue = parseFloat($row.find('.Dye').val()) || 0;
+//    var DysType = $row.find('.DysType').val();
+//    var mlr = parseFloat($('#MLR').val()) || 0;
+//    var totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+
+//    var waterLevel = totalWeight * mlr;
+//    var totalDyeQty = 0;
+
+//    if (DysType === "1") { // GPL
+//        totalDyeQty = (dyeValue / 1000) * waterLevel;
+//    } else { // %
+//        totalDyeQty = (totalWeight * dyeValue) / 100;
+//    }
+
+//    $row.find('.TotalDyeQty').val(totalDyeQty.toFixed(3));
+//}
+
+//function calculateChemicalQty($row) {
+
+//    // 🔴 THIS MUST MATCH YOUR HTML
+//    var value = parseFloat(
+//        $row.find('input[type="text"]:not(.Qty)').first().val()
+//    ) || 0;
+
+//    var DysType = $row.find('.DysType').val();
+//    var totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+
+//    // ⚠️ IMPORTANT (developer note)
+//    // WaterLevel is derived from MLR, not WaterLevel input
+//    var mlr = parseFloat($('#MLR').val()) || 0;
+//    var waterLevel = totalWeight * mlr;
+
+//    var qty = 0;
+
+//    if (DysType === "1") { // GPL
+//        qty = (value / 1000) * waterLevel;
+//    } else { // %
+//        qty = (totalWeight * value) / 100;
+//    }
+
+//    $row.find('.Qty').val(qty.toFixed(3));
+//}
+
+function duplicateRowChemicalPre() {
+
+    if (!PreTreatmentChemicalProduct || !PreTreatmentChemicalProduct[0] || PreTreatmentChemicalProduct[0].length === 0) {
+        return;
+    }
+
+    const defaultChemicals = PreTreatmentChemicalProduct[0].filter(c => c.IsDefault === true);
+
+    if (defaultChemicals.length === 0) {
+        return;
+    }
+
+    defaultChemicals.forEach(function (chemical) {
+
+        let numberIncr = Math.random().toString(36).substring(2);
+        var rowadd = $('.RowOfChemical-Pre').length;
+
+        var defaultOption = '<option value="">--Select--</option>';
+        var PreTreatmentSelectOptions = PreTreatmentChemicalProduct[0].map(function (c) { return `<option value="${c.ChemicalId}">${c.ChemicalName}</option>`; }).join('');
+
+        var htmlRow = `
+            <div class="row RowOfChemical-Pre">
+                <label class="ProductionPlanChemicalRequirementId d-none"></label>
+
+                <div class="col-md-5 col-lg-5 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                        <select class="form-control ProductSelectPre ProductIdPre" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                            ${defaultOption}${PreTreatmentSelectOptions}
+                        </select>
+                    </div>
+                </div>
+                 
+                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                     <div class="form-group">
+                        <label class="GPLClass">Value<span id="Asterisk">*</span></label>
+                         <div id="ember325" class="input-group ember-view" style="gap: 8px;">
+                              <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                                 <option value="1">GPL</option>
+                                 <option value="2">%</option>
+                              </select>
+                              <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required />
+                         </div>
+                     </div>
+                </div>
+               
+                <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                        <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalPreTesting(this)" style="position: absolute; top: 22px; right: 14px;">
+                            <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                        </button>
+                    </div>
+                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                        <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemovePre mt-0" type="button" onclick="removeRowRowChemicalPre(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
-                <div class="form-group">
-                    <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
-                </div>
-            </div>
-            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
-                <div class="form-group">
-                    <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
-                </div>
-            </div>
-            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
-                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
-                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalPre(this)" style="position: absolute; top: 22px; right: 14px;">
-                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
-                    </button>
-                </div>
-                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
-                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemovePre mt-0" type="button" onclick="removeRowRowChemicalPre(this)" style="top: -16px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </div>
-        </div>
-    `;
-    $('#ChemicalDynamic-Pre').append(htmlRow);
+        `;
+
+        $('#ChemicalDynamic-Pre').append(htmlRow);
+        $(`#ProductId${numberIncr}`).val(chemical.ChemicalId);
+    });
     updateRemoveChemicalPre();
 }
+
 
 function updateRemoveChemicalPre() {
     var rows = $('.RowOfChemical-Pre');
@@ -1431,54 +1711,76 @@ function removeRowRowChemicalPre(button) {
 }
 
 function duplicateRowChemicalAfter() {
-    let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.RowOfChemical-After').length;
 
-    var AfterTreatmentSelectOptions = "";
-    var defaultOption = '<option value="">--Select--</option>';
-
-    if (AfterTreatmentChemicalProduct != null && AfterTreatmentChemicalProduct.length > 0 && AfterTreatmentChemicalProduct[0].length > 0) {
-        AfterTreatmentSelectOptions = AfterTreatmentChemicalProduct[0].map(function (ChemicalId) {
-            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
-        }).join('');
+    if (AfterTreatmentChemicalProduct == null || AfterTreatmentChemicalProduct.length === 0 || AfterTreatmentChemicalProduct[0].length === 0) {
+        return;
     }
 
-    var htmlRow = `
-        <div class="row RowOfChemical-After">
-            <label class="ProductionPlanChemicalRequirementId d-none"></label>
-            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
-                <div class="form-group">
-                    <label class="ProductClass">Product<span id="Asterisk">*</span></label>
-                    <select class="form-control ProductSelectAfter ProductIdAfter" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
-                        ${defaultOption}${AfterTreatmentSelectOptions}
-                    </select>
+    const defaultChemicals = AfterTreatmentChemicalProduct[0].filter(c => c.IsDefault === true);
+
+    if (defaultChemicals.length === 0) {
+        return;
+    }
+
+    defaultChemicals.forEach(function (chemical) {
+
+        let numberIncr = Math.random().toString(36).substring(2);
+        var rowadd = $('.RowOfChemical-After').length;
+
+        var AfterTreatmentSelectOptions = "";
+        var defaultOption = '<option value="">--Select--</option>';
+
+        AfterTreatmentSelectOptions = AfterTreatmentChemicalProduct[0].map(function (ChemicalId) { return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`; }).join('');
+
+        var htmlRow = `
+            <div class="row RowOfChemical-After">
+                <label class="ProductionPlanChemicalRequirementId d-none"></label>
+
+                <div class="col-md-5 col-lg-5 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                        <select class="form-control ProductSelectAfter ProductIdAfter" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                            ${defaultOption}${AfterTreatmentSelectOptions}
+                        </select>
+                    </div>
+                </div>
+                  
+                 <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                      <div class="form-group">
+                         <label class="GPLClass">Value<span id="Asterisk">*</span></label>
+                          <div id="ember325" class="input-group ember-view" style="gap: 8px;">
+                               <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                                  <option value="1">GPL</option>
+                                  <option value="2">%</option>
+                               </select>
+                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
+                          </div>
+                      </div>
+                  </div>
+              
+                 <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                        <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalAfterTesting(this)" style="position: absolute; top: 22px; right: 14px;">
+                            <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                        </button>
+                    </div>
+                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                        <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemoveAfter mt-0" type="button" onclick="removeRowRowChemicalAfter(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
-                <div class="form-group">
-                    <label class="GPLClass">GPL%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
-                </div>
-            </div>
-            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
-                <div class="form-group">
-                    <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
-                </div>
-            </div>
-            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
-                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
-                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalAfter(this)" style="position: absolute; top: 22px; right: 14px;">
-                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
-                    </button>
-                </div>
-                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
-                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemoveAfter mt-0" type="button" onclick="removeRowRowChemicalAfter(this)" style="top: -16px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
-                </div>
-            </div>
-        </div>
-    `;
-    $('#ChemicalDynamic-After').append(htmlRow);
+        `;
+
+        $('#ChemicalDynamic-After').append(htmlRow);
+        $(`#ProductId${numberIncr}`).val(chemical.ChemicalId);
+    });
+
     updateRemoveChemicalAfter();
 }
 
@@ -1509,6 +1811,7 @@ function removeRowRowChemicalAfter(button) {
     refreshProductDropdowns(".ProductSelectAfter");
 }
 
+
 function duplicateRowRawMetarial() {
     let numberIncr = Math.random().toString(36).substring(2);
     var rowadd = $('.RawMetarial').length;
@@ -1524,21 +1827,29 @@ function duplicateRowRawMetarial() {
 
     var htmlRow = `
         <div class="row RawMetarial">
-            <label class="ProductionPlanDyeRequirementId d-none"></label>
-            <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+           <label class="ProductionPlanDyeRequirementId d-none"></label>
+           <div class="col-md-5 col-lg-5 col-sm-6 col-6">
+               <div class="form-group">
+                   <label class="DyeNameClass">DyeName<span id="Asterisk">*</span></label>
+                   <select class="form-control ProductIdRawMaterial ProductId" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                       ${defaultOption}${DyeSelectOptions}
+                   </select>
+               </div>
+           </div>
+            
+           <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                 <div class="form-group">
-                    <label class="DyeNameClass">DyeName<span id="Asterisk">*</span></label>
-                    <select class="form-control ProductIdRawMaterial ProductId" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
-                        ${defaultOption}${DyeSelectOptions}
-                    </select>
+                    <label class="DyeClass">Value<span id="Asterisk">*</span></label>
+                    <div id="ember325" class="input-group ember-view" style="gap: 8px;"> 
+                         <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                            <option value="1">GPL</option>
+                            <option value="2">%</option>
+                         </select>
+                         <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye${numberIncr}" name="Dye${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required style="border-top-left-radius: 3px;border-bottom-left-radius: 3px;"/>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
-                <div class="form-group">
-                    <label class="DyeClass">Dye%<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye${numberIncr}" name="Dye${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
-                </div>
-            </div>
+             
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="TotalDyeQtyClass">TotalDyeQty<span id="Asterisk">*</span></label>
@@ -1552,7 +1863,7 @@ function duplicateRowRawMetarial() {
                     </button>
                 </div>
                 <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
-                    <button id="RemoveButton" class="btn DynrowRemove RowOfMetarialRemove mt-0" type="button" onclick="removeRowMaterial(this)" style="top: -16px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfMetarialRemove mt-0" type="button" onclick="removeRowMaterial(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </div>
         </div>
@@ -1560,6 +1871,7 @@ function duplicateRowRawMetarial() {
     $('#RawMaterialDynamic').append(htmlRow);
     updateRemoveButtonsRawMetarial();
 }
+
 
 function updateRemoveButtonsRawMetarial() {
     var rows = $('.RawMetarial');
@@ -1923,7 +2235,7 @@ $(document).keydown(function (event) {
     if (event.altKey && event.key === 'c') {
         event.preventDefault();
         $('#ProductionPlanCancelBtn').click();
-    }``
+    } ``
 });
 
 function bindDropDownMultiProcess(id, moduleName, preSelectValues = []) {
@@ -1937,7 +2249,7 @@ function bindDropDownMultiProcess(id, moduleName, preSelectValues = []) {
         data: JSON.stringify(request),
         success: function (response) {
             if (response.status === true) {
-                Common.bindDropDownMultiSuccess(response.data, id); 
+                Common.bindDropDownMultiSuccess(response.data, id);
                 if (preSelectValues.length > 0) {
                     let $select = $("#" + id);
                     $select.val(preSelectValues).trigger('change');
@@ -1958,3 +2270,306 @@ function bindDropDownMultiProcess(id, moduleName, preSelectValues = []) {
         },
     });
 }
+
+
+
+/*================================Testing================================*/
+
+
+
+function duplicateRowRawMetarialTesting() {
+
+    if (!DyeDropdown || !DyeDropdown[0] || DyeDropdown[0].length === 0) {
+        return;
+    }
+
+    DyeDropdown[0].forEach(function (product) {
+
+        let numberIncr = Math.random().toString(36).substring(2);
+
+        var defaultOption = '<option value="">--Select--</option>';
+        var DyeSelectOptions = DyeDropdown[0].map(function (p) { return `<option value="${p.ProductId}">${p.ProductName}</option>`; }).join('');
+
+        var htmlRow = `
+            <div class="row RawMetarial">
+                <label class="ProductionPlanDyeRequirementId d-none"></label>
+
+                <div class="col-md-7 col-lg-7 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="DyeNameClass">DyeName<span id="Asterisk">*</span></label>
+                        <select class="form-control ProductIdRawMaterial ProductId" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                            ${defaultOption}${DyeSelectOptions}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="DyeClass">Value<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control Dye" placeholder="Ex: 8.3" id="Dye${numberIncr}" name="Dye${numberIncr}"oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required />
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="TotalDyeQtyClass">TotalDyeQty<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control TotalDyeQty" placeholder="Ex: 0" id="TotalDyeQty${numberIncr}" name="TotalDyeQty${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required />
+                    </div>
+                </div>
+            </div>
+        `;
+
+        $('#RawMaterialDynamic').append(htmlRow);
+        $(`#ProductId${numberIncr}`).val(product.ProductId);
+    });
+    updateRemoveButtonsRawMetarial();
+}
+
+function duplicateRowChemicalAfterTesting() {
+    let numberIncr = Math.random().toString(36).substring(2);
+    var rowadd = $('.RowOfChemical-After').length;
+
+    var AfterTreatmentSelectOptions = "";
+    var defaultOption = '<option value="">--Select--</option>';
+
+    if (AfterTreatmentChemicalProduct != null && AfterTreatmentChemicalProduct.length > 0 && AfterTreatmentChemicalProduct[0].length > 0) {
+        AfterTreatmentSelectOptions = AfterTreatmentChemicalProduct[0].map(function (ChemicalId) {
+            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+        }).join('');
+    }
+
+    var htmlRow = `
+        <div class="row RowOfChemical-After">
+            <label class="ProductionPlanChemicalRequirementId d-none"></label>
+            <div class="col-md-5 col-lg-5 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                    <select class="form-control ProductSelectAfter ProductIdAfter" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                        ${defaultOption}${AfterTreatmentSelectOptions}
+                    </select>
+                </div>
+            </div> 
+            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="GPLClass">Value<span id="Asterisk">*</span></label>
+                    <div id="ember325" class="input-group ember-view" style="gap: 8px;">
+                        <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                            <option value="1">GPL</option>
+                            <option value="2">%</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required/>
+                    </div>
+                </div>
+            </div>
+              
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalAfter(this)" style="position: absolute; top: 22px; right: 14px;">
+                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                    </button>
+                </div>
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemoveAfter mt-0" type="button" onclick="removeRowRowChemicalAfter(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+    $('#ChemicalDynamic-After').append(htmlRow);
+    updateRemoveChemicalAfter();
+}
+
+
+
+function duplicateRowChemicalPreTesting() {
+    let numberIncr = Math.random().toString(36).substring(2);
+    var rowadd = $('.RowOfChemical-Pre').length;
+
+    var PreTreatmentSelectOptions = "";
+    var defaultOption = '<option value="">--Select--</option>';
+
+    if (PreTreatmentChemicalProduct != null && PreTreatmentChemicalProduct.length > 0 && PreTreatmentChemicalProduct[0].length > 0) {
+        PreTreatmentSelectOptions = PreTreatmentChemicalProduct[0].map(function (ChemicalId) {
+            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+        }).join('');
+    }
+
+    var htmlRow = `
+        <div class="row RowOfChemical-Pre">
+            <label class="ProductionPlanChemicalRequirementId d-none"></label>
+            <div class="col-md-5 col-lg-5 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                    <select class="form-control ProductSelectPre ProductIdPre" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                        ${defaultOption}${PreTreatmentSelectOptions}
+                    </select>
+                </div>
+            </div> 
+            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                    <div class="form-group">
+                    <label class="GPLClass">Value<span id="Asterisk">*</span></label>
+                        <div id="ember325" class="input-group ember-view" style="gap: 8px;">
+                            <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                                <option value="1">GPL</option>
+                                <option value="2">%</option>
+                            </select>
+                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required />
+                        </div>
+                    </div>
+            </div> 
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalPre(this)" style="position: absolute; top: 22px; right: 14px;">
+                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                    </button>
+                </div>
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemovePre mt-0" type="button" onclick="removeRowRowChemicalPre(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+    $('#ChemicalDynamic-Pre').append(htmlRow);
+    updateRemoveChemicalPre();
+}
+
+/*========================================================Status Tracking=================================================================*/
+
+function StatusActivitySuccess(response) {
+    var parsedData = JSON.parse(response.data);
+    var timelineData = parsedData[0];
+
+    var $timeline = $(".horizontal-timeline");
+
+    // Remove existing stages
+    $timeline.find(".timeline-stage").remove();
+    var progressStatuses = [];
+
+    // Append new timeline stages
+    $.each(timelineData, function (index, item) {
+        var status = item.InventoryStatusName || "Unknown";
+        var user = item.UserName || "N/A";
+        var color = item.Status_Color || "#000";
+
+        var date = new Date(item.CreatedDate);
+        var formattedDate = date.toLocaleDateString('en-GB') + ', ' +
+            date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        var statusClass = "status-" + status.toLowerCase().replace(/\s+/g, '');
+
+        var $stage = $('<div>', {
+            class: `timeline-stage ${statusClass}`
+        });
+
+        var $marker = $('<div>', { class: 'stage-marker' });
+
+        var $statusSpan = $('<span>', {
+            class: 'stage-status',
+            text: status,
+            css: { color: color }
+        });
+
+        $marker.append($statusSpan);
+
+        var $content = $('<div>', { class: 'stage-content' });
+        $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
+        $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
+
+        $stage.append($marker).append($content);
+        $timeline.append($stage);
+
+        progressStatuses.push(status);
+
+    });
+
+    setTimeout(function () {
+        updateTimelineProgress(progressStatuses);
+    }, 1000);
+}
+
+function updateTimelineProgress(progressStatuses) {
+    var $timeline = $(".horizontal-timeline");
+    var $fillLine = $timeline.find(".timeline-progress-line-fill");
+    var $stages = $timeline.find(".timeline-stage");
+
+    if ($stages.length === 0) return;
+
+    let $lastValidStage = null;
+
+    $stages.each(function () {
+        const statusText = $(this).find(".stage-status").text().trim();
+        if (progressStatuses.includes(statusText)) {
+            $lastValidStage = $(this);
+        }
+    });
+
+    if ($lastValidStage) {
+        const $marker = $lastValidStage.find(".stage-marker");
+        const timelineLeft = $timeline.offset().left;
+        const markerCenter = $marker.offset().left + ($marker.outerWidth() / 2);
+
+        const fillWidth = markerCenter - timelineLeft;
+
+        $fillLine.css({
+            width: fillWidth + "px"
+        });
+    } else {
+        $fillLine.css({ width: "0" });
+    }
+}
+
+function ajaxPromise(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
+}
+/*========================================================End Status Tracking=================================================================*/
+
+$(document).on('click', '#ProductionPlanPreviewbtn', function () {
+
+    $('#loader-pms').show();
+    var ProductionPlanNo = $('#BatchNo').val();
+    // URL to convert into QR
+    var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+
+    $.ajax({
+        url: '/Productions/GenerateQrPdf',
+        method: 'GET',
+        data: { URL: scanUrl, ProductionPlanNo: ProductionPlanNo },
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function (response) {
+
+            $('#ShareDropdownitems').hide();
+
+            var blob = new Blob([response], { type: 'application/pdf' });
+            var blobUrl = window.URL.createObjectURL(blob);
+
+            var link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = `${ProductionPlanNo}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            window.URL.revokeObjectURL(blobUrl);
+            $('#loader-pms').hide();
+        },
+        error: function (xhr) {
+            $('#loader-pms').hide();
+            Common.errorMsg("Failed to generate QR PDF");
+        }
+    });
+});

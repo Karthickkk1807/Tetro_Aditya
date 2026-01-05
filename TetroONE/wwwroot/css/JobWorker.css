@@ -9,7 +9,7 @@
     box-shadow: 0 3px 11px rgb(58 169 0 / 93%);
 }
 
-#JobWorkerTable{
+#JobWorkerTable, #Managetable {
     width: 100% !important;
 }
 

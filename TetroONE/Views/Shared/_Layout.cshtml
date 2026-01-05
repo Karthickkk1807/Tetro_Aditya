@@ -25,7 +25,8 @@
             <meta name="author" content="Dreamguys - Codeigniter Admin Template">
             <meta name="robots" content="noindex, nofollow">
 
-            <title>TetroOne</title>
+            <title>TetroOne_Adhithiya</title>
+
             <link rel="icon" href="~/assets/moduleusedtetroone/tetroone_loadedicon.svg" type="image/x-icon" />
             <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
             <link href="~/assets/css/style.css" rel="stylesheet" />
@@ -434,7 +435,7 @@
                                                         </a>
                                                     }
                                                 </li>
-                                                <li>
+                                                @*<li>
                                                     @if (access.Any(x => x.ToLower() == UserScreen.JobWorkers.ToLower()))
                                                     {
                                                         <a asp-controller="Contact" asp-action="JobWorker">
@@ -443,7 +444,7 @@
                                                             </i> <span class="sub-item">Job Worker</span>
                                                         </a>
                                                     }
-                                                </li>
+                                                </li>*@
                                                 <li>
                                                     @if (access.Any(x => x.ToLower() == UserScreen.ServiceEngr.ToLower()))
                                                     {
@@ -720,7 +721,7 @@
                                                         </a>
                                                     </li>
                                                 }
-                                                @if (access.Any(x => x.ToLower() == UserScreen.JobOrder.ToLower()))
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.JobOrder.ToLower()))
                                                 {
                                                     <li>
                                                         <a asp-controller="Productions" asp-action="JobOrder">
@@ -729,7 +730,7 @@
                                                             </i> <span class="sub-item">Job Order</span>
                                                         </a>
                                                     </li>
-                                                }
+                                                }*@
                                                 @if (access.Any(x => x.ToLower() == UserScreen.ProductionPlan.ToLower()))
                                                 {
                                                     <li>
@@ -1425,7 +1426,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 col-lg-6 col-sm-12 col-12 d-none" id="DepartmentManageUserhide">
+                                                <div class="col-md-6 col-lg-6 col-sm-12 col-12" id="DepartmentManageUserhide">
                                                     <div class="form-group">
                                                         <label>Department Mapping</label>
                                                         <select multiple class="multi-select" data-allow-clear="1" id="DepartmentDetailsId" name="DepartmentDetailsId">

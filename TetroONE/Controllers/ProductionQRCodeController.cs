@@ -27,9 +27,10 @@ namespace TetroONE.Controllers
         {
             public int? ProductionPlanId { get; set; }
         }
-         
+          
         public class InsertUpdateProductionLogMobClass
         {
+            public int? LoginUserId { get; set; }
             public int? ProductionPlanId { get; set; }
             public int? ProductionLogId { get; set; }
             public int? ProcessTypeId { get; set; }

@@ -178,3 +178,7 @@ textarea.form-controltext {
 .select2-container--bootstrap4.select2-container--multiple .select2-selection {
     cursor: pointer !important;
 }
+
+.dateTimePicker{
+    background: white !important;
+}

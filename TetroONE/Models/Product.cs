@@ -32,6 +32,7 @@ namespace TetroONE.Models
         public decimal SecondaryPrice { get; set; }
         public decimal ReOrderLevel { get; set; }
         public int? TaxInfoId { get; set; }
+        public bool? IsDefault { get; set; }
         //public decimal? CGST { get; set; }
         //public decimal? SGST { get; set; }
         //public decimal? IGST { get; set; }

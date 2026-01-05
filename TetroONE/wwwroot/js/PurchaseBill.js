@@ -158,14 +158,33 @@ $(document).ready(async function () {
         $("#PurchaseInvoiceModal .modal-body").animate({ scrollTop: 0 }, "fast");
     });
 
+    //$(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
+    //    e.preventDefault();
+    //    e.stopPropagation();
+    //    const $rows = $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3');
+    //    const isCurrentlyVisible = $rows.is(':visible');
+    //    $rows.stop(true, true).slideToggle(300);
+    //    $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+    //    $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead').css('border-bottom', '1px solid #c7c7c7');
+    //});
+
     $(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        const $rows = $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3');
-        const isCurrentlyVisible = $rows.is(':visible');
+
+        const $rows = $(
+            '#VendorColumn .row.mt-3, ' +
+            '#ShippingColumn .row.mt-3, ' +
+            '#OriginalInvoiceNoDiv, ' +
+            '#PurchaseOrderNoDiv'
+        );
+
         $rows.stop(true, true).slideToggle(300);
+
         $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
-        $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead').css('border-bottom', '1px solid #c7c7c7');
+
+        $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead')
+            .css('border-bottom', '1px solid #c7c7c7');
     });
 
     $(document).on('click', '#PurchaseInvoiceCancelBtn, #PurchaseinvoiceClose', function () {
@@ -254,7 +273,7 @@ $(document).ready(async function () {
     });
 
     $(document).on('click', '#AddItemBtn', function () {
-        var FromBranch = $('#FromAddressId').val();
+        var FromBranch = $('#Vendor').val();
         if (FromBranch != "") {
 
             $('#loader-pms').show();
@@ -321,13 +340,14 @@ $(document).ready(async function () {
                 GetPurchaseInvoiceSuccess,
                 null
             );
+        }, {
+            showSuccessMsg: true
         });
-
     });
 
+    function savePurchaseInvoice(callback, options = {}) {
 
-    function savePurchaseInvoice(callback) {
-
+        const showSuccessMsg = options.showSuccessMsg !== false; // default = true
         // ===== ALL YOUR VALIDATION CODE STAYS SAME =====
         getExistFiles();
 
@@ -379,10 +399,10 @@ $(document).ready(async function () {
             PurchaseOrderId: $('#PurchaseOrderNo').val(),
 
             OriginalInvoiceNo: $('#InvoiceNoOriginal').val(),
-            SubTotal: parseFloat($('#Subtotal').val() || 0.00),
-            RoundOffValue: parseFloat($('#roundOff').val() || 0.00),
-            GrantTotal: parseFloat($('#GrantTotal').val() || 0.00),
-            BalanceAmount: parseFloat($('#BalanceAmount').val() || 0.00),
+            SubTotal: parseFloatValueInsert($('#Subtotal').val() || 0.00),
+            RoundOffValue: parseFloatValueInsert($('#roundOff').val() || 0.00),
+            GrantTotal: parseFloatValueInsert($('#GrantTotal').val() || 0.00),
+            BalanceAmount: parseFloatValueInsert($('#BalanceAmount').val() || 0.00),
             Notes: $('#AddNotesText').val(),
             TermsAndCondition: $('#TermsAndCondition').val(),
             PurchaseBillStatusId: parseInt(PIStatusId),
@@ -405,16 +425,16 @@ $(document).ready(async function () {
                 Quantity: Common.parseFloatValue($rowTable.find('.TableRowQty').val() || 0),
                 UnitId: parseInt($rowTable.find('.ForBindtableProductUnit').val()),
                 ProductDescription: $rowTable.find('.descriptiontdtext').val(),
-                SubTotal: Common.parseFloatValue($rowTable.find('.SubTotalQty').val()),
-                CGST_Percentage: Common.parseFloatValue($rowTable.find('.CGST input').val().replace('%', '').trim()),
-                CGST_Value: Common.parseFloatValue($rowTable.find('.CGST .CGSTAmount').text().trim()),
-                SGST_Percentage: Common.parseFloatValue($rowTable.find('.SGST input').val().replace('%', '').trim()),
-                SGST_Value: Common.parseFloatValue($rowTable.find('.SGST .SGSTAmount').text().trim()),
-                IGST_Percentage: Common.parseFloatValue($rowTable.find('.IGST input').val().replace('%', '').trim()),
-                IGST_Value: Common.parseFloatValue($rowTable.find('.IGST .IGSTAmount').text().trim()),
-                CESS_Percentage: Common.parseFloatValue($rowTable.find('.CESS input').val().replace('%', '').trim()),
-                CESS_Value: Common.parseFloatValue($rowTable.find('.CESS .CESSAmount').text().trim()),
-                TotalAmount: Common.parseFloatValue($rowTable.find('.Total input').val()),
+                SubTotal: parseFloatValueInsert($rowTable.find('.SubTotalQty').val()),
+                CGST_Percentage: parseFloatValueInsert($rowTable.find('.CGST input').val().replace('%', '').trim()),
+                CGST_Value: parseFloatValueInsert($rowTable.find('.CGST .CGSTAmount').text().trim()),
+                SGST_Percentage: parseFloatValueInsert($rowTable.find('.SGST input').val().replace('%', '').trim()),
+                SGST_Value: parseFloatValueInsert($rowTable.find('.SGST .SGSTAmount').text().trim()),
+                IGST_Percentage: parseFloatValueInsert($rowTable.find('.IGST input').val().replace('%', '').trim()),
+                IGST_Value: parseFloatValueInsert($rowTable.find('.IGST .IGSTAmount').text().trim()),
+                CESS_Percentage: parseFloatValueInsert($rowTable.find('.CESS input').val().replace('%', '').trim()),
+                CESS_Value: parseFloatValueInsert($rowTable.find('.CESS .CESSAmount').text().trim()),
+                TotalAmount: parseFloatValueInsert($rowTable.find('.Total input').val()),
             };
             PurchaseBillProductMappingDetails.push(productDetail);
         });
@@ -432,8 +452,8 @@ $(document).ready(async function () {
                     OtherChargesId: parseInt($(value).find('.taxandothers').val() || 0),
                     OtherChargesType: $(value).find('.taxandothers').attr('OtherChargesType'),
                     IsPercentage: $(value).find("input[name='" + ispercentageval + "']:checked").val() === "1",
-                    Value: parseFloat($(value).find('.OtherValueInsert').val() || 0),
-                    OtherChargeValue: parseFloat($(value).find('.otherChargeValue').val() || 0),
+                    Value: parseFloatValueInsert($(value).find('.OtherValueInsert').val() || 0),
+                    OtherChargeValue: parseFloatValueInsert($(value).find('.otherChargeValue').val() || 0),
                     ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null
                 });
             }
@@ -452,15 +472,21 @@ $(document).ready(async function () {
             contentType: false,
             processData: false,
             success: function (response) {
+
                 if (response.status) {
                     formDataMultiple = new FormData();
-                    Common.successMsg(response.message);
+
+                    // ✅ Show success only when allowed
+                    if (showSuccessMsg) {
+                        Common.successMsg(response.message);
+                    }
 
                     // 🔑 IMPORTANT: return PurchaseBillId
                     if (callback) {
                         var dataId = JSON.parse(response.data);
                         callback(dataId[0][0].PurchaseBillId);
                     }
+
                 } else {
                     Common.errorMsg(response.message);
                 }
@@ -470,149 +496,6 @@ $(document).ready(async function () {
             }
         });
     }
-
-
-    //$(document).on('click', '#PurchaseInvoiceSaveBtn', function () {
-
-    //    getExistFiles();
-
-    //    var RightSideHeaderFormIsValid = $("#FormRightSideHeader").validate().form();
-    //    var ShippingFormIsValid = $("#FormShipping").validate().form();
-    //    var VendorFormIsValid = $("#FormVendor").validate().form();
-    //    var StatusFormIsValid = $("#FormStatus").validate().form();
-    //    var BillFromIsValid = $("#FormBillFrom").validate().form();
-    //    var TaxdiscountFormIsValid = $('#frmtaxdiscountothers').validate().form();
-    //    if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid || !TaxdiscountFormIsValid) {
-    //        $('#PurchaseInvoiceSaveBtn-error').insertAfter('#statusError');
-    //        $('#Vendor-error').insertAfter('.vendorerror');
-    //        $('#AlternativeCompanyAddress-error').insertAfter('.AlternativeCompanyError');
-    //        $('#loader-pms').hide();
-    //        return false;
-    //    }
-
-    //    var vendorInput = $('#Vendor').val();
-
-    //    if (vendorInput == '') {
-    //        Common.warningMsg('Click + Add Vendor and Fill the Input');
-    //        $('#loader-pms').hide();
-    //        return false;
-    //    }
-
-    //    var TableLenthDynamicRow = $('.ProductTableRow').length;
-    //    if (TableLenthDynamicRow == 0) {
-    //        Common.warningMsg('Choose Atleast One Product');
-    //        $('#loader-pms').hide();
-    //        return false;
-    //    }
-
-    //    var PurchaseBillDetailsStatic;
-    //    var vendorId = $('#Vendor').val();
-    //    var alternativeCompanyAddress = $('#AlternativeCompanyAddress').val();
-
-    //    var PIStatusId = $('#PurchaseInvoiceStatusId option:selected').text();
-    //    PIStatusId = (PIStatusId == '-- Select --') ? null : $('#PurchaseInvoiceStatusId').val();
-
-    //    PurchaseBillDetailsStatic = {
-    //        PurchaseBillId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null,
-    //        VendorId: parseInt(vendorId),
-    //        BillFromPlantId: parseInt($('#BillFrom').val()),
-    //        PlantId: PlantMappingId || null,
-    //        ShipToPlantId: parseInt(alternativeCompanyAddress),
-    //        PurchaseBillNo: $('#InvoiceNo').val(),
-    //        PurchaseBillDate: $('#InvoiceDate').val(),
-    //        PurchaseOrderId: $('#PurchaseOrderNo').val(),
-
-    //        OriginalInvoiceNo: $('#InvoiceNoOriginal').val(),
-    //        SubTotal: parseFloat($('#Subtotal').val() || 0.00),
-    //        RoundOffValue: parseFloat($('#roundOff').val() || 0.00),
-    //        GrantTotal: parseFloat($('#GrantTotal').val() || 0.00),
-    //        BalanceAmount: parseFloat($('#BalanceAmount').val() || 0.00),
-    //        Notes: $('#AddNotesText').val(),
-    //        TermsAndCondition: $('#TermsAndCondition').val(),
-    //        PurchaseBillStatusId: parseInt(PIStatusId),
-    //    };
-
-    //    var PurchaseBillProductMappingDetails = [];
-
-    //    $('#PIProductTablebody .ProductTableRow').each(function () {
-    //        var $rowTable = $(this);
-    //        var productId = $rowTable.data('product-id');
-    //        //var productInfoStr = $rowTable.attr('data-product-info');
-    //        var PurchaseBillProductMappingId = $rowTable.attr('data-productmapping-id');
-    //        //var productInfo = JSON.parse(productInfoStr);
-
-    //        var productDetail = {
-    //            PurchaseProductMappingId: PurchaseBillProductMappingId == 0 ? null : parseInt(PurchaseBillProductMappingId),
-    //            ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null,
-    //            ProductId: parseInt(productId),
-    //            PurchasePrice: Common.parseFloatValue($rowTable.find('.SellingPrice').val()),
-    //            Quantity: Common.parseFloatValue($rowTable.find('.TableRowQty').val() || 0),
-    //            UnitId: parseInt($rowTable.find('.ForBindtableProductUnit').val()),
-    //            ProductDescription: $rowTable.find('.descriptiontdtext').val(),
-    //            SubTotal: Common.parseFloatValue($rowTable.find('.SubTotalQty').val()),
-    //            CGST_Percentage: Common.parseFloatValue($rowTable.find('.CGST input').val().replace('%', '').trim()),
-    //            CGST_Value: Common.parseFloatValue($rowTable.find('.CGST .CGSTAmount').text().trim()),
-    //            SGST_Percentage: Common.parseFloatValue($rowTable.find('.SGST input').val().replace('%', '').trim()),
-    //            SGST_Value: Common.parseFloatValue($rowTable.find('.SGST .SGSTAmount').text().trim()),
-    //            IGST_Percentage: Common.parseFloatValue($rowTable.find('.IGST input').val().replace('%', '').trim()),
-    //            IGST_Value: Common.parseFloatValue($rowTable.find('.IGST .IGSTAmount').text().trim()),
-    //            CESS_Percentage: Common.parseFloatValue($rowTable.find('.CESS input').val().replace('%', '').trim()),
-    //            CESS_Value: Common.parseFloatValue($rowTable.find('.CESS .CESSAmount').text().trim()),
-    //            TotalAmount: Common.parseFloatValue($rowTable.find('.Total input').val()),
-    //        };
-    //        PurchaseBillProductMappingDetails.push(productDetail);
-    //    });
-
-    //    var PurchaseBillOtherChargesMappingDetails = [];
-    //    var PurhInvoiceOtherChargesMappingDetails = $("#dynamicBindRow .dynamicBindRow");
-
-    //    $.each(PurhInvoiceOtherChargesMappingDetails, function (index, value) {
-    //        var PurchaseSaleOtherChargesMappingId = $(value).find('.dynamicBindRow').attr('data-OtherChargeMapping-id') || null;
-    //        var ispercentageval = $(value).find("input[type='radio']").attr("name");
-    //        var oid = $(value).find('.taxandothers').val();
-    //        if (oid != undefined) {
-    //            PurchaseBillOtherChargesMappingDetails.push({
-    //                PurchaseSaleOtherChargesMappingId: PurchaseSaleOtherChargesMappingId == '' ? null : parseInt(PurchaseSaleOtherChargesMappingId),
-    //                OtherChargesId: parseInt($(value).find('.taxandothers').val() || 0),
-    //                OtherChargesType: $(value).find('.taxandothers').attr('OtherChargesType'),
-    //                IsPercentage: $(value).find("input[name='" + ispercentageval + "']:checked").val() === "1",
-    //                Value: parseFloat($(value).find('.OtherValueInsert').val() || 0),
-    //                OtherChargeValue: parseFloat($(value).find('.otherChargeValue').val() || 0),
-    //                ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null
-    //            });
-    //        }
-    //    });
-
-    //    formDataMultiple.append("PurchaseBillDetailsStatic", JSON.stringify(PurchaseBillDetailsStatic));
-    //    formDataMultiple.append("PurchaseBillProductMappingDetails", JSON.stringify(PurchaseBillProductMappingDetails));
-    //    formDataMultiple.append("PurchaseBillOtherChargesMappingDetails", JSON.stringify(PurchaseBillOtherChargesMappingDetails));
-    //    formDataMultiple.append("ExistFiles", JSON.stringify(existFiles));
-    //    formDataMultiple.append("DeletedFiles", JSON.stringify(deletedFiles));
-
-    //    $.ajax({
-    //        type: "POST",
-    //        url: "/PurchaseInvoice/InsertUpdatePurchaseBill",
-    //        data: formDataMultiple,
-    //        contentType: false,
-    //        processData: false,
-    //        success: function (response) {
-    //            if (response.status) {
-    //                formDataMultiple = new FormData();
-    //                Common.successMsg(response.message);
-    //                $("#PurchaseInvoiceModal").hide();
-    //                var fnData = Common.getDateFilter('dateDisplay2');
-    //                Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseBill", { PlantId: parseInt(PlantMappingId), PurchaseBillId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseInvoiceSuccess, null);
-    //            }
-    //            else {
-    //                formDataMultiple = new FormData();
-    //                Common.errorMsg(response.message);
-    //            }
-    //        },
-    //        error: function (response) {
-    //            Common.errorMsg(response.message);
-    //        }
-    //    });
-    //});
 
     $(document).on('change', '#PurchaseOrderNo', function () {
         var $thisVal = $(this).val();
@@ -764,7 +647,7 @@ $(document).ready(async function () {
                 var IGST = parseFloat(productInfo.IGST) || 0;
                 var CESS = parseFloat(productInfo.CESS) || 0;
 
-                var SubTotal = (SecondaryPrice * QtyProductAdd).toFixed(2);
+                var SubTotal = (SelectedPrice * QtyProductAdd).toFixed(2);
 
                 var BillToState = $('#VendorStateName').text().toLowerCase();
                 var ShipToState = $('#StateName').text().toLowerCase();
@@ -819,31 +702,31 @@ $(document).ready(async function () {
                                     <span class="unit-dropdown">${unitDropdownHtml}</span>
                                 </div>
                             </div>
-                            <div style="justify-content:center;display:flex;margin-top:5px;">
+                            <div style="justify-content:center;display:flex;margin-top:0px;">
                                 <span class="remaining-stock ml-2 d-none" style="color:green;">(${productInfo.SecondaryUnitStockInHand || 0})</span>
                             </div>
                         </td>
                         <td data-label="SubTotal" class="SubTotal">
-                            <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${SubTotal || ''}" />
+                            <input type="text" class="form-control SubTotalQty DisabledTextBox" value="₹ ${SubTotal || ''}" />
                         </td>
                         <td data-label="CGST" class="CGST">
                             <input type="text" class="form-control CGST DisabledTextBox" value="${productInfo.CGST || 0} %" />
-                            <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${cgstAmt}</small>
+                            <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cgstAmt}</small>
                         </td>
                         <td data-label="SGST" class="SGST">
                             <input type="text" class="form-control SGST DisabledTextBox" value="${productInfo.SGST || 0} %" />
-                            <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${sgstAmt}</small>
+                            <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${sgstAmt}</small>
                         </td>
                         <td data-label="IGST" class="IGST">
                             <input type="text" class="form-control IGST DisabledTextBox" value="${productInfo.IGST || 0} %" />
-                            <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${igstAmt}</small>
+                            <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${igstAmt}</small>
                         </td>
                         <td data-label="CESS" class="CESS">
                             <input type="text" class="form-control CESS DisabledTextBox" value="${productInfo.CESS || 0} %" />
-                            <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${cessAmt}</small>
+                            <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cessAmt}</small>
                         </td>
                         <td data-label="Total" class="Total">
-                            <input type="text" class="form-control Total DisabledTextBox" value="${totalAmount || 0}" />
+                            <input type="text" class="form-control Total DisabledTextBox" value="₹ ${totalAmount || 0}" />
                         </td>
                         <td data-label="Action" style="text-align:center;">
                             <button class="btn DynremoveBtn DynrowRemove" type="button">
@@ -916,57 +799,88 @@ $(document).ready(async function () {
         $('#loader-pms').show();
 
         savePurchaseInvoice(function (purchaseBillId) {
+
+            // 🔴 Safety check
+            if (!purchaseBillId) {
+                $('#loader-pms').hide();
+                Common.errorMsg("Purchase Bill ID not returned");
+                return;
+            }
+
             var EditData = {
-                ModuleId: purchaseBillId,
+                ModuleId: parseInt(purchaseBillId),
                 NoOfCopies: 1,
-                printType: "preview"
+                printType: "Preview"
             };
 
             $.ajax({
+                type: 'GET',
                 url: '/PurchaseInvoice/PurchaseBillPrint',
-                method: 'GET',
                 data: EditData,
                 xhrFields: { responseType: 'blob' },
+
                 success: function (response) {
-                    var printType = "Preview";
-                    $('#ShareDropdownitems').css('display', 'none');
+
+                    $('#ShareDropdownitems').hide();
+
                     var blob = new Blob([response], { type: 'application/pdf' });
                     var blobUrl = URL.createObjectURL(blob);
-                    if (printType == "Preview") {
+
+                    // 🔹 PRINT TYPE HANDLER
+                    if (EditData.printType === "Preview") {
+
                         var newTab = window.open();
                         if (newTab) {
                             newTab.document.write(`
-                                              <html>
-                                              <head><title>Purchase Bill Preview</title></head>
-                                              <body style="margin:0;">
-                                                  <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-                                              </body>
-                                              </html>
-                                          `);
+                            <html>
+                            <head>
+                                <title>Purchase Bill Preview</title>
+                            </head>
+                            <body style="margin:0; padding:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
                             newTab.document.close();
+                        } else {
+                            Common.warningMsg("Popup blocked. Please allow popups.");
                         }
-                    } else if (printType == "Download") {
+
+                    } else if (EditData.printType === "Download") {
+
                         var link = document.createElement('a');
                         link.href = blobUrl;
                         link.download = 'Purchase Bill.pdf';
+                        document.body.appendChild(link);
                         link.click();
-                    } else if (printType == "Print") {
+                        document.body.removeChild(link);
+
+                    } else if (EditData.printType === "Print") {
+
                         var iframe = document.createElement('iframe');
                         iframe.style.display = 'none';
                         iframe.src = blobUrl;
                         document.body.appendChild(iframe);
-                        iframe.contentWindow.print();
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+                        };
                     }
+
                     $('#loader-pms').hide();
                 },
+
                 error: function () {
                     $('#loader-pms').hide();
                     Common.errorMsg("Print failed");
                 }
             });
+
+        }, {
+            showSuccessMsg: false   // ❌ SUCCESS MESSAGE DISABLED
         });
 
     });
+
 
 
     //$(document).on('click', '#btnPordersaveprintbtn', function () {
@@ -1184,31 +1098,31 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
                             <span class="unit-dropdown">${unitDropdownHtml}</span>
                         </div>
                     </div>
-                    <div style="justify-content:center;display:flex;margin-top:5px;">
+                    <div style="justify-content:center;display:flex;margin-top:0px;">
                         <span class="remaining-stock ml-2 d-none" style="color:green;">(${productInfo.SecondaryUnitStockInHand || 0})</span>
                     </div>
                 </td> 
                 <td data-label="SubTotal" class="SubTotal">
-                    <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${SubTotal}" />
+                    <input type="text" class="form-control SubTotalQty DisabledTextBox" value="₹ ${SubTotal}" />
                 </td>
                 <td data-label="CGST" class="CGST">
                     <input type="text" class="form-control CGST DisabledTextBox" value="${CGST} %" />
-                    <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${cgstAmt}</small>
+                    <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cgstAmt}</small>
                 </td>
                 <td data-label="SGST" class="SGST">
                     <input type="text" class="form-control SGST DisabledTextBox" value="${SGST} %" />
-                    <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${sgstAmt}</small>
+                    <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${sgstAmt}</small>
                 </td>
                 <td data-label="IGST" class="IGST">
                     <input type="text" class="form-control IGST DisabledTextBox" value="${IGST} %" />
-                    <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${igstAmt}</small>
+                    <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${igstAmt}</small>
                 </td>
                 <td data-label="CESS" class="CESS">
                     <input type="text" class="form-control CESS DisabledTextBox" value="${CESS} %" />
-                    <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${cessAmt}</small>
+                    <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cessAmt}</small>
                 </td>
                 <td data-label="Total" class="Total">
-                    <input type="text" class="form-control Total DisabledTextBox" value="${totalAmount}" />
+                    <input type="text" class="form-control Total DisabledTextBox" value="₹ ${totalAmount}" />
                 </td>
                 <td data-label="Action" style="text-align:center;">
                     <button class="btn DynremoveBtn DynrowRemove" type="button">
@@ -1513,77 +1427,175 @@ function updateGSTVisibility(firstStateId, secondStateId) {
 }
 
 // ========== Row Calculation Function ==========
-function calculateRow($row) {
-    var SecondaryPrice = parseFloat($row.find(".SellingPrice").val()) || 0;
-    var QtyProductAdd = parseFloat($row.find(".TableRowQty").val()) || 0;
+//function calculateRow($row) {
+//    var SecondaryPrice = parseFloat($row.find(".SellingPrice").val()) || 0;
+//    var QtyProductAdd = parseFloat($row.find(".TableRowQty").val()) || 0;
 
-    // Get % values (remove % sign)
-    var CGST = parseFloat(($row.find(".CGST input").val() || "0").replace('%', '').trim()) || 0;
-    var SGST = parseFloat(($row.find(".SGST input").val() || "0").replace('%', '').trim()) || 0;
-    var IGST = parseFloat(($row.find(".IGST input").val() || "0").replace('%', '').trim()) || 0;
-    var CESS = parseFloat(($row.find(".CESS input").val() || "0").replace('%', '').trim()) || 0;
+//    // Get % values (remove % sign)
+//    var CGST = parseFloat(($row.find(".CGST input").val() || "0").replace('%', '').trim()) || 0;
+//    var SGST = parseFloat(($row.find(".SGST input").val() || "0").replace('%', '').trim()) || 0;
+//    var IGST = parseFloat(($row.find(".IGST input").val() || "0").replace('%', '').trim()) || 0;
+//    var CESS = parseFloat(($row.find(".CESS input").val() || "0").replace('%', '').trim()) || 0;
+
+//    var vendorState = ($("#VendorStateName").text() || '').trim().toLowerCase();
+//    var buyerState = ($("#StateName").text() || '').trim().toLowerCase();
+
+//    var SubTotal = SecondaryPrice * QtyProductAdd;
+//    var cgstAmt = 0, sgstAmt = 0, igstAmt = 0, cessAmt = 0;
+
+//    // GST logic based on state
+//    if (vendorState && buyerState && vendorState !== buyerState) {
+//        igstAmt = (SubTotal * IGST / 100).toFixed(2);
+//        cessAmt = (SubTotal * CESS / 100).toFixed(2);
+//        cgstAmt = sgstAmt = (0).toFixed(2);
+//    } else {
+//        cgstAmt = (SubTotal * CGST / 100).toFixed(2);
+//        sgstAmt = (SubTotal * SGST / 100).toFixed(2);
+//        cessAmt = (SubTotal * CESS / 100).toFixed(2);
+//        igstAmt = (0).toFixed(2);
+//    }
+
+//    var totalAmount = (
+//        parseFloat(SubTotal) +
+//        parseFloat(cgstAmt) +
+//        parseFloat(sgstAmt) +
+//        parseFloat(igstAmt) +
+//        parseFloat(cessAmt)
+//    ).toFixed(2);
+
+//    // Update row values
+//    $row.find(".SubTotal input").val(SubTotal.toFixed(2));
+//    $row.find(".CGSTAmount").text(cgstAmt);
+//    $row.find(".SGSTAmount").text(sgstAmt);
+//    $row.find(".IGSTAmount").text(igstAmt);
+//    $row.find(".CESSAmount").text(cessAmt);
+//    $row.find(".Total input").val(totalAmount);
+
+//    // Store numeric values for total calculation
+//    $row.find('.subtotal').val(SubTotal.toFixed(2));
+//    $row.find('.cgst-amt').val(cgstAmt);
+//    $row.find('.sgst-amt').val(sgstAmt);
+//    $row.find('.igst-amt').val(igstAmt);
+//    $row.find('.cess-amt').val(cessAmt);
+//    $row.find('.totalValue').val(totalAmount);
+//}
+
+//// ========== Table Total Calculation ==========
+//function calculateGrandTotal() {
+//    let subtotalTotal = 0,
+//        cgstTotal = 0,
+//        sgstTotal = 0,
+//        igstTotal = 0,
+//        cessTotal = 0,
+//        grandTotal = 0;
+
+//    $('#PIProductTablebody .ProductTableRow').each(function () {
+//        let $row = $(this);
+
+//        let subtotal = parseFloat($row.find('.SubTotal input').val()) || 0;
+//        let cgst = parseFloat($row.find('.CGSTAmount').text()) || 0;
+//        let sgst = parseFloat($row.find('.SGSTAmount').text()) || 0;
+//        let igst = parseFloat($row.find('.IGSTAmount').text()) || 0;
+//        let cess = parseFloat($row.find('.CESSAmount').text()) || 0;
+//        let total = parseFloat($row.find('.Total input').val()) || 0;
+
+//        subtotalTotal += subtotal;
+//        cgstTotal += cgst;
+//        sgstTotal += sgst;
+//        igstTotal += igst;
+//        cessTotal += cess;
+//        grandTotal += total;
+//    });
+
+//    $('#SubtotalRow #SubTotalTotal').val(subtotalTotal.toFixed(2));
+//    $('#SubtotalRow #CGSTTotal').val(cgstTotal.toFixed(2));
+//    $('#SubtotalRow #SGSTTotal').val(sgstTotal.toFixed(2));
+//    $('#SubtotalRow #IGSTTotal').val(igstTotal.toFixed(2));
+//    $('#SubtotalRow #CESSTotal').val(cessTotal.toFixed(2));
+//    $('#SubtotalRow #Subtotal').val(grandTotal.toFixed(2));
+
+//    // Round-off logic
+//    var decimalPart = grandTotal.toFixed(2).split('.')[0];
+//    var roundedDecimal = Math.ceil(decimalPart);
+//    var AddOrSub = roundedDecimal;
+
+//    var RoundOffValu = grandTotal.toFixed(2).split('.')[1];
+//    if (RoundOffValu >= 50) {
+//        $('#roundOff').css('color', 'green');
+//        AddOrSub++;
+//    } else if (RoundOffValu == '00') {
+//        $('#roundOff').css('color', 'blue');
+//    } else if (RoundOffValu <= 50) {
+//        $('#roundOff').css('color', 'orange');
+//    }
+
+//    $('#roundOff').val('0.' + RoundOffValu);
+//    $('#GrantTotal').val(AddOrSub.toFixed(2));
+//}
+
+function calculateRow($row) {
+
+    var SecondaryPrice = getNumber($row.find(".SellingPrice").val());
+    var QtyProductAdd = getNumber($row.find(".TableRowQty").val());
+
+    var CGST = getNumber(($row.find(".CGST input").val() || "0").replace('%', ''));
+    var SGST = getNumber(($row.find(".SGST input").val() || "0").replace('%', ''));
+    var IGST = getNumber(($row.find(".IGST input").val() || "0").replace('%', ''));
+    var CESS = getNumber(($row.find(".CESS input").val() || "0").replace('%', ''));
 
     var vendorState = ($("#VendorStateName").text() || '').trim().toLowerCase();
     var buyerState = ($("#StateName").text() || '').trim().toLowerCase();
 
     var SubTotal = SecondaryPrice * QtyProductAdd;
+
     var cgstAmt = 0, sgstAmt = 0, igstAmt = 0, cessAmt = 0;
 
-    // GST logic based on state
     if (vendorState && buyerState && vendorState !== buyerState) {
-        igstAmt = (SubTotal * IGST / 100).toFixed(2);
-        cessAmt = (SubTotal * CESS / 100).toFixed(2);
-        cgstAmt = sgstAmt = (0).toFixed(2);
+        igstAmt = SubTotal * IGST / 100;
+        cessAmt = SubTotal * CESS / 100;
     } else {
-        cgstAmt = (SubTotal * CGST / 100).toFixed(2);
-        sgstAmt = (SubTotal * SGST / 100).toFixed(2);
-        cessAmt = (SubTotal * CESS / 100).toFixed(2);
-        igstAmt = (0).toFixed(2);
+        cgstAmt = SubTotal * CGST / 100;
+        sgstAmt = SubTotal * SGST / 100;
+        cessAmt = SubTotal * CESS / 100;
     }
 
-    var totalAmount = (
-        parseFloat(SubTotal) +
-        parseFloat(cgstAmt) +
-        parseFloat(sgstAmt) +
-        parseFloat(igstAmt) +
-        parseFloat(cessAmt)
-    ).toFixed(2);
+    var totalAmount = SubTotal + cgstAmt + sgstAmt + igstAmt + cessAmt;
 
-    // Update row values
-    $row.find(".SubTotal input").val(SubTotal.toFixed(2));
-    $row.find(".CGSTAmount").text(cgstAmt);
-    $row.find(".SGSTAmount").text(sgstAmt);
-    $row.find(".IGSTAmount").text(igstAmt);
-    $row.find(".CESSAmount").text(cessAmt);
-    $row.find(".Total input").val(totalAmount);
+    // ✅ Display with ₹
+    $row.find(".SubTotal input").val(formatRupee(SubTotal));
+    $row.find(".CGSTAmount").text(formatRupee(cgstAmt));
+    $row.find(".SGSTAmount").text(formatRupee(sgstAmt));
+    $row.find(".IGSTAmount").text(formatRupee(igstAmt));
+    $row.find(".CESSAmount").text(formatRupee(cessAmt));
+    $row.find(".Total input").val(formatRupee(totalAmount));
 
-    // Store numeric values for total calculation
+    // ✅ Store raw values (no ₹)
     $row.find('.subtotal').val(SubTotal.toFixed(2));
-    $row.find('.cgst-amt').val(cgstAmt);
-    $row.find('.sgst-amt').val(sgstAmt);
-    $row.find('.igst-amt').val(igstAmt);
-    $row.find('.cess-amt').val(cessAmt);
-    $row.find('.totalValue').val(totalAmount);
+    $row.find('.cgst-amt').val(cgstAmt.toFixed(2));
+    $row.find('.sgst-amt').val(sgstAmt.toFixed(2));
+    $row.find('.igst-amt').val(igstAmt.toFixed(2));
+    $row.find('.cess-amt').val(cessAmt.toFixed(2));
+    $row.find('.totalValue').val(totalAmount.toFixed(2));
 }
 
-// ========== Table Total Calculation ==========
 function calculateGrandTotal() {
+
     let subtotalTotal = 0,
         cgstTotal = 0,
         sgstTotal = 0,
         igstTotal = 0,
         cessTotal = 0,
-        grandTotal = 0;
+        grandTotal = 0; 
 
     $('#PIProductTablebody .ProductTableRow').each(function () {
         let $row = $(this);
 
-        let subtotal = parseFloat($row.find('.SubTotal input').val()) || 0;
-        let cgst = parseFloat($row.find('.CGSTAmount').text()) || 0;
-        let sgst = parseFloat($row.find('.SGSTAmount').text()) || 0;
-        let igst = parseFloat($row.find('.IGSTAmount').text()) || 0;
-        let cess = parseFloat($row.find('.CESSAmount').text()) || 0;
-        let total = parseFloat($row.find('.Total input').val()) || 0;
+        let subtotal = getNumber($row.find('.SubTotal input').val()) || 0;
+        let cgst = getNumber($row.find('.CGSTAmount').text()) || 0;
+        let sgst = getNumber($row.find('.SGSTAmount').text()) || 0;
+        let igst = getNumber($row.find('.IGSTAmount').text()) || 0;
+        let cess = getNumber($row.find('.CESSAmount').text()) || 0;
+        let total = getNumber($row.find('.Total input').val()) || 0;
 
         subtotalTotal += subtotal;
         cgstTotal += cgst;
@@ -1592,32 +1604,55 @@ function calculateGrandTotal() {
         cessTotal += cess;
         grandTotal += total;
     });
+     
+    $('#SubtotalRow #SubTotalTotal').val(formatRupee(subtotalTotal));
+    $('#SubtotalRow #CGSTTotal').val(formatRupee(cgstTotal));
+    $('#SubtotalRow #SGSTTotal').val(formatRupee(sgstTotal));
+    $('#SubtotalRow #IGSTTotal').val(formatRupee(igstTotal));
+    $('#SubtotalRow #CESSTotal').val(formatRupee(cessTotal));
+    $('#SubtotalRow #Subtotal').val(formatRupee(grandTotal));
 
-    $('#SubtotalRow #SubTotalTotal').val(subtotalTotal.toFixed(2));
-    $('#SubtotalRow #CGSTTotal').val(cgstTotal.toFixed(2));
-    $('#SubtotalRow #SGSTTotal').val(sgstTotal.toFixed(2));
-    $('#SubtotalRow #IGSTTotal').val(igstTotal.toFixed(2));
-    $('#SubtotalRow #CESSTotal').val(cessTotal.toFixed(2));
-    $('#SubtotalRow #Subtotal').val(grandTotal.toFixed(2));
-
-    // Round-off logic
+    // ✅ Round-off logic (kept same, but safe)
     var decimalPart = grandTotal.toFixed(2).split('.')[0];
     var roundedDecimal = Math.ceil(decimalPart);
     var AddOrSub = roundedDecimal;
 
     var RoundOffValu = grandTotal.toFixed(2).split('.')[1];
+
     if (RoundOffValu >= 50) {
         $('#roundOff').css('color', 'green');
         AddOrSub++;
-    } else if (RoundOffValu == '00') {
+    } else if (RoundOffValu === '00') {
         $('#roundOff').css('color', 'blue');
-    } else if (RoundOffValu <= 50) {
+    } else {
         $('#roundOff').css('color', 'orange');
     }
 
-    $('#roundOff').val('0.' + RoundOffValu);
-    $('#GrantTotal').val(AddOrSub.toFixed(2));
+    $('#roundOff').val(formatRupee('0.' + RoundOffValu));
+    $('#GrantTotal').val(formatRupee(AddOrSub.toFixed(2)));
 }
+
+function getNumber(value) {
+    if (value == null) return 0;
+
+    return parseFloat(
+        value
+            .toString()
+            .replace(/₹/g, '')
+            .replace(/,/g, '')
+            .trim()
+    ) || 0;
+}
+
+function formatRupee(value) {
+    let num = getNumber(value);
+
+    return '₹' + num.toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
 
 // ========== Trigger Calculation on Input ==========
 $(document).on("input", ".SellingPrice, .TableRowQty", function () {
@@ -1666,6 +1701,10 @@ function VendorAlignmentOpen() {
     $('#BillFromColumn').show();
     $('#VendorColumn').show();
     $('#ShippingColumn').show();
+    $('#OriginalInvoiceNoDiv').show();
+    $('#PurchaseOrderNoDiv').show();
+    //$('#OriginalInvoiceNoDiv').hide();
+    //$('#PurchaseOrderNoDiv').hide();
     $('#AddVendorlableColumn').removeClass('d-flex justify-content-center');
 
     $('#PurchaseInvoiceNumberDiv').removeClass('col-lg-4 col-md-6 col-sm-6 col-6').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
@@ -1675,7 +1714,7 @@ function VendorAlignmentOpen() {
     $('#POColumn').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-4 col-md-12 col-sm-12 col-12');
 
     $('#PurchaseOrderDateDiv').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
-    $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3').stop(true, true).slideToggle(300);
+    $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3, #OriginalInvoiceNoDiv, #PurchaseOrderNoDiv').stop(true, true).slideToggle(300);
     $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
 
     //if (!TriggerValues) {
@@ -1684,12 +1723,15 @@ function VendorAlignmentOpen() {
     //    Common.bindDropDownParent('AlternativeCompanyAddress', 'FormShipping', 'PlantBillFrom');
     //} 
 }
+
 function VendorAlignmentClose() {
     $('#AddVendorlableColumn').show();
     $('#BillFromColumn').hide();
     $('#VendorColumn').hide();
     $('#ShippingColumn').hide();
     $('#AddVendorlableColumn').removeClass('d-flex justify-content-center');
+    $('#OriginalInvoiceNoDiv').show();
+    $('#PurchaseOrderNoDiv').show();
 
     $('#PurchaseInvoiceNumberDiv').removeClass('col-lg-6 col-md-6 col-sm-6 col-6').addClass('col-lg-4 col-md-6 col-sm-6 col-6');
     $('#PurchaseInvoiceDateDiv').removeClass('col-lg-6 col-md-6 col-sm-6 col-6').addClass('col-lg-4 col-md-6 col-sm-6 col-6');
@@ -2236,14 +2278,16 @@ $(document).on("input change", ".calculateinventory, .OtherValueInsert", functio
 });
 
 function calculateOtherCharges() {
-    let grandTotal = parseFloat($("#Subtotal").val()) || 0;
+
+    // ✅ Read grand total WITHOUT ₹
+    let grandTotal = getNumber($("#Subtotal").val());
     let finalTotal = grandTotal;
 
     $("#dynamicBindRow .OtherChargesRow").each(function () {
         let row = $(this);
         let type = row.attr("data-id");
 
-        let value = parseFloat(row.find(".OtherValueInsert").val()) || 0;
+        let value = getNumber(row.find(".OtherValueInsert").val());
         let isPercentage = row.find("input[value='1']").is(":checked");
 
         let calcValue = 0;
@@ -2254,7 +2298,9 @@ function calculateOtherCharges() {
             calcValue = value;
         }
 
-        row.find(".otherChargeValue").val(calcValue.toFixed(2));
+        // ✅ Show ₹, store numeric
+        row.find(".otherChargeValue").val(formatRupee(calcValue));
+        row.find(".otherChargeValueRaw").val(calcValue.toFixed(2)); // hidden raw field (optional)
 
         if (type === "Discount") {
             finalTotal -= calcValue;
@@ -2266,9 +2312,10 @@ function calculateOtherCharges() {
     // =========================
     // CUSTOM ROUNDING RULE
     // =========================
+
     let beforeRound = finalTotal.toFixed(2);
     let split = beforeRound.split('.');
-    let whole = parseInt(split[0]);
+    let whole = parseInt(split[0], 10);
     let decimal = parseFloat("0." + split[1]);
 
     let roundedTotal = 0;
@@ -2278,23 +2325,37 @@ function calculateOtherCharges() {
     if (decimal === 0) {
         roundedTotal = whole;
         roundOffValue = 0;
+        $('#roundOff').css('color', 'blue');
     }
-
     // CASE 2 — Decimal < 0.50 → ROUND DOWN
     else if (decimal < 0.50) {
-        roundedTotal = whole;                 // go down
-        roundOffValue = decimal.toFixed(2);   // show positive decimal
+        roundedTotal = whole;
+        roundOffValue = decimal;
         $('#roundOff').css('color', 'orange');
     }
-
     // CASE 3 — Decimal ≥ 0.50 → ROUND UP
     else {
-        roundedTotal = whole + 1;                     // go up
-        roundOffValue = (1 - decimal).toFixed(2);     // positive difference
+        roundedTotal = whole + 1;
+        roundOffValue = 1 - decimal;
         $('#roundOff').css('color', 'green');
     }
 
-    // SET OUTPUTS
-    $('#roundOff').val(roundOffValue);
-    $("#GrantTotal").val(roundedTotal.toFixed(2));
-} 
+    // ✅ Bind with ₹
+    $('#roundOff').val(formatRupee(roundOffValue));
+    $("#GrantTotal").val(formatRupee(roundedTotal.toFixed(2)));
+}
+
+
+//// ========== Row Insert Parsing Function ==========
+function parseFloatValueInsert(value) {
+    if (value == null) return 0;
+
+    return parseFloat(
+        value
+            .toString()
+            .replace(/₹/g, '')   // remove rupee symbol
+            .replace(/,/g, '')   // remove commas
+            .replace('%', '')    // remove percentage if present
+            .trim()
+    ) || 0;
+};

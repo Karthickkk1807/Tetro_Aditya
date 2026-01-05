@@ -451,7 +451,8 @@ function GetReportName() {
         dataType: "json",
         url: '/Report/GetReportName',
         data: {
-            ReportId: Common.parseInputValue('mainModuleDropdown')
+           // ReportId: Common.parseInputValue('mainModuleDropdown')
+            ModuleName: $('#mainModuleDropdown option:selected').text()
         },
         success: function (response) {
             if (response.status) {
@@ -461,7 +462,7 @@ function GetReportName() {
                 data[0].forEach(function (item, index) {
                     var isActive = index === 0 ? 'active' : '';
                     var reportMainName = `<li>
-						<a  class="${isActive}">${item.ReportModuleName}</a>
+						<a  class="${isActive}">${item.ReportName}</a>
 					</li>`;
                     $('#subModuleList').append(reportMainName);
                 });

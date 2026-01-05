@@ -282,180 +282,264 @@ $(document).ready(async function () {
     });
 
     $(document).on('click', '#BtnSave', function () {
-        if ($(".ShipToedit-icon i.fas.fa-save:visible").length > 0) {
-            Common.warningMsg('Please Save the Ship To Address before Proceeding.');
-            return false;
-        }
-        if ($("#TopStatic").valid() && $("#FormShipping").valid() && $("#FormShipTo").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
-            $('#loader-pms').show();
-            getExistFiles();
 
-            var objvalue = {
-                OutWardId: OutWardId > 0 ? parseInt(OutWardId) : null,
-                OutwardDate: $('#OutwardDate').val() || null,
-                OutwardNo: $('#OutwardNo').val() || null,
-                OutWardTo: parseInt($('#OutWardTo').val()) || null,
-                PackingSlipNo: $('#PackingSlipNo').val() || null,
-                ShipFrom: $('#ShipFromId').val() || null,
-                ShipTo: $('#ShipToId').val() || null,
-                ShipToAddress: $('#ShipToAddress').text() || null,
-                ShipToCity: $('#ShipToCity').text() || null,
-                ShiptoMobileNo: $('#ShipToContactNumber').text() || null,
-                ShipToPlaceOfSupply: $('#ShipToPlaceOfSupply').text() || null,
-                OutWardedBy: parseInt($('#OutWardBy').val()) || null,
-                NoofFabric: parseInt($('#NoofFabric').val()) || null,
-                TotalQty: parseFloat($('#TotalQty').val()) || null,
-                TotalRolls: parseFloat($('#TotalRolls').val()) || null,
-                Notes: $('#AddNotesText').val() || null,
-                VehicleNo: $('#VehicleNO').val() || null,
-                DriverName: $('#DriverName').val() || null,
-                OutWardStatusId: parseInt($('#OutWardStatus').val()) || null,
-                InwardId: parseInt($('#InwardNo').val()) || null,
-                PlantId: parseInt(PlantMappingId),
-            };
+        saveOutward(function () { 
+            $('#OutWardModal').hide();
 
-            var FabricMapping = [];
-            var FabricProcessMapping = [];
-
-            var currentGroupRowNo = 0;
-            var parentFabricTypeId = null;
-
-            $("#OutWardTableBody .dynamic-item-row, #OutWardTableBody .dynamic-item-row_Second").each(function () {
-                let row = $(this);
-                let currentRowFabricVal = row.find(".FabricSelect").val();
-
-                // ---- IDENTIFY PARENT OR CHILD ROW ----
-                if (row.hasClass("dynamic-item-row")) {
-                    currentGroupRowNo = 1;
-                    parentFabricTypeId = currentRowFabricVal;
-                    row.find(".FabricSelect").val(parentFabricTypeId);
-                } else if (row.hasClass("dynamic-item-row_Second")) {
-                    currentGroupRowNo++;
-                }
-
-                // ---- GET OutwardFabricId ----
-                let OutwardFabricId = row.find(".outwardFabricId").text().trim();
-                if (!OutwardFabricId) {
-                    OutwardFabricId = row.prevAll(".dynamic-item-row").first().find(".outwardFabricId").text().trim();
-                }
-
-                let OutwardFabricProcessMappingId = row.find(".OutwardFabricProcessMappingId").text().trim();
-
-                // ---- PUSH FABRIC MAPPING ROW DATA INLINE ----
-                FabricMapping.push({
-                    OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
-                    FabricTypeId: parseInt(parentFabricTypeId) || null,
-                    ProcessCount: row.find(".Process").val()?.length || 0,
-                    Dia: parseFloat(row.find(".DiaInput").val()) || null,
-                    GSM: parseFloat(row.find(".GsmInput").val()) || null,
-                    Qty: parseFloat(row.find(".QtyInput").val()) || null,
-                    NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
-                    Width: parseInt(row.find(".WidthSelect").val()) || null,
-                    OutwardId: OutWardId > 0 ? parseInt(OutWardId) : null,
-                    RowNo: currentGroupRowNo,
-                });
-
-                // ---- PUSH PROCESS MAPPING INLINE ----
-                let selectedProcessIds = row.find("select.Process").val() || [];
-                selectedProcessIds.forEach(pid => {
-                    FabricProcessMapping.push({
-                        RowNo: currentGroupRowNo,
-                        OutwardFabricProcessMappingId: OutwardFabricProcessMappingId ? parseInt(OutwardFabricProcessMappingId) : null,
-                        OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
-                        FabricTypeId: parentFabricTypeId ? parseInt(parentFabricTypeId) : null,
-                        ProcessId: parseInt(pid)
-                    });
-                });
-            });
-
-            formDataMultiple.append("OutwardStaticData", JSON.stringify(objvalue));
-            formDataMultiple.append("OutwardFabricDetails", JSON.stringify(FabricMapping));
-            formDataMultiple.append("OutwardFabricProcessMappingDetails", JSON.stringify(FabricProcessMapping));
-            formDataMultiple.append("Exist", JSON.stringify(existFiles));
-            formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
-
-            $.ajax({
-                type: "POST",
-                url: "/Productions/InsertUpdateOutwardDetails",
-                data: formDataMultiple,
-                contentType: false,
-                processData: false,
-
-                success: function (response) {
-                    if (response.status) {
-                        formDataMultiple = new FormData();
-                        $('#loader-pms').hide();
-                        Common.successMsg(response.message);
-                        $('#OutWardModal').hide();
-                        var fnData = Common.getDateFilter('dateDisplay2');
-                        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
-                    }
-                    else {
-                        formDataMultiple = new FormData();
-                        Common.errorMsg(response.message);
-                    }
+            var fnData = Common.getDateFilter('dateDisplay2');
+            Common.ajaxCall(
+                "GET",
+                "/Productions/GetOutward",
+                {
+                    PlantId: parseInt(PlantMappingId),
+                    OutWardId: null,
+                    FromDate: fnData.startDate.toISOString(),
+                    ToDate: fnData.endDate.toISOString()
                 },
-
-                error: function (response) {
-                    Common.errorMsg(response.message);
-                }
-            }); 
-        }
+                GetOutwardSuccess,
+                null
+            );
+        });
     });
 
+    function saveOutward(callback, options = {}) {
 
-    $(document).on('click', '#BtnSavePreviewbtn', function () {
+        const showSuccessMsg = options.showSuccessMsg !== false; // default true
+
+        if ($(".ShipToedit-icon i.fas.fa-save:visible").length > 0) {
+            Common.warningMsg('Please Save the Ship To Address before Proceeding.');
+            return;
+        }
+
+        if (
+            !$("#TopStatic").valid() ||
+            !$("#FormShipping").valid() ||
+            !$("#FormShipTo").valid() ||
+            !$("#TableInputs").valid() ||
+            !$("#FormStatus").valid()
+        ) {
+            return;
+        }
+
         $('#loader-pms').show();
-        var EditData = { NoOfCopies: 1, printType: "preview" }
+        getExistFiles();
+
+        /* ================= STATIC DATA ================= */
+        var objvalue = {
+            OutWardId: OutWardId > 0 ? parseInt(OutWardId) : null,
+            OutwardDate: $('#OutwardDate').val() || null,
+            OutwardNo: $('#OutwardNo').val() || null,
+            OutWardTo: parseInt($('#OutWardTo').val()) || null,
+            PackingSlipNo: $('#PackingSlipNo').val() || null,
+            ShipFrom: $('#ShipFromId').val() || null,
+            ShipTo: $('#ShipToId').val() || null,
+            ShipToAddress: $('#ShipToAddress').text() || null,
+            ShipToCity: $('#ShipToCity').text() || null,
+            ShiptoMobileNo: $('#ShipToContactNumber').text() || null,
+            ShipToPlaceOfSupply: $('#ShipToPlaceOfSupply').text() || null,
+            OutWardedBy: parseInt($('#OutWardBy').val()) || null,
+            NoofFabric: parseInt($('#NoofFabric').val()) || null,
+            TotalQty: parseFloat($('#TotalQty').val()) || null,
+            TotalRolls: parseFloat($('#TotalRolls').val()) || null,
+            Notes: $('#AddNotesText').val() || null,
+            VehicleNo: $('#VehicleNO').val() || null,
+            DriverName: $('#DriverName').val() || null,
+            OutWardStatusId: parseInt($('#OutWardStatus').val()) || null,
+            InwardId: parseInt($('#InwardNo').val()) || null,
+            PlantId: parseInt(PlantMappingId)
+        };
+
+        /* ================= FABRIC & PROCESS ================= */
+        var FabricMapping = [];
+        var FabricProcessMapping = [];
+
+        var currentGroupRowNo = 0;
+        var parentFabricTypeId = null;
+
+        $("#OutWardTableBody .dynamic-item-row, #OutWardTableBody .dynamic-item-row_Second").each(function () {
+
+            let row = $(this);
+            let fabricVal = row.find(".FabricSelect").val();
+
+            if (row.hasClass("dynamic-item-row")) {
+                currentGroupRowNo = 1;
+                parentFabricTypeId = fabricVal;
+            } else {
+                currentGroupRowNo++;
+            }
+
+            let OutwardFabricId = row.find(".outwardFabricId").text().trim()
+                || row.prevAll(".dynamic-item-row").first().find(".outwardFabricId").text().trim();
+
+            let OutwardFabricProcessMappingId = row.find(".OutwardFabricProcessMappingId").text().trim();
+
+            FabricMapping.push({
+                OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
+                FabricTypeId: parentFabricTypeId ? parseInt(parentFabricTypeId) : null,
+                ProcessCount: row.find(".Process").val()?.length || 0,
+                Dia: parseFloat(row.find(".DiaInput").val()) || null,
+                GSM: parseFloat(row.find(".GsmInput").val()) || null,
+                Qty: parseFloat(row.find(".QtyInput").val()) || null,
+                NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
+                Width: parseInt(row.find(".WidthSelect").val()) || null,
+                OutwardId: OutWardId > 0 ? parseInt(OutWardId) : null,
+                RowNo: currentGroupRowNo
+            });
+
+            (row.find("select.Process").val() || []).forEach(pid => {
+                FabricProcessMapping.push({
+                    RowNo: currentGroupRowNo,
+                    OutwardFabricProcessMappingId: OutwardFabricProcessMappingId ? parseInt(OutwardFabricProcessMappingId) : null,
+                    OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
+                    FabricTypeId: parentFabricTypeId ? parseInt(parentFabricTypeId) : null,
+                    ProcessId: parseInt(pid)
+                });
+            });
+        });
+
+        formDataMultiple.append("OutwardStaticData", JSON.stringify(objvalue));
+        formDataMultiple.append("OutwardFabricDetails", JSON.stringify(FabricMapping));
+        formDataMultiple.append("OutwardFabricProcessMappingDetails", JSON.stringify(FabricProcessMapping));
+        formDataMultiple.append("Exist", JSON.stringify(existFiles));
+        formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
 
         $.ajax({
-            url: '/Productions/OutwardPrint',
-            method: 'GET',
-            data: EditData,
-            xhrFields: {
-                responseType: 'blob'
-            },
+            type: "POST",
+            url: "/Productions/InsertUpdateOutwardDetails",
+            data: formDataMultiple,
+            contentType: false,
+            processData: false,
             success: function (response) {
-                var printType = "Preview";
-                $('#ShareDropdownitems').css('display', 'none');
-                var blob = new Blob([response], { type: 'application/pdf' });
-                var blobUrl = URL.createObjectURL(blob);
-                if (printType == "Preview") {
-                    var newTab = window.open();
-                    if (newTab) {
-                        newTab.document.write(`
-                                              <html>
-                                              <head><title>Outward Preview</title></head>
-                                              <body style="margin:0;">
-                                                  <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-                                              </body>
-                                              </html>
-                                          `);
-                        newTab.document.close();
+
+                $('#loader-pms').hide();
+
+                if (response.status) {
+                    formDataMultiple = new FormData();
+
+                    if (showSuccessMsg) {
+                        Common.successMsg(response.message);
                     }
 
-                } else if (printType == "Download") {
-                    var link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = 'Purchase Order.pdf';
-                    link.click();
-                } else if (printType == "Print") {
-                    var iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = blobUrl;
-                    document.body.appendChild(iframe);
-                    iframe.contentWindow.print();
-                }
-                $('#loader-pms').hide();
-                /* Print*/
+                    if (callback) {
+                        var data = JSON.parse(response.data);
+                        callback(data[0][0].OutWardId);
+                    }
 
+                } else {
+                    Common.errorMsg(response.message);
+                }
             },
             error: function () {
                 $('#loader-pms').hide();
-                Common.errorMsg(response.message);
+                Common.errorMsg("Save failed");
             }
         });
+    }
+
+    $(document).on('click', '#BtnSavePreviewbtn', function () {
+
+        $('#loader-pms').show();
+
+        saveOutward(function (outwardId) {
+
+            if (!outwardId) {
+                $('#loader-pms').hide();
+                Common.errorMsg("Outward ID not found");
+                return;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: '/Productions/OutwardPrint',
+                data: {
+                    ModuleId: outwardId,
+                    NoOfCopies: 1,
+                    printType: "Preview"
+                },
+                xhrFields: { responseType: 'blob' },
+                success: function (response) {
+
+                    var blob = new Blob([response], { type: 'application/pdf' });
+                    var blobUrl = URL.createObjectURL(blob);
+
+                    var newTab = window.open();
+                    if (newTab) {
+                        newTab.document.write(`
+                        <html>
+                        <head><title>Outward Preview</title></head>
+                        <body style="margin:0;">
+                            <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                        </body>
+                        </html>
+                    `);
+                        newTab.document.close();
+                    }
+
+                    $('#loader-pms').hide();
+                },
+                error: function () {
+                    $('#loader-pms').hide();
+                    Common.errorMsg("Preview failed");
+                }
+            });
+
+        }, {
+            showSuccessMsg: false   // ❌ disable save success toast
+        });
     });
+
+    //$(document).on('click', '#BtnSavePreviewbtn', function () {
+    //    $('#loader-pms').show();
+    //    var EditData = { NoOfCopies: 1, printType: "preview" }
+
+    //    $.ajax({
+    //        url: '/Productions/OutwardPrint',
+    //        method: 'GET',
+    //        data: EditData,
+    //        xhrFields: {
+    //            responseType: 'blob'
+    //        },
+    //        success: function (response) {
+    //            var printType = "Preview";
+    //            $('#ShareDropdownitems').css('display', 'none');
+    //            var blob = new Blob([response], { type: 'application/pdf' });
+    //            var blobUrl = URL.createObjectURL(blob);
+    //            if (printType == "Preview") {
+    //                var newTab = window.open();
+    //                if (newTab) {
+    //                    newTab.document.write(`
+    //                                          <html>
+    //                                          <head><title>Outward Preview</title></head>
+    //                                          <body style="margin:0;">
+    //                                              <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+    //                                          </body>
+    //                                          </html>
+    //                                      `);
+    //                    newTab.document.close();
+    //                }
+
+    //            } else if (printType == "Download") {
+    //                var link = document.createElement('a');
+    //                link.href = blobUrl;
+    //                link.download = 'Purchase Order.pdf';
+    //                link.click();
+    //            } else if (printType == "Print") {
+    //                var iframe = document.createElement('iframe');
+    //                iframe.style.display = 'none';
+    //                iframe.src = blobUrl;
+    //                document.body.appendChild(iframe);
+    //                iframe.contentWindow.print();
+    //            }
+    //            $('#loader-pms').hide();
+    //            /* Print*/
+
+    //        },
+    //        error: function () {
+    //            $('#loader-pms').hide();
+    //            Common.errorMsg(response.message);
+    //        }
+    //    });
+    //});
 
     $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
@@ -773,7 +857,7 @@ function duplicateFabric() {
             </td> 
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
-            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
+            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
             <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" required oninput="Common.allowOnlyNumberLength(this,3)" ></td> 
             <td>
                 <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
@@ -837,7 +921,7 @@ function addNewFabricRow(afterRow) {
             </td> 
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
-            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
+            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
             <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" required oninput="Common.allowOnlyNumberLength(this,3)" ></td> 
             <td>
                 <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
@@ -1253,3 +1337,126 @@ function bindDropDownWidth(id, moduleName, callback) {
         }
     });
 }
+
+
+//$(document).on('click', '#BtnSave', function () {
+//    if ($(".ShipToedit-icon i.fas.fa-save:visible").length > 0) {
+//        Common.warningMsg('Please Save the Ship To Address before Proceeding.');
+//        return false;
+//    }
+//    if ($("#TopStatic").valid() && $("#FormShipping").valid() && $("#FormShipTo").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
+//        $('#loader-pms').show();
+//        getExistFiles();
+
+//        var objvalue = {
+//            OutWardId: OutWardId > 0 ? parseInt(OutWardId) : null,
+//            OutwardDate: $('#OutwardDate').val() || null,
+//            OutwardNo: $('#OutwardNo').val() || null,
+//            OutWardTo: parseInt($('#OutWardTo').val()) || null,
+//            PackingSlipNo: $('#PackingSlipNo').val() || null,
+//            ShipFrom: $('#ShipFromId').val() || null,
+//            ShipTo: $('#ShipToId').val() || null,
+//            ShipToAddress: $('#ShipToAddress').text() || null,
+//            ShipToCity: $('#ShipToCity').text() || null,
+//            ShiptoMobileNo: $('#ShipToContactNumber').text() || null,
+//            ShipToPlaceOfSupply: $('#ShipToPlaceOfSupply').text() || null,
+//            OutWardedBy: parseInt($('#OutWardBy').val()) || null,
+//            NoofFabric: parseInt($('#NoofFabric').val()) || null,
+//            TotalQty: parseFloat($('#TotalQty').val()) || null,
+//            TotalRolls: parseFloat($('#TotalRolls').val()) || null,
+//            Notes: $('#AddNotesText').val() || null,
+//            VehicleNo: $('#VehicleNO').val() || null,
+//            DriverName: $('#DriverName').val() || null,
+//            OutWardStatusId: parseInt($('#OutWardStatus').val()) || null,
+//            InwardId: parseInt($('#InwardNo').val()) || null,
+//            PlantId: parseInt(PlantMappingId),
+//        };
+
+//        var FabricMapping = [];
+//        var FabricProcessMapping = [];
+
+//        var currentGroupRowNo = 0;
+//        var parentFabricTypeId = null;
+
+//        $("#OutWardTableBody .dynamic-item-row, #OutWardTableBody .dynamic-item-row_Second").each(function () {
+//            let row = $(this);
+//            let currentRowFabricVal = row.find(".FabricSelect").val();
+
+//            // ---- IDENTIFY PARENT OR CHILD ROW ----
+//            if (row.hasClass("dynamic-item-row")) {
+//                currentGroupRowNo = 1;
+//                parentFabricTypeId = currentRowFabricVal;
+//                row.find(".FabricSelect").val(parentFabricTypeId);
+//            } else if (row.hasClass("dynamic-item-row_Second")) {
+//                currentGroupRowNo++;
+//            }
+
+//            // ---- GET OutwardFabricId ----
+//            let OutwardFabricId = row.find(".outwardFabricId").text().trim();
+//            if (!OutwardFabricId) {
+//                OutwardFabricId = row.prevAll(".dynamic-item-row").first().find(".outwardFabricId").text().trim();
+//            }
+
+//            let OutwardFabricProcessMappingId = row.find(".OutwardFabricProcessMappingId").text().trim();
+
+//            // ---- PUSH FABRIC MAPPING ROW DATA INLINE ----
+//            FabricMapping.push({
+//                OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
+//                FabricTypeId: parseInt(parentFabricTypeId) || null,
+//                ProcessCount: row.find(".Process").val()?.length || 0,
+//                Dia: parseFloat(row.find(".DiaInput").val()) || null,
+//                GSM: parseFloat(row.find(".GsmInput").val()) || null,
+//                Qty: parseFloat(row.find(".QtyInput").val()) || null,
+//                NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
+//                Width: parseInt(row.find(".WidthSelect").val()) || null,
+//                OutwardId: OutWardId > 0 ? parseInt(OutWardId) : null,
+//                RowNo: currentGroupRowNo,
+//            });
+
+//            // ---- PUSH PROCESS MAPPING INLINE ----
+//            let selectedProcessIds = row.find("select.Process").val() || [];
+//            selectedProcessIds.forEach(pid => {
+//                FabricProcessMapping.push({
+//                    RowNo: currentGroupRowNo,
+//                    OutwardFabricProcessMappingId: OutwardFabricProcessMappingId ? parseInt(OutwardFabricProcessMappingId) : null,
+//                    OutwardFabricId: OutwardFabricId ? parseInt(OutwardFabricId) : null,
+//                    FabricTypeId: parentFabricTypeId ? parseInt(parentFabricTypeId) : null,
+//                    ProcessId: parseInt(pid)
+//                });
+//            });
+//        });
+
+//        formDataMultiple.append("OutwardStaticData", JSON.stringify(objvalue));
+//        formDataMultiple.append("OutwardFabricDetails", JSON.stringify(FabricMapping));
+//        formDataMultiple.append("OutwardFabricProcessMappingDetails", JSON.stringify(FabricProcessMapping));
+//        formDataMultiple.append("Exist", JSON.stringify(existFiles));
+//        formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
+
+//        $.ajax({
+//            type: "POST",
+//            url: "/Productions/InsertUpdateOutwardDetails",
+//            data: formDataMultiple,
+//            contentType: false,
+//            processData: false,
+
+//            success: function (response) {
+//                if (response.status) {
+//                    formDataMultiple = new FormData();
+//                    $('#loader-pms').hide();
+//                    Common.successMsg(response.message);
+//                    $('#OutWardModal').hide();
+//                    var fnData = Common.getDateFilter('dateDisplay2');
+//                    Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
+//                }
+//                else {
+//                    formDataMultiple = new FormData();
+//                    Common.errorMsg(response.message);
+//                }
+//            },
+
+//            error: function (response) {
+//                Common.errorMsg(response.message);
+//            }
+//        });
+//    }
+//});
