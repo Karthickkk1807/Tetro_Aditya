@@ -8,7 +8,7 @@ var printType = "";
 var TriggerValues = true;
 
 $(document).ready(function () {
-    $('.Status-Div').removeClass('d-block').addClass('d-none');
+    //$('.Status-Div').removeClass('d-block').addClass('d-none');
 
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
@@ -317,6 +317,10 @@ $(document).ready(function () {
         var BillFromIsValid = $("#FormBillFrom").validate().form();
 
         if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid) {
+            $('#PurchaseInvoiceSaveBtn-error').insertAfter('#statusError');
+            $('#Vendor-error').insertAfter('.vendorerror');
+            $('#AlternativeCompanyAddress-error').insertAfter('.AlternativeCompanyError');
+            $('#loader-pms').hide();
             return;
         }
 
@@ -413,6 +417,7 @@ $(document).ready(function () {
 
                     if (callback) {
                         var dataId = JSON.parse(response.data);
+                        EditPurchaseId = dataId[0][0].PurchaseOrderId;
                         callback(dataId[0][0].PurchaseOrderId);
                     }
 
@@ -424,9 +429,9 @@ $(document).ready(function () {
                 Common.errorMsg(response.message);
             }
         });
-    } 
+    }
 
-    $(document).on('click', '.btn-edit', function () {
+    $(document).on('click', '.btn-edit', async function () {
 
         $('#loader-pms').show();
         EditPurchaseId = $(this).data('id');
@@ -453,6 +458,12 @@ $(document).ready(function () {
 
         $("#PurchaseOrderModal .modal-body").animate({ scrollTop: 0 }, "fast");
         $('#PurchaseOrderModal').show();
+
+        const activityResponse = await ajaxPromise("GET", "/Common/ActivityHistoryDetails", {
+            ModuleName: "PurchaseOrder",
+            ModuleId: EditPurchaseId
+        });
+        StatusActivitySuccess(activityResponse);
 
         var fnData = Common.getDateFilter('dateDisplay2');
 
@@ -770,6 +781,91 @@ $(document).ready(function () {
             var EditData = {
                 ModuleId: parseInt(purchaseOrderId),
                 NoOfCopies: 1,
+                printType: "Print"
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: '/PurchaseOrder/PurchaseOrderPrint',
+                data: EditData,
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (response) {
+
+                    $('#ShareDropdownitems').hide();
+
+                    var blob = new Blob([response], { type: 'application/pdf' });
+                    var blobUrl = URL.createObjectURL(blob);
+
+                    var printType = EditData.printType;
+
+                    if (printType === "Preview") {
+
+                        var newTab = window.open();
+                        if (newTab) {
+                            newTab.document.write(`
+                            <html>
+                            <head>
+                                <title>Purchase Order Preview</title>
+                            </head>
+                            <body style="margin:0; padding:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
+                            newTab.document.close();
+                        } else {
+                            Common.warningMsg("Popup blocked. Please allow popups.");
+                        }
+
+                    } else if (printType === "Download") {
+
+                        var link = document.createElement('a');
+                        link.href = blobUrl;
+                        link.download = 'Purchase Order.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                    } else if (printType === "Print") {
+
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = blobUrl;
+                        document.body.appendChild(iframe);
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+                        };
+                    }
+
+                    $('#loader-pms').hide();
+                },
+                error: function () {
+                    $('#loader-pms').hide();
+                    Common.errorMsg("Print failed");
+                }
+            });
+        }, {
+            showSuccessMsg: false   // ❌ SUCCESS MESSAGE DISABLED
+        });
+
+    });
+
+    $(document).on('click', '#btnPreviewPorder', function () {
+
+        $('#loader-pms').show();
+
+        savePurchaseOrder(function (purchaseOrderId) {
+            if (!purchaseOrderId) {
+                $('#loader-pms').hide();
+                Common.errorMsg("Purchase Order ID not found");
+                return;
+            }
+
+            var EditData = {
+                ModuleId: parseInt(purchaseOrderId),
+                NoOfCopies: 1,
                 printType: "Preview"
             };
 
@@ -847,6 +943,94 @@ $(document).ready(function () {
         $('#ExpectedDeliveryDate').val(selectedDate);
     });
 });
+
+
+/*========================================================Status Tracking=================================================================*/
+function StatusActivitySuccess(response) {
+    var parsedData = JSON.parse(response.data);
+    var timelineData = parsedData[0];
+
+    var $timeline = $(".horizontal-timeline");
+
+    // Remove existing stages
+    $timeline.find(".timeline-stage").remove();
+    var progressStatuses = [];
+
+    // Append new timeline stages
+    $.each(timelineData, function (index, item) {
+        var status = item.InventoryStatusName || "Unknown";
+        var user = item.UserName || "N/A";
+        var color = item.Status_Color || "#000";
+
+        var date = new Date(item.CreatedDate);
+        var formattedDate = date.toLocaleDateString('en-GB') + ', ' +
+            date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        var statusClass = "status-" + status.toLowerCase().replace(/\s+/g, '');
+
+        var $stage = $('<div>', {
+            class: `timeline-stage ${statusClass}`
+        });
+
+        var $marker = $('<div>', { class: 'stage-marker' });
+
+        var $statusSpan = $('<span>', {
+            class: 'stage-status',
+            text: status,
+            css: { color: color }
+        });
+
+        $marker.append($statusSpan);
+
+        var $content = $('<div>', { class: 'stage-content' });
+        $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
+        $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
+
+        $stage.append($marker).append($content);
+        $timeline.append($stage);
+
+        progressStatuses.push(status);
+
+    });
+
+    setTimeout(function () {
+        updateTimelineProgress(progressStatuses);
+    }, 1000);
+}
+
+function updateTimelineProgress(progressStatuses) {
+    var $timeline = $(".horizontal-timeline");
+    var $fillLine = $timeline.find(".timeline-progress-line-fill");
+    var $stages = $timeline.find(".timeline-stage");
+
+    if ($stages.length === 0) return;
+
+    let $lastValidStage = null;
+
+    $stages.each(function () {
+        const statusText = $(this).find(".stage-status").text().trim();
+        if (progressStatuses.includes(statusText)) {
+            $lastValidStage = $(this);
+        }
+    });
+
+    if ($lastValidStage) {
+        const $marker = $lastValidStage.find(".stage-marker");
+        const timelineLeft = $timeline.offset().left;
+        const markerCenter = $marker.offset().left + ($marker.outerWidth() / 2);
+
+        const fillWidth = markerCenter - timelineLeft;
+
+        $fillLine.css({
+            width: fillWidth + "px"
+        });
+    } else {
+        $fillLine.css({ width: "0" });
+    }
+}
+
+/*========================================================End Status Tracking=================================================================*/
+
 
 async function PurchaseOrderGetNotNull(response) {
     if (!response.status) return;
@@ -1892,6 +2076,13 @@ function parseFloatValueInsert(value) {
             .trim()
     ) || 0;
 };
+ 
+function ajaxPromise(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
+}
+
 
 //// ========== Row Calculation Function ==========
 //function calculateRow($row) {

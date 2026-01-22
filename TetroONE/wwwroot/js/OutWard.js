@@ -127,6 +127,7 @@ $(document).ready(async function () {
         formDataMultiple = new FormData();
         $('#selectedFiles').empty();
         $('#ExistselectedFiles').empty();
+        $('.Status-Div').hide();
 
         Common.removevalidation('TopStatic');
         Common.removevalidation('FormShipping');
@@ -173,7 +174,7 @@ $(document).ready(async function () {
         else $('.ShipTo-edit').show();
     });
 
-    $(document).on('click', '.btn-edit', function () {
+    $(document).on('click', '.btn-edit', async function () {
         OutWardId = $(this).data('id');
 
         $('.dynamic-item-row').remove();
@@ -198,6 +199,14 @@ $(document).ready(async function () {
         $('#AddAttachLable, #AddNotesLable').show();
 
         $('.modal-body').animate({ scrollTop: 0 }, 300);
+        $('.Status-Div').show();
+
+        const activityResponse = await ajaxPromise("GET", "/Common/ActivityHistoryDetails", {
+            ModuleName: "Outward",
+            ModuleId: OutWardId
+        });
+        StatusActivitySuccess(activityResponse);
+
         Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: parseInt(OutWardId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardNotNullSuccess, null);
         $('#OutWardModal').show();
     });
@@ -422,6 +431,7 @@ $(document).ready(async function () {
 
                     if (callback) {
                         var data = JSON.parse(response.data);
+                        OutWardId = data[0][0].OutWardId;
                         callback(data[0][0].OutWardId);
                     }
 
@@ -454,7 +464,7 @@ $(document).ready(async function () {
                 data: {
                     ModuleId: outwardId,
                     NoOfCopies: 1,
-                    printType: "Preview"
+                    printType: "Print"
                 },
                 xhrFields: { responseType: 'blob' },
                 success: function (response) {
@@ -487,60 +497,7 @@ $(document).ready(async function () {
             showSuccessMsg: false   // ❌ disable save success toast
         });
     });
-
-    //$(document).on('click', '#BtnSavePreviewbtn', function () {
-    //    $('#loader-pms').show();
-    //    var EditData = { NoOfCopies: 1, printType: "preview" }
-
-    //    $.ajax({
-    //        url: '/Productions/OutwardPrint',
-    //        method: 'GET',
-    //        data: EditData,
-    //        xhrFields: {
-    //            responseType: 'blob'
-    //        },
-    //        success: function (response) {
-    //            var printType = "Preview";
-    //            $('#ShareDropdownitems').css('display', 'none');
-    //            var blob = new Blob([response], { type: 'application/pdf' });
-    //            var blobUrl = URL.createObjectURL(blob);
-    //            if (printType == "Preview") {
-    //                var newTab = window.open();
-    //                if (newTab) {
-    //                    newTab.document.write(`
-    //                                          <html>
-    //                                          <head><title>Outward Preview</title></head>
-    //                                          <body style="margin:0;">
-    //                                              <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-    //                                          </body>
-    //                                          </html>
-    //                                      `);
-    //                    newTab.document.close();
-    //                }
-
-    //            } else if (printType == "Download") {
-    //                var link = document.createElement('a');
-    //                link.href = blobUrl;
-    //                link.download = 'Purchase Order.pdf';
-    //                link.click();
-    //            } else if (printType == "Print") {
-    //                var iframe = document.createElement('iframe');
-    //                iframe.style.display = 'none';
-    //                iframe.src = blobUrl;
-    //                document.body.appendChild(iframe);
-    //                iframe.contentWindow.print();
-    //            }
-    //            $('#loader-pms').hide();
-    //            /* Print*/
-
-    //        },
-    //        error: function () {
-    //            $('#loader-pms').hide();
-    //            Common.errorMsg(response.message);
-    //        }
-    //    });
-    //});
-
+     
     $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
         if (response == true) {
@@ -1460,3 +1417,96 @@ function bindDropDownWidth(id, moduleName, callback) {
 //        });
 //    }
 //});
+
+
+/*========================================================Status Tracking=================================================================*/
+function StatusActivitySuccess(response) {
+    var parsedData = JSON.parse(response.data);
+    var timelineData = parsedData[0];
+
+    var $timeline = $(".horizontal-timeline");
+
+    // Remove existing stages
+    $timeline.find(".timeline-stage").remove();
+    var progressStatuses = [];
+
+    // Append new timeline stages
+    $.each(timelineData, function (index, item) {
+        var status = item.InventoryStatusName || "Unknown";
+        var user = item.UserName || "N/A";
+        var color = item.Status_Color || "#000";
+
+        var date = new Date(item.CreatedDate);
+        var formattedDate = date.toLocaleDateString('en-GB') + ', ' +
+            date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        var statusClass = "status-" + status.toLowerCase().replace(/\s+/g, '');
+
+        var $stage = $('<div>', {
+            class: `timeline-stage ${statusClass}`
+        });
+
+        var $marker = $('<div>', { class: 'stage-marker' });
+
+        var $statusSpan = $('<span>', {
+            class: 'stage-status',
+            text: status,
+            css: { color: color }
+        });
+
+        $marker.append($statusSpan);
+
+        var $content = $('<div>', { class: 'stage-content' });
+        $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
+        $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
+
+        $stage.append($marker).append($content);
+        $timeline.append($stage);
+
+        progressStatuses.push(status);
+
+    });
+
+    setTimeout(function () {
+        updateTimelineProgress(progressStatuses);
+    }, 1000);
+}
+
+function updateTimelineProgress(progressStatuses) {
+    var $timeline = $(".horizontal-timeline");
+    var $fillLine = $timeline.find(".timeline-progress-line-fill");
+    var $stages = $timeline.find(".timeline-stage");
+
+    if ($stages.length === 0) return;
+
+    let $lastValidStage = null;
+
+    $stages.each(function () {
+        const statusText = $(this).find(".stage-status").text().trim();
+        if (progressStatuses.includes(statusText)) {
+            $lastValidStage = $(this);
+        }
+    });
+
+    if ($lastValidStage) {
+        const $marker = $lastValidStage.find(".stage-marker");
+        const timelineLeft = $timeline.offset().left;
+        const markerCenter = $marker.offset().left + ($marker.outerWidth() / 2);
+
+        const fillWidth = markerCenter - timelineLeft;
+
+        $fillLine.css({
+            width: fillWidth + "px"
+        });
+    } else {
+        $fillLine.css({ width: "0" });
+    }
+}
+
+function ajaxPromise(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
+}
+
+/*========================================================End Status Tracking=================================================================*/

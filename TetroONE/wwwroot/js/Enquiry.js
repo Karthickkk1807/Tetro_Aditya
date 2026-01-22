@@ -200,7 +200,7 @@ $(document).on('click', '#customBtn_enquiryTable', function () {
     $('#EnquiryDate').attr('max', formattedDate);
     $('#EnquiryLookUpDate').attr('min', formattedDate);
 
-    $('#AttendantId').val(EmployeeId).trigger('change');
+    //$('#AttendantId').val(EmployeeId).trigger('change');
     $('#EnquiryTypeId').val(1);
      
     var EditDataId = { ModuleName: 'Enquiry', PlantId: PlantMappingId };
@@ -500,12 +500,11 @@ $('#dyanmicplusbtn').click(function () {
                 $(currentrow).closest('.dynamicrow').find('.checkboxalign').css({ 'margin-bottom': '8px' });
             }
             updateRemoveButtons();
-            setMinDateForFollowUp();
+            //setMinDateForFollowUp();
         }
     }
 });
-
-
+ 
 function updateRowLabels() {
     $('.dynamicrow').each(function (index) {
         $(this).find('.DynamicLable').text('Enquiry Followup ' + (index + 1));

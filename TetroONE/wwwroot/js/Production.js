@@ -123,7 +123,7 @@ $(document).ready(async function () {
 
     $(document).on('click', '#Clear', function () {
         productionPlanLogId = 0;
-        ArrayProcessTypeId = []; 
+        ArrayProcessTypeId = [];
 
         $("#Clear").hide();
         $('#SaveProductionLog').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
@@ -248,13 +248,20 @@ function GetProductionLogNotNullSuccess(response) {
         bindDropDownSuccessProcessType(data[1], "Process", true);
 
         //$('#Process').val(data[3][0].ProcessTypeId || '');
-        //$('#Quantity').val(data[3][0].Quantity || '');
+        if (data[1] && data[1][0] && data[1][0].StatusName === "Started") {
+            $('#Quantity').val('');
+            $('#Remarks').val('');
+        } else {
+            $('#Quantity').val(data[3][0].Quantity != null ? Number(data[3][0].Quantity).toFixed(3) : '');
+            $('#Remarks').val(data[3][0].Remarks || '');
+        }
+
         $('#PreparedBy').val(data[3][0].PreparedBy || '');
         $('#Remarks').val(data[3][0].Remarks || '');
         //$('#Status').val(data[3][0].ProductionLogStatusId || '');
 
         ArrayProcessTypeId = data[4];
-
+        productionPlanLogId = data[5][0].ProductionLogId;
         $('#TransactionsInfo').empty('');
         var html = `
             <div class="table-responsive">

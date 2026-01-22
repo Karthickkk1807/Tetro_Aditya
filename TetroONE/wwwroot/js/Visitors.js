@@ -180,7 +180,7 @@ $(document).on('click', '#customBtn_VisitorTable', function () {
     $('#InsertVisitorInfo').modal('show');
     $('#VisitorPopupHeader').text('Add Visitor');    
     $('#VisitorTypeId').val(3); 
-    $('#AttendantId').val(EmployeeId);
+    //$('#AttendantId').val(EmployeeId);
     var EditDataId = { ModuleName: 'Visitor', PlantId: PlantMappingId };
 
     Common.ajaxCall("GET", "/Common/GetAutoGenerate", EditDataId, function (response) {

@@ -42,23 +42,23 @@ namespace TetroONE.Models
         public DateTime? InsuranceDate { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public int PayTypeId { get; set; }
-        public decimal CTC { get; set; }
-        public decimal AccAmount { get; set; }
-        public decimal CashAmount { get; set; }
-        public int PayGroupId { get; set; }
-        public bool IsPFApplicable { get; set; }
+        public decimal? CTC { get; set; }
+        public decimal? AccAmount { get; set; }
+        public decimal? CashAmount { get; set; }
+        public int? PayGroupId { get; set; }
+        public bool? IsPFApplicable { get; set; }
         public string? UANNumber { get; set; }
         public string? PFNumber { get; set; }
         public string? EmployeeContribution { get; set; }
         public string? EmployerContribution { get; set; }
-        public bool IsESIApplicable { get; set; }
+        public bool? IsESIApplicable { get; set; }
         public string? ESINumber { get; set; }
         public string? ESIEmployeeContribution { get; set; }
         public string? ESIEmployerContribution { get; set; }
         public int? PlantId { get; set; }
-        public int UserTypeId { get; set; }
-        public int UserGroupId { get; set; }
-        public bool IsLoginUser { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UserGroupId { get; set; }
+        public bool? IsLoginUser { get; set; }
 
         public List<AttendanceMachineMappingDetail> attendanceMachineMappingDetails { get; set; }
         public DataTable TVP_EmployeeDeviceMappingDetails { get; set; }

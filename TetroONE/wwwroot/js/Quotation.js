@@ -121,7 +121,8 @@ $(document).ready(async function () {
         $('.DynamicColorList').empty();
         $('.DynamicProcessList').empty();
         Common.removevalidation('FormQuotation');
-        $('#CreatedByDiv').hide();
+        $('#CreatedByDiv').hide(); 
+        $('.Status-Div').hide();
         var currentDate = new Date();
         var formattedDate = currentDate.toISOString().slice(0, 10);
         $('#QuotationDate').val(formattedDate);
@@ -139,6 +140,13 @@ $(document).ready(async function () {
         duplicateRowColor();
         CanvasOpenFirstShowingQuotation();
 
+        var EditDataId = { ModuleName: 'Quotation', ModuleId: null }
+        Common.ajaxCall("GET", "/Common/GetInventoryStatusDetails", EditDataId, function (response) {
+            if (response.status);
+            Common.bindDropDownSuccess(response.data, "QuotationStatusId");
+            $('#QuotationStatusId').val(1).trigger('change');
+        }, null);
+         
         Common.ajaxCall("GET", "/Common/GetAutoGenerate", { ModuleName: 'Quotation', PlantId: PlantMappingId }, function (response) {
             Common.AutoGenerateNumberGet(response, "QuotationNo", "QuotationNo");
         });
@@ -147,7 +155,7 @@ $(document).ready(async function () {
         $('#PrintQuotation').removeClass('btn btn-primary m-r-20 text-white').addClass('btn btn-success m-r-20 text-white');
     });
 
-    $(document).on('click', '.btn-edit', function () {
+    $(document).on('click', '.btn-edit', async function () {
         QuotationId = $(this).data('id');
         var windowWidth = $(window).width();
         if (windowWidth <= 600) {
@@ -169,10 +177,17 @@ $(document).ready(async function () {
         $('#selectedFiles').empty();
         $('#ExistselectedFiles').empty();
 
+        $('.Status-Div').show();
         $('#CreatedByDiv').show();
         CanvasOpenFirstShowingQuotation();
         $('#SaveQuotation').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
         $('#PrintQuotation').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
+
+        const activityResponse = await ajaxPromise("GET", "/Common/ActivityHistoryDetails", {
+            ModuleName: "Quotation",
+            ModuleId: QuotationId
+        });
+        StatusActivitySuccess(activityResponse);
 
         var fnData = Common.getDateFilter('dateDisplay2');
         Common.ajaxCall("GET", "/Sale/GetQuotation", { PlantId: parseInt(PlantMappingId), QuotationId: QuotationId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, QuotationNotNullSuccess, null);
@@ -264,6 +279,7 @@ $(document).ready(async function () {
                         $('#selectedFiles').empty();
                         $('#ExistselectedFiles').empty();
 
+                        QuotationId = data[0][0].QuotationId; 
                         callback(data[0][0].QuotationId);
                     }
                 } else {
@@ -323,7 +339,7 @@ $(document).ready(async function () {
             var EditData = {
                 ModuleId: parseInt(quotationId),
                 NoOfCopies: 1,
-                printType: "Preview"
+                printType: "Print"
             };
 
             $.ajax({
@@ -442,11 +458,104 @@ function QuotationInsertUpdateSuccess(response) {
     }
 }
 
+/*========================================================Status Tracking=================================================================*/
+function StatusActivitySuccess(response) {
+    var parsedData = JSON.parse(response.data);
+    var timelineData = parsedData[0];
+
+    var $timeline = $(".horizontal-timeline");
+
+    // Remove existing stages
+    $timeline.find(".timeline-stage").remove();
+    var progressStatuses = [];
+
+    // Append new timeline stages
+    $.each(timelineData, function (index, item) {
+        var status = item.InventoryStatusName || "Unknown";
+        var user = item.UserName || "N/A";
+        var color = item.Status_Color || "#000";
+
+        var date = new Date(item.CreatedDate);
+        var formattedDate = date.toLocaleDateString('en-GB') + ', ' +
+            date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        var statusClass = "status-" + status.toLowerCase().replace(/\s+/g, '');
+
+        var $stage = $('<div>', {
+            class: `timeline-stage ${statusClass}`
+        });
+
+        var $marker = $('<div>', { class: 'stage-marker' });
+
+        var $statusSpan = $('<span>', {
+            class: 'stage-status',
+            text: status,
+            css: { color: color }
+        });
+
+        $marker.append($statusSpan);
+
+        var $content = $('<div>', { class: 'stage-content' });
+        $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
+        $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
+
+        $stage.append($marker).append($content);
+        $timeline.append($stage);
+
+        progressStatuses.push(status);
+
+    });
+
+    setTimeout(function () {
+        updateTimelineProgress(progressStatuses);
+    }, 1000);
+}
+
+function updateTimelineProgress(progressStatuses) {
+    var $timeline = $(".horizontal-timeline");
+    var $fillLine = $timeline.find(".timeline-progress-line-fill");
+    var $stages = $timeline.find(".timeline-stage");
+
+    if ($stages.length === 0) return;
+
+    let $lastValidStage = null;
+
+    $stages.each(function () {
+        const statusText = $(this).find(".stage-status").text().trim();
+        if (progressStatuses.includes(statusText)) {
+            $lastValidStage = $(this);
+        }
+    });
+
+    if ($lastValidStage) {
+        const $marker = $lastValidStage.find(".stage-marker");
+        const timelineLeft = $timeline.offset().left;
+        const markerCenter = $marker.offset().left + ($marker.outerWidth() / 2);
+
+        const fillWidth = markerCenter - timelineLeft;
+
+        $fillLine.css({
+            width: fillWidth + "px"
+        });
+    } else {
+        $fillLine.css({ width: "0" });
+    }
+}
+
+/*========================================================End Status Tracking=================================================================*/
+
 function QuotationNotNullSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
         Common.bindData(data[0]);
-
+         
+        var EditDataId = { ModuleName: 'Quotation', ModuleId: parseInt(QuotationId) }
+        Common.ajaxCall("GET", "/Common/GetInventoryStatusDetails", EditDataId, function (response) {
+            if (response.status);
+            Common.bindDropDownSuccess(response.data, "QuotationStatusId");
+            $('#QuotationStatusId').val(data[0][0].QuotationStatusId);
+        }, null);
+         
         if (data[1][0].QuotationColorMappingId != null && data[1][0].QuotationColorMappingId != "") {
 
             $('.DynamicColorList').empty();
@@ -939,3 +1048,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function ajaxPromise(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
+}

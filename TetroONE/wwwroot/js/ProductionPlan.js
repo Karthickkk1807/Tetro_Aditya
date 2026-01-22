@@ -633,7 +633,7 @@ async function GetProductionPlanNotNullSuccess(response) {
                     </td> 
                     <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
                     <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
-                    <td><input type="number" class="form-control qty" value="${item.Quantity || ''}" required></td> 
+                    <td><input type="text" class="form-control qty" value="${item.Quantity || ''}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
                     <td>
                         <select multiple class="form-control Process" id="processRoute${numberIncr}" name="processRoute${numberIncr}">
                             ${processDropdownOptions}
@@ -1096,7 +1096,7 @@ $(document).on("click", "#BtnAdd", function () {
                         <td data-id="${item.FabricId}"><input type="text" class="form-control fabricType" value="${item.FabricType}" disabled></td>
                         <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
                         <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
-                        <td><input type="number" class="form-control qty" value="${item.AvailableQuantity}" required></td>
+                        <td><input type="text" class="form-control qty" value="${item.AvailableQuantity}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
                         <td>
                             <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
                             </select>
@@ -2557,14 +2557,14 @@ $(document).on('click', '#ProductionPlanPreviewbtn', function () {
             var blob = new Blob([response], { type: 'application/pdf' });
             var blobUrl = window.URL.createObjectURL(blob);
 
-            var link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = `${ProductionPlanNo}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            window.URL.revokeObjectURL(blobUrl);
+            var iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = blobUrl;
+            document.body.appendChild(iframe);
+            iframe.onload = function () {
+                iframe.contentWindow.print();
+            };
+              
             $('#loader-pms').hide();
         },
         error: function (xhr) {

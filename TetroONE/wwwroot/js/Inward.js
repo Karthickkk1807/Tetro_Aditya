@@ -137,6 +137,7 @@ $(document).ready(async function () {
         $('#ModalHeading').text('InWard Details');
         $("#BtnSave span:first").text("Save");
 
+        $('.Status-Div').hide();
         var currentDate = new Date();
         var formattedDate = currentDate.toISOString().slice(0, 10);
         $('#InwardDate').val(formattedDate);
@@ -153,7 +154,7 @@ $(document).ready(async function () {
         $('#InWardModal').show();
     });
 
-    $(document).on('click', '.btn-edit', function () {
+    $(document).on('click', '.btn-edit', async function () {
         InWardId = $(this).data('id');
 
         deletedFiles = [];
@@ -171,10 +172,18 @@ $(document).ready(async function () {
         $('#AddAttachLable, #AddNotesLable').show();
 
         $('.modal-body').animate({ scrollTop: 0 }, 300);
-        $('#InWardModal').show();
+        $('.Status-Div').show();
+
+        const activityResponse = await ajaxPromise("GET", "/Common/ActivityHistoryDetails", {
+            ModuleName: "Inward",
+            ModuleId: InWardId
+        });
+        StatusActivitySuccess(activityResponse);
 
         var fnData = Common.getDateFilter('dateDisplay2');
         Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), InwardId: parseInt(InWardId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardNotNullSuccess, null);
+
+        $('#InWardModal').show();
     });
 
     $(document).on('click', '#BtnCancel, #InWardClose', function () {
@@ -912,3 +921,96 @@ function bindDropDownWidth(id, moduleName, callback) {
         }
     });
 }
+
+
+/*========================================================Status Tracking=================================================================*/
+function StatusActivitySuccess(response) {
+    var parsedData = JSON.parse(response.data);
+    var timelineData = parsedData[0];
+
+    var $timeline = $(".horizontal-timeline");
+
+    // Remove existing stages
+    $timeline.find(".timeline-stage").remove();
+    var progressStatuses = [];
+
+    // Append new timeline stages
+    $.each(timelineData, function (index, item) {
+        var status = item.InventoryStatusName || "Unknown";
+        var user = item.UserName || "N/A";
+        var color = item.Status_Color || "#000";
+
+        var date = new Date(item.CreatedDate);
+        var formattedDate = date.toLocaleDateString('en-GB') + ', ' +
+            date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        var statusClass = "status-" + status.toLowerCase().replace(/\s+/g, '');
+
+        var $stage = $('<div>', {
+            class: `timeline-stage ${statusClass}`
+        });
+
+        var $marker = $('<div>', { class: 'stage-marker' });
+
+        var $statusSpan = $('<span>', {
+            class: 'stage-status',
+            text: status,
+            css: { color: color }
+        });
+
+        $marker.append($statusSpan);
+
+        var $content = $('<div>', { class: 'stage-content' });
+        $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
+        $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
+
+        $stage.append($marker).append($content);
+        $timeline.append($stage);
+
+        progressStatuses.push(status);
+
+    });
+
+    setTimeout(function () {
+        updateTimelineProgress(progressStatuses);
+    }, 1000);
+}
+
+function updateTimelineProgress(progressStatuses) {
+    var $timeline = $(".horizontal-timeline");
+    var $fillLine = $timeline.find(".timeline-progress-line-fill");
+    var $stages = $timeline.find(".timeline-stage");
+
+    if ($stages.length === 0) return;
+
+    let $lastValidStage = null;
+
+    $stages.each(function () {
+        const statusText = $(this).find(".stage-status").text().trim();
+        if (progressStatuses.includes(statusText)) {
+            $lastValidStage = $(this);
+        }
+    });
+
+    if ($lastValidStage) {
+        const $marker = $lastValidStage.find(".stage-marker");
+        const timelineLeft = $timeline.offset().left;
+        const markerCenter = $marker.offset().left + ($marker.outerWidth() / 2);
+
+        const fillWidth = markerCenter - timelineLeft;
+
+        $fillLine.css({
+            width: fillWidth + "px"
+        });
+    } else {
+        $fillLine.css({ width: "0" });
+    }
+}
+ 
+function ajaxPromise(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
+}
+
+/*========================================================End Status Tracking=================================================================*/

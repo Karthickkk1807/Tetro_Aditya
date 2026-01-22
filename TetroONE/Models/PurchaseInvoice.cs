@@ -53,6 +53,7 @@ namespace TetroONE.Models
         public int LoginuserId { get; set; }
         public int? VendorId { get; set; }
         public int? PlantId { get; set; } 
+        public int? PurchaseOrderId { get; set; } 
     }
     
     public class DD_GetPurchaseOrderNo

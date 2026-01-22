@@ -162,7 +162,7 @@ $(document).ready(function () {
         //$("#TicketDate").attr("max", today).val(today);
         $('#BindFollowupInfo').empty('');
         $('#TicketingInfoForm #StatusHide').hide();
-        $('#CreatedById').val(UserName);
+        //$('#CreatedById').val(UserName);
         $('#SaveTicketing').text('Save');
         $('#HidingDynamicRow').hide();
         $('#SaveTicketing').removeClass('btn-update').addClass('btn-success');

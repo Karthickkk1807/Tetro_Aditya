@@ -11,7 +11,7 @@ var TriggerValues = true;
 var PurchaseOrderNOData = true;
 
 $(document).ready(async function () {
-    $('.Status-Div').removeClass('d-block').addClass('d-none');
+    //$('.Status-Div').removeClass('d-block').addClass('d-none');
 
     var otherChangesDiscountDropdown = await Common.bindDropDownSync('OtherChargesDiscount');
     OtherChangesDiscountDropdown = JSON.parse(otherChangesDiscountDropdown);
@@ -231,7 +231,7 @@ $(document).ready(async function () {
                 if (responsePlant !== null) {
                     ShipToAddress(responsePlant);
                     updateGSTVisibility('#VendorStateName', '#StateName');
-                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(VendorId), PlantId: parseInt(ShipToId) }, function (responseOrderNo) {
+                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(VendorId), PlantId: parseInt(ShipToId), PurchaseOrderId: null }, function (responseOrderNo) {
                         if (responseOrderNo !== null) {
                             Common.bindDropDownSuccess(responseOrderNo.data, "PurchaseOrderNo");
                         }
@@ -471,8 +471,7 @@ $(document).ready(async function () {
             data: formDataMultiple,
             contentType: false,
             processData: false,
-            success: function (response) {
-
+            success: function (response) { 
                 if (response.status) {
                     formDataMultiple = new FormData();
 
@@ -484,6 +483,7 @@ $(document).ready(async function () {
                     // 🔑 IMPORTANT: return PurchaseBillId
                     if (callback) {
                         var dataId = JSON.parse(response.data);
+                        EditPurchaseBillId = dataId[0][0].PurchaseBillId;
                         callback(dataId[0][0].PurchaseBillId);
                     }
 
@@ -539,6 +539,12 @@ $(document).ready(async function () {
 
         $("#PurchaseInvoiceModal .modal-body").animate({ scrollTop: 0 }, "fast");
         $('#PurchaseInvoiceModal').show();
+
+        const activityResponse = await ajaxPromise("GET", "/Common/ActivityHistoryDetails", {
+            ModuleName: "PurchaseBill",
+            ModuleId: EditPurchaseBillId
+        });
+        StatusActivitySuccess(activityResponse);
 
         var fnData = Common.getDateFilter('dateDisplay2');
 
@@ -810,7 +816,7 @@ $(document).ready(async function () {
             var EditData = {
                 ModuleId: parseInt(purchaseBillId),
                 NoOfCopies: 1,
-                printType: "Preview"
+                printType: "Print"
             };
 
             $.ajax({
@@ -881,61 +887,181 @@ $(document).ready(async function () {
 
     });
 
+    $(document).on('click', '#btnPreviewPInvoicebtn', function () {
 
+        $('#loader-pms').show();
 
-    //$(document).on('click', '#btnPordersaveprintbtn', function () {
-    //    $('#loader-pms').show();
-    //    var EditData = { ModuleId : parseInt(EditPurchaseBillId), NoOfCopies: 1, printType: "preview" }
+        savePurchaseInvoice(function (purchaseBillId) {
 
-    //    $.ajax({
-    //        url: '/PurchaseInvoice/PurchaseBillPrint',
-    //        method: 'GET',
-    //        data: EditData,
-    //        xhrFields: {
-    //            responseType: 'blob'
-    //        },
-    //        success: function (response) {
-    //            var printType = "Preview";
-    //            $('#ShareDropdownitems').css('display', 'none');
-    //            var blob = new Blob([response], { type: 'application/pdf' });
-    //            var blobUrl = URL.createObjectURL(blob);
-    //            if (printType == "Preview") {
-    //                var newTab = window.open();
-    //                if (newTab) {
-    //                    newTab.document.write(`
-    //                                          <html>
-    //                                          <head><title>Purchase Bill Preview</title></head>
-    //                                          <body style="margin:0;">
-    //                                              <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-    //                                          </body>
-    //                                          </html>
-    //                                      `);
-    //                    newTab.document.close();
-    //                }
+            // 🔴 Safety check
+            if (!purchaseBillId) {
+                $('#loader-pms').hide();
+                Common.errorMsg("Purchase Bill ID not returned");
+                return;
+            }
 
-    //            } else if (printType == "Download") {
-    //                var link = document.createElement('a');
-    //                link.href = blobUrl;
-    //                link.download = 'Purchase Order.pdf';
-    //                link.click();
-    //            } else if (printType == "Print") {
-    //                var iframe = document.createElement('iframe');
-    //                iframe.style.display = 'none';
-    //                iframe.src = blobUrl;
-    //                document.body.appendChild(iframe);
-    //                iframe.contentWindow.print();
-    //            }
-    //            $('#loader-pms').hide();
-    //            /* Print*/
+            var EditData = {
+                ModuleId: parseInt(purchaseBillId),
+                NoOfCopies: 1,
+                printType: "Preview"
+            };
 
-    //        },
-    //        error: function () {
-    //            $('#loader-pms').hide();
-    //            Common.errorMsg(response.message);
-    //        }
-    //    });
-    //});
+            $.ajax({
+                type: 'GET',
+                url: '/PurchaseInvoice/PurchaseBillPrint',
+                data: EditData,
+                xhrFields: { responseType: 'blob' },
+
+                success: function (response) {
+
+                    $('#ShareDropdownitems').hide();
+
+                    var blob = new Blob([response], { type: 'application/pdf' });
+                    var blobUrl = URL.createObjectURL(blob);
+
+                    // 🔹 PRINT TYPE HANDLER
+                    if (EditData.printType === "Preview") {
+
+                        var newTab = window.open();
+                        if (newTab) {
+                            newTab.document.write(`
+                            <html>
+                            <head>
+                                <title>Purchase Bill Preview</title>
+                            </head>
+                            <body style="margin:0; padding:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
+                            newTab.document.close();
+                        } else {
+                            Common.warningMsg("Popup blocked. Please allow popups.");
+                        }
+
+                    } else if (EditData.printType === "Download") {
+
+                        var link = document.createElement('a');
+                        link.href = blobUrl;
+                        link.download = 'Purchase Bill.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                    } else if (EditData.printType === "Print") {
+
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = blobUrl;
+                        document.body.appendChild(iframe);
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+                        };
+                    }
+
+                    $('#loader-pms').hide();
+                },
+
+                error: function () {
+                    $('#loader-pms').hide();
+                    Common.errorMsg("Print failed");
+                }
+            });
+
+        }, {
+            showSuccessMsg: false   // ❌ SUCCESS MESSAGE DISABLED
+        });
+
+    });
 });
+
+
+/*========================================================Status Tracking=================================================================*/
+function StatusActivitySuccess(response) {
+    var parsedData = JSON.parse(response.data);
+    var timelineData = parsedData[0];
+
+    var $timeline = $(".horizontal-timeline");
+
+    // Remove existing stages
+    $timeline.find(".timeline-stage").remove();
+    var progressStatuses = [];
+
+    // Append new timeline stages
+    $.each(timelineData, function (index, item) {
+        var status = item.InventoryStatusName || "Unknown";
+        var user = item.UserName || "N/A";
+        var color = item.Status_Color || "#000";
+
+        var date = new Date(item.CreatedDate);
+        var formattedDate = date.toLocaleDateString('en-GB') + ', ' +
+            date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        var statusClass = "status-" + status.toLowerCase().replace(/\s+/g, '');
+
+        var $stage = $('<div>', {
+            class: `timeline-stage ${statusClass}`
+        });
+
+        var $marker = $('<div>', { class: 'stage-marker' });
+
+        var $statusSpan = $('<span>', {
+            class: 'stage-status',
+            text: status,
+            css: { color: color }
+        });
+
+        $marker.append($statusSpan);
+
+        var $content = $('<div>', { class: 'stage-content' });
+        $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
+        $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
+
+        $stage.append($marker).append($content);
+        $timeline.append($stage);
+
+        progressStatuses.push(status);
+
+    });
+
+    setTimeout(function () {
+        updateTimelineProgress(progressStatuses);
+    }, 1000);
+}
+
+function updateTimelineProgress(progressStatuses) {
+    var $timeline = $(".horizontal-timeline");
+    var $fillLine = $timeline.find(".timeline-progress-line-fill");
+    var $stages = $timeline.find(".timeline-stage");
+
+    if ($stages.length === 0) return;
+
+    let $lastValidStage = null;
+
+    $stages.each(function () {
+        const statusText = $(this).find(".stage-status").text().trim();
+        if (progressStatuses.includes(statusText)) {
+            $lastValidStage = $(this);
+        }
+    });
+
+    if ($lastValidStage) {
+        const $marker = $lastValidStage.find(".stage-marker");
+        const timelineLeft = $timeline.offset().left;
+        const markerCenter = $marker.offset().left + ($marker.outerWidth() / 2);
+
+        const fillWidth = markerCenter - timelineLeft;
+
+        $fillLine.css({
+            width: fillWidth + "px"
+        });
+    } else {
+        $fillLine.css({ width: "0" });
+    }
+}
+
+/*========================================================End Status Tracking=================================================================*/
+
 
 async function PurchaseBillGetNotNull(response) {
     if (!response.status) return;
@@ -975,7 +1101,7 @@ async function PurchaseBillGetNotNull(response) {
                 if (plantResponse) {
                     ShipToAddress(plantResponse);
                     $('#AlternativeCompanyAddress').val(data[1][0].ShipToPlantId).trigger('change');
-                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(data[1][0].VendorId), PlantId: parseInt(data[1][0].ShipToPlantId) }, function (responseOrderNo) {
+                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(data[1][0].VendorId), PlantId: parseInt(data[1][0].ShipToPlantId), PurchaseOrderId: parseInt(data[1][0].PurchaseOrderId) }, function (responseOrderNo) {
                         if (responseOrderNo !== null) {
                             Common.bindDropDownSuccess(responseOrderNo.data, "PurchaseOrderNo");
 
@@ -2359,3 +2485,9 @@ function parseFloatValueInsert(value) {
             .trim()
     ) || 0;
 };
+
+function ajaxPromise(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
+}
