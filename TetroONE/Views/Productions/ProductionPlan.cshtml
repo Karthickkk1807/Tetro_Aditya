@@ -275,10 +275,12 @@
                                                     <th>Lot No<span style="visibility: hidden;">1111</span></th>
                                                     <th>Colour<span style="visibility: hidden;">111</span></th>
                                                     <th>Fabric Type<span style="visibility: hidden;">1111</span></th>
-                                                    <th>GSM<span style="visibility: hidden;">1</span></th>
-                                                    <th>Width<span style="visibility: hidden;">1</span></th>
+                                                    <th>Dia<span style="visibility: hidden;">1111</span></th>
+                                                    <th>GSM<span style="visibility: hidden;">1111</span></th>
+                                                    <th>#Rolls<span style="visibility: hidden;">1111</span></th>
+                                                    <th>Width<span style="visibility: hidden;">1111</span></th>
                                                     <th>Qty (KG)<span style="visibility: hidden;">1</span></th>
-                                                    <th>Process<span style="visibility: hidden;">111111111111111111111111111111111111111111111</span></th>
+                                                    <th>Process<span style="visibility: hidden;">111111111111111111111111</span></th>
                                                     @* <th>Remarks<span style="visibility: hidden;">111111111111111111111111111</span></th> *@
                                                     <th style="width: 65px;">Action</th>
                                                 </tr>
@@ -287,7 +289,7 @@
 
                                                 <!--Add Item-->
                                                 <tr id="AddItemButtonRow">
-                                                    <td colspan="10" class="add-item">
+                                                    <td colspan="12" class="add-item">
                                                         <div class="add-item">
                                                             <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
                                                         </div>
@@ -295,7 +297,7 @@
                                                 </tr>
 
                                                 <tr id="SubtotalRow" style="border-top: 2px solid white !important;">
-                                                    <td colspan="10" class="p-2">
+                                                    <td colspan="12" class="p-2">
                                                         <div class="summary-label"><a class="mr-3" id="RawMetarialInfo">+ RawMaterial Info</a><a id="ChemicalInfo">+ Chemical Info</a></div>
                                                     </td>
                                                 </tr>
@@ -454,13 +456,12 @@
                                         <span class="sr-only">Loading...</span>
                                     </div>
                                 </div>
-                            </ul> *@
+                                </ul> *@
 
                             <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanCancelBtn">
                                 <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
                             </button>
-
-
+                             
                         </div>
                     </div>
                 </div>
@@ -470,7 +471,7 @@
 </div>
 
 <div id="ProductionPlanAddItemModal" class="modal" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-xxl">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
                 <h2 id="">Add Item</h2>
@@ -497,7 +498,9 @@
                                         <th scope="col">Lot No</th>
                                         <th scope="col">Colour</th>
                                         <th scope="col">Fabric Type</th>
-                                        <th scope="col">GSM</th>
+                                        <th scope="col">Dia</th>
+                                        <th scope="col">GSM</th> 
+                                        <th scope="col">#Rolls</th>
                                         <th scope="col">Width</th>
                                         <th scope="col">FabricQty</th>
                                         <th scope="col">InWardQty</th>

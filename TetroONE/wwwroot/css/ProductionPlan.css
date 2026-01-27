@@ -182,3 +182,80 @@ textarea.form-controltext {
 .dateTimePicker{
     background: white !important;
 }
+
+
+
+/* -------------------------------- STATUS ACTIVITY -------------------------------- */
+
+.horizontal-timeline {
+    --gap: clamp(24px, 5vw, 64px);
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    gap: var(--gap);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin-top: 8px;
+    white-space: nowrap;
+}
+
+/* EACH STAGE */
+.timeline-stage {
+    position: relative;
+    flex: 0 0 auto; /* prevents shrinking */
+    z-index: 1;
+    margin-bottom: 15px;
+}
+
+    /* CONNECTING LINE (drawn per stage) */
+    .timeline-stage::after {
+        content: "";
+        position: absolute;
+        top: 6px; /* vertically center with dot */
+        left: 13px; /* start after dot */
+        width: calc(100% + var(--gap)); /* connect to next dot */
+        height: 2px;
+        background-color: #6ac64a;
+        z-index: 0;
+    }
+
+    /* REMOVE LINE AFTER LAST ITEM */
+    .timeline-stage:last-child::after {
+        display: none;
+    }
+
+/* DOT */
+.stage-marker {
+    width: 13px;
+    height: 13px;
+    background-color: #3493fa;
+    border-radius: 50%;
+    border: 2px solid white;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+/* STATUS LABEL */
+.stage-status {
+    font-weight: 700;
+    background-color: #e4e4e4;
+    padding: 5px 8px;
+    border-radius: 5px;
+    position: absolute;
+    left: -1px;
+    top: 0px;
+    white-space: nowrap;
+}
+
+/* CONTENT UNDER DOT */
+.stage-content {
+    display: grid;
+    margin-left: 17px;
+}
+
+/* FIELDSET SCROLL */
+.Status-Div fieldset {
+    overflow-x: auto;
+    overflow-y: hidden;
+}

@@ -35,6 +35,15 @@ $(document).ready(function () {
 
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
+    var $cols = $('#FormProductSubCategory .row > div');
+
+    // Hide 3rd div
+    $cols.eq(2).hide();
+
+    // Update 1st and 2nd div classes
+    $cols.eq(0).removeClass().addClass('col-md-6 col-lg-6 col-sm-6 col-6');
+    $cols.eq(1).removeClass().addClass('col-md-6 col-lg-6 col-sm-6 col-6');
+
     /*=================================================================Common=====================================================================*/
 
     InstillationMasterDataTwoPara();

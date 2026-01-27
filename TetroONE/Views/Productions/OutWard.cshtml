@@ -387,8 +387,15 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Inward No</label>
-                                            <select class="form-control" id="InwardNo" name="InwardNo">
+                                            <label>Inward No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="InwardNo" name="InwardNo" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Production Plan No<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="ProductionPlanId" name="ProductionPlanId" required>
                                             </select>
                                         </div>
                                     </div>
@@ -468,10 +475,10 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-6 my-2 px-1" id="">
+                                   @*  <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-6 my-2 px-1" id="">
                                         <input type="button" id="toggleShipTo" class="btn btn-link p-0" value="">
                                         <i class="fas fa-chevron-up" id="toggleIconShipTo" style="cursor: pointer;font-size: large;color: blue;margin-top: 7px;"></i>
-                                    </div>
+                                    </div> *@
                                 </div>
                             </form>
                             <div class="row mt-3">
@@ -537,7 +544,7 @@
                                                     <th>Width<span style="visibility: hidden;">11111</span></th>
                                                     <th style="text-align: center;">
                                                         Action<span style="visibility: hidden;">1</span><span>
-                                                            <button id="dyanmicplusbtn" class="btn AddStockBtn" type="button" onclick="duplicateFabric(this)">
+                                                            <button id="dyanmicplusbtn" class="btn AddStockBtn d-none" type="button" onclick="duplicateFabric(this)">
                                                                 <i class="fas fa-plus" id="AddButton"></i>
                                                             </button>
                                                         </span>
@@ -553,7 +560,7 @@
                                                 <tr id="SubtotalRow" style="background-color: #e4edf5;">
                                                     <td colspan="4"><div class="summary-label"><a>NoOfFabric</a></div></td>
                                                     <td style="padding: 4px;" id="FabricTotalDiv"> <input type="text" id="NoofFabric" name="NoofFabric" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                    <td style="padding: 4px;" id="QtyTotalDiv"> <input type="text" id="TotalQty" name="TotalQty" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td style="padding: 4px;" id="QtyTotalDiv"> <input type="text" id="TotalQty" name="TotalQty" class="form-control" placeholder="0.00" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" style="background: #fbfbfb !important;" disabled></td>
                                                     <td style="padding: 4px;" id="NoOfRollsTotalDiv"> <input type="text" id="TotalRolls" name="TotalRolls" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
 
                                                     <td colspan="3"></td>

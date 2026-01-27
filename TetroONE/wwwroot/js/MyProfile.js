@@ -471,7 +471,7 @@ function ManageUserSuccess(response) {
         var data = JSON.parse(response.data);
 
         $('#CompanyUserCount').text('(' + data[1][0].CompanyUserCount + ')');
-        $('#JobWorkerUserCount').text('(' + data[1][1].CompanyUserCount + ')');
+        //$('#JobWorkerUserCount').text('(' + data[1][1].CompanyUserCount + ')');
         $('#VendorUserCount').text('(' + data[1][2].CompanyUserCount + ')');
         $('#ClientUserCount').text('(' + data[1][3].CompanyUserCount + ')');
         

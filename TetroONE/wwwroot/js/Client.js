@@ -5,6 +5,9 @@ var formDataMultiple = new FormData();
 
 $(document).ready(function () {
 
+    var $cols = $('#FormClient .row > div');
+    $cols.eq(0).hide();
+
     Common.ajaxCall("GET", "/Contact/GetClient", {}, ClientSuccess, null);
     Common.bindDropDownParent('State', 'FormClient', 'State');
     setPrimaryCheckboxEventListeners();

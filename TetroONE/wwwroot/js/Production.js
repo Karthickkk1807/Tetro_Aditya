@@ -128,7 +128,7 @@ $(document).ready(async function () {
         $("#Clear").hide();
         $('#SaveProductionLog').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
 
-        $('#Process, #Status').prop('disabled', false);
+        $('#Process, #Status, #Quantity, #PreparedBy, #Remarks').prop('disabled', false);
         $('#Quantity').val('');
         $('#Status').val('');
         $('#Remarks').val('');
@@ -167,7 +167,7 @@ $(document).ready(async function () {
                 bindDropDownSuccessProcessType(data[1], "Process", false);
 
                 $('#Process').val(data[0][0].ProcessTypeId || '').prop('disabled', true);
-                $('#Quantity').val(data[0][0].Quantity || '');
+                $('#Quantity').val(data[0][0].Quantity.toFixed(3) || '');
                 $('#PreparedBy').val(data[0][0].PreparedBy || '');
                 $('#Remarks').val(data[0][0].Remarks || '');
                 $('#Status').val(data[0][0].ProductionLogStatusId || '').prop('disabled', true);
@@ -247,21 +247,34 @@ function GetProductionLogNotNullSuccess(response) {
 
         bindDropDownSuccessProcessType(data[1], "Process", true);
 
+        const arr = data[3];
+        const lastQuantity = arr?.[arr.length - 1]?.Quantity ?? null;
+        const lastRemarks = arr?.[arr.length - 1]?.Remarks ?? null;
+         
         //$('#Process').val(data[3][0].ProcessTypeId || '');
         if (data[1] && data[1][0] && data[1][0].StatusName === "Started") {
             $('#Quantity').val('');
             $('#Remarks').val('');
         } else {
-            $('#Quantity').val(data[3][0].Quantity != null ? Number(data[3][0].Quantity).toFixed(3) : '');
-            $('#Remarks').val(data[3][0].Remarks || '');
+            $('#Quantity').val(lastQuantity != null ? Number(lastQuantity).toFixed(3) : '');
+            $('#Remarks').val(lastRemarks || '');
         }
 
-        $('#PreparedBy').val(data[3][0].PreparedBy || '');
-        $('#Remarks').val(data[3][0].Remarks || '');
+        $('#PreparedBy').val(data[3][0].PreparedBy || ''); 
         //$('#Status').val(data[3][0].ProductionLogStatusId || '');
 
         ArrayProcessTypeId = data[4];
-        productionPlanLogId = data[5][0].ProductionLogId;
+         
+        // Get ProcessTypeName safely
+        const processTypeName = data[1]?.[0]?.ProcessTypeName || null;
+        productionPlanLogId = null;
+
+        data[2].forEach(item => {
+            if (item.Process && item.Process === processTypeName) {
+                productionPlanLogId = data[5][0].ProductionLogId || null;
+            }
+        });
+
         $('#TransactionsInfo').empty('');
         var html = `
             <div class="table-responsive">
@@ -271,13 +284,13 @@ function GetProductionLogNotNullSuccess(response) {
         $('#TransactionsInfo').append(html);
 
         var columns = Common.bindColumn(data[2], ['ProductionLogId']);
-        bindTableTransactionsInfo('TransactionsInfoTable', data[2], -1, 'ProductionLogId', columns, '151px', true);
+        bindTableTransactionsInfo('TransactionsInfoTable', data[2], -1, 'ProductionLogId', columns, true);
 
         /*============================QRCODE=============================*/
 
         $("#QRCode").html("");
 
-        var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
+        var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
         //var scanUrl = "https://localhost:44366/ProductionQRCode/QRCodePop" + "?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
 
         new QRCode(document.getElementById("QRCode"), {
@@ -418,7 +431,7 @@ function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, i
     }, 100);
 }
 
-function bindTableTransactionsInfo(tableid, data, actionTarget, editcolumn, columns, scrollpx, isAction) {
+function bindTableTransactionsInfo(tableid, data, actionTarget, editcolumn, columns, isAction) {
     if ($.fn.DataTable.isDataTable('#' + tableid)) {
         if ($('#' + tableid).DataTable().rows().data().toArray().length > 0) {
             $('#' + tableid).DataTable().clear().destroy();
@@ -451,33 +464,51 @@ function bindTableTransactionsInfo(tableid, data, actionTarget, editcolumn, colu
         }
     )
 
+    /* ===============================
+      Dynamic scroll height calculation
+      =============================== */
+    const rowHeight = 42;      // approx height of one row
+    const maxHeight = 400;     // max scroll height
+
+    let calculatedScrollPx = "100px";
+    if (data && data.length > 0) {
+        calculatedScrollPx =
+            Math.min(data.length * rowHeight, maxHeight) + "px";
+    }
+
+    /* ===============================
+       DataTable Options
+       =============================== */
     var dataTableOptions = {
-        "dom": "Blfrtip",
-        "bDestroy": true,
-        "responsive": true,
-        "data": !isbuyernocount ? data : [],
-        "columns": columns,
-        "destroy": true,
-        "scrollY": scrollpx,
-        "sScrollX": "100%",
-        "scrollX": true,
-        "scroller": true,
-        "scrollCollapse": true,
-        "aaSorting": [],
-        "language": {
-            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
+        dom: "Blfrtip",
+        bDestroy: true,
+        responsive: true,
+        data: !isbuyernocount ? data : [],
+        columns: columns,
+        destroy: true,
+        scrollY: data.length > 5 ? calculatedScrollPx : false, // auto-fit small tables
+        sScrollX: "100%",
+        scrollX: true,
+        scroller: true,
+        scrollCollapse: true,
+        aaSorting: [],
+        language: {
+            emptyTable:
+                '<div><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
         },
-        "searching": false,
-        "info": false,
-        "paging": false,
-        "pageLength": 30,
-        //"lengthMenu": [5, 10, 25, 50],
-        "columnDefs": renderColumn
+        searching: false,
+        info: false,
+        paging: false,
+        pageLength: 30,
+        columnDefs: renderColumn
     };
-    $('#' + tableid).DataTable(dataTableOptions);
-    var tableId = $('#' + tableid).DataTable();
-    Common.autoAdjustColumns(tableId);
-}
+
+    // Initialize DataTable
+    var table = $('#' + tableid).DataTable(dataTableOptions);
+
+    // Adjust column widths
+    Common.autoAdjustColumns(table);
+} 
 
 function bindDropDownSuccessProcessType(response, controlid, IsTrigger) {
 
@@ -488,6 +519,7 @@ function bindDropDownSuccessProcessType(response, controlid, IsTrigger) {
         $ddl.empty();
 
         if (dataValue.length > 0 && response[0].ProcessTypeId != null) {
+            $('#SaveProductionLog').show();
             var valueproperty = Object.keys(dataValue[0])[0];
             var textproperty = Object.keys(dataValue[0])[1];
 
@@ -501,7 +533,9 @@ function bindDropDownSuccessProcessType(response, controlid, IsTrigger) {
             $ddl.append($('<option>', {
                 value: '',
                 text: 'ProcessCompleted'
-            }));
+            })); 
+            $('#Process, #Status, #Quantity, #PreparedBy, #Remarks').prop('disabled', true);
+            $('#SaveProductionLog').hide();
         }
 
         if (IsTrigger === true) $ddl.prop('selectedIndex', 0).trigger('change');

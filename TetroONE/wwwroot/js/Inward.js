@@ -17,6 +17,7 @@ $(document).ready(async function () {
     Common.bindDropDown('ColorId', 'Color');
     Common.bindDropDown('PaymentTypeId', 'PaymentType');
     Common.bindDropDown('InWardStatusId', 'InWardStatus');
+    Common.bindDropDown('StorageLocationId', 'StorageLocation');
 
     var fabricTypeDropdown = await Common.bindDropDownSync('FabricType');
     FabricTypeDropdown = JSON.parse(fabricTypeDropdown);
@@ -651,7 +652,7 @@ function calculateGsmNoOfRollTotal() {
         }
     });
 
-    $("#TotalQty").val(totalGsm.toFixed(2));
+    $("#TotalQty").val(totalGsm.toFixed(3));
     $("#TotalRolls").val(totalNoOfRoll.toFixed(2));
 }
 

@@ -86,7 +86,7 @@ $(document).ready(function () {
                             const plantMappingId = urlParams.get('PlantMappingId');
                             const userId = data[0][0].UserId;
 
-                            const newUrl = `http://103.174.10.91:8108/ProductionQRCode/QRCodePop?ProductionPlanId=${productionPlanId}&PlantMappingId=${plantMappingId}&UserId=${userId}`;
+                            const newUrl = `http://103.174.10.91:8123/ProductionQRCode/QRCodePop?ProductionPlanId=${productionPlanId}&PlantMappingId=${plantMappingId}&UserId=${userId}`;
                             //const newUrl = `https://localhost:44366/ProductionQRCode/QRCodePop?ProductionPlanId=${productionPlanId}&PlantMappingId=${plantMappingId}&UserId=${userId}`;
 
                             window.location.href = newUrl;

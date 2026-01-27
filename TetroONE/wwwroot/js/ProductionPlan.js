@@ -185,6 +185,7 @@ $(document).ready(async function () {
         $('#AddAttachment, #AddNotes').show();
         $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
 
+        $('#ProductionPlanStatusId').val('1').trigger('change');
         $('.modal-body').animate({ scrollTop: 0 }, 300);
         $('#ProductionPlanSaveBtn').show();
         $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
@@ -359,7 +360,7 @@ $(document).ready(async function () {
                 TotalWeight: parseFloat($('#TotalWeight').val()) || null,
                 ColorId: parseInt($('#ColorId').val()) || null,
                 MachineId: parseInt($('#MachineId').val()) || null,
-                MLR: parseInt($('#MLR').val()) || null,
+                MLR: parseFloat($('#MLR').val()) || null,
                 WaterLevel: parseInt($('#WaterLevel').val()) || null,
                 LoadingDateTime: $('#LoadingDateTime').val() || null,
                 UnLoadingDateTime: $('#UnLoadingDateTime').val() || null,
@@ -383,6 +384,10 @@ $(document).ready(async function () {
                     InwardFabricId: inwardFabricId ? parseInt(inwardFabricId) : null,
                     FabricTypeId: parseInt($rowTable.find('.fabricType').parent().data('id')) || null,
                     ColorId: parseInt($rowTable.find('.colour').parent().data('id')) || null,
+                    Dia: parseFloat($rowTable.find('.Dia').val()) || null,
+                    GSM: parseFloat($rowTable.find('.GSM').val()) || null,
+                    NoOfRolls: parseInt($rowTable.find('.NoOfRolls').val()) || null,
+                    Width: ($rowTable.find('.Width').val() || '').toLowerCase() === 'tubler' ? 2 : 1,
                     Quantity: Common.parseFloatValue($rowTable.find('.qty').val()) || null,
                     ProcessCount: Common.parseFloatValue($rowTable.find('.processRoute').val()) || null,
                     Comments: $rowTable.find('.Remarks').val() || null,
@@ -575,7 +580,14 @@ async function GetProductionPlanNotNullSuccess(response) {
         $('#MLR').val(header.MLR);
         $('#WaterLevel').val(header.WaterLevel);
 
-        if (header.ProductionPlanStatusId == 3) {
+        if ([1, 2].includes(header.ProductionPlanStatusId)) {
+            $('#ProductionPlanSaveBtn').show();
+            $('#ProductionPlanPreviewbtn').hide();
+            $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
+                'pointer-events': 'auto',
+                'opacity': 1
+            });
+        } else { 
             $('#ProductionPlanSaveBtn').hide();
             $('#ProductionPlanPreviewbtn').show();
             $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow').css({
@@ -583,13 +595,6 @@ async function GetProductionPlanNotNullSuccess(response) {
                 'opacity': 0.9
             });
             $('#SubtotalRow').css({
-                'pointer-events': 'auto',
-                'opacity': 1
-            });
-        } else {
-            $('#ProductionPlanSaveBtn').show();
-            $('#ProductionPlanPreviewbtn').hide();
-            $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
                 'pointer-events': 'auto',
                 'opacity': 1
             });
@@ -631,7 +636,9 @@ async function GetProductionPlanNotNullSuccess(response) {
                     <td data-id="${item.FabricTypeId}">
                         <input type="text" class="form-control fabricType" value="${item.FabricTypeName}" disabled>
                     </td> 
+                    <td><input type="text" class="form-control Dia" value="${item.Dia}" disabled></td>
                     <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
+                    <td><input type="text" class="form-control NoOfRolls" value="${item.NoOfRolls}" disabled></td>
                     <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
                     <td><input type="text" class="form-control qty" value="${item.Quantity || ''}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
                     <td>
@@ -893,13 +900,15 @@ function LoadPopupItems(allItems) {
                 <td><label class="d-none InWardNo">${item.InWardId}</label><label class="LotNo mb-0">${item.InWardNo}</label></td>
                 <td><label class="d-none ColorId">${item.ColorId}</label><label class="Colour mb-0">${item.ColorName}</label></td>
                 <td><label class="d-none FabricId">${item.FabricId}</label><label class="FabricType mb-0">${item.Fabric}</label></td>
+                <td><label class="Dia mb-0">${item.Dia}</label></td>
                 <td><label class="GSM mb-0">${item.GSM}</label></td>
+                <td><label class="NoOfRolls mb-0">${item.NoOfRolls}</label></td>
                 <td><label class="Width mb-0">${item.Width}</label></td>
                 <td><label class="FabricQty mb-0">${item.FabricQty}</label></td>
                 <td><label class="FabricQty mb-0">${item.InWardQty}</label></td> 
                 <td> 
                     <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;width: 100px;">
-                        <input type="text" class="form-control AvailableQuantity" value="${qtyValue}">
+                        <input type="text" class="form-control AvailableQuantity" value="${qtyValue}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)">
                         <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size: 12px;width: 29px;height: 26px;"> KG </button>
                     </div>
                 </td>
@@ -910,6 +919,27 @@ function LoadPopupItems(allItems) {
 
     $("#ProductionPlanAddItemModal").show();
 }
+
+$(document).on('input', '.AvailableQuantity', function () {
+
+    var $row = $(this).closest('tr');
+
+    var fabricQtyText = $row.find('.FabricQty').first().text();
+    var fabricQty = parseFloat(
+        fabricQtyText.replace(/,/g, '').replace(/[^0-9.]/g, '')
+    ) || 0;
+
+    var val = $(this).val();
+     
+    if (val === '') return;
+
+    var enteredQty = parseFloat(val);
+    if (isNaN(enteredQty)) return;
+     
+    if (enteredQty > fabricQty) {
+        $(this).val(parseFloat(fabricQty).toFixed(3));
+    }
+});
 
 $(document).on('change', '.ItemCheckbox', function () {
     const itemId = $(this).attr('id').replace("ItemId-", "");
@@ -953,6 +983,8 @@ $(document).on('change', '.ItemCheckbox', function () {
         FabricType: $row.find(".FabricType").text() || '',
         Colour: $row.find(".Colour").text() || '',
         GSM: $row.find(".GSM").text() || '',
+        Dia: $row.find(".Dia").text() || '',
+        NoOfRolls: $row.find(".NoOfRolls").text() || '',
         Width: $row.find(".Width").text() || '',
         Quantity: parseFloat($row.find(".Quantity").text()) || 0,
         AvailableQuantity: parseFloat($row.find(".AvailableQuantity").val()) || 0,
@@ -1069,6 +1101,8 @@ $(document).on("click", "#BtnAdd", function () {
                     Colour: $(this).find('.Colour').text(),
                     FabricType: $(this).find('.FabricType').text(),
                     GSM: $(this).find('.GSM').text(),
+                    Dia: $(this).find('.Dia').text(),
+                    NoOfRolls: $(this).find('.NoOfRolls').text(),
                     Width: $(this).find('.Width').text(),
                     AvailableQuantity: $(this).find('.AvailableQuantity').val(),
                     ProcessList: $(this).data('id')
@@ -1094,7 +1128,9 @@ $(document).on("click", "#BtnAdd", function () {
                         <td data-id="${item.InWardId}"><input type="text" class="form-control lotNo" value="${item.LotNo}" disabled></td>
                         <td data-id="${item.ColorId}"><input type="text" class="form-control colour" value="${item.Colour}" disabled></td>
                         <td data-id="${item.FabricId}"><input type="text" class="form-control fabricType" value="${item.FabricType}" disabled></td>
+                        <td><input type="text" class="form-control Dia" value="${item.Dia}" disabled></td>
                         <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
+                        <td><input type="text" class="form-control NoOfRolls" value="${item.NoOfRolls}" disabled></td>
                         <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
                         <td><input type="text" class="form-control qty" value="${item.AvailableQuantity}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
                         <td>
@@ -2541,7 +2577,7 @@ $(document).on('click', '#ProductionPlanPreviewbtn', function () {
     $('#loader-pms').show();
     var ProductionPlanNo = $('#BatchNo').val();
     // URL to convert into QR
-    var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+    var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
 
     $.ajax({
         url: '/Productions/GenerateQrPdf',
@@ -2550,8 +2586,7 @@ $(document).on('click', '#ProductionPlanPreviewbtn', function () {
         xhrFields: {
             responseType: 'blob'
         },
-        success: function (response) {
-
+        success: function (response) { 
             $('#ShareDropdownitems').hide();
 
             var blob = new Blob([response], { type: 'application/pdf' });

@@ -127,16 +127,19 @@ function GetQRCodeSuccess(response) {
         //Common.bindDropDownSuccessProcessType(data[2], "Process");
         bindDropDownSuccessProcessType(data[2], "Process");
 
+        const arr = data[1];
+        const lastQuantity = arr?.[arr.length - 1]?.Quantity ?? null;
+        const lastRemarks = arr?.[arr.length - 1]?.Remarks ?? null; 
+
         if (data[2] && data[2][0] && data[2][0].StatusName === "Started") {
             $('#Quantity').val('');
-            $('#Remark').val('');
+            $('#Remark').val(''); 
+            ProductionLogId = null;
         } else {
-            $('#Quantity').val(data[1][0].Quantity != null ? Number(data[1][0].Quantity).toFixed(3) : '');
-            $('#Remark').val(data[1][0].Remarks);
+            $('#Quantity').val(lastQuantity != null ? Number(lastQuantity).toFixed(3) : '');
+            $('#Remark').val(lastRemarks);
+            ProductionLogId = data[1][0].ProductionLogId;
         }
-         
-        ProductionLogId = data[1][0].ProductionLogId;
-
     }
 }
 

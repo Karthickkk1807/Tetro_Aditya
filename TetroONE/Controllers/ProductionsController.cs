@@ -323,6 +323,21 @@ namespace TetroONE.Controllers
         }
 
         [HttpGet]
+        [Route("GetDDProductionPlan")]
+        public IActionResult GetProductionPlan(int? ProductionPlanId)
+        {
+            GetDDProductionPlan request = new GetDDProductionPlan()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                ProductionPlanId = ProductionPlanId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[DD_USP_GetProductionPlanDetails]", request);
+            return Json(response);
+        }
+
+
+        [HttpGet]
         [Route("GetOutWardTypeContactDetails")]
         public IActionResult GetOutWardTypeContactDetails(int OutwardType)
         {
@@ -437,6 +452,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@OutwardDate", staticDetails.OutwardDate);
                     command.Parameters.AddWithValue("@OutwardNo", staticDetails.OutwardNo);
                     command.Parameters.AddWithValue("@OutWardTo", staticDetails.OutWardTo);
+                    command.Parameters.AddWithValue("@ProductionPlanId", staticDetails.ProductionPlanId);
                     command.Parameters.AddWithValue("@PackingSlipNo", staticDetails.PackingSlipNo);
                     command.Parameters.AddWithValue("@ShipFrom", staticDetails.ShipFrom);
                     command.Parameters.AddWithValue("@ShipTo", staticDetails.ShipTo);

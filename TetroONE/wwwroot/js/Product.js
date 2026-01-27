@@ -274,9 +274,9 @@ $(document).ready(async function () {
         $('#SaveProduct').text('Update').addClass('btn-update').removeClass('btn-success');
         $('#BindPlantDyanimcData .PlantDetailsMappingInfo').remove();
 
-        IsTrigger = false; 
+        IsTrigger = false;
         productId = $(this).data('id');
-        var plantId = parseInt($('#UserFranchiseMappingId').val()); 
+        var plantId = parseInt($('#UserFranchiseMappingId').val());
         Common.ajaxCall("GET", "/Product/GetProductId", { ProductId: productId, PlantId: plantId }, EditProductSuccess, null);
 
         $('#ProductCanvas .collapse').removeClass('show');
@@ -942,14 +942,16 @@ function ProductSuccess(response) {
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
             var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
-            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', true, access);
+            var access1 = { create: false, delete: false, update: false, view: false }
+            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', false, access1);
         } else if (activeTabText.includes("Processed")) {
             $('#CounterImage1').prop('src', '/assets/moduleimages/inventory/fgproducticon_1.svg');
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
             var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
-            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', true, access);
+            var access1 = { create: false, delete: false, update: false, view: false }
+            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', false, access1);
         }
 
         $('#loader-pms').hide();
@@ -1077,7 +1079,7 @@ function EditProductSuccess(response) {
                             });
                         });
                     });
-                    IsTrigger = true; 
+                    IsTrigger = true;
                 }
             }, null);
         }
@@ -1151,7 +1153,7 @@ function dyanmicRow() {
             dropdownParent: $(this).parent()
         });
     });
-    $('.PlantName').val('2').trigger('change');
+    $('.PlantName').val(PlantMappingId).trigger('change');
 
     updateRemoveButtons();
 }

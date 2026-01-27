@@ -370,7 +370,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@Email", staticDetails.Email);
                     command.Parameters.AddWithValue("@GSTNumber", staticDetails.GSTNumber);
                     command.Parameters.AddWithValue("@CreditLimit", staticDetails.CreditLimit);
-                    command.Parameters.AddWithValue("@CurrentCreditLimit", staticDetails.CurrentCreditLimit);
+                    //command.Parameters.AddWithValue("@CurrentCreditLimit", staticDetails.CurrentCreditLimit);
                     command.Parameters.AddWithValue("@Remark", staticDetails.Remark);
 
                     command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails);

@@ -371,12 +371,7 @@
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Storage Location<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="StorageLocationId" name="StorageLocationId" required="">
-                                                <option value="">--Select--</option>
-                                                <option value="1">A</option>
-                                                <option value="2">B</option>
-                                                <option value="3">C</option>
-                                                <option value="4">D</option>
+                                            <select class="form-control" id="StorageLocationId" name="StorageLocationId" required=""> 
                                             </select>
                                         </div>
                                     </div>
@@ -421,7 +416,7 @@
                                                 <tr id="SubtotalRow" style="background-color: #e4edf5;">
                                                     <td colspan="4"><div class="summary-label"><a>NoOfFabric</a></div></td>
                                                     <td style="padding: 4px;" id="FabricTotalDiv"> <input type="text" id="NoofFabric" name="NoofFabric" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
-                                                    <td style="padding: 4px;" id="QtyTotalDiv"> <input type="text" id="TotalQty" name="TotalQty" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td style="padding: 4px;" id="QtyTotalDiv"> <input type="text" id="TotalQty" name="TotalQty" class="form-control" placeholder="0.00" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" style="background: #fbfbfb !important;" disabled></td>
                                                     <td style="padding: 4px;" id="NoOfRollsTotalDiv"> <input type="text" id="TotalRolls" name="TotalRolls" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
 
                                                     <td colspan="3"></td>
