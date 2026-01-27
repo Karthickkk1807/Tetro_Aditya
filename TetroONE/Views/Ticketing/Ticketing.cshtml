@@ -1,7 +1,7 @@
 ﻿@using System.Security.Claims
 @{
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.Ticketing, Context.Session);
-    var UserName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
+    //var UserName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
 }
 
 <link href="~/css/ticketing.css" rel="stylesheet" />
@@ -309,7 +309,7 @@
 
 <script>
     var access = @Html.Raw(Json.Serialize(access));
-    var UserName = "@UserName";
+    //var UserName = "UserName";
 </script>
 
 <script src="~/js/ticketing.js"></script>

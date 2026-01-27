@@ -704,7 +704,7 @@
             }),
             "columnDefs": !isTetroONEnocount
                 ? renderColumn : [],
-        });
+        }); 
         $('#tableFilter').on('keyup', function () {
             table.search($(this).val()).draw();
         });
@@ -1236,6 +1236,28 @@
         inputElement.value = resultValue;
     },
 
+    allowOnlyNumbersAndAfterDecimalThreeVal: function (inputElement, maxLength) {
+        // Remove everything except numbers and dot
+        let cleanedValue = inputElement.value.replace(/[^\d.]/g, '');
+
+        // Allow only ONE decimal point
+        let parts = cleanedValue.split('.');
+        let integerPart = parts[0];
+        let decimalPart = '';
+
+        if (parts.length > 1) {
+            decimalPart = '.' + parts[1].slice(0, 3); // 👈 allow .999
+        }
+
+        // Limit integer length
+        if (integerPart.length > maxLength) {
+            integerPart = integerPart.slice(0, maxLength);
+        }
+
+        // Final value
+        inputElement.value = integerPart + decimalPart;
+    },
+ 
     allowTextNumberAndWithoutSpace: function (inputElement, maxLength) {
         let value = inputElement.value;
         // Allow letters, numbers, and special characters, disallowing spaces
@@ -2745,8 +2767,4 @@
 
         $('#' + targetDivId).html(starsHtml);
     },
-}
-
-
-
-
+} 

@@ -37,6 +37,12 @@ namespace TetroONE.Models
         public DateTime? ToDate { get; set; }
     }
 
+    public class GetDDProductionPlan
+    {
+        public int LoginUserId { get; set; }
+        public int? ProductionPlanId { get; set; }
+    }
+
     public class GetOutWardTypeContactDetails
     {
         public int LoginUserId { get; set; }
@@ -133,6 +139,7 @@ namespace TetroONE.Models
         public DateTime? OutwardDate { get; set; }
         public string? OutwardNo { get; set; }
         public int? OutWardTo { get; set; }
+        public int? ProductionPlanId { get; set; }
         public string? PackingSlipNo { get; set; }
         public string? ShipFrom { get; set; }
         public string? ShipTo { get; set; }
@@ -184,7 +191,7 @@ namespace TetroONE.Models
         public int LoginUserId { get; set; }
         public int? OutWardId { get; set; }
     }
-     
+
     public class InsertUpdateProductionPlanDetails
     {
         public int LoginUserId { get; set; }
@@ -195,6 +202,8 @@ namespace TetroONE.Models
         public decimal? TotalWeight { get; set; }
         public int? ColorId { get; set; }
         public int? MachineId { get; set; }
+        public decimal? MLR { get; set; }
+        public int? WaterLevel { get; set; }
         public string? LoadingDateTime { get; set; }
         public string? UnLoadingDateTime { get; set; }
         public int? ProductionPlanStatusId { get; set; }
@@ -214,9 +223,13 @@ namespace TetroONE.Models
     {
         public int? ProductionPlanFabricId { get; set; }
         public int? InwardId { get; set; }
-        public int? InwardFabricId { get; set; } 
+        public int? InwardFabricId { get; set; }
         public int? FabricTypeId { get; set; }
         public int? ColorId { get; set; }
+        public decimal? Dia { get; set; }
+        public decimal? GSM { get; set; }
+        public int? NoOfRolls { get; set; }
+        public int? Width { get; set; }
         public decimal? Quantity { get; set; }
         public int? ProcessCount { get; set; }
         public string? Comments { get; set; }
@@ -235,6 +248,7 @@ namespace TetroONE.Models
     {
         public int? ProductionPlanDyeRequirementId { get; set; }
         public int? DyeId { get; set; }
+        public int? DyeType { get; set; }
         public decimal? PercentageOfDye { get; set; }
         public decimal? TotalQty { get; set; }
         public int? ProductionPlanId { get; set; }
@@ -245,6 +259,7 @@ namespace TetroONE.Models
         public int? ProductionPlanChemicalRequirementId { get; set; }
         public int? ProcessType { get; set; }
         public int? ChemicalId { get; set; }
+        public int? ChemicalType { get; set; }
         public decimal? GPL { get; set; }
         public decimal? TotalQty { get; set; }
         public int? ProductionPlanId { get; set; }
@@ -261,7 +276,7 @@ namespace TetroONE.Models
         public int LoginUserId { get; set; }
         public int? PlantId { get; set; }
         public int? ProductionPlanId { get; set; }
-        public int? ProductionLogId { get; set; } 
+        public int? ProductionLogId { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
     }
@@ -271,13 +286,46 @@ namespace TetroONE.Models
         public int LoginUserId { get; set; }
         public int? ProductionPlanId { get; set; }
         public int? ProductionLogId { get; set; }
-        public int? PlantId { get; set; } 
-        public int? PreparedBy { get; set; } 
+        public int? PlantId { get; set; }
+        public int? PreparedBy { get; set; }
         public int? ProcessTypeId { get; set; }
         public decimal? Quantity { get; set; }
         public int? ProductionLogStatusId { get; set; }
         public string? StartTime { get; set; }
         public string? EndTime { get; set; }
         public string? Remarks { get; set; }
-    }  
+    }
+
+    public class OutWardPrint
+    {
+        public string? CompanyName { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Phone { get; set; }
+        public string? PFCodeNo { get; set; }
+        public string? ESICodeNo { get; set; }
+        public string? Email { get; set; }
+        public string? GSTin { get; set; }
+        public string? MSMERegistrationNo { get; set; }
+
+        public string? OutwardToName { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? GSTNumber { get; set; }
+
+        public string? DCNo { get; set; }
+        public string? DCDate { get; set; }
+        public string? Time { get; set; }
+        public string? DeliveryTo { get; set; }
+
+        public string? TotalInwardWt { get; set; }
+        public string? TotalOutwardWt { get; set; }
+        public string? AvgLoss { get; set; }
+        public string? DeliveredBy { get; set; }
+        public string? VehicleNo { get; set; }
+        public string? DriverName { get; set; }
+
+        public DataTable ProductItemData { get; set; }
+    }
+
 }

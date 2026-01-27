@@ -21,8 +21,7 @@ namespace TetroONE.Controllers
 		{
 			_configuration = configuration;
 		}
-
-
+		 
 		[AllowAnonymous]
 		public IActionResult Login()
 		{

@@ -209,7 +209,7 @@
                                     <div class="col-lg-2 col-md-2 col-sm-6 col-6" id="BatchDateDiv">
                                         <div class="form-group">
                                             <label>Batch Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" id="BatchDate" name="BatchDate" required>
+                                            <input type="date" class="form-control dateTimePicker" id="BatchDate" name="BatchDate" required>
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-md-2 col-sm-6 col-6" id="TotalWeightDiv">
@@ -231,7 +231,19 @@
                                             <select class="form-control Machine" id="MachineId" name="MachineId">
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> 
+                                    <div class="col-lg-2 col-md-2 col-sm-6 col-6" id="MLRWaterLevelDiv">
+                                        <div class="form-group">
+                                            <label>WaterLevel<span id="Asterisk">*</span></label>
+                                            <div class="d-flex" style="gap: 5px;">
+                                                <input type="text" class="form-control" id="MLR" name="MLR" placeholder="MLR" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required style="width: 50px;">
+                                                <div id="ember325" class="input-group">
+                                                    <input type="text" class="form-control" id="WaterLevel" name="WaterLevel" disabled placeholder="0.00">
+                                                    <button id="ReorderLevelSymbol" class="btn btn-secondary p-0" type="button" style="padding:4px!important;border-top-left-radius:0;border-bottom-left-radius:0;font-size:16px;width:33px;">L</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
                                     <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="LoadingDateTimeDiv">
                                         <div class="form-group">
                                             <label>LoadingDate Time<span id="Asterisk">*</span></label>
@@ -263,10 +275,12 @@
                                                     <th>Lot No<span style="visibility: hidden;">1111</span></th>
                                                     <th>Colour<span style="visibility: hidden;">111</span></th>
                                                     <th>Fabric Type<span style="visibility: hidden;">1111</span></th>
-                                                    <th>GSM<span style="visibility: hidden;">1</span></th>
-                                                    <th>Width<span style="visibility: hidden;">1</span></th>
+                                                    <th>Dia<span style="visibility: hidden;">1111</span></th>
+                                                    <th>GSM<span style="visibility: hidden;">1111</span></th>
+                                                    <th>#Rolls<span style="visibility: hidden;">1111</span></th>
+                                                    <th>Width<span style="visibility: hidden;">1111</span></th>
                                                     <th>Qty (KG)<span style="visibility: hidden;">1</span></th>
-                                                    <th>Process<span style="visibility: hidden;">111111111111111111111111111111111111111111111</span></th>
+                                                    <th>Process<span style="visibility: hidden;">111111111111111111111111</span></th>
                                                     @* <th>Remarks<span style="visibility: hidden;">111111111111111111111111111</span></th> *@
                                                     <th style="width: 65px;">Action</th>
                                                 </tr>
@@ -275,7 +289,7 @@
 
                                                 <!--Add Item-->
                                                 <tr id="AddItemButtonRow">
-                                                    <td colspan="10" class="add-item">
+                                                    <td colspan="12" class="add-item">
                                                         <div class="add-item">
                                                             <a id="AddItemBtn" class="d-flex justify-content-center">+ Add Item</a>
                                                         </div>
@@ -283,7 +297,7 @@
                                                 </tr>
 
                                                 <tr id="SubtotalRow" style="border-top: 2px solid white !important;">
-                                                    <td colspan="10" class="p-2">
+                                                    <td colspan="12" class="p-2">
                                                         <div class="summary-label"><a class="mr-3" id="RawMetarialInfo">+ RawMaterial Info</a><a id="ChemicalInfo">+ Chemical Info</a></div>
                                                     </td>
                                                 </tr>
@@ -404,7 +418,12 @@
                                 <i class="fas fa-save mr-1"></i>
                                 <span>Save</span><span class="shortcut-key">[ Ctrl+S ]</span>
                             </button>
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlansaveprintbtn">
+
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanPreviewbtn">
+                                <i class="fas fa-print mr-1"></i> <span> Print QRCode</span><span class="shortcut-key">[ Alt + P ]</span>
+                            </button>
+
+                            @* <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlansaveprintbtn">
                                 <i class="fas fa-print mr-1"></i> <span> Save &amp; Print</span><span class="shortcut-key">[ Alt + P ]</span>
                             </button>
                             <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanPreviewPorder">
@@ -437,13 +456,12 @@
                                         <span class="sr-only">Loading...</span>
                                     </div>
                                 </div>
-                            </ul>
+                                </ul> *@
 
                             <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanCancelBtn">
                                 <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
                             </button>
-
-
+                             
                         </div>
                     </div>
                 </div>
@@ -453,7 +471,7 @@
 </div>
 
 <div id="ProductionPlanAddItemModal" class="modal" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-xxl">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
                 <h2 id="">Add Item</h2>
@@ -480,7 +498,9 @@
                                         <th scope="col">Lot No</th>
                                         <th scope="col">Colour</th>
                                         <th scope="col">Fabric Type</th>
-                                        <th scope="col">GSM</th>
+                                        <th scope="col">Dia</th>
+                                        <th scope="col">GSM</th> 
+                                        <th scope="col">#Rolls</th>
                                         <th scope="col">Width</th>
                                         <th scope="col">FabricQty</th>
                                         <th scope="col">InWardQty</th>

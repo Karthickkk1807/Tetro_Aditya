@@ -385,8 +385,7 @@ namespace TetroONE.Controllers
                                 }
                             }
                             else
-                            {
-
+                            { 
                                 return Json(new { success = false, message = "No data found for the given ModuleId." });
                             }
                         }

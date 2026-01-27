@@ -6,11 +6,17 @@
 //using iText.Kernel.Colors;
 //using iText.Kernel.Geom;
 //using iText.IO.Image;
+using iText.Barcodes;
+using iText.Kernel.Colors;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Asn1.Crmf;
+using PdfSharp;
 using PdfSharp.Snippets;
 using Razorpay.Api;
 using RestSharp;
@@ -255,10 +261,10 @@ namespace TetroONE.Controllers
                         System.IO.File.Delete(filePath);
                     }
                 }
-            } 
+            }
             return Json(response);
         }
-          
+
         [HttpGet]
         [Route("DeleteInWardDetails")]
         public IActionResult DeleteInWardDetails(int InWardId)
@@ -317,6 +323,21 @@ namespace TetroONE.Controllers
         }
 
         [HttpGet]
+        [Route("GetDDProductionPlan")]
+        public IActionResult GetProductionPlan(int? ProductionPlanId)
+        {
+            GetDDProductionPlan request = new GetDDProductionPlan()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                ProductionPlanId = ProductionPlanId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[DD_USP_GetProductionPlanDetails]", request);
+            return Json(response);
+        }
+
+
+        [HttpGet]
         [Route("GetOutWardTypeContactDetails")]
         public IActionResult GetOutWardTypeContactDetails(int OutwardType)
         {
@@ -344,7 +365,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetOutWardType_ClientJobDetails]", request);
             return Json(response);
         }
-        
+
         [HttpPost]
         [Route("InsertUpdateOutwardDetails")]
         public async Task<IActionResult> InsertUpdateOutwardDetails()
@@ -417,6 +438,8 @@ namespace TetroONE.Controllers
                 spName = "[dbo].[USP_InsertOutWardDetails]";
             }
 
+            DataSet ds = new DataSet();
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -428,8 +451,9 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@LoginUserId", _userId);
                     command.Parameters.AddWithValue("@OutwardDate", staticDetails.OutwardDate);
                     command.Parameters.AddWithValue("@OutwardNo", staticDetails.OutwardNo);
-                    command.Parameters.AddWithValue("@OutWardTo", staticDetails.OutWardTo); 
-                    command.Parameters.AddWithValue("@PackingSlipNo", staticDetails.PackingSlipNo); 
+                    command.Parameters.AddWithValue("@OutWardTo", staticDetails.OutWardTo);
+                    command.Parameters.AddWithValue("@ProductionPlanId", staticDetails.ProductionPlanId);
+                    command.Parameters.AddWithValue("@PackingSlipNo", staticDetails.PackingSlipNo);
                     command.Parameters.AddWithValue("@ShipFrom", staticDetails.ShipFrom);
                     command.Parameters.AddWithValue("@ShipTo", staticDetails.ShipTo);
                     command.Parameters.AddWithValue("@ShipToAddress", staticDetails.ShipToAddress);
@@ -447,7 +471,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@PlantId", staticDetails.PlantId);
 
                     command.Parameters.AddWithValue("@TVP_OutwardFabricDetails", OutWardFabricDetails);
-                    command.Parameters.AddWithValue("@TVP_OutwardFabricProcessMappingDetails", OutwardFabricProcessMappingDetails); 
+                    command.Parameters.AddWithValue("@TVP_OutwardFabricProcessMappingDetails", OutwardFabricProcessMappingDetails);
                     command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
 
                     if (staticDetails.OutWardId > 0)
@@ -459,19 +483,14 @@ namespace TetroONE.Controllers
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
 
-                    try
-                    {
-                        await command.ExecuteNonQueryAsync();
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(ds);
 
                     response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
                     response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                    response.Data = GenericTetroONE.dataSetToJSON(ds);
                 }
-                connection.Close(); 
+                connection.Close();
             }
             if (!response.Status)
             {
@@ -488,7 +507,7 @@ namespace TetroONE.Controllers
             }
             return Json(response);
         }
-         
+
         [HttpGet]
         [Route("DeleteOutWardDetails")]
         public IActionResult DeleteOutWardDetails(int OutWardId)
@@ -563,7 +582,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetFabricDetails_ProductionPlan]", request);
             return Json(response);
         }
-        
+
         [HttpPost]
         [Route("InsertUpdateProductionPlanDetails")]
         public async Task<IActionResult> InsertUpdateProductionPlanDetails()
@@ -577,7 +596,7 @@ namespace TetroONE.Controllers
             IFormFileCollection file = Request.Form.Files;
             List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
             DataTable dtattachment = new DataTable();
-            
+
             foreach (var item in file)
             {
                 var attachment = GetFilePath(item.FileName);
@@ -622,16 +641,16 @@ namespace TetroONE.Controllers
 
             List<ProductionPlanFabricDetails>? ProductionPlanFabricDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanFabricDetails>?>(Request.Form["ProductionPlanFabricDetails"]);
             DataTable ProductionPlanFabricDetails = GenericTetroONE.ToDataTable(ProductionPlanFabricDetails1);
-              
+
             List<ProductionPlanFabricProcessMappingDetails>? ProductionPlanFabricProcessMappingDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanFabricProcessMappingDetails>?>(Request.Form["ProductionPlanFabricProcessMappingDetails"]);
             DataTable ProductionPlanFabricProcessMappingDetails = GenericTetroONE.ToDataTable(ProductionPlanFabricProcessMappingDetails1);
-              
+
             List<ProductionPlanDyeRequirementDetails>? ProductionPlanDyeRequirementDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanDyeRequirementDetails>?>(Request.Form["ProductionPlanDyeRequirementDetails"]);
             DataTable ProductionPlanDyeRequirementDetails = GenericTetroONE.ToDataTable(ProductionPlanDyeRequirementDetails1);
-              
+
             List<ProductionPlanChemicalRequirementDetails>? ProductionPlanChemicalRequirementDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanChemicalRequirementDetails>?>(Request.Form["ProductionPlanChemicalRequirementDetails"]);
             DataTable ProductionPlanChemicalRequirementDetails = GenericTetroONE.ToDataTable(ProductionPlanChemicalRequirementDetails1);
-            
+
             var spName = string.Empty;
             if (staticDetails.ProductionPlanId != null && staticDetails.ProductionPlanId != 0)
             {
@@ -657,8 +676,10 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@TotalWeight", staticDetails.TotalWeight);
                     command.Parameters.AddWithValue("@ColorId", staticDetails.ColorId);
                     command.Parameters.AddWithValue("@MachineId", staticDetails.MachineId);
+                    command.Parameters.AddWithValue("@MLR", staticDetails.MLR);
+                    command.Parameters.AddWithValue("@WaterLevel", staticDetails.WaterLevel);
                     command.Parameters.AddWithValue("@ProductionPlanStatusId", staticDetails.ProductionPlanStatusId);
-                    command.Parameters.AddWithValue("@Comments", staticDetails.Comments == null ? (object)DBNull.Value : staticDetails.Comments); 
+                    command.Parameters.AddWithValue("@Comments", staticDetails.Comments == null ? (object)DBNull.Value : staticDetails.Comments);
                     command.Parameters.AddWithValue("@PreparedBy", staticDetails.PreparedBy);
 
                     command.Parameters.AddWithValue("@TVP_ProductionPlanFabricDetails", ProductionPlanFabricDetails);
@@ -781,96 +802,189 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
+
         [HttpGet]
         [Route("OutwardPrint")]
-        public IActionResult OutwardPrint(int NoOfCopies, string printType)
+        public IActionResult OutwardPrint(int ModuleId, int NoOfCopies, string printType)
         {
-            PDFTaxInvoice pdfService = new PDFTaxInvoice();
-            byte[] pdfContent = pdfService.OutwardAdithiyaPrint(NoOfCopies);
-
-            switch (printType?.ToLower())
+            try
             {
-                case "mail":
-                    var base64PdfContent = Convert.ToBase64String(pdfContent);
-                    return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
+                _employeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-                case "download":
-                    return File(pdfContent, "application/pdf", "Outward.pdf");
-
-                case "preview":
-                    var customFileName = "Kavinesh Developer Testing";
-                    Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
-                    return File(pdfContent, "application/pdf");
-
-                case "print":
-                    return File(pdfContent, "application/pdf");
-
-                case "whatsapp":
-                    string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                    string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
-
-                    if (!Directory.Exists(folderPath))
-                        Directory.CreateDirectory(folderPath);
-
-                    string fileName = "PurchaseOrder_" + Guid.NewGuid() + ".pdf";
-                    string filePath = Path.Combine(folderPath, fileName);
-
-                    try
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("[dbo].[USP_GetPrintPDFDetails]", connection))
                     {
-                        System.IO.File.WriteAllBytes(filePath, pdfContent);
-                        string fileUrlPath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
-                        return Json(new { status = true, message = $"PDF saved successfully.", data = fileUrlPath });
-                    }
-                    catch (Exception ex)
-                    {
-                        return Json(new { status = false, message = "Error saving PDF: " + ex.Message });
-                    }
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@LoginUserId", _employeeId);
+                        command.Parameters.AddWithValue("@ModuleName", "OutWard");
+                        command.Parameters.AddWithValue("@ModuleId", ModuleId);
 
-                default:
-                    return Json(new { status = false, message = "Invalid print type selected." });
+                        command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                        command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+                        DataSet ds = new DataSet();
+
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        if (ds.Tables.Count >= 5)
+                        {
+                            DataTable dt1 = ds.Tables[0];
+                            DataTable dt2 = ds.Tables[1];
+                            DataTable dt3 = ds.Tables[2];
+                            DataTable dt4 = ds.Tables[3];
+                            DataTable dt5 = ds.Tables[4];
+
+                            // Check if dt1 has rows
+                            if (dt1.Rows.Count > 0)
+                            {
+                                var data = new OutWardPrint
+                                {
+                                    CompanyName = dt1.Rows[0]["CompanyName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyName"]) : null,
+                                    Address1 = dt1.Rows[0]["Address1"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Address1"]) : null,
+                                    Address2 = dt1.Rows[0]["Address2"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Address2"]) : null,
+                                    Phone = dt1.Rows[0]["Phone"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Phone"]) : null,
+                                    PFCodeNo = dt1.Rows[0]["PFCodeNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["PFCodeNo"]) : null,
+                                    ESICodeNo = dt1.Rows[0]["ESICodeNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["ESICodeNo"]) : null,
+                                    Email = dt1.Rows[0]["Email"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Email"]) : null,
+                                    GSTin = dt1.Rows[0]["GSTin"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["GSTin"]) : null,
+                                    MSMERegistrationNo = dt1.Rows[0]["MSMERegistrationNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["MSMERegistrationNo"]) : null,
+
+                                    OutwardToName = dt2.Rows[0]["OutwardToName"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["OutwardToName"]) : null,
+                                    Address = dt2.Rows[0]["Address"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Address"]) : null,
+                                    City = dt2.Rows[0]["City"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["City"]) : null,
+                                    GSTNumber = dt2.Rows[0]["GSTNumber"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["GSTNumber"]) : null,
+
+                                    DCNo = dt3.Rows[0]["DCNo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["DCNo"]) : null,
+                                    DCDate = dt3.Rows[0]["DCDate"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["DCDate"]) : null,
+                                    Time = dt3.Rows[0]["Time"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["Time"]) : null,
+                                    DeliveryTo = dt3.Rows[0]["DeliveryTo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["DeliveryTo"]) : null,
+
+                                    TotalInwardWt = dt5.Rows[0]["TotalInwardWt"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["TotalInwardWt"]) : null,
+                                    TotalOutwardWt = dt5.Rows[0]["TotalOutwardWt"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["TotalOutwardWt"]) : null,
+                                    AvgLoss = dt5.Rows[0]["AvgLoss"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["AvgLoss"]) : null,
+                                    DeliveredBy = dt5.Rows[0]["DeliveredBy"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DeliveredBy"]) : null,
+                                    VehicleNo = dt5.Rows[0]["VehicleNo"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["VehicleNo"]) : null,
+                                    DriverName = dt5.Rows[0]["DriverName"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DriverName"]) : null,
+
+                                    ProductItemData = dt4,
+                                };
+
+                                string DCNo = dt3.Rows[0]["DCNo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["DCNo"]) : null;
+                                string customFileName = $"OutWard_{DCNo}.pdf";
+
+                                PDFTaxInvoice pdfService = new PDFTaxInvoice();
+                                byte[] pdfContent = null;
+                                pdfContent = pdfService.OutwardAdithiyaPrint(NoOfCopies, data);
+
+                                switch (printType.ToLower())
+                                {
+                                    case "mail":
+                                        var base64PdfContent = Convert.ToBase64String(pdfContent);
+                                        return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
+
+                                    case "download":
+                                        return File(pdfContent, "application/pdf", "OutWard.pdf");
+
+                                    case "preview":
+                                        Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
+                                        return File(pdfContent, "application/pdf");
+
+                                    case "print":
+                                        return File(pdfContent, "application/pdf");
+
+                                    case "whatsapp":
+                                        string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+                                        string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
+
+                                        if (!Directory.Exists(folderPath))
+                                        {
+                                            Directory.CreateDirectory(folderPath);
+                                        }
+
+                                        string fileName = "OutWard" + Guid.NewGuid().ToString() + ".pdf";
+                                        string filePath = Path.Combine(folderPath, fileName);
+
+                                        //string fileName = "OutWard" + PurchaseOrderNumber + ".pdf";
+                                        //string filePath = Path.Combine(folderPath, fileName);
+
+                                        //if (System.IO.File.Exists(filePath))
+                                        //{
+                                        //    System.IO.File.Delete(filePath);
+                                        //}
+                                        try
+                                        {
+                                            // Write the PDF file to the specified path
+                                            System.IO.File.WriteAllBytes(filePath, pdfContent);
+
+                                            // Return the response with status, message, and the file URL
+                                            string fileurlpath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
+                                            return Json(new { status = true, message = $"PDF saved successfully at {filePath}", data = fileurlpath });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            return Json(new { success = false, message = "Error saving PDF: " + ex.Message });
+                                        }
+
+                                    default:
+                                        return Json(new { success = false, message = "Invalid print type selected." });
+                                }
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "No data found for the given ModuleId." });
+                            }
+                        }
+                        else
+                        {
+                            // Handle case where expected number of tables is not returned
+                            return Json(new { success = false, message = "Expected number of tables not returned from stored procedure." });
+                        }
+                    }
+                }
             }
-
-            // ⭐ FINAL REQUIRED RETURN
-            return Json(new { status = true, message = "" });
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                return Json(new { success = false, message = "An error occurred while generating purchase order print.", error = ex.Message });
+            }
         }
 
-        //[HttpGet]
-        //[Route("GenerateQrPdf")]
-        //public IActionResult GenerateQrPdf(string URL)
-        //{
-        //    using (var stream = new MemoryStream())
-        //    {
-        //        PdfWriter writer = new PdfWriter(stream);
-        //        PdfDocument pdf = new PdfDocument(writer);
-        //        Document document = new Document(pdf, PageSize.A4);
+        [HttpGet]
+        [Route("GenerateQrPdf")]
+        public IActionResult GenerateQrPdf(string URL, string ProductionPlanNo)
+        {
+            using (var stream = new MemoryStream())
+            {
+                PdfWriter writer = new PdfWriter(stream);
+                PdfDocument pdf = new PdfDocument(writer);
+                var pageSize = iText.Kernel.Geom.PageSize.A4;
+                Document document = new Document(pdf, pageSize);
+                Paragraph heading = new Paragraph(ProductionPlanNo + "_" + "QRCode").SetFontSize(20).SetBold().SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER).SetMarginBottom(30);
+                document.Add(heading);
 
-        //        Paragraph heading = new Paragraph("Scan and apply")
-        //            .SetFontSize(20).SetBold()
-        //            .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
-        //            .SetMarginBottom(30);
+                var qrCode = new BarcodeQRCode(URL);
+                var qrObject = qrCode.CreateFormXObject(ColorConstants.BLACK, pdf);
+                var qrImage = new Image(qrObject);
 
-        //        document.Add(heading);
+                float size = pageSize.GetWidth() - 100;
+                qrImage.SetWidth(size);
+                qrImage.SetHeight(size);
+                qrImage.SetHorizontalAlignment(iText.Layout.Properties.HorizontalAlignment.CENTER);
 
-        //        var qrCode = new BarcodeQRCode(URL);
-        //        var qrObject = qrCode.CreateFormXObject(iText.Kernel.Colors.ColorConstants.BLACK, pdf);
-        //        var qrImage = new Image(qrObject);
+                document.Add(qrImage);
+                document.Close();
 
-        //        float size = PageSize.A4.GetWidth() - 100;
-        //        qrImage.SetWidth(size);
-        //        qrImage.SetHeight(size);
-        //        qrImage.SetHorizontalAlignment(iText.Layout.Properties.HorizontalAlignment.CENTER);
+                // ✅ Fallback + clean filename
+                var safePlanNo = string.IsNullOrWhiteSpace(ProductionPlanNo) ? "QRCode" : ProductionPlanNo.Replace("/", "-").Replace("\\", "-");
 
-        //        document.Add(qrImage);
-
-        //        document.Close();
-
-        //        var fileBytes = stream.ToArray();
-        //        return File(fileBytes, "application/pdf", "QRCode.pdf");
-        //    }
-        //}
-
-
-
+                return File(stream.ToArray(), "application/pdf", $"{safePlanNo}_QRCode.pdf");
+            }
+        }
 
         private (string, string) GetFilePath(string reqfilename)
         {

@@ -73,8 +73,6 @@ namespace TetroONE.Extension
 			context.Response.StatusCode = (int)statusCode;
 			await context.Response.WriteAsJsonAsync(Get);
 
-		}
-
-
+		} 
 	}
 }

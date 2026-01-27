@@ -18,8 +18,8 @@ function getMasterData(moduleName) {
     });
 }
 
-//const moduleOrder = ["EmployeeType", "Department", "UserGroup", "UserType", "PayType", "ClaimType", "EmployeeStatus", "LeaveStatus", "DocType"];
-const moduleOrder = ["Fabric", "Process","Unit", "Department", "ClaimType"]; 
+//const moduleOrder = ["EmployeeType", "Department", "UserGroup", "UserType", "PayType", "ClaimType", "EmployeeStatus", "LeaveStatus", "DocType", "ClaimType", "ExpenseType"];
+const moduleOrder = ["Fabric", "Process", "Unit", "Department", "ExpenseType"]; 
 
 Common.ajaxCall("GET", "/Settings/GetProductCategory", { ProductCategoryId: null }, ProductCategorySuccess, null);
 Common.ajaxCall("GET", "/Settings/GetProductSubCategory", { ProductSubCategoryId: null }, ProductSubCategorySuccess, null);
@@ -34,6 +34,15 @@ Common.bindDropDownParent('ModuleTypeId', 'FormAutoGeneratePrefix', 'ModuleType'
 $(document).ready(function () {
 
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
+
+    var $cols = $('#FormProductSubCategory .row > div');
+
+    // Hide 3rd div
+    $cols.eq(2).hide();
+
+    // Update 1st and 2nd div classes
+    $cols.eq(0).removeClass().addClass('col-md-6 col-lg-6 col-sm-6 col-6');
+    $cols.eq(1).removeClass().addClass('col-md-6 col-lg-6 col-sm-6 col-6');
 
     /*=================================================================Common=====================================================================*/
 
@@ -446,7 +455,7 @@ function ColorSuccess(response) {
         var data = JSON.parse(response.data);
 
         var columns = Common.bindColumn(data[0], ['ColorId']);
-        Common.bindTableSettings('ColorTable', data[0], columns, -1, 'ColorId', '271px', true);
+        bindTableParaDifSettings('ColorTable', data[0], columns, -1, 'ColorId', '271px', true);
     }
 }
 
@@ -475,7 +484,7 @@ function MachineSuccess(response) {
         var data = JSON.parse(response.data);
 
         var columns = Common.bindColumn(data[0], ['MachineId']);
-        Common.bindTableSettings('MachineTable', data[0], columns, -1, 'MachineId', '271px', true);
+        bindTableParaDifSettings('MachineTable', data[0], columns, -1, 'MachineId', '271px', true);
     }
 }
 
@@ -504,7 +513,7 @@ function ProductCategorySuccess(response) {
         var data = JSON.parse(response.data);
 
         var columns = Common.bindColumn(data[0], ['ProductCategoryId']);
-        Common.bindTableSettings('ProductCategoryTable', data[0], columns, -1, 'ProductCategoryId', '271px', true);
+        bindTableParaDifSettings('ProductCategoryTable', data[0], columns, -1, 'ProductCategoryId', '271px', true);
     }
 }
 
@@ -533,7 +542,7 @@ function ProductSubCategorySuccess(response) {
         var data = JSON.parse(response.data);
 
         var columns = Common.bindColumn(data[0], ['ProductSubCategoryId']);
-        Common.bindTableSettings('ProductSubCategoryTable', data[0], columns, -1, 'ProductSubCategoryId', '271px', true);
+        bindTableParaDifSettings('ProductSubCategoryTable', data[0], columns, -1, 'ProductSubCategoryId', '271px', true);
     }
 }
 
@@ -566,7 +575,7 @@ function AutoGeneratePrefixSuccess(response) {
         var data = JSON.parse(response.data);
 
         var columns = Common.bindColumn(data[0], ['AutoGeneratePrefixId']);
-        Common.bindTableSettings('AutoGeneratePrefixTable', data[0], columns, -1, 'AutoGeneratePrefixId', '271px', true);
+        bindTableParaDifSettings('AutoGeneratePrefixTable', data[0], columns, -1, 'AutoGeneratePrefixId', '271px', true);
     }
 }
 
@@ -675,6 +684,77 @@ function bindTableSettings(tableid, data, columns, actionTarget, editcolumn, scr
         table.search($(this).val()).draw();
     });
 
+    setTimeout(function () {
+        var table1 = $('#' + tableid).DataTable();
+        Common.autoAdjustColumns(table1);
+    }, 100);
+}
+
+
+function bindTableParaDifSettings(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction) {
+    if ($.fn.DataTable.isDataTable('#' + tableid)) {
+        $('#' + tableid).DataTable().clear().destroy();
+    }
+    $('#' + tableid).empty();
+    columns = columns.filter(x => x.name != "TetroONEnocount");
+
+    var isTetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
+    if (isAction == true && data != null && data.length > 0 && !isTetroONEnocount) {
+        columns.push({
+            "data": "Action", "name": "Action", "title": "Action", orderable: false
+        });
+    }
+
+    var renderColumn = [];
+    renderColumn.push(
+        {
+            targets: actionTarget,
+            render: function (data, type, row, meta) {
+                return `<td><div class="actionEllipsis"><i class="btn-edit mx-1" data-id="${row[editcolumn]}" title="Edit"><img src="/assets/commonimages/edit.svg" /></i> 
+                                <i class="btn-delete alert_delete"  data-id="${row[editcolumn]}" title="Delete"><img src="/assets/commonimages/delete.svg" /></i></td></div>`;
+
+            }
+        }
+    )
+
+    var lang = {};
+    var screenWidth = $(window).width();
+    if (screenWidth <= 575) {
+        var lang = {
+            "paginate": {
+                "next": ">",
+                "previous": "<"
+            }
+        }
+    }
+
+    var table = $('#' + tableid).DataTable({
+        "dom": "Bfrtip",
+        "bDestroy": true,
+        "responsive": true,
+        "data": !isTetroONEnocount ? data : [],
+        "columns": columns,
+        "destroy": true,
+        "scrollY": scrollpx,
+        "sScrollX": "100%",
+        "aaSorting": [],
+        "scrollCollapse": true,
+        "oSearch": { "bSmart": false, "bRegex": true },
+        "info": false,
+        "paging": false,
+        "pageLength": 7,
+        "lengthMenu": [7, 14, 50],
+        "language": $.extend({}, lang, {
+            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
+        }),
+        "columnDefs": !isTetroONEnocount
+            ? renderColumn : [],
+    });
+
+    $('#tableFilter' + tableid).on('keyup', function () {
+        table.search($(this).val()).draw();
+    });
+     
     setTimeout(function () {
         var table1 = $('#' + tableid).DataTable();
         Common.autoAdjustColumns(table1);

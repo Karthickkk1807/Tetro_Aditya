@@ -218,6 +218,8 @@ $(document).on('click', '#AddVendor', function () {
     $('#IsActiveHide').hide();
     $('#SaveVendor').text('Save').addClass('btn-success').removeClass('btn-update');
     $("input[name='products']").prop("checked", false);
+    $('#CurrentlimitHide').hide(); 
+    $('#RemarksDiv').removeClass('col-md-7 col-lg-7 col-sm-7 col-12').addClass('col-md-12 col-lg-12 col-sm-12 col-12'); 
     $('#loader-pms').hide(); 
 
     deletedFiles = [];
@@ -253,6 +255,8 @@ $(document).on('click', '.btn-edit', function () {
     $("#VendorHeader").text('Edit Vendor Details');
     $('#SaveVendor').text('Update').addClass('btn-update').removeClass('btn-success'); 
     $('#IsActiveHide').show();
+    $('#CurrentlimitHide').show();
+    $('#RemarksDiv').removeClass('col-md-12 col-lg-12 col-sm-12 col-12').addClass('col-md-7 col-lg-7 col-sm-7 col-12'); 
 
     deletedFiles = [];
     existFiles = [];
@@ -419,8 +423,8 @@ function editSuccess(response) {
          `;
         $('#TransactionsInfo').append(html);
 
-        var columns = Common.bindColumn(data[3], ['PurchaseRequestId', 'Status_Color']);
-        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'PurchaseRequestId', '151px', true);
+        var columns = Common.bindColumn(data[3], ['TransactionId', 'Status_Color']);
+        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'TransactionId', '151px', true);
          
         updateRemoveButtons();
     }

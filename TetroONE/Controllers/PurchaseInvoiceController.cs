@@ -112,13 +112,14 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetPurchaseOrderNoDetails_ByVendorPlant")]
-        public IActionResult GetPurchaseOrderNoDetails_ByVendorPlant(int? VendorId, int PlantId)
+        public IActionResult GetPurchaseOrderNoDetails_ByVendorPlant(int? VendorId, int PlantId, int PurchaseOrderId)
         {
             GetPurchaseOrderNoDetails_ByVendorPlant getInfo = new GetPurchaseOrderNoDetails_ByVendorPlant()
             {
                 LoginuserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
                 VendorId = VendorId,
                 PlantId = PlantId,
+                PurchaseOrderId = PurchaseOrderId == 0 ? null : PurchaseOrderId
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[DBO].[USP_DD_GetPurchaseOrderNoDetails_ByVendorPlant]", getInfo);

@@ -171,6 +171,15 @@
     <div class="offcanvas-body">
         <form id="FormQuotation">
             <div class="row">
+                <div class="col-12 Status-Div">
+                    <fieldset class="expensefild_1">
+                        <legend class="w-auto">Quotation Status</legend>
+                        <div class="horizontal-timeline">
+                            <div class="timeline-progress-line-fill"></div>
+                            <div class="timeline-progress-line"></div>
+                        </div>
+                    </fieldset>
+                </div>
                 <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                     <div class="form-group">
                         <label>Quotation No<span id="Asterisk">*</span></label>
@@ -217,29 +226,43 @@
                         <div class="DynamicProcessList"></div>
                     </fieldset>
                 </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6" id="CreatedByDiv">
-                    <div class="form-group">
-                        <label>Created By<span id="Asterisk">*</span></label>
-                        <select class="form-control" id="CreatedBy" name="CreatedBy" required disabled></select>
+                <div class="row col-12">
+
+                    <!-- ROW 1 -->
+                    <div class="col-md-8 col-lg-8 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Remarks</label>
+                            <textarea class="form-control" id="ReMarks" name="ReMarks" rows="3" maxlength="250" placeholder="Remarks"></textarea>
+                        </div>
                     </div>
+
+                    <div class="col-md-4 col-lg-4 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label>Status <span id="Asterisk">*</span></label>
+                            <select class="form-control" id="QuotationStatusId" name="QuotationStatusId" required> 
+                            </select>
+                        </div>
+                        <div class="form-group" id="CreatedByDiv">
+                            <label>Created By <span id="Asterisk">*</span></label>
+                            <select class="form-control" id="CreatedBy" name="CreatedBy" required="" disabled="" fdprocessedid="ua59n"><option value="">--Select--</option><option value="4">Mr. BalaSubramanian</option><option value="14">Mr. Support User</option><option value="40">Mr. Akil</option><option value="41">Mr. Manager</option><option value="42">Mr. Robert</option><option value="43">Mr. Murali</option><option value="44">Mr. Inward Supervisor</option></select>
+                        </div>
+                    </div> 
                 </div>
-                <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Status<span id="Asterisk">*</span></label> 
-                        <select class="form-control" id="QuotationStatusId" name="QuotationStatusId" required>
-                            <option value="">--Select--</option>
-                            <option value="1">Draft</option>
-                            <option value="2">Approved</option>
-                            <option value="3">Sent</option>
-                            <option value="4">Accepted</option>
-                            <option value="5">Cancelled</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-12 col-lg-12 col-sm-12 col-12">
-                    <div class="form-group">
-                        <label>Remarks</label>
-                        <textarea class="form-control" id="ReMarks" autocomplete="off" name="ReMarks" rows="1" maxlength="250" placeholder="Remarks"></textarea>
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" id="Attachrow">
+                    <div class=" border border-radius" style="background-color:#F1F0EF; max-height:10.5rem;height: 96px;">
+                        <!-- Add a custom button for choosing files -->
+                        <label class=" d-flex justify-content-center align-content-center mt-1" style="text-decoration:underline; color:#7D7C7C;">
+                            <b>Click Here to Attach your files</b>
+                            <input type="file" id="fileInput" multiple="" class="custom-file-input">
+                        </label>
+                        <div class="file-preview d-flex justify-content-center" id="preview">
+                            <div class="attachrow">
+                                <div class="attachcolumn">
+                                    <ul class="row justify-content-center px-3 mb-2" id="selectedFiles"></ul>
+                                </div>
+                                <div class="attachcolumn"><ul class="row justify-content-center px-3 mb-2" id="ExistselectedFiles"></ul></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -251,7 +274,7 @@
                 <div class="card-action">
                     <a class="btn btn-success m-r-20 text-white" id="SaveQuotation">Save</a>
                     <a class="btn btn-success m-r-20 text-white" id="PrintQuotation">Print</a>
-                </div> 
+                </div>
             </div>
         </div>
     </div>

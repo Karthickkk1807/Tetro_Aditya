@@ -424,15 +424,15 @@ function getSuccess(response) {
             $('#CounterImage3').prop('src', '/assets/moduleimages/claim/claimicon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/claim/claimicon_4.svg');
 
-            $("#CounterTextBox1").text('Total');
-            $("#CounterTextBox2").text('Requested');
-            $("#CounterTextBox3").text('Approved');
-            $("#CounterTextBox4").text('Rejected');
-
-            $('#CounterValBox1').text('31 / ₹ 29,758.00');
-            $('#CounterValBox2').text('4 / ₹ 6590.00');
-            $('#CounterValBox3').text('12 / ₹ 18,555.00');
-            $('#CounterValBox4').text('19 / ₹ 11,203.00');
+            //$("#CounterTextBox1").text('Total');
+            //$("#CounterTextBox2").text('Requested');
+            //$("#CounterTextBox3").text('Approved');
+            //$("#CounterTextBox4").text('Rejected');
+            
+            //$('#CounterValBox1').text('31 / ₹ 29,758.00');
+            //$('#CounterValBox2').text('4 / ₹ 6590.00');
+            //$('#CounterValBox3').text('12 / ₹ 18,555.00');
+            //$('#CounterValBox4').text('19 / ₹ 11,203.00');
 
         } else if (activeTabText.includes("Advance")) {
             $('#CounterImage1').prop('src', '/assets/moduleimages/advance/advanceicon_1.svg');
@@ -440,15 +440,15 @@ function getSuccess(response) {
             $('#CounterImage3').prop('src', '/assets/moduleimages/advance/advanceicon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/advance/advanceicon_4.svg');
 
-            $("#CounterTextBox1").text('Total Advance');
-            $("#CounterTextBox2").text('Total Due');
-            $("#CounterTextBox3").text('No Of Request');
-            $("#CounterTextBox4").text('No Of Rejected');
-
-            $('#CounterValBox1').text('28 / ₹ 3,90,000.00');
-            $('#CounterValBox2').text('₹ 31,000.00');
-            $('#CounterValBox3').text('7 / ₹ 38,000.00');
-            $('#CounterValBox4').text('2 / ₹ 46,000.00');
+            //$("#CounterTextBox1").text('Total Advance');
+            //$("#CounterTextBox2").text('Total Due');
+            //$("#CounterTextBox3").text('No Of Request');
+            //$("#CounterTextBox4").text('No Of Rejected');
+            
+            //$('#CounterValBox1').text('28 / ₹ 3,90,000.00');
+            //$('#CounterValBox2').text('₹ 31,000.00');
+            //$('#CounterValBox3').text('7 / ₹ 38,000.00');
+            //$('#CounterValBox4').text('2 / ₹ 46,000.00');
 
         } else if (activeTabText.includes("Loan")) {
             $('#CounterImage1').prop('src', '/assets/moduleimages/loan/loanicon_1.svg');
@@ -456,15 +456,15 @@ function getSuccess(response) {
             $('#CounterImage3').prop('src', '/assets/moduleimages/loan/loanicon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/loan/loanicon_4.svg');
 
-            $("#CounterTextBox1").text('Total Loan');
-            $("#CounterTextBox2").text('Total Due');
-            $("#CounterTextBox3").text('No Of Request');
-            $("#CounterTextBox4").text('No Of Rejected');
-
-            $('#CounterValBox1').text('23 / ₹ 7,22,000.00');
-            $('#CounterValBox2').text('₹ 57,000.00');
-            $('#CounterValBox3').text('5 / ₹ 51,000.00');
-            $('#CounterValBox4').text('3 / ₹ 26,000.00');
+            //$("#CounterTextBox1").text('Total Loan');
+            //$("#CounterTextBox2").text('Total Due');
+            //$("#CounterTextBox3").text('No Of Request');
+            //$("#CounterTextBox4").text('No Of Rejected');
+            
+            //$('#CounterValBox1').text('23 / ₹ 7,22,000.00');
+            //$('#CounterValBox2').text('₹ 57,000.00');
+            //$('#CounterValBox3').text('5 / ₹ 51,000.00');
+            //$('#CounterValBox4').text('3 / ₹ 26,000.00');
 
         }
 

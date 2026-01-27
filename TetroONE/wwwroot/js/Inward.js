@@ -2,7 +2,7 @@
 var InWardId = 0;
 var WidthDropdown = [];
 var FabricTypeDropdown = [];
-var ProcessTypeDropdown = []; 
+var ProcessTypeDropdown = [];
 var deletedFiles = [];
 var existFiles = [];
 var formDataMultiple = new FormData();
@@ -11,11 +11,13 @@ $(document).ready(async function () {
 
     Common.bindDropDown('ClientId', 'Client');
     Common.bindDropDown('TransactionId', 'TransactionType');
-    Common.bindDropDown('ReceivedFrom', 'JobWorker');
+    //Common.bindDropDown('ReceivedFrom', 'JobWorker');
+    Common.bindDropDown('ReceivedFrom', 'Client');
     Common.bindDropDown('ReceivedBy', 'SampleReceivedBy');
     Common.bindDropDown('ColorId', 'Color');
     Common.bindDropDown('PaymentTypeId', 'PaymentType');
     Common.bindDropDown('InWardStatusId', 'InWardStatus');
+    Common.bindDropDown('StorageLocationId', 'StorageLocation');
 
     var fabricTypeDropdown = await Common.bindDropDownSync('FabricType');
     FabricTypeDropdown = JSON.parse(fabricTypeDropdown);
@@ -114,6 +116,7 @@ $(document).ready(async function () {
     Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), InwardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardSuccess, null);
 
     $(document).on('click', '#AddInWard', function () {
+        InWardId = 0;
         $('.dynamic-item-row').remove();
         $('.dynamic-item-row_Second').remove();
         duplicateFabric();
@@ -135,6 +138,7 @@ $(document).ready(async function () {
         $('#ModalHeading').text('InWard Details');
         $("#BtnSave span:first").text("Save");
 
+        $('.Status-Div').hide();
         var currentDate = new Date();
         var formattedDate = currentDate.toISOString().slice(0, 10);
         $('#InwardDate').val(formattedDate);
@@ -151,7 +155,7 @@ $(document).ready(async function () {
         $('#InWardModal').show();
     });
 
-    $(document).on('click', '.btn-edit', function () {
+    $(document).on('click', '.btn-edit', async function () {
         InWardId = $(this).data('id');
 
         deletedFiles = [];
@@ -169,10 +173,18 @@ $(document).ready(async function () {
         $('#AddAttachLable, #AddNotesLable').show();
 
         $('.modal-body').animate({ scrollTop: 0 }, 300);
-        $('#InWardModal').show();
+        $('.Status-Div').show();
+
+        const activityResponse = await ajaxPromise("GET", "/Common/ActivityHistoryDetails", {
+            ModuleName: "Inward",
+            ModuleId: InWardId
+        });
+        StatusActivitySuccess(activityResponse);
 
         var fnData = Common.getDateFilter('dateDisplay2');
         Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), InwardId: parseInt(InWardId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardNotNullSuccess, null);
+
+        $('#InWardModal').show();
     });
 
     $(document).on('click', '#BtnCancel, #InWardClose', function () {
@@ -181,7 +193,7 @@ $(document).ready(async function () {
 
     $(document).on('click', '#BtnSave', function () {
 
-        if ($("#TableInputs").valid() && $("#TopStatic").valid() && $("#FormStatus").valid()) {
+        if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
             var DataUpdate1 = JSON.parse(JSON.stringify(jQuery('#TopStatic').serializeArray()));
             var DataUpdate2 = JSON.parse(JSON.stringify(jQuery('#FormStatus').serializeArray()));
 
@@ -357,7 +369,7 @@ function GetInwardNotNullSuccess(response) {
     Inventory.toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "HideNotesLable");
     Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
     Inventory.bindAttachments(data[3]);
-     
+
     $('.dynamic-item-row, .dynamic-item-row_Second').remove();
 
     const InwardRows = data[1];
@@ -366,7 +378,7 @@ function GetInwardNotNullSuccess(response) {
     let fabricFirstRowTracker = {};
     let rowCountTracker = {};
     let processLookup = {};
-     
+
     processMapping.forEach(p => {
         let key = `${p.FabricTypeId}_${p.RowNo}`;
         if (!processLookup[key]) processLookup[key] = [];
@@ -374,31 +386,31 @@ function GetInwardNotNullSuccess(response) {
     });
 
     InwardRows.forEach((item, index) => {
-         
+
         if (!rowCountTracker[item.FabricTypeId]) rowCountTracker[item.FabricTypeId] = 1;
         else rowCountTracker[item.FabricTypeId]++;
 
         let currentRowNo = rowCountTracker[item.FabricTypeId];
         let lookupKey = `${item.FabricTypeId}_${currentRowNo}`;
-         
+
         let mappedProcesses = processLookup[lookupKey] || [];
         let selectedProcesses = mappedProcesses.map(x => x.ProcessId);
         let processMappingId = mappedProcesses.length ? mappedProcesses[0].InwardFabricProcessMappingId : "";
-         
+
         let uid = `row_${item.FabricTypeId}_${currentRowNo}_${Date.now()}`;
-         
+
         let isParentRow = currentRowNo === 1;
-         
+
         let FabricHTML = FabricTypeDropdown[0].map(f => `
             <option value="${f.FabricTypeId}" ${f.FabricTypeId == item.FabricTypeId ? 'selected' : ''}>
                 ${f.FabricTypeName}
             </option>
         `).join('');
-         
+
         let WidthHTML = WidthDropdown[0].map(w => `
             <option value="${w.WidthId}" ${item.Width == w.WidthId ? 'selected' : ''}>${w.Width}</option>
         `).join('');
-         
+
         let rowHTML = `
         <tr class="${isParentRow ? 'dynamic-item-row' : 'dynamic-item-row_Second'}"
             data-id="${uid}" data-rowno="${currentRowNo}"> 
@@ -411,26 +423,26 @@ function GetInwardNotNullSuccess(response) {
                 <label class="InwardFabricProcessMappingId d-none">${processMappingId || ''}</label> 
                 <select multiple class="select2 Process" data-coreui-search="true" required>
                     ${ProcessTypeDropdown[0].map(p =>
-                        `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
+            `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
                             ${p.ProcessTypeName}
                         </option>`
-                    ).join('')}
+        ).join('')}
                 </select>
             </td> 
-            <td><input class="form-control DiaInput" value="${item.Dia || ''}"></td>
-            <td><input class="form-control GsmInput" value="${item.GSM || ''}"></td>
-            <td><input class="form-control QtyInput" value="${item.Qty || ''}"></td>
-            <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td> 
+            <td><input class="form-control DiaInput" value="${item.Dia || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"></td>
+            <td><input class="form-control GsmInput" value="${item.GSM || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"></td>
+            <td><input class="form-control QtyInput" value="${Number(item.Qty || 0).toFixed(3)}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
+            <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}" oninput="Common.allowOnlyNumberLength(this,3)"></td> 
             <td><select class="form-control WidthSelect">${WidthHTML}</select></td> 
             <td style="text-align:center">
                 ${isParentRow ?
-                    `<button class="btn AddStockBtn AddFabric"><i class="fas fa-plus"></i></button>`
-                    : ""
-                }
+                `<button class="btn AddStockBtn AddFabric"><i class="fas fa-plus"></i></button>`
+                : ""
+            }
                 <button class="btn DynrowRemove removeRowBtn"><i class="fas fa-trash-alt"></i></button>
             </td>
         </tr>`;
-         
+
         if (isParentRow) {
             $("#AddItemButtonRow").before(rowHTML);
         } else {
@@ -438,7 +450,7 @@ function GetInwardNotNullSuccess(response) {
             parentRow.last().after(rowHTML);
         }
     });
-     
+
     $(".Process").select2({
         theme: 'bootstrap4',
         placeholder: '-- Select Process --',
@@ -476,9 +488,9 @@ function duplicateFabric() {
                 <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
                 </select>
             </td> 
-            <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
-            <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
-            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
+            <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required /></td> 
+            <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required /></td> 
+            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" required /></td> 
             <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" oninput="Common.allowOnlyNumberLength(this,3)" required /></td> 
             <td>
                 <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
@@ -541,9 +553,9 @@ function addNewFabricRow(afterRow) {
                  <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
                  </select>
             </td> 
-            <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
-            <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
-            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required /></td> 
+            <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required /></td> 
+            <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required /></td> 
+            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" required /></td> 
             <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" oninput="Common.allowOnlyNumberLength(this,3)" required /></td> 
             <td>
                 <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
@@ -640,7 +652,7 @@ function calculateGsmNoOfRollTotal() {
         }
     });
 
-    $("#TotalQty").val(totalGsm.toFixed(2));
+    $("#TotalQty").val(totalGsm.toFixed(3));
     $("#TotalRolls").val(totalNoOfRoll.toFixed(2));
 }
 
@@ -910,3 +922,96 @@ function bindDropDownWidth(id, moduleName, callback) {
         }
     });
 }
+
+
+/*========================================================Status Tracking=================================================================*/
+function StatusActivitySuccess(response) {
+    var parsedData = JSON.parse(response.data);
+    var timelineData = parsedData[0];
+
+    var $timeline = $(".horizontal-timeline");
+
+    // Remove existing stages
+    $timeline.find(".timeline-stage").remove();
+    var progressStatuses = [];
+
+    // Append new timeline stages
+    $.each(timelineData, function (index, item) {
+        var status = item.InventoryStatusName || "Unknown";
+        var user = item.UserName || "N/A";
+        var color = item.Status_Color || "#000";
+
+        var date = new Date(item.CreatedDate);
+        var formattedDate = date.toLocaleDateString('en-GB') + ', ' +
+            date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        var statusClass = "status-" + status.toLowerCase().replace(/\s+/g, '');
+
+        var $stage = $('<div>', {
+            class: `timeline-stage ${statusClass}`
+        });
+
+        var $marker = $('<div>', { class: 'stage-marker' });
+
+        var $statusSpan = $('<span>', {
+            class: 'stage-status',
+            text: status,
+            css: { color: color }
+        });
+
+        $marker.append($statusSpan);
+
+        var $content = $('<div>', { class: 'stage-content' });
+        $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
+        $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
+
+        $stage.append($marker).append($content);
+        $timeline.append($stage);
+
+        progressStatuses.push(status);
+
+    });
+
+    setTimeout(function () {
+        updateTimelineProgress(progressStatuses);
+    }, 1000);
+}
+
+function updateTimelineProgress(progressStatuses) {
+    var $timeline = $(".horizontal-timeline");
+    var $fillLine = $timeline.find(".timeline-progress-line-fill");
+    var $stages = $timeline.find(".timeline-stage");
+
+    if ($stages.length === 0) return;
+
+    let $lastValidStage = null;
+
+    $stages.each(function () {
+        const statusText = $(this).find(".stage-status").text().trim();
+        if (progressStatuses.includes(statusText)) {
+            $lastValidStage = $(this);
+        }
+    });
+
+    if ($lastValidStage) {
+        const $marker = $lastValidStage.find(".stage-marker");
+        const timelineLeft = $timeline.offset().left;
+        const markerCenter = $marker.offset().left + ($marker.outerWidth() / 2);
+
+        const fillWidth = markerCenter - timelineLeft;
+
+        $fillLine.css({
+            width: fillWidth + "px"
+        });
+    } else {
+        $fillLine.css({ width: "0" });
+    }
+}
+ 
+function ajaxPromise(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
+}
+
+/*========================================================End Status Tracking=================================================================*/

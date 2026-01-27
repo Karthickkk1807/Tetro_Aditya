@@ -756,8 +756,7 @@ function SavePurchaseReturn(successCallback, errorCallback) {
         contentType: false,
         processData: false,
         success: successCallback,
-        error: errorCallback
-
+        error: errorCallback 
     });
 
 }

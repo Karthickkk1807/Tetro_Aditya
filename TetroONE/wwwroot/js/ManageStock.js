@@ -75,9 +75,9 @@ $(document).ready(function () {
     $('#increment-month-btn2').hide();
 
     var fnData = Common.getDateFilter('dateDisplay2');
-
-    var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) };
-    Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+    Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ManageStockSuccess, null);
+    //var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) };
+    //Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
 
     $(document).on('click', function (event) {
         var $target = $(event.target);
@@ -93,8 +93,9 @@ $(document).ready(function () {
 
         var fnData = Common.getDateFilter('dateDisplay2');
 
-        var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) };
-        Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+        Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ManageStockSuccess, null);
+        //var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) };
+        //Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
@@ -103,7 +104,9 @@ $(document).ready(function () {
         var fnData = Common.getDateFilter('dateDisplay2');
 
         var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) };
-        Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+
+        Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ManageStockSuccess, null);
+        //Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
     });
 
     function updateMonthDisplay(date) {
@@ -133,7 +136,8 @@ $(document).ready(function () {
         $('#ToDate').attr('min', fromDate);
         if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
             var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTime('ToDate').toISOString(), ManageStockId: null, ProductTypeId: parseInt(1) };
-            Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+            //Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ManageStockSuccess, null);
         }
     });
 
@@ -147,7 +151,9 @@ $(document).ready(function () {
         var fnData = Common.getDateFilter('dateDisplay2');
 
         var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(1) };
-        Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+        //Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+        Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ManageStockSuccess, null);
+
     });
 
     $(document).on('click', '#bulkEmployee', function () {
@@ -176,9 +182,10 @@ $(document).ready(function () {
                 `;
             $('#ManageStockDynamic').append(html);
 
-            var fnData = Common.getDateFilter('dateDisplay2');
-            var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(1) };
-            Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ManageStockSuccess, null);
+            //var fnData = Common.getDateFilter('dateDisplay2');
+            //var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(1) };
+            //Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
 
         } else if (titleForHeaderProductTab == "Un-Processed") {
             $('#ManageStockDynamic').empty('');
@@ -190,9 +197,10 @@ $(document).ready(function () {
                 `;
             $('#ManageStockDynamic').append(html);
 
-            var fnData = Common.getDateFilter('dateDisplay2');
-            var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(2) };
-            Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(2) }, ManageStockSuccess, null);
+            //var fnData = Common.getDateFilter('dateDisplay2');
+            //var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(2) };
+            //Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
         } else if (titleForHeaderProductTab == "Processed") {
             $('#ManageStockDynamic').empty('');
             var html = ` 
@@ -203,9 +211,10 @@ $(document).ready(function () {
                 `;
             $('#ManageStockDynamic').append(html);
 
-            var fnData = Common.getDateFilter('dateDisplay2');
-            var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) };
-            Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(3) }, ManageStockSuccess, null);
+            //var fnData = Common.getDateFilter('dateDisplay2');
+            //var EditDataId = { PlantId: parseInt(PlantMappingId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), ManageStockId: null, ProductTypeId: parseInt(3) };
+            //Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
         }
     });
 
@@ -258,15 +267,32 @@ function ManageStockSuccess(response) {
         var data = JSON.parse(response.data);
         var CounterBox = Object.keys(data[0][0]);
 
-        $("#CounterTextBox1").text(CounterBox[0]);
-        $("#CounterTextBox2").text(CounterBox[1]);
-        $("#CounterTextBox3").text(CounterBox[2]);
-        $("#CounterTextBox4").text(CounterBox[3]);
+        //$("#CounterTextBox1").text(CounterBox[0]);
+        //$("#CounterTextBox2").text(CounterBox[1]);
+        //$("#CounterTextBox3").text(CounterBox[2]);
+        //$("#CounterTextBox4").text(CounterBox[3]);
+        //
+        //$('#CounterValBox1').text(data[0][0][CounterBox[0]]);
+        //$('#CounterValBox2').text(data[0][0][CounterBox[1]]);
+        //$('#CounterValBox3').text(data[0][0][CounterBox[2]]);
+        //$('#CounterValBox4').text(data[0][0][CounterBox[3]]);
+         
+        $("#CounterTextBox1").text('Raw Product');
+        $("#CounterTextBox2").text('InCrease Count / Qty');
+        $("#CounterTextBox3").text('DeCrease Count / Qty'); 
+        $("#CounterTextBox4").text('LessthanReOrderLevel');
 
-        $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
-        $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
-        $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
-        $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
+        if (titleForHeaderProductTab == 'Raw Material' || titleForHeaderProductTab == 'Processed') { 
+            $('#CounterValBox1').text('4');
+            $('#CounterValBox2').text('3');
+            $('#CounterValBox3').text('2');
+            $('#CounterValBox4').text('1');
+        } else if (titleForHeaderProductTab == 'Un-Processed') {
+            $('#CounterValBox1').text('10');
+            $('#CounterValBox2').text('5');
+            $('#CounterValBox3').text('6');
+            $('#CounterValBox4').text('2');
+        }   
 
         //var activeTabText = $('.nav-link.navbar-tab.active').text().trim();
         $('#ManageStockDynamic').empty('');
@@ -278,82 +304,160 @@ function ManageStockSuccess(response) {
                 `;
         $('#ManageStockDynamic').append(html);
 
-        var columns = Common.bindColumn(data[1], ['ManageStockId', '']);
-        bindTableManageStock('ManageStockTable', data[1], columns, -1, 'ManageStockId', '330px', true, access);
+        var columns = Common.bindColumn(data[1], ['ManageStockId', 'ProductId', 'StockInHand_Colour']);
+        bindTableManageStock('ManageStockTable', data[1], columns, -1, 'ProductId', '330px', true, access);
 
         $('#loader-pms').hide();
     }
 }
- 
+
 function bindTableManageStock(tableid, data, columns, actionTarget, editcolumn, scrollpx) {
-    if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
-        try {
-            //$('#' + tableid).DataTable().clear().destroy();
-        } catch (error) {
-            console.error('DataTable destroy error:', error);
-            return; // stop execution if there's an error
-        }
+
+    // Destroy existing DataTable safely
+    if ($.fn.DataTable.isDataTable('#' + tableid)) {
+        $('#' + tableid).DataTable().clear().destroy();
     }
+
     $('#' + tableid).empty();
 
-    columns = columns.filter(x => x.name != "TetroONEnocount");
-    var isTetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
-    var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
+    // Remove unwanted column
+    columns = columns.filter(x => x.name !== "TetroONEnocount");
 
-    var renderColumn = [];
+    var hasValidData = data && data.length > 0;
 
-    renderColumn.push(
-        {
-            targets: actionTarget,
-            render: function (data, type, row, meta) {
-                return `<i class="btneye actionEllipsis" data-id="${row[editcolumn]}" title="View">
-                            <img src="/assets/commonimages/attendanceeye.svg" />
-                        </i>`;
-            }
+    /* ---------------- ADD ACTION COLUMN ---------------- */
+    columns.push({
+        data: null,
+        title: 'Action',
+        orderable: false,
+        searchable: false
+    });
+
+    /* ---------------- RENDER EYE ICON ---------------- */
+    var renderColumn = [{
+        targets: -1,
+        render: function (data, type, row) {
+            return `
+                <i class="btneye actionEllipsis" 
+                   data-id="${row[editcolumn]}" 
+                   title="View" style="cursor:pointer">
+                    <img src="/assets/commonimages/attendanceeye.svg" />
+                </i>`;
         }
-    )
+    }];
 
+    /* ---------------- MOBILE PAGINATION ---------------- */
     var lang = {};
-    var screenWidth = $(window).width();
-    if (screenWidth <= 575) {
-        var lang = {
-            "paginate": {
-                "next": ">",
-                "previous": "<"
+    if ($(window).width() <= 575) {
+        lang = {
+            paginate: {
+                next: ">",
+                previous: "<"
             }
-        }
+        };
     }
 
+    /* ---------------- INIT DATATABLE ---------------- */
     var table = $('#' + tableid).DataTable({
-        "dom": "Bfrtip",
-        "bDestroy": true,
-        "responsive": true,
-        "data": !isTetroONEnocount ? data : [],
-        "columns": columns,
-        "destroy": true,
-        "scrollY": scrollpx,
-        "sScrollX": "100%",
-        "aaSorting": [],
-        "scrollCollapse": true,
-        "oSearch": { "bSmart": false, "bRegex": true },
-        "info": hasValidData,
-        "paging": hasValidData,
-        "pageLength": 7,
-        "lengthMenu": [7, 14, 50],
-        "language": $.extend({}, lang, {
-            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
-        }),
-        "columnDefs": !isTetroONEnocount
-            ? renderColumn : [],
+        dom: "Bfrtip",
+        destroy: true,
+        responsive: true,
+        data: data,
+        columns: columns,
+        columnDefs: renderColumn,
+        scrollY: scrollpx,
+        scrollX: true,
+        scrollCollapse: true,
+        ordering: false,
+        paging: hasValidData,
+        info: hasValidData,
+        pageLength: 7,
+        lengthMenu: [7, 14, 50],
+        language: $.extend({}, lang, {
+            emptyTable:
+                '<div><img src="/assets/commonimages/nodata.svg" style="margin-right:10px;">No records found</div>'
+        })
     });
-    $('#tableFilter').on('keyup', function () {
-        table.search($(this).val()).draw();
+
+    /* ---------------- SEARCH ---------------- */
+    $('#tableFilter').off('keyup').on('keyup', function () {
+        table.search(this.value).draw();
     });
+
+    /* ---------------- AUTO ADJUST ---------------- */
     setTimeout(function () {
-        var table1 = $('#' + tableid).DataTable();
-        Common.autoAdjustColumns(table1);
+        Common.autoAdjustColumns(table);
     }, 100);
 }
+//function bindTableManageStock(tableid, data, columns, actionTarget, editcolumn, scrollpx) {
+//    if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
+//        try {
+//            //$('#' + tableid).DataTable().clear().destroy();
+//        } catch (error) {
+//            console.error('DataTable destroy error:', error);
+//            return; // stop execution if there's an error
+//        }
+//    }
+//    $('#' + tableid).empty();
+
+//    columns = columns.filter(x => x.name != "TetroONEnocount");
+//    var isTetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
+//    var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
+
+//    var renderColumn = [];
+
+//    renderColumn.push(
+//        {
+//            targets: actionTarget,
+//            render: function (data, type, row, meta) {
+//                return `<i class="btneye actionEllipsis" data-id="${row[editcolumn]}" title="View">
+//                            <img src="/assets/commonimages/attendanceeye.svg" />
+//                        </i>`;
+//            }
+//        }
+//    )
+
+//    var lang = {};
+//    var screenWidth = $(window).width();
+//    if (screenWidth <= 575) {
+//        var lang = {
+//            "paginate": {
+//                "next": ">",
+//                "previous": "<"
+//            }
+//        }
+//    }
+
+//    var table = $('#' + tableid).DataTable({
+//        "dom": "Bfrtip",
+//        "bDestroy": true,
+//        "responsive": true,
+//        "data": !isTetroONEnocount ? data : [],
+//        "columns": columns,
+//        "destroy": true,
+//        "scrollY": scrollpx,
+//        "sScrollX": "100%",
+//        "aaSorting": [],
+//        "scrollCollapse": true,
+//        "oSearch": { "bSmart": false, "bRegex": true },
+//        "info": hasValidData,
+//        "paging": hasValidData,
+//        "pageLength": 7,
+//        "lengthMenu": [7, 14, 50],
+//        "language": $.extend({}, lang, {
+//            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
+//        }),
+//        "columnDefs": !isTetroONEnocount
+//            ? renderColumn : [],
+//    });
+//    $('#tableFilter').on('keyup', function () {
+//        table.search($(this).val()).draw();
+//    });
+//    setTimeout(function () {
+//        var table1 = $('#' + tableid).DataTable();
+//        Common.autoAdjustColumns(table1);
+//    }, 100);
+//}
 
 function bindTableEditManageStock(tableid, data, columns, scrollpx) {
     if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {

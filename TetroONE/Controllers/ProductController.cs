@@ -93,13 +93,13 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteProductDetails]", GetProduct);
             return Json(response);
         }
-
+         
         [HttpPost]
         [Route("InsertUpdateProductDetails")]
-        public async Task<IActionResult> SaveLoan([FromBody] InsertUpdateDetails request)
+        public async Task<IActionResult> InsertUpdateProductDetails([FromBody] InsertUpdateDetails request)
         {
             _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-             
+            
             DataTable ProductPlantMappingDetails = new DataTable();
             ProductPlantMappingDetails = GenericTetroONE.ToDataTable(request.ProductPlantMappingDetails);
 

@@ -1,4 +1,4 @@
-﻿#ProductionStagesTable, #UnitTable, #ProductCategoryTable, #QualityParameterTable, #CriteriaTable, #ModulePrefixTable, #DocumentTable, #ColorTable, #MachineTable, #ProductCategoryTable, #ProductSubCategoryTable, #AutoGeneratePrefixTable {
+﻿#ProductionStagesTable, #UnitTable, #ProductCategoryTable, #QualityParameterTable, #CriteriaTable, #ModulePrefixTable, #DocumentTable, #ColorTable, #MachineTable, #ProductCategoryTable, #ProductSubCategoryTable, #AutoGeneratePrefixTable, #ExpenseType {
     width: 100% !important;
 }
 

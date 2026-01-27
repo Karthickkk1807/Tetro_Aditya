@@ -203,4 +203,30 @@ namespace TetroONE.Models
         public DataTable? ProductItemTableNew { get; set; }
 
     }
+     
+    public class QuotationPrint
+    {
+        public string? CompanyName { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Phone { get; set; }
+        public string? PFCodeNo { get; set; }
+        public string? ESICodeNo { get; set; }
+        public string? Email { get; set; }
+        public string? GSTin { get; set; }
+        public string? MSMERegistrationNo { get; set; }
+        public string? Sir { get; set; }
+        public string? SirContent { get; set; }
+        public string? FooterContent { get; set; }
+
+        public string? ClientName { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; } 
+
+        public string? QuotationNo { get; set; }
+        public string? QuotationDate { get; set; }
+        public string? Validity { get; set; } 
+         
+        public DataTable ProductItemData { get; set; }
+    }
 }

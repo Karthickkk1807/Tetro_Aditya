@@ -11,7 +11,7 @@
                 <div class="Date-SearchColumn justify-content-end">
                     <div class="d-flex">
                         <div class="searchbar mt-1">
-                            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterProductCategoryTable" placeholder="Search">
                             <button type="submit" class="searchbar__button">
                                 <img src="/assets/commonimages/search.svg" />
                             </button>
@@ -47,7 +47,7 @@
                 <div class="Date-SearchColumn justify-content-end">
                     <div class="d-flex">
                         <div class="searchbar mt-1">
-                            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterProductSubCategoryTable" placeholder="Search">
                             <button type="submit" class="searchbar__button">
                                 <img src="/assets/commonimages/search.svg" />
                             </button>
@@ -83,7 +83,7 @@
                 <div class="Date-SearchColumn justify-content-end">
                     <div class="d-flex">
                         <div class="searchbar mt-1">
-                            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterColorTable" placeholder="Search">
                             <button type="submit" class="searchbar__button">
                                 <img src="/assets/commonimages/search.svg" />
                             </button>
@@ -119,7 +119,7 @@
                 <div class="Date-SearchColumn justify-content-end">
                     <div class="d-flex">
                         <div class="searchbar mt-1">
-                            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterMachineTable" placeholder="Search">
                             <button type="submit" class="searchbar__button">
                                 <img src="/assets/commonimages/search.svg" />
                             </button>
@@ -155,7 +155,7 @@
                 <div class="Date-SearchColumn justify-content-end">
                     <div class="d-flex">
                         <div class="searchbar mt-1">
-                            <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterAutoGeneratePrefixTable" placeholder="Search">
                             <button type="submit" class="searchbar__button">
                                 <img src="/assets/commonimages/search.svg" />
                             </button>
@@ -340,26 +340,26 @@
             <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
                 <form id="FormMachine">
                     <div class="row">
-                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                        <div class="col-md-6 col-lg-6 col-sm-4 col-6">
                             <div class="form-group">
                                 <label>Machine Name<span class="Asterisk"> *</span></label>
                                 <input type="text" id="MachineName" name="MachineName" class="form-control" placeholder="Color Name" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
                             </div>
                         </div>
-                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
-                            <div class="form-group">
-                                <label>Max Capacity<span class="Asterisk"> *</span></label>
-                                <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                    <input type="text" class="form-control" id="MaxCapacity" name="MaxCapacity" placeholder="Ex: 3500 KG" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
-                                    <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:16px; width: 33px;"> KG </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                        <div class="col-md-3 col-lg-3 col-sm-4 col-6">
                             <div class="form-group">
                                 <label>Min Capacity<span class="Asterisk"> *</span></label>
                                 <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
                                     <input type="text" class="form-control" id="MinCapacity" name="MinCapacity" placeholder="Ex: 1200 KG" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                                    <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:16px; width: 33px;"> KG </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Max Capacity<span class="Asterisk"> *</span></label>
+                                <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                    <input type="text" class="form-control" id="MaxCapacity" name="MaxCapacity" placeholder="Ex: 3500 KG" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
                                     <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:16px; width: 33px;"> KG </button>
                                 </div>
                             </div>
@@ -404,7 +404,7 @@
                         <div class="col-md-4 col-lg-4 col-sm-4 col-6">
                             <div class="form-group">
                                 <label>Prefix<span class="Asterisk"> *</span></label>
-                                <input type="text" class="form-control" id="Prefix" name="Prefix" placeholder="Ex: PO/NO/" oninput="Common.allowAllCharacters(this, 10)" required>
+                                <input type="text" class="form-control" id="Prefix" name="Prefix" placeholder="Ex: PO/NO/" oninput="Common.allowAllCharacters(this, 25)" required>
                             </div>
                         </div>
                         <div class="col-md-4 col-lg-4 col-sm-4 col-6">
