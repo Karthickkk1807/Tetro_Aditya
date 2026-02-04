@@ -30,22 +30,22 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetPayment")]
-		public IActionResult GetPayment(int? PaymentId, int FranchiseId, DateTime? FromDate, DateTime? ToDate)
+		public IActionResult GetPayment(int? PlantId, DateTime? FromDate, DateTime? ToDate, int? PaymentId, int PaymentTypeId)
 		{
 			GetPayment getPayment = new GetPayment()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-				PaymentId = PaymentId,
-				FranchiseId = FranchiseId,
+                PlantId = PlantId, 
 				FromDate = FromDate,
-				ToDate = ToDate
+				ToDate = ToDate,
+                PaymentId = PaymentId,
+                PaymentTypeId = PaymentTypeId
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetPaymentDetails]", getPayment);
 			return Json(response);
 		}
-
-
+		
 		[HttpGet]
 		[Route("PaymentGetContactNameDetails")]
 		public IActionResult PaymentGetContactNameDetails(int FranchiseId, int PaymentTypeId, int PaymentCategory)
@@ -64,12 +64,12 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetPaymentBillNo")]
-		public IActionResult GetPaymentBillNo(int FranchiseId, int PaymentTypeId, int ContactId)
+		public IActionResult GetPaymentBillNo(int PlantId, int PaymentTypeId, int ContactId)
 		{
 			GetPaymentBillNo getPaymentBillNo = new GetPaymentBillNo()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-				FranchiseId = FranchiseId,
+                PlantId = PlantId,
 				PaymentTypeId = PaymentTypeId,
 				ContactId = ContactId
 			};
@@ -97,12 +97,12 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetAutoGenerateNo")]
-		public IActionResult GetAutoGenerateNo(int? FranchiseId, string? ModuleName)
+		public IActionResult GetAutoGenerateNo(int? PlantId, string? ModuleName)
 		{
 			GetAutoGenerateNo getAutoGenerateNo = new GetAutoGenerateNo()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-				FranchiseId = FranchiseId,
+                PlantId = PlantId,
 				ModuleName = ModuleName
 			};
 
@@ -190,8 +190,8 @@ namespace TetroONE.Controllers
 
 					command.Parameters.AddWithValue("@LoginUserId", _userId);
 					command.Parameters.AddWithValue("@PaymentDate", staticDetails.PaymentDate);
-					command.Parameters.AddWithValue("@FranchiseId", staticDetails.FranchiseId);
-					command.Parameters.AddWithValue("@BillingFranchiseId", staticDetails.BillingFranchiseId);
+					command.Parameters.AddWithValue("@PlantId", staticDetails.PlantId);
+					command.Parameters.AddWithValue("@BillingPlantId", staticDetails.BillingPlantId);
 					command.Parameters.AddWithValue("@PaymentTypeId", staticDetails.PaymentTypeId);
 					command.Parameters.AddWithValue("@PaymentCategory", staticDetails.PaymentCategory);
 					command.Parameters.AddWithValue("@ContactId", staticDetails.ContactId);

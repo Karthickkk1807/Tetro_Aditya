@@ -5,9 +5,12 @@ namespace TetroONE.Models
     public class GetManageStock
     {
         public int LoginUserId { get; set; }
+        public int? ProductId { get; set; }
+        public int? ProductTypeId { get; set; } 
         public int? PlantId { get; set; }
-        public int? ProductTypeId { get; set; }
-        public int? ManageStockId { get; set; }
+        public decimal? Dia { get; set; }
+        public decimal? GSM { get; set; }
+        public int? Width { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
     }

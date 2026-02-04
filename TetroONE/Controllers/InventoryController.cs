@@ -57,17 +57,20 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DD_GetMasterInfoDetails]", request);
             return Json(response);
         }
-         
+        
         [HttpGet]
         [Route("GetManageStock")]
-        public IActionResult GetManageStock(int PlantId, DateTime? FromDate, DateTime? ToDate, int? ManageStockId, int ProductTypeId)
+        public IActionResult GetManageStock(int? ProductId, int ProductTypeId, int PlantId, decimal Dia, decimal GSM, int Width, DateTime? FromDate, DateTime? ToDate)
         {
             GetManageStock request = new GetManageStock()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                PlantId = PlantId,
+                ProductId = ProductId == 0 ? (int?)null : ProductId,
                 ProductTypeId = ProductTypeId,
-                ManageStockId = ManageStockId,
+                PlantId = PlantId, 
+                Dia = Dia == 0 ? (decimal?)null : Dia,
+                GSM = GSM == 0 ? (decimal?)null : GSM,
+                Width = Width == 0 ? (int?)null : Width,
                 FromDate = FromDate.HasValue ? FromDate.Value.AddDays(1) : (DateTime?)null,
                 ToDate = ToDate,
             };
@@ -75,7 +78,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetManageStockDetails]", request);
             return Json(response);
         }
-        
+         
         [HttpGet]
         [Route("GetTransfer")]
         public IActionResult GetTransfer(int TransferId, DateTime? FromDate, DateTime? ToDate, int FranchiseId)

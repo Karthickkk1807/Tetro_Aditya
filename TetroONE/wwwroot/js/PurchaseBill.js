@@ -699,7 +699,7 @@ $(document).ready(async function () {
                             <textarea class="form-control mt-2 descriptiontdtext" placeholder="Description">${defaultDescription}</textarea>
                         </td>
                         <td data-label="Selling Price">
-                            <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" />
+                            <input type="text" class="form-control SellingPrice" value="${SelectedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" />
                         </td>
                         <td data-label="QTY">
                             <div class="input-group" style="width: 124px;">

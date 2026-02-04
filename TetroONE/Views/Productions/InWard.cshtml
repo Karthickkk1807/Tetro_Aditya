@@ -123,6 +123,12 @@
         cursor: pointer !important;
     }
 
+    .add-item-option {
+        text-align: center;
+        font-weight: 600;
+        color: blue
+    }
+
 </style>
 
 <div class="row quick-db m-b-5">
@@ -328,6 +334,7 @@
                                         <div class="form-group">
                                             <label>Client<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="ClientId" name="ClientId" required></select>
+                                            <input type="text" class="form-control" id="AlterClientId" name="AlterClientId" required />
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
@@ -339,8 +346,8 @@
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Received From</label>
-                                            <select class="form-control" id="ReceivedFrom" name="ReceivedFrom">
-                                            </select>
+                                            <select class="form-control" id="ReceivedFrom" name="ReceivedFrom"></select>
+                                            <input type="text" class="form-control" id="AlterReceivedFrom" name="AlterReceivedFrom" required disabled/>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
@@ -542,6 +549,35 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="AddItemModal" class="modal" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="">Add Client</h2>
+                <span id="AddItemClose" class="close d-none" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 73vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FromAddItem">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label>Client Name<span id="Asterisk">*</span></label>
+                                <input type="text" class="form-control" id="CommonId" name="CommonId" placeholder="Ex: Ramesh R" required />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer w-100" style="text-align: center;align-items: center !important;align-content: center;display: block;">
+                <div>
+                    <button type="button" id="AddItemSave" class="btn mr-2" style="background-color: green; color:white">Save</button>
+                    <button type="button" id="AddItemBtnClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

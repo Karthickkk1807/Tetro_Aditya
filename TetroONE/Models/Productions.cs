@@ -66,6 +66,14 @@ namespace TetroONE.Models
         public DateTime? ToDate { get; set; }
     }
 
+    public class GetDefaultChemical
+    {
+        public int LoginUserId { get; set; }
+        public int? ProcessType { get; set; }
+        public int? ProductionPlanId { get; set; }
+        public decimal? ColourValue { get; set; }
+    }
+
     public class GetFabricDetailsProductionPlan
     {
         public int LoginUserId { get; set; }
@@ -212,9 +220,7 @@ namespace TetroONE.Models
         public List<ProductionPlanFabricDetails> ProductionPlanFabricDetails { get; set; }
         public DataTable TVP_ProductionPlanFabricDetails { get; set; }
         public List<ProductionPlanFabricProcessMappingDetails> ProductionPlanFabricProcessMappingDetails { get; set; }
-        public DataTable TVP_ProductionPlanFabricProcessMappingDetails { get; set; }
-        public List<ProductionPlanDyeRequirementDetails> ProductionPlanDyeRequirementDetails { get; set; }
-        public DataTable TVP_ProductionPlanDyeRequirementDetails { get; set; }
+        public DataTable TVP_ProductionPlanFabricProcessMappingDetails { get; set; } 
         public List<ProductionPlanChemicalRequirementDetails> ProductionPlanChemicalRequirementDetails { get; set; }
         public DataTable TVP_ProductionPlanChemicalRequirementDetails { get; set; }
     }
@@ -243,17 +249,7 @@ namespace TetroONE.Models
         public int? ProcessTypeId { get; set; }
         public int? RowNo { get; set; }
     }
-
-    public class ProductionPlanDyeRequirementDetails
-    {
-        public int? ProductionPlanDyeRequirementId { get; set; }
-        public int? DyeId { get; set; }
-        public int? DyeType { get; set; }
-        public decimal? PercentageOfDye { get; set; }
-        public decimal? TotalQty { get; set; }
-        public int? ProductionPlanId { get; set; }
-    }
-
+    
     public class ProductionPlanChemicalRequirementDetails
     {
         public int? ProductionPlanChemicalRequirementId { get; set; }

@@ -226,7 +226,7 @@ $(document).ready(function () {
                 if ($('#imageUpload').get(0).files?.length > 0) {
                     objvalue.UserImageFileName = $("#imageUpload").get(0).files[0].name;
                 }
-                objvalue.UserGroupId = parseInt($('#UserGroupId').val());
+                objvalue.UserGroupId = parseInt($('#ManageUserForm #UserGroupId').val());
                 objvalue.UserTypeId = parseInt($('#ManageUserForm #UserTypeId').val());
                 objvalue.ContactId = parseInt($('#ContactId').val()) || null;
                 objvalue.UserImageFileName = $('#imageUpload').get(0)?.files[0]?.name;
@@ -285,9 +285,9 @@ $(document).ready(function () {
                     objvalue.UserImageFileName = $("#imageUpload").get(0).files[0].name;
                 }
                 objvalue.UserId = parseInt(InfoId);
-                objvalue.UserGroupId = parseInt($('#UserGroupId').val());
+                objvalue.UserGroupId = parseInt($('#ManageUserForm #UserGroupId').val());
                 objvalue.UserTypeId = parseInt($('#ManageUserForm #UserTypeId').val());
-                objvalue.ContactId = parseInt($('#ContactId').val()) || null;
+                objvalue.ContactId = parseInt($('#ManageUserForm #ContactId').val()) || null;
                 objvalue.ExistingImage = $('#UserPathExist').text();
                 objvalue.UserImageFileName = $('#imageUpload').get(0)?.files[0]?.name;
 

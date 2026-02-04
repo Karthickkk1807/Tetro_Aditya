@@ -1,6 +1,6 @@
 ﻿var ExpenseDropdown = [];
 var expenseId = 0;
-var FranchiseMappingId = 0;
+var PlantMappingId = 0;
 var StartDate;
 var EndDate;
 
@@ -14,8 +14,8 @@ let dropdownCache = {
 
 $(document).ready(function () {
     dropdownCache.ExpenseCategory = [];
-    FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-    initializePage(FranchiseMappingId);
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
+    initializePage(PlantMappingId);
 
     Common.ajaxCall("GET", "/HumanResource/GetExpenseNo", { ModuleId: null, ModuleName: "Claim" }, function (response) {
         if (response.status) {
@@ -42,6 +42,7 @@ function getDropDownData(moduleName, callback) {
         }
     });
 }
+
 function bindDropDownFromCache(element, dataList, idField, nameField) {
     element.empty().append('<option value="">-- Select --</option>');
     $.each(dataList, function (i, item) {
@@ -51,8 +52,9 @@ function bindDropDownFromCache(element, dataList, idField, nameField) {
         }));
     });
 }
-async function initializePage(FranchiseMappingId) {
-    Common.bindDropDown('BillingFranchise', 'UserFranchiseMapping');
+
+async function initializePage(PlantMappingId) {
+    Common.bindDropDown('PlantId', 'Plant');
     let ExpenseDropdownVal = await Common.bindDropDownSync('ExpenseType');
     ExpenseDropdown = JSON.parse(ExpenseDropdownVal);
     var today = new Date().toISOString().split('T')[0];
@@ -70,9 +72,7 @@ async function initializePage(FranchiseMappingId) {
 
     $('#AddAttachment').hide();
 
-    var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-
-    var EditDataId = { FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+    var EditDataId = { FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
     Common.ajaxCall("GET", "/Expense/GetExpense", EditDataId, ExpenseSuccess, null);
 
     $(document).click(function (event) {
@@ -102,23 +102,22 @@ async function initializePage(FranchiseMappingId) {
         $('#increment-month-btn2').show();
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
         if ($('#ToVendorGrid').hasClass('purchaseactive')) {
             TypeId = 1;
         } else if ($('#FromDistributorGrid').hasClass('purchaseactive')) {
             TypeId = 2;
         }
-        var EditDataId = { FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+        var EditDataId = { FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
         Common.ajaxCall("GET", "/Expense/GetExpense", EditDataId, ExpenseSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
         displayedDate.setMonth(displayedDate.getMonth() + 1);
         updateMonthDisplay(displayedDate);
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+        var PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
         var fnData = Common.getDateFilter('dateDisplay2');
 
-        var EditDataId = { FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+        var EditDataId = { FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
         Common.ajaxCall("GET", "/Expense/GetExpense", EditDataId, ExpenseSuccess, null);
     });
 
@@ -148,7 +147,7 @@ async function initializePage(FranchiseMappingId) {
         var fromDate = $('#FromDate').val();
         $('#ToDate').attr('min', fromDate);
         if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
-            var EditDataId = { FranchiseId: FranchiseMappingId, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTime('ToDate').toISOString() };
+            var EditDataId = { FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTime('ToDate').toISOString() };
             Common.ajaxCall("GET", "/Expense/GetExpense", EditDataId, ExpenseSuccess, null);
         }
     });
@@ -161,7 +160,7 @@ async function initializePage(FranchiseMappingId) {
         let displayedDate = new Date(currentYear, currentMonth)
         updateMonthDisplay(displayedDate);
 
-        var EditDataId = { FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+        var EditDataId = { FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
         Common.ajaxCall("GET", "/Expense/GetExpense", EditDataId, ExpenseSuccess, null);
     });
 
@@ -186,7 +185,7 @@ $(document).on('click', '#customBtn_ExpenseData', function () {
     $('#InsertExpense').text('Save').addClass('btn-success').removeClass('btn-update');
     $('#selectedFiles').empty();
     $('#ExistselectedFiles').empty();
-    $('#BillingFranchise').val(null).trigger('change');
+    $('#PlantId').val(PlantMappingId).trigger('change');
     CanvasOpen();
     expenseId = 0;
     $('#dyanmicplusbtn').click();
@@ -203,8 +202,8 @@ $(document).on('click', '#InsertExpense', function () {
     var expenseDate = new Date(ExpanseDateString);
     var ExpenseDetailsStatic = {
         ExpenseId: expenseId > 0 ? expenseId : null,
-        FranchiseId: parseInt(localStorage.getItem('FranchiseId')),
-        BillingFranchiseId: $('#BillingFranchise').val(),
+        PlantId: parseInt(PlantMappingId),
+        BillingPlantId: $('#PlantId').val(),
         ExpenseDate: expenseDate,
         ExpenseNo: $('#ExpenseNo').val(),
     };
@@ -212,10 +211,9 @@ $(document).on('click', '#InsertExpense', function () {
     var ExpenseTypeMappingDetails = $('.dynamicclass')
     $.each(ExpenseTypeMappingDetails, function (index, value) {
         ExpenseTypeMappingDetailsArray.push({
-            ExpenseTypeMappingId: $(value).data('id') || null,
-            ClaimId: parseInt($(value).find('.ClaimId').val()) || null,
+            ExpenseTypeMappingId: $(value).data('id') || null, 
             ExpenseCategoryId: parseInt($(value).find('.ExpenseCategoryId').val()) || null,
-            TypeId: Common.parseIntValue($(value).find('.ExpenseTypeId').val()),
+            ExpenseTypeId: Common.parseIntValue($(value).find('.ExpenseTypeId').val()),
             ExpenseAmount: Common.parseFloatValue($(value).find('.ExpenseAmount').val()),
             Description: $(value).find('.Comments').val(),
             ExpenseId: expenseId > 0 ? expenseId : null
@@ -236,7 +234,7 @@ $(document).on('click', '#InsertExpense', function () {
             Common.successMsg(response.message);
 
             var fnData = Common.getDateFilter('dateDisplay2');
-            var EditDataId = { FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+            var EditDataId = { FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
             Common.ajaxCall("GET", "/Expense/GetExpense", EditDataId, ExpenseSuccess, null);
 
             $("#ExpenseCanvas").css("width", "0%");
@@ -274,15 +272,14 @@ $('#ExpenseData').on('click', '.btn-delete', async function () {
     var response = await Common.askConfirmation();
     if (response == true) {
         var ExpenseId = $(this).data('id');
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-        Common.ajaxCall("GET", "/Expense/DeleteExpense", { ExpenseId: parseInt(ExpenseId), FranchiseId: FranchiseMappingId }, ExpenseReload, null);
+        var PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
+        Common.ajaxCall("GET", "/Expense/DeleteExpense", { ExpenseId: parseInt(ExpenseId), FranchiseId: PlantMappingId }, ExpenseReload, null);
     }
 });
 
-$('#BillingFranchise').on('change', function () {
-    var franchiseId = parseInt($('#BillingFranchise').val());
-    if (franchiseId != "" && franchiseId != null && franchiseId != undefined) {
-        var editeData = { FranchiseId: franchiseId, ModuleName: "Expense" };
+$('#PlantId').on('change', function () { 
+    if (PlantMappingId != "" && PlantMappingId != null && PlantMappingId != undefined) {
+        var editeData = { PlantId: PlantMappingId, ModuleName: "Expense" };
         Common.ajaxCall("GET", "/Payment/GetAutoGenerateNo", editeData, function (response) {
             if (response.status) {
                 var data = JSON.parse(response.data);
@@ -323,7 +320,7 @@ function ExpenseGetNotNull(response) {
         expenseId = data[0][0].ExpenseId;
         $("#ExpenseNo").val(data[0][0].ExpenseNo);
         $('#ExpenseDate').val(extractDate(data[0][0].ExpenseDate));
-        $('#BillingFranchise').val(data[0][0].BillingFranchiseId).trigger('change');
+        $('#PlantId').val(data[0][0].PlantId).trigger('change');
         if (data[1] != null && data[1].length > 0) {
             $('#ExpanseDynRow').empty("");
 
@@ -344,20 +341,13 @@ function ExpenseGetNotNull(response) {
                 }
                 if (ExpenseDropdown != null && ExpenseDropdown.length > 0 && ExpenseDropdown[0].length > 0) {
                     selectOptionsExpence = ExpenseDropdown[0].map(function (ExpenseTypeId) {
-                        var isSelected = ExpenseTypeId.ClaimId == value.ExpenseTypeId ? 'selected' : '';
+                        var isSelected = ExpenseTypeId.ExpenseTypeId == value.ExpenseTypeId ? 'selected' : '';
                         return `<option value="${ExpenseTypeId.ExpenseTypeId}" ${isSelected}>${ExpenseTypeId.ExpenseTypeName}</option>`;
                     }).join('');
                 }
 
                 var newRowDataHtml = `
-                       <div class="row duplicaterow dynamicclass" data-id="${value.ExpenseTypeMappingId}">
-                             <div class="col-lg-4 col-md-6 col-sm-6 col-6">
-                              <div class="form-group">
-                                  <label>Claim No</label>
-                                  <select class="form-control ClaimId" id="ClaimId${numberIncr}" name="ClaimId${numberIncr}" >${defaultOption}${selectOptionsClaim}</select>
-                                  
-                              </div>
-                          </div>
+                       <div class="row duplicaterow dynamicclass" data-id="${value.ExpenseTypeMappingId}"> 
                           <div class="col-lg-4 col-md-6 col-sm-6 col-6">
                             <div class="form-group">
                                 <label>Expense Category<span id="Asterisk">*</span></label>
@@ -372,20 +362,20 @@ function ExpenseGetNotNull(response) {
                                   
                               </div>
                           </div>
-                          <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                          <div class="col-lg-4 col-md-6 col-sm-6 col-6">
                               <div class="form-group">
                                  <label>Amount <span id="Asterisk">*</span></label>
                                   <input type="text" class="form-control ExpenseAmount" id="ExpenseAmount${numberIncr}" name="ExpenseAmount${numberIncr}" value="${value.ExpenseAmount}" required  ${value.ClaimId != null && value.ClaimId != "" ? 'disabled' : ''}>
                               </div>
                           </div>
-                          <div class="col-lg-7 col-md-10 col-sm-10 col-10">
+                          <div class="col-lg-8 col-md-10 col-sm-10 col-10">
                               <div class="form-group">
                                  <label>Description</label>
                                   <input type="text" class="form-control Comments" id="Comments${numberIncr}" name="Comments${numberIncr}"autocomplete="off" value="${value.Description}"
                                          placeholder="Description">
                               </div>
                           </div>  
-                          <div class="col-lg-2 col-md-2 col-sm-2 col-2 p-1 d-flex justify-content-center align-items-center">
+                          <div class="col-lg-4 col-md-4 col-sm-2 col-2 p-1 d-flex justify-content-center align-items-center">
                               <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
                                      <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
                                  </div>
@@ -475,14 +465,7 @@ $(document).on('click', '#dyanmicplusbtn', function () {
     }
 
     var newRowDataHtml = `
-      <div class="row duplicaterow dynamicclass" data-id="">
-            <div class="col-lg-4 col-md-6 col-sm-6 col-6">
-             <div class="form-group">
-                 <label>Claim No</label>
-                 <select class="form-control ClaimId" id="ClaimId${numberIncr}" name="ClaimId${numberIncr}">${defaultOption}${selectOptionsClaim}</select>
-                 
-             </div>
-         </div>
+      <div class="row duplicaterow dynamicclass" data-id=""> 
          <div class="col-lg-4 col-md-6 col-sm-6 col-6">
              <div class="form-group">
                  <label>Expense Category<span id="Asterisk">*</span></label>
@@ -497,21 +480,21 @@ $(document).on('click', '#dyanmicplusbtn', function () {
                  
              </div>
          </div>
-         <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+         <div class="col-lg-4 col-md-6 col-sm-6 col-6">
              <div class="form-group">
                 <label>Amount <span id="Asterisk">*</span></label>
                  <input type="text" class="form-control ExpenseAmount" id="ExpenseAmount${numberIncr}" name="ExpenseAmount${numberIncr}" required autocomplete="off" oninput="Common.allowOnlyNumbersAndDecimalInventory(this)"
                         placeholder="0.00" required >
              </div>
          </div>
-         <div class="col-lg-7 col-md-10 col-sm-10 col-10">
+         <div class="col-lg-8 col-md-10 col-sm-10 col-10">
              <div class="form-group">
                 <label>Description</label>
                  <input type="text" class="form-control Comments" id="Comments${numberIncr}" name="Comments${numberIncr}"autocomplete="off"
                         placeholder="Description">
              </div>
          </div>  
-         <div class="col-lg-2 col-md-2 col-sm-2 col-2 p-1 d-flex justify-content-center align-items-center">
+         <div class="col-lg-4 col-md-4 col-sm-2 col-2 p-1 d-flex justify-content-center align-items-center">
              <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
                     <button id="RemoveButton" class="btn DynrowRemove mt-3" type="button" onclick="removeRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
                 </div>
@@ -682,7 +665,7 @@ function ExpenseReload(response) {
         Common.successMsg(response.message);
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        var EditDataId = { FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+        var EditDataId = { FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
         Common.ajaxCall("GET", "/Expense/GetExpense", EditDataId, ExpenseSuccess, null);
 
         setTimeout(function () {

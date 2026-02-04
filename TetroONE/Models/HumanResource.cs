@@ -59,6 +59,7 @@ namespace TetroONE.Models
         public int? UserTypeId { get; set; }
         public int? UserGroupId { get; set; }
         public bool? IsLoginUser { get; set; }
+        public int? ContractorId { get; set; }
 
         public List<AttendanceMachineMappingDetail> attendanceMachineMappingDetails { get; set; }
         public DataTable TVP_EmployeeDeviceMappingDetails { get; set; }

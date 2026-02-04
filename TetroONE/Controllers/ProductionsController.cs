@@ -644,10 +644,7 @@ namespace TetroONE.Controllers
 
             List<ProductionPlanFabricProcessMappingDetails>? ProductionPlanFabricProcessMappingDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanFabricProcessMappingDetails>?>(Request.Form["ProductionPlanFabricProcessMappingDetails"]);
             DataTable ProductionPlanFabricProcessMappingDetails = GenericTetroONE.ToDataTable(ProductionPlanFabricProcessMappingDetails1);
-
-            List<ProductionPlanDyeRequirementDetails>? ProductionPlanDyeRequirementDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanDyeRequirementDetails>?>(Request.Form["ProductionPlanDyeRequirementDetails"]);
-            DataTable ProductionPlanDyeRequirementDetails = GenericTetroONE.ToDataTable(ProductionPlanDyeRequirementDetails1);
-
+             
             List<ProductionPlanChemicalRequirementDetails>? ProductionPlanChemicalRequirementDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanChemicalRequirementDetails>?>(Request.Form["ProductionPlanChemicalRequirementDetails"]);
             DataTable ProductionPlanChemicalRequirementDetails = GenericTetroONE.ToDataTable(ProductionPlanChemicalRequirementDetails1);
 
@@ -683,8 +680,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@PreparedBy", staticDetails.PreparedBy);
 
                     command.Parameters.AddWithValue("@TVP_ProductionPlanFabricDetails", ProductionPlanFabricDetails);
-                    command.Parameters.AddWithValue("@TVP_ProductionPlanFabricProcessMappingDetails", ProductionPlanFabricProcessMappingDetails);
-                    command.Parameters.AddWithValue("@TVP_ProductionPlanDyeRequirementDetails", ProductionPlanDyeRequirementDetails);
+                    command.Parameters.AddWithValue("@TVP_ProductionPlanFabricProcessMappingDetails", ProductionPlanFabricProcessMappingDetails); 
                     command.Parameters.AddWithValue("@TVP_ProductionPlanChemicalRequirementDetails", ProductionPlanChemicalRequirementDetails);
                     command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
 
@@ -765,6 +761,23 @@ namespace TetroONE.Controllers
             }
             return Json(response);
         }
+
+        [HttpGet]
+        [Route("GetDefaultChemicalDetails")]
+        public IActionResult GetDefaultChemicalDetails(int ProcessType, int ProductionPlanId, decimal ColourValue)
+        {
+            GetDefaultChemical request = new GetDefaultChemical()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                ProcessType = ProcessType,
+                ProductionPlanId = ProductionPlanId,
+                ColourValue = ColourValue == 0 ? null : ColourValue
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetDefaultChemicalDetails]", request);
+            return Json(response);
+        }
+
 
         //-------------------------------------------------------------------------ProductionPlan---------------------------------------------------------------------------------
 
@@ -981,6 +994,75 @@ namespace TetroONE.Controllers
 
                 // ✅ Fallback + clean filename
                 var safePlanNo = string.IsNullOrWhiteSpace(ProductionPlanNo) ? "QRCode" : ProductionPlanNo.Replace("/", "-").Replace("\\", "-");
+
+                return File(stream.ToArray(), "application/pdf", $"{safePlanNo}_QRCode.pdf");
+            }
+        }
+
+        [HttpGet]
+        [Route("GenerateQrContectPdf")] 
+        public IActionResult GenerateQrContectPdf(string URL, string ProductionPlanNo)
+        {
+            using (var stream = new MemoryStream())
+            {
+                PdfWriter writer = new PdfWriter(stream);
+                PdfDocument pdf = new PdfDocument(writer);
+
+                var pageSize = iText.Kernel.Geom.PageSize.A4;
+                Document document = new Document(pdf, pageSize);
+
+                // ===== Heading =====
+                Paragraph heading = new Paragraph("Contact QR Code")
+                    .SetFontSize(20)
+                    .SetBold()
+                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER)
+                    .SetMarginBottom(30);
+
+                document.Add(heading);
+
+                // ===== QR Code (vCard) =====
+                BarcodeQRCode qrCode = new BarcodeQRCode(URL);
+                var qrObject = qrCode.CreateFormXObject(ColorConstants.BLACK, pdf);
+                Image qrImage = new Image(qrObject);
+
+                float qrSize = pageSize.GetWidth() - 250;
+                qrImage.SetWidth(qrSize);
+                qrImage.SetHeight(qrSize);
+                qrImage.SetHorizontalAlignment(iText.Layout.Properties.HorizontalAlignment.CENTER);
+
+                document.Add(qrImage);
+
+                // ===== Space =====
+                document.Add(new Paragraph("\n"));
+
+                // ===== Contact Text (Styled) =====
+                Paragraph name = new Paragraph("Name : RAMESH KUMAR")
+                    .SetFontSize(12)
+                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+
+                Paragraph title = new Paragraph("Managing Director")
+                    .SetFontSize(16)   // BIGGER FONT
+                    .SetBold()         // DIFFERENT STYLE
+                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+
+                Paragraph phone = new Paragraph("Contact Number : +91-99940 66096")
+                    .SetFontSize(12)
+                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+
+                Paragraph email = new Paragraph("Email : ramesh.kumar@vahle.com")
+                    .SetFontSize(12)
+                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+
+                document.Add(name);
+                document.Add(title);
+                document.Add(phone);
+                document.Add(email);
+
+                document.Close();
+
+                var safePlanNo = string.IsNullOrWhiteSpace(ProductionPlanNo)
+                    ? "Contact_QR"
+                    : ProductionPlanNo.Replace("/", "-").Replace("\\", "-");
 
                 return File(stream.ToArray(), "application/pdf", $"{safePlanNo}_QRCode.pdf");
             }

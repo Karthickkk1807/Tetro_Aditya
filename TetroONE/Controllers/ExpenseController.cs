@@ -23,15 +23,14 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("GetExpense")]
-		public IActionResult GetExpense(DateTime FromDate, DateTime ToDate, int FranchiseId)
+		public IActionResult GetExpense(DateTime FromDate, DateTime ToDate)
 		{
 			GetExpense request = new GetExpense()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
 				ExpenseDate = null,
 				FromDate = FromDate,
-				ToDate = ToDate,
-				FranchiseId = FranchiseId
+				ToDate = ToDate
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetExpenseDetails]", request);
@@ -87,8 +86,8 @@ namespace TetroONE.Controllers
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
 				ExpenseId = ExpenseDetailsStatic.ExpenseId,
-				FranchiseId = ExpenseDetailsStatic.FranchiseId,
-				BillingFranchiseId = ExpenseDetailsStatic.BillingFranchiseId,
+				PlantId = ExpenseDetailsStatic.PlantId,
+				BillingPlantId = ExpenseDetailsStatic.BillingPlantId,
 				ExpenseNo = ExpenseDetailsStatic.ExpenseNo,
 				ExpenseDate = ExpenseDetailsStatic.ExpenseDate,
 
@@ -124,8 +123,7 @@ namespace TetroONE.Controllers
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
 				ExpenseDate = ExpenseDate,
 				FromDate = null,
-				ToDate = null,
-				FranchiseId = null
+				ToDate = null
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetExpenseDetails]", getInfo);

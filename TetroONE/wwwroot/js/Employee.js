@@ -21,6 +21,7 @@ $(document).ready(function () {
     Common.bindDropDownParent('DepartmentId', 'FormEmployee', 'Department');
     Common.bindDropDownParent('UserGroupId', 'FormEmployee', 'EmployeeUserGroup');
     Common.bindDropDownParent('UserTypeId', 'FormEmployee', 'EmployeeUserType');
+    Common.bindDropDownParent('ContractorId', 'FormEmployee', 'Contractor');
     Common.bindDropDownMulti('AttendanceMachineId', 'AttendanceMachine');
 
     Common.inputMaxDateNotAllow('DateOfBirth');
@@ -58,6 +59,17 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('change', '#EmployeeTypeId', function () {
+        var $thisVal = $(this).val();
+        if ($thisVal == 2) {
+            $('#DivContractorId').show();
+            $('#ContractorId').prop('required', true);
+        }
+        else {
+            $('#DivContractorId').hide();
+            $('#ContractorId').prop('required', false);
+        }
+    });
 
     var aadhaarAttached = false;
     $(document).on('click', '#SaveEmployee', function (e) {
@@ -142,7 +154,6 @@ $(document).ready(function () {
                 });
             });
 
-
             objvalue.EmployeeId = employeeId == 0 ? null : employeeId;
             objvalue.EmployeeCompanyId = $('#EmployeeCompanyId').val();
             objvalue.EmployeeImage = $('#imageUploadlabel-manageuser2').get(0)?.files[0]?.name;
@@ -152,6 +163,12 @@ $(document).ready(function () {
             objvalue.EmployeeStatusId = Common.parseInputValue('EmployeeStatusId') || null;
             objvalue.ShiftId = Common.parseInputValue('ShiftId');
             objvalue.DepartmentId = Common.parseInputValue('DepartmentId');
+
+            if (objvalue.EmployeeTypeId != 2) {
+                $('#ContractorId').val('').trigger('change');
+            } 
+
+            objvalue.ContractorId = Common.parseInputValue('ContractorId');
 
             objvalue.IsInsuranceApplicable = $('#IsInsuranceApplicable').is(':checked');
             objvalue.InsuranceNumber = Common.parseStringValue('InsuranceNumber');
@@ -296,11 +313,14 @@ $(document).ready(function () {
         LabelTextForRequired.forEach(item => {
             $(`${item.ClassName}`).html(`${item.Text}`);
         });
+         
+        $('#DivContractorId').hide();
 
         employeeId = $(this).data('id');
         nonEditable = false;
         var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
         Common.ajaxCall("GET", "/HumanResource/Get", { EmployeeTypeId: null, EmployeeId: employeeId, FranchiseId: FranchiseMappingId }, editSuccess, null);
+
         $('#employeeCanvas .collapse').removeClass('show');
         $('#collapse1').addClass('show');
         $('.attachcolumn ul').empty("")
@@ -354,6 +374,9 @@ $(document).ready(function () {
             width: '100%',
             placeholder: '--Select Reporting Person--'
         }).trigger('change');
+
+        $('#DivContractorId').hide();
+        $('#ContractorId').prop('required', false);
 
         const LabelTextForRequired = [{ ClassName: '.InsuNoLable', Text: 'Insurance Number' }, { ClassName: '.ValidFromLable', Text: 'Valid From' }, { ClassName: '.ExpiredOnLable', Text: 'Expired On' }];
         LabelTextForRequired.forEach(item => {
@@ -710,7 +733,6 @@ function togglePassword(passwordField, icon) {
     }
 }
 
-
 function editSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
@@ -735,6 +757,7 @@ function editSuccess(response) {
                         Common.bindParentData(data[2], 'FormEmployee');
                         Common.bindParentData(data[3], 'FormEmployee');
                         Common.bindParentData(data[4], 'FormEmployee');
+
                         nonEditable = true;
 
                         Common.bindDropDownSuccess(response.data, "PayGroupId");
