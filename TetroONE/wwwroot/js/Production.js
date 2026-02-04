@@ -283,7 +283,7 @@ function GetProductionLogNotNullSuccess(response) {
         `;
         $('#TransactionsInfo').append(html);
 
-        var columns = Common.bindColumn(data[2], ['ProductionLogId']);
+        var columns = Common.bindColumn(data[2], ['ProductionLogId', 'Status_Color']);
         bindTableTransactionsInfo('TransactionsInfoTable', data[2], -1, 'ProductionLogId', columns, true);
 
         /*============================QRCODE=============================*/
@@ -441,13 +441,32 @@ function bindTableTransactionsInfo(tableid, data, actionTarget, editcolumn, colu
     columns = columns.filter(x => x.name != "TetroONEnocount");
     var isbuyernocount = data[0].hasOwnProperty('TetroONEnocount');
 
+    var StatusColumnIndex = columns.findIndex(column => column.data === "Status");
+
     if (isAction == true && data != null && data.length > 0) {
         columns.push({
             "data": "Action", "name": "Action", "title": "Action", orderable: false
         });
     }
 
-    var renderColumn = [];
+    var renderColumn = [
+        {
+            "targets": StatusColumnIndex,
+            render: function (data, type, row, meta) {
+                if (type === 'display' && row.Status_Color != null && row.Status_Color.length > 0) {
+                    var dataText = row.Status;
+                    var statusColor = row.Status_Color.toLowerCase();
+
+                    var htmlContent = '<div>';
+                    htmlContent += '<span style="color:' + statusColor + ';width: 115px;font-size: 12px;height: 23px;">' + dataText + '</span>';
+                    htmlContent += '</div>';
+
+                    return htmlContent;
+                }
+                return data;
+            }
+        }
+    ];
 
     renderColumn.push(
         {

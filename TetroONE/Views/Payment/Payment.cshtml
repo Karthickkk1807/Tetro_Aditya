@@ -190,15 +190,22 @@
                             </div>
                             <div class="col-lg-2 col-md-6 col-sm-6 col-6">
                                 <div class="form-group">
-                                    <label>Franchise<span id="Asterisk">*</span></label>
-                                    <select class="form-control" id="FranchiseId" name="FranchiseId" required>
+                                    <label>Plant<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="PlantId" name="PlantId" required>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-2 col-md-6 col-sm-6 col-6">
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-6" id="PaymentTypeRequest">
                                 <div class="form-group">
                                     <label>Payment Type<span id="Asterisk">*</span></label>
-                                    <select class="form-control" id="PaymentTypeId" name="PaymentTypeId" required>
+                                    <select class="form-control" id="PaymentTypeRequestId" name="PaymentTypeRequestId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-6" id="PaymentTypeReceivable">
+                                <div class="form-group">
+                                    <label>Payment Type<span id="Asterisk">*</span></label>
+                                    <select class="form-control" id="PaymentTypeReceivableId" name="PaymentTypeReceivableId" required>
                                     </select>
                                 </div>
                             </div>
@@ -209,10 +216,17 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-2 col-md-6 col-sm-6 col-6">
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-6" id="ContactRequest">
                                 <div class="form-group">
-                                    <label for="productCategory" id="ContactIdLabel"></label><span id="Asterisk">*</span>
-                                    <select class="form-control" id="ContactId" name="ContactId" required>
+                                    <label for="productCategory">Vendor</label><span id="Asterisk">*</span>
+                                    <select class="form-control" id="ContactRequestId" name="ContactRequestId" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-6 col-sm-6 col-6" id="ContactReceivable">
+                                <div class="form-group">
+                                    <label for="productCategory">Client</label><span id="Asterisk">*</span>
+                                    <select class="form-control" id="ContactReceivableId" name="ContactReceivableId" required>
                                     </select>
                                 </div>
                             </div>

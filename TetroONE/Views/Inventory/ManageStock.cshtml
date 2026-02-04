@@ -36,6 +36,10 @@ var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.V
         border-bottom: 1px solid #111;
         margin-bottom: 10px;
     }
+    
+    #EditManageStockTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
+        height: auto !important; /* OR unset */ 
+    }
 
     #RgbCol {
         white-space: nowrap;

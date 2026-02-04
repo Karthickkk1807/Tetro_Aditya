@@ -7,16 +7,20 @@ var deletedFiles = [];
 var existFiles = [];
 var formDataMultiple = new FormData();
 var PaymentAmount = [];
-var FranchiseMappingId = 0;
-var titleForHeaderProductTab = "Payment Request";
+var PlantMappingId = 0;
+var titleForHeaderProductTab = "Accounts Payable";
 
 $(document).ready(async function () {
-    Common.bindDropDownParent('FranchiseId', 'FormPayment', 'UserFranchiseMapping');
-    Common.bindDropDownParent('PaymentTypeId', 'FormPayment', 'PamentType');
+    Common.bindDropDownParent('PlantId', 'FormPayment', 'Plant');
+    Common.bindDropDownParent('PaymentTypeRequestId', 'FormPayment', 'PaymentTypeRequest');
+    Common.bindDropDownParent('PaymentTypeReceivableId', 'FormPayment', 'PaymentTypeReceivable');
     Common.bindDropDownParent('PaymentCategory', 'FormPayment', 'PamentCategory');
 
-    $('#ContactId').append($('<option>', { value: '', text: '--Select--', }));
-    $("#ContactIdLabel").text('Name');
+    Common.bindDropDownParent('PaymentCategory', 'FormPayment', 'PamentCategory');
+    Common.bindDropDownParent('PaymentCategory', 'FormPayment', 'PamentCategory');
+
+    Common.bindDropDownParent('ContactReceivableId', 'FormPayment', 'Client');
+    Common.bindDropDownParent('ContactRequestId', 'FormPayment', 'Vendor');
 
     var ModeOfPayData = await Common.bindDropDownSync('ModeOfPayment');
     ModeOfPayDropdown = JSON.parse(ModeOfPayData);
@@ -39,9 +43,9 @@ $(document).ready(async function () {
 
     $('#AddAttachment').hide();
 
-    FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
-    var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+    var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: 1 };
     Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
 
     $(document).click(function (event) {
@@ -71,23 +75,21 @@ $(document).ready(async function () {
         $('#increment-month-btn2').show();
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
         if ($('#ToVendorGrid').hasClass('purchaseactive')) {
             TypeId = 1;
         } else if ($('#FromDistributorGrid').hasClass('purchaseactive')) {
             TypeId = 2;
         }
-        var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+        var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: 1 };
         Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
         displayedDate.setMonth(displayedDate.getMonth() + 1);
         updateMonthDisplay(displayedDate);
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
         var fnData = Common.getDateFilter('dateDisplay2');
 
-        var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+        var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: 1 };
         Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
     });
 
@@ -117,7 +119,7 @@ $(document).ready(async function () {
         var fromDate = $('#FromDate').val();
         $('#ToDate').attr('min', fromDate);
         if ($('#FromDate').val() != "" && $('#ToDate').val() != "") {
-            var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTime('ToDate').toISOString() };
+            var EditDataId = { PlantId: PlantMappingId, FromDate: Common.stringToDateTime('FromDate').toISOString(), ToDate: Common.stringToDateTime('ToDate').toISOString(), PaymentId: null, PaymentTypeId: 1 };
             Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
         }
     });
@@ -130,7 +132,7 @@ $(document).ready(async function () {
         let displayedDate = new Date(currentYear, currentMonth)
         updateMonthDisplay(displayedDate);
 
-        var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+        var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: 1 };
         Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
     });
 
@@ -143,6 +145,8 @@ $(document).ready(async function () {
     $(document).on('click', '.navbar-tab', function () {
 
         titleForHeaderProductTab = $(this).text().trim();
+        var fnData = Common.getDateFilter('dateDisplay2');
+
         $('.navbar-tab').removeClass('active');
         $(this).each(function () {
             if ($(this).text().trim() === titleForHeaderProductTab) {
@@ -150,30 +154,24 @@ $(document).ready(async function () {
             }
         });
 
-        if (titleForHeaderProductTab == "Payment Request") {
+        if (titleForHeaderProductTab == "Accounts Payable") {
             $('.table-responsive').empty('');
             var html = ` 
                 <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PaymentTable"></table>
                 `;
             $('.table-responsive').append(html);
 
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-
-            var fnData = Common.getDateFilter('dateDisplay2');
-            var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+            var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: 1 };
             Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
 
-        } else if (titleForHeaderProductTab == "Accounts Payable") {
+        } else if (titleForHeaderProductTab == "Accounts Receivable") {
             $('.table-responsive').empty('');
             var html = ` 
                 <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PaymentTable"></table>
                 `;
             $('.table-responsive').append(html);
 
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-
-            var fnData = Common.getDateFilter('dateDisplay2');
-            var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+            var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: 2 };
             Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
         }
         else {
@@ -183,10 +181,7 @@ $(document).ready(async function () {
                 `;
             $('.table-responsive').append(html);
 
-            var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-
-            var fnData = Common.getDateFilter('dateDisplay2');
-            var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+            var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: 1 };
             Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
         }
     });
@@ -220,11 +215,25 @@ function PaymentSuccess(response) {
 $(document).on('click', '#AddPayment', function () {
     $('#loader-pms').show();
     $("#ContactIdLabel").text('Name');
-    $('#PaymentModal').show(); 
+    $('#PaymentModal').show();
     $("#PaymentHeader").text(
-        titleForHeaderProductTab === "Payment Request" ? "Add Payment Request Details" :
-            titleForHeaderProductTab === "Accounts Payable" ? "Add Accounts Payable Details" : "Add Accounts Receivable Details"
+        titleForHeaderProductTab === "Accounts Payable" ? "Add Accounts Payable Details" :
+            titleForHeaderProductTab === "Accounts Payable" ? "Add Accounts Receivable Details" : "Add Accounts Receivable Details"
     );
+
+    if (titleForHeaderProductTab === "Accounts Payable") {
+        $('#PaymentTypeReceivable').hide();
+        $('#PaymentTypeRequest').show();
+        $('#ContactReceivable').hide();
+        $('#ContactRequest').show();
+    }
+    else {
+        $('#PaymentTypeRequest').hide();
+        $('#PaymentTypeReceivable').show();
+        $('#ContactRequest').hide();
+        $('#ContactReceivable').show();
+    }
+
     $("#PaymentNo").val("");
     $('.addr1').remove();
     duplicateRow();
@@ -240,7 +249,7 @@ $(document).on('click', '#AddPayment', function () {
     //$("#PaymentDate").attr("max", today).val(today);
     PaymentAmount = [];
     paymentId = 0;
-    $('#ContactId').append($('<option>', { value: '', text: '--Select--', }));
+    $('#PlantId').val(PlantMappingId).trigger('change');
     $('#loader-pms').hide();
 });
 
@@ -252,19 +261,39 @@ $(document).on('click', '.btn-delete', async function () {
         var EditDataId = { PaymentId: paymentId };
         Common.ajaxCall("GET", "/Payment/DeletePayment", EditDataId, function (response) {
             var fnData = Common.getDateFilter('dateDisplay2');
-            var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
-            Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
+            var PaymentTypeId;
+            if (titleForHeaderProductTab === "Accounts Payable")
+                PaymentTypeId = 1;
+            else
+                PaymentTypeId = 2;
+
+            var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: parseInt(PaymentTypeId) };
+            Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null); 
         }, null);
     }
 });
- 
+
 $(document).on('click', '.btn-edit', function () {
     $('#loader-pms').show();
-    $('#PaymentModal').show(); 
+    $('#PaymentModal').show();
     $("#PaymentHeader").text(
-        titleForHeaderProductTab === "Payment Request" ? "Edit Payment Request Details" :
+        titleForHeaderProductTab === "Accounts Payable" ? "Edit Accounts Payable Details" :
             titleForHeaderProductTab === "Accounts Payable" ? "Edit Accounts Payable Details" : "Edit Accounts Receivable Details"
     );
+     
+    if (titleForHeaderProductTab === "Accounts Payable") {
+        $('#PaymentTypeReceivable').hide();
+        $('#PaymentTypeRequest').show();
+        $('#ContactReceivable').hide();
+        $('#ContactRequest').show();
+    }
+    else {
+        $('#PaymentTypeRequest').hide();
+        $('#PaymentTypeReceivable').show();
+        $('#ContactRequest').hide();
+        $('#ContactReceivable').show();
+    }
+     
     $('#SavePayment').css('background', 'blue');
     $('#SavePayment').css('border-color', 'blue');
     $("#PaymentNo").val("");
@@ -275,20 +304,35 @@ $(document).on('click', '.btn-edit', function () {
 
     paymentId = $(this).data('id');
     var fnData = Common.getDateFilter('dateDisplay2');
-    var EditDataId = { PaymentId: parseInt(paymentId), FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+    var PaymentTypeId;
+    if (titleForHeaderProductTab === "Accounts Payable")
+        PaymentTypeId = 1;
+    else
+        PaymentTypeId = 2;
+
+    var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: parseInt(paymentId), PaymentTypeId: parseInt(PaymentTypeId) };
     Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, EditPaymentSuccess, null);
 });
 
 var ContactIdValEdit = 0;
 function EditPaymentSuccess(response) {
     var data = JSON.parse(response.data);
-    $('#FranchiseId').val(data[0][0].FranchiseId);
-    $('#PaymentTypeId').val(data[0][0].PaymentTypeId).trigger('change');
+    $('#PlantId').val(data[0][0].PlantId);
     $('#PaymentCategory').val(data[0][0].PaymentCategory).trigger('change');
-    ContactIdValEdit = data[0][0].ContactId;
-    $('#ContactId').val(data[0][0].ContactId);
+    ContactIdValEdit = data[0][0].ContactId; 
     $('#PaymentNo').val(data[0][0].PaymentNo);
     $('#Comments').val(data[0][0].Comments);
+
+
+    if (titleForHeaderProductTab === "Accounts Payable") {
+        $('#PaymentTypeRequestId').val(data[0][0].PaymentTypeId).trigger('change');
+        $('#ContactRequestId').val(data[0][0].ContactId); 
+    }
+    else {
+        $('#ContactReceivableId').val(data[0][0].PaymentTypeId).trigger('change');
+        $('#PaymentTypeReceivableId').val(data[0][0].ContactId);  
+    }
+
 
     var dateStr = data[0][0].PaymentDate;
     var dateParts = dateStr.split('-');
@@ -300,13 +344,11 @@ function EditPaymentSuccess(response) {
     var contactIdVal = parseInt($('#ContactId').val(data[0][0].ContactId));
     if (contactIdVal != NaN && contactIdVal != "" && contactIdVal != undefined)
         //ContactIdValEdit = contactIdVal
-        contactIdVal = ContactIdValEdit
-    var PamentTypeVal = parseInt($('#PaymentTypeId').val());
-    var FranchiseId = parseInt(localStorage.getItem('FranchiseId'));
-    var editData = { FranchiseId: FranchiseId, PaymentTypeId: PamentTypeVal, ContactId: contactIdVal };
+        contactIdVal = ContactIdValEdit 
+    var editData = { PlantId: PlantMappingId, PaymentTypeId: parseInt(data[0][0].PaymentTypeId), ContactId: parseInt(contactIdVal) };
     Common.ajaxCall("GET", "/Payment/GetPaymentBillNo", editData, function (response) {
         if (response != null && response.data != null) {
-            var BillNoDd = JSON.parse(response.data);
+            BillNoDropdown = JSON.parse(response.data); 
             $.each(data[1], function (index, value) {
                 numberIncr = numberIncr + 1;
                 var table = $("#paymentTable");
@@ -317,12 +359,11 @@ function EditPaymentSuccess(response) {
 
                 var defaultOption = '<option value="">--Select--</option>';
                 var BillNoSelectOptions = "";
-                BillNoSelectOptions = BillNoDd[0].map(function (BillNoval) {
+                BillNoSelectOptions = BillNoDropdown[0].map(function (BillNoval) {
                     var isSelected = BillNoval.BillNumber == value.BillNumber ? 'selected' : '';
                     return `<option value="${BillNoval.BillNumber}" ${isSelected}>${BillNoval.BillNumber}</option>`;
                 }).join('');
-
-
+                 
                 var PaymentStatusSelectOptions = "";
                 PaymentStatusSelectOptions = PaymentStatusDropdown[0].map(function (PaymentStatusId) {
                     var isSelected = PaymentStatusId.PaymentStatusId == value.PaymentStatusId ? 'selected' : '';
@@ -349,17 +390,17 @@ function EditPaymentSuccess(response) {
                             </td>
                         
                             <td class="totalAmountTr px-1">
-                                <input type="number" name="TotalAmount${numberIncr}" value=${value.TotalAmount} placeholder="0.00" class="form-control totalAmount" id="TotalAmount${numberIncr}" disabled />
+                                <input type="number" name="TotalAmount${numberIncr}" value=${value.TotalAmount.toFixed(2)} placeholder="0.00" class="form-control totalAmount" id="TotalAmount${numberIncr}" disabled />
                             </td>
                         
                             <td class="paidAmountTr px-1">
                                 <input type="text" name="PaidAmount${numberIncr}"
-                                       class="form-control paidAmount" id="PaidAmount${numberIncr}" placeholder="0.00" value=${value.PaidAmount} oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,6)" required>
+                                       class="form-control paidAmount" id="PaidAmount${numberIncr}" placeholder="0.00" value=${value.PaidAmount.toFixed(2) } oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,6)" required>
                             </td>
                         
                             <td class="balanceAmountTr px-1">
                                 <input type="text" name="BalanceAmount${numberIncr}"
-                                       class="form-control balanceAmount" id="BalanceAmount${numberIncr}" value=${value.BalanceAmount} readonly placeholder="0.00" />
+                                       class="form-control balanceAmount" id="BalanceAmount${numberIncr}" value=${value.BalanceAmount.toFixed(2) } readonly placeholder="0.00" />
                             </td>
                         
                             <td class="modeOfPaymentIdTr px-1">
@@ -392,17 +433,17 @@ function EditPaymentSuccess(response) {
                             </td>
                         
                             <td class="totalAmountTr px-1">
-                                <input type="number" name="TotalAmount${numberIncr}" value=${value.TotalAmount} placeholder="0.00" class="form-control totalAmount" id="TotalAmount${numberIncr}" disabled />
+                                <input type="number" name="TotalAmount${numberIncr}" value=${value.TotalAmount.toFixed(2) } placeholder="0.00" class="form-control totalAmount" id="TotalAmount${numberIncr}" disabled />
                             </td>
                         
                             <td class="paidAmountTr px-1">
                                 <input type="text" name="PaidAmount${numberIncr}"
-                                       class="form-control paidAmount" id="PaidAmount${numberIncr}" placeholder="0.00" value=${value.PaidAmount} oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,6)" required>
+                                       class="form-control paidAmount" id="PaidAmount${numberIncr}" placeholder="0.00" value=${value.PaidAmount.toFixed(2) } oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,6)" required>
                             </td>
                         
                             <td class="balanceAmountTr px-1">
                                 <input type="text" name="BalanceAmount${numberIncr}"
-                                       class="form-control balanceAmount" id="BalanceAmount${numberIncr}" value=${value.BalanceAmount} readonly placeholder="0.00" />
+                                       class="form-control balanceAmount" id="BalanceAmount${numberIncr}" value=${value.BalanceAmount.toFixed(2) } readonly placeholder="0.00" />
                             </td>
                         
                             <td class="modeOfPaymentIdTr px-1">
@@ -442,7 +483,7 @@ function EditPaymentSuccess(response) {
                         </td>
                     
                         <td class="paidAmountTr px-1">
-                            <input type="text" name="PaidAmount${numberIncr}" class="form-control paidAmount" id="PaidAmount${numberIncr}" value=${value.PaidAmount} placeholder="0.00" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,6)" required>
+                            <input type="text" name="PaidAmount${numberIncr}" class="form-control paidAmount" id="PaidAmount${numberIncr}" value=${value.PaidAmount.toFixed(2) } placeholder="0.00" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,6)" required>
                         </td>
                     
                         <td class="balanceAmountTr px-1">
@@ -540,7 +581,7 @@ $(document).on('click', '#PaymentClose,#ClosePayment', function () {
     $('#PaymentModal').hide();
 });
 
-$(document).on('change', '#ContactId', function () {
+$(document).on('change', '#ContactRequestId', function () {
     var $thisVal = $(this).val();
     $('.addr1').remove();
     duplicateRow();
@@ -556,47 +597,19 @@ $('#PaymentCategory').on('change', function () {
     else if (paymentCategoryVal == 2) {
         $('.addr1').remove();
         duplicateRow();
-    }
-
-    var PayentTypeVal = parseInt($('#PaymentTypeId').val());
-    var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-
-    if (paymentCategoryVal != "" && paymentCategoryVal != NaN && paymentCategoryVal != undefined && paymentCategoryVal != null) {
-        var paymentCategory = parseInt(paymentCategoryVal);
-        Common.ajaxCall("GET", "/Payment/PaymentGetContactNameDetails", { FranchiseId: FranchiseMappingId, PaymentTypeId: PayentTypeVal, PaymentCategory: paymentCategory }, function (response) {
-            if (response != null) {
-                var data = JSON.parse(response.data);
-                $('#ContactId').empty();
-                var dataValue = data[0];
-                if (dataValue != null && dataValue.length > 0) {
-                    var valueproperty = Object.keys(dataValue[0])[0];
-                    var textproperty = Object.keys(dataValue[0])[1];
-                    $('#ContactId').append($('<option>', {
-                        value: '',
-                        text: '--Select--',
-                    }));
-                    $.each(dataValue, function (index, item) {
-                        $('#ContactId').append($('<option>', {
-                            value: item[valueproperty],
-                            text: item[textproperty],
-                        }));
-                    });
-                } else {
-                    $('#ContactId').append($('<option>', {
-                        value: '',
-                        text: '--Select--',
-                    }));
-                }
-            }
-        }, null);
-    }
+    } 
 });
 
-$('#ContactId').on('change', function () {
+$('#ContactRequestId, #ContactReceivableId').on('change', function () {
     var contactIdVal = parseInt($(this).val());
-    var PamentTypeVal = parseInt($('#PaymentTypeId').val());
-    var FranchiseId = parseInt(localStorage.getItem('FranchiseId'));
-    var editData = { FranchiseId: FranchiseId, PaymentTypeId: PamentTypeVal, ContactId: contactIdVal };
+    var PamentTypeVal;
+    if (titleForHeaderProductTab === "Accounts Payable") {
+        PamentTypeVal = parseInt($('#PaymentTypeRequestId').val());
+    }
+    else {
+        PamentTypeVal = parseInt($('#PaymentTypeReceivableId').val());
+    }
+    var editData = { PlantId: PlantMappingId, PaymentTypeId: PamentTypeVal, ContactId: contactIdVal };
 
     if (contactIdVal != null && contactIdVal != "" && contactIdVal != undefined && contactIdVal != NaN) {
         Common.ajaxCall("GET", "/Payment/GetPaymentBillNo", editData, function (response) {
@@ -633,13 +646,14 @@ $('#ContactId').on('change', function () {
 });
 
 
-$('#FranchiseId').on('change', function () {
+$('#PlantId').on('change', function () {
     $('#PaymentCategory').val('').trigger('change');
-    $('#PaymentTypeId').val('').trigger('change');
+    $('#PaymentTypeRequestId').val('').trigger('change');
+    $('#PaymentTypeReceivableId').val('').trigger('change');
     $('.addr1').remove();
     duplicateRow();
-    var franchiseId = parseInt($('#FranchiseId').val());
-    var editeData = { FranchiseId: franchiseId, ModuleName: "Payment" };
+    var PlantId = parseInt($(this).val());
+    var editeData = { PlantId: PlantId, ModuleName: "Payment" };
     Common.ajaxCall("GET", "/Payment/GetAutoGenerateNo", editeData, function (response) {
         if (response.status) {
             var data = JSON.parse(response.data);
@@ -648,7 +662,7 @@ $('#FranchiseId').on('change', function () {
     }, null);
 });
 
-$('#PaymentTypeId').on('change', function () {
+$('#PaymentTypeRequestId, #PaymentTypeReceivableId').on('change', function () {
     var PamentTypeVal = parseInt($(this).val());
     if (PamentTypeVal == 1) {
         $("#ContactIdLabel").text('Vendor Name');
@@ -680,11 +694,23 @@ $(document).on('click', '#SavePayment', function () {
             objvalue[item.name] = item.value;
         });
         var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
-        var billingFranchiseId = $('#FranchiseId').val();
-        var ContactIdId = $('#ContactId').val();
-        objvalue.FranchiseId = FranchiseMappingId;
-        objvalue.BillingFranchiseId = parseInt(billingFranchiseId);
+        var billingPlantId = $('#PlantId').val();
+        var ContactIdId;
+        var PaymentTypeId;
+
+        if (titleForHeaderProductTab === "Accounts Payable") {
+            ContactIdId = parseInt($('#ContactRequestId').val());
+            PaymentTypeId = parseInt($('#PaymentTypeRequestId').val());
+        }
+        else {
+            ContactIdId = parseInt($('#ContactReceivableId').val());
+            PaymentTypeId = parseInt($('#PaymentTypeReceivableId').val());
+        }
+
+        objvalue.PlantId = PlantMappingId;
+        objvalue.BillingPlantId = parseInt(billingPlantId);
         objvalue.ContactId = parseInt(ContactIdId);
+        objvalue.PaymentTypeId = parseInt(PaymentTypeId);
         objvalue.PaymentNo = $('#PaymentNo').val();
         objvalue.PaymentId = parseInt(paymentId);
 
@@ -731,7 +757,13 @@ $(document).on('click', '#SavePayment', function () {
                     $('#PaymentModal').hide();
                     PaymentAmount = [];
                     var fnData = Common.getDateFilter('dateDisplay2');
-                    var EditDataId = { PaymentId: null, FranchiseId: FranchiseMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
+                    var PaymentTypeId;
+                    if (titleForHeaderProductTab === "Accounts Payable")
+                        PaymentTypeId = 1;
+                    else
+                        PaymentTypeId = 2;
+
+                    var EditDataId = { PlantId: PlantMappingId, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString(), PaymentId: null, PaymentTypeId: parseInt(PaymentTypeId) };
                     Common.ajaxCall("GET", "/Payment/GetPayment", EditDataId, PaymentSuccess, null);
                 }
                 else {
@@ -747,12 +779,20 @@ $(document).on('click', '#SavePayment', function () {
     }
 });
 
-
 $(document).on('change', '.billNumber', function () {
     var row = $(this).closest('tr');
     var billNumberVal = row.find('.billNumber').val();
-    var contactIdVal = parseInt($('#ContactId').val());
-    var paymentTypeVal = parseInt($('#PaymentTypeId').val());
+    var contactIdVal, paymentTypeVal;
+
+    if (titleForHeaderProductTab === "Accounts Payable") {
+        contactIdVal = parseInt($('#ContactRequestId').val());
+        paymentTypeVal = parseInt($('#PaymentTypeRequestId').val());
+    }
+    else {
+        contactIdVal = parseInt($('#ContactReceivableId').val());
+        paymentTypeVal = parseInt($('#PaymentTypeReceivableId').val());
+    }
+
     var editData = { PaymentTypeId: paymentTypeVal, ContactId: contactIdVal, BillNumber: billNumberVal };
 
     var currentRow = $(this).closest('tr');
@@ -785,7 +825,7 @@ $(document).on('change', '.billNumber', function () {
         Common.ajaxCall("GET", "/Payment/GetPaymentBillNoAmount", editData, function (response) {
             if (response != null) {
                 var data = JSON.parse(response.data);
-                row.find('.totalAmount').val(data[0][0].TotalAmount);
+                row.find('.totalAmount').val(data[0][0].TotalAmount).toFixed(2);
             }
         }, null);
     }
@@ -799,11 +839,14 @@ $(document).on('input', '.paidAmount', function () {
 
     var paymentCategoryVal = $('#PaymentCategory').val();
     if (paymentCategoryVal == 2) {
+
         var inputOfThis = parseFloat(row.find('.paidAmount').val()) || 0;
         var inputOfTotalAmount = parseFloat(row.find('.totalAmount').val()) || 0;
+
         var BalanceAmount = inputOfTotalAmount - inputOfThis;
 
-        row.find('.balanceAmount').val(BalanceAmount);
+        // ✅ balance formatted
+        row.find('.balanceAmount').val(format2(BalanceAmount));
 
         var entry = {
             tbodyIndex: tbodyIndex,
@@ -811,10 +854,7 @@ $(document).on('input', '.paidAmount', function () {
             BalanceAmount: BalanceAmount
         };
 
-        var existingIndex = PaymentAmount.findIndex(function (item) {
-            return item.tbodyIndex === tbodyIndex;
-        });
-
+        var existingIndex = PaymentAmount.findIndex(x => x.tbodyIndex === tbodyIndex);
         if (existingIndex === -1) {
             PaymentAmount.push(entry);
         } else {
@@ -823,16 +863,19 @@ $(document).on('input', '.paidAmount', function () {
 
         if (inputOfThis > inputOfTotalAmount) {
             Common.warningMsg('The balance amount is negative!');
-            row.find('.balanceAmount').val(0);
-            row.find('.paidAmount').val(inputOfTotalAmount);
+            row.find('.balanceAmount').val(format2(0));
+            row.find('.paidAmount').val(format2(inputOfTotalAmount));
             row.find('.PaymentStatusId').val('8').trigger('change');
             BalanceAmount = 0;
-        } else if (inputOfThis == inputOfTotalAmount) {
+
+        } else if (inputOfThis === inputOfTotalAmount) {
             row.find('.PaymentStatusId').val('8').trigger('change');
+
         } else if (inputOfThis === 0 || isNaN(inputOfThis)) {
             row.find('.PaymentStatusId').val('').trigger('change');
-            row.find('.balanceAmount').val(0);
+            row.find('.balanceAmount').val(format2(0));
             BalanceAmount = 0;
+
         } else {
             row.find('.PaymentStatusId').val('9').trigger('change');
         }
@@ -841,9 +884,7 @@ $(document).on('input', '.paidAmount', function () {
             $("#paymentTable tbody").each(function (i) {
                 if (i > tbodyIndex && $(this).find(".billNumber").val() === BillNo) {
                     $(this).remove();
-                    PaymentAmount = PaymentAmount.filter(function (item) {
-                        return item.tbodyIndex !== i;
-                    });
+                    PaymentAmount = PaymentAmount.filter(x => x.tbodyIndex !== i);
                 }
             });
             return;
@@ -854,28 +895,32 @@ $(document).on('input', '.paidAmount', function () {
         });
 
         let prevBalance = BalanceAmount;
+
         allRows.each(function (i) {
             if (i <= tbodyIndex) return;
 
             let $nextRow = $(this);
             let total = prevBalance;
-            $nextRow.find('.totalAmount').val(total);
+
+            // ✅ total & balance formatted
+            $nextRow.find('.totalAmount').val(format2(total));
 
             let paid = parseFloat($nextRow.find('.paidAmount').val()) || 0;
             let balance = total - paid;
-            $nextRow.find('.balanceAmount').val(balance);
+
+            $nextRow.find('.balanceAmount').val(format2(balance));
 
             prevBalance = balance;
 
             let idx = $("#paymentTable tbody").index($nextRow);
-            var nextEntry = {
+            let existIdx = PaymentAmount.findIndex(x => x.tbodyIndex === idx);
+
+            let nextEntry = {
                 tbodyIndex: idx,
                 BillNo: BillNo,
                 BalanceAmount: balance
             };
-            var existIdx = PaymentAmount.findIndex(function (item) {
-                return item.tbodyIndex === idx;
-            });
+
             if (existIdx === -1) {
                 PaymentAmount.push(nextEntry);
             } else {
@@ -884,6 +929,104 @@ $(document).on('input', '.paidAmount', function () {
         });
     }
 });
+
+function format2(val) {
+    return (parseFloat(val) || 0).toFixed(2); 
+}
+
+//$(document).on('input', '.paidAmount', function () {
+//    var row = $(this).closest('tr');
+//    var tbody = $(this).closest('tbody');
+//    var tbodyIndex = $("#paymentTable tbody").index(tbody);
+//    var BillNo = row.find('.billNumber').val();
+
+//    var paymentCategoryVal = $('#PaymentCategory').val();
+//    if (paymentCategoryVal == 2) {
+//        var inputOfThis = parseFloat(row.find('.paidAmount').val()) || 0;
+//        var inputOfTotalAmount = parseFloat(row.find('.totalAmount').val()) || 0;
+//        var BalanceAmount = inputOfTotalAmount - inputOfThis;
+
+//        row.find('.balanceAmount').val(Number(BalanceAmount).toFixed(2));
+
+//        var entry = {
+//            tbodyIndex: tbodyIndex,
+//            BillNo: BillNo,
+//            BalanceAmount: BalanceAmount
+//        };
+
+//        var existingIndex = PaymentAmount.findIndex(function (item) {
+//            return item.tbodyIndex === tbodyIndex;
+//        });
+
+//        if (existingIndex === -1) {
+//            PaymentAmount.push(entry);
+//        } else {
+//            PaymentAmount[existingIndex] = entry;
+//        }
+
+//        if (inputOfThis > inputOfTotalAmount) {
+//            Common.warningMsg('The balance amount is negative!');
+//            row.find('.balanceAmount').val(0);
+//            row.find('.paidAmount').val(Number(inputOfTotalAmount).toFixed(2));
+//            row.find('.PaymentStatusId').val('8').trigger('change');
+//            BalanceAmount = 0;
+//        } else if (inputOfThis == inputOfTotalAmount) {
+//            row.find('.PaymentStatusId').val('8').trigger('change');
+//        } else if (inputOfThis === 0 || isNaN(inputOfThis)) {
+//            row.find('.PaymentStatusId').val('').trigger('change');
+//            row.find('.balanceAmount').val(0);
+//            BalanceAmount = 0;
+//        } else {
+//            row.find('.PaymentStatusId').val('9').trigger('change');
+//        }
+
+//        if (BalanceAmount === 0) {
+//            $("#paymentTable tbody").each(function (i) {
+//                if (i > tbodyIndex && $(this).find(".billNumber").val() === BillNo) {
+//                    $(this).remove();
+//                    PaymentAmount = PaymentAmount.filter(function (item) {
+//                        return item.tbodyIndex !== i;
+//                    });
+//                }
+//            });
+//            return;
+//        }
+
+//        let allRows = $("#paymentTable tbody").filter(function () {
+//            return $(this).find(".billNumber").val() === BillNo;
+//        });
+
+//        let prevBalance = BalanceAmount;
+//        allRows.each(function (i) {
+//            if (i <= tbodyIndex) return;
+
+//            let $nextRow = $(this);
+//            let total = prevBalance;
+//            $nextRow.find('.totalAmount').val(total);
+
+//            let paid = parseFloat($nextRow.find('.paidAmount').val()) || 0;
+//            let balance = total - paid;
+//            $nextRow.find('.balanceAmount').val(Number(balance).toFixed(2));
+
+//            prevBalance = balance;
+
+//            let idx = $("#paymentTable tbody").index($nextRow);
+//            var nextEntry = {
+//                tbodyIndex: idx,
+//                BillNo: BillNo,
+//                BalanceAmount: balance
+//            };
+//            var existIdx = PaymentAmount.findIndex(function (item) {
+//                return item.tbodyIndex === idx;
+//            });
+//            if (existIdx === -1) {
+//                PaymentAmount.push(nextEntry);
+//            } else {
+//                PaymentAmount[existIdx] = nextEntry;
+//            }
+//        });
+//    }
+//});
 
 async function duplicateRow(button) {
     numberIncr = numberIncr + 1;
@@ -1226,7 +1369,7 @@ function recalcBillRows(billNo) {
                 $row.find('.totalAmount').val(total);
                 let paid = parseFloat($row.find('.paidAmount').val()) || 0;
                 let balance = total - paid;
-                $row.find('.balanceAmount').val(balance);
+                $row.find('.balanceAmount').val(balance).toFixed(2);
 
                 prevBalance = balance;
             });

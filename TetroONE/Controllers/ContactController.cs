@@ -48,6 +48,12 @@ namespace TetroONE.Controllers
         {
             return View();
         }
+        
+        [Route("Contractor")]
+        public IActionResult Contractor()
+        {
+            return View();
+        }
 
         //===============================================================================================Vendor==========================================================================================================
         [HttpGet]
@@ -246,6 +252,174 @@ namespace TetroONE.Controllers
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteVendorDetails]", getVendor);
+            return Json(response);
+        }
+
+        //===============================================================================================End Vendor==========================================================================================================
+        //===============================================================================================Contractor==========================================================================================================
+        [HttpGet]
+        [Route("GetContractor")]
+        public IActionResult GetContractor(int ContractorId)
+        {
+            GetContractor getContractor = new GetContractor()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ContractorId = ContractorId == 0 ? null : ContractorId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetContractorDetails]", getContractor);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertUpdateContractorDetails")]
+        public async Task<IActionResult> InsertUpdateContractorDetails()
+        {
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            InsertUpdateContractorDetails staticDetails = new InsertUpdateContractorDetails();
+
+            staticDetails = JsonConvert.DeserializeObject<InsertUpdateContractorDetails>(Request.Form["ContractorData"]);
+
+            IFormFileCollection file = Request.Form.Files;
+            List<AttachmentDetails> lstattachment = new List<AttachmentDetails>();
+            DataTable dtattachment = new DataTable();
+
+            foreach (var item in file)
+            {
+                var attachment = GetFilePath(item.FileName);
+                lstattachment.Add(new AttachmentDetails()
+                {
+                    AttachmentExactFileName = item.FileName,
+                    AttachmentFileName = attachment.Item1,
+                    AttachmentFilePath = attachment.Item2,
+                    ModuleName = "Contractor"
+                });
+            }
+
+            bool isuploaded = await IsClaimAttachmentUploaded(file, lstattachment);
+            foreach (var item in lstattachment)
+            {
+                item.AttachmentFileName = item.AttachmentExactFileName;
+            }
+
+            var exist = Request.Form["Exist"].ToList();
+            if (exist != null && exist.Count > 0)
+            {
+                List<AttachmentDetails> lstexistattachment = ParseFormData(Request.Form["Exist"]);
+                if (lstexistattachment.Any())
+                {
+                    lstattachment.AddRange(lstexistattachment);
+                }
+            }
+            List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstattachment.AddRange(lstdeleteattachment);
+                    lstattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
+                }
+            }
+
+            dtattachment = GenericTetroONE.ToDataTable(lstattachment);
+            dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
+
+            List<ContactPersonDetails>? staticData = JsonConvert.DeserializeObject<List<ContactPersonDetails>?>(Request.Form["ContractorContactPersonDetails"]);
+            DataTable ClientContactPersonDetails = GenericTetroONE.ToDataTable(staticData);
+
+            var spName = string.Empty;
+            if (staticDetails.ContractorId != null && staticDetails.ContractorId != 0)
+            {
+                spName = "[dbo].[USP_UpdateContractorDetails]";
+            }
+            else
+            {
+                spName = "[dbo].[USP_InsertContractorDetails]";
+            }
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(spName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@LoginUserId", _userId);
+                    command.Parameters.AddWithValue("@ContractorName", staticDetails.ContractorName);
+                    command.Parameters.AddWithValue("@Address", staticDetails.Address);
+                    command.Parameters.AddWithValue("@City", staticDetails.City);
+                    command.Parameters.AddWithValue("@State", staticDetails.State);
+                    command.Parameters.AddWithValue("@Country", staticDetails.Country);
+                    command.Parameters.AddWithValue("@ZipCode", staticDetails.ZipCode);
+                    command.Parameters.AddWithValue("@ContactNumber", staticDetails.ContactNumber);
+                    command.Parameters.AddWithValue("@Email", staticDetails.Email);
+                    command.Parameters.AddWithValue("@GSTNumber", staticDetails.GSTNumber);
+                    command.Parameters.AddWithValue("@Remark", staticDetails.Remark);
+                    command.Parameters.AddWithValue("@IFSCCode", staticDetails.IFSCCode);
+                    command.Parameters.AddWithValue("@BankName", staticDetails.BankName);
+                    command.Parameters.AddWithValue("@BranchName", staticDetails.BranchName);
+                    command.Parameters.AddWithValue("@AccountType", staticDetails.AccountType);
+                    command.Parameters.AddWithValue("@AccountName", staticDetails.AccountName);
+                    command.Parameters.AddWithValue("@AccountNumber", staticDetails.AccountNumber);
+                    command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails);
+                    command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
+
+                    if (staticDetails.ContractorId > 0)
+                    {
+                        command.Parameters.AddWithValue("@ContractorId", staticDetails.ContractorId);
+                        command.Parameters.AddWithValue("@IsActive", staticDetails.IsActive);
+                    }
+
+                    command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
+                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                }
+                connection.Close();
+
+            }
+            if (!response.Status)
+            {
+                foreach (var item in lstattachment)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                                .Replace("..", "").Replace("/", "\\");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
+
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteContractor")]
+        public IActionResult DeleteContractor(int ContractorId) 
+        {
+            GetContractor getContractor = new GetContractor()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ContractorId = ContractorId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteContractorDetails]", getContractor);
             return Json(response);
         }
 

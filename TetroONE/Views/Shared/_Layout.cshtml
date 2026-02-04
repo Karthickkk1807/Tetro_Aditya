@@ -118,7 +118,7 @@
 
                     <nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2">
                         <div class="container-fluid">
-                            <h4 style="color: white;" class="mt-2 m-b-1" >
+                            <h4 style="color: white;" class="mt-2 m-b-1">
                                 <b>@companyName</b>
                                 @*<b id="NavCompanyName"></b>*@
                             </h4>
@@ -242,7 +242,7 @@
                         </div>
                     </nav>
                 </div>
-                 
+
                 <div class="sidebar sidebar-style-2">
                     <div class="sidebar-wrapper scrollbar scrollbar-inner">
                         <div class="sidebar-content">
@@ -308,7 +308,7 @@
                                                             </ul>
                                                         </div>
                                                     </li>
-                                                } 
+                                                }
                                                 <li>
                                                     @if (access.Any(x => x.ToLower() == UserScreen.Employee.ToLower()))
                                                     {
@@ -435,6 +435,16 @@
                                                         </a>
                                                     }
                                                 </li>
+                                                <li>
+                                                    @if (access.Any(x => x.ToLower() == UserScreen.Clients.ToLower()))
+                                                    {
+                                                        <a asp-controller="Contact" asp-action="Contractor">
+                                                            <i>
+                                                                <img src="~/assets/moduleusedtetroone/sidenav/contact_sidebar/contactsicon 1.svg" width="20" />
+                                                            </i> <span class="sub-item">Contractor</span>
+                                                        </a>
+                                                    }
+                                                </li>
                                                 @*<li>
                                                     @if (access.Any(x => x.ToLower() == UserScreen.JobWorkers.ToLower()))
                                                     {
@@ -477,7 +487,7 @@
                                                         <a asp-controller="Product" asp-action="Product">
                                                             <i>
                                                                 <img src="~/assets/moduleusedtetroone/sidenav/inventory_sidebar/product.svg" width="20" />
-                                                            </i> <span class="sub-item">Product (BOM)</span>
+                                                            </i> <span class="sub-item">Product</span>
                                                         </a>
                                                     }
                                                 </li>
@@ -549,7 +559,7 @@
                                                             </i> <span class="sub-item">Purchase Order</span>
                                                         </a>
                                                     </li>
-                                                } 
+                                                }
                                                 @if (access.Any(x => x.ToLower() == UserScreen.PurchaseInvoice.ToLower()))
                                                 {
                                                     <li>
@@ -598,7 +608,7 @@
                                                         </a>
                                                     </li>
                                                 }
-                                               @*@if (access.Any(x => x.ToLower() == UserScreen.SaleOrder.ToLower()))
+                                                @*@if (access.Any(x => x.ToLower() == UserScreen.SaleOrder.ToLower()))
                                                 {
                                                     <li>
                                                         <a asp-controller="TaxInvoice" asp-action="SaleOrder">
@@ -684,7 +694,7 @@
                                                             </i><span class="sub-item">Financial Planning</span>
                                                         </a>
                                                     }
-                                                </li> 
+                                                </li>
                                                 <li>
                                                     @if (access.Any(x => x.ToLower() == UserScreen.ProfitAnalysis.ToLower()))
                                                     {
@@ -694,7 +704,7 @@
                                                             </i><span class="sub-item">Profit Analysis</span>
                                                         </a>
                                                     }
-                                                </li> 
+                                                </li>
                                             </ul>
                                         </div>
                                     </li>
@@ -710,7 +720,7 @@
                                         </a>
                                         <div class="collapse" id="Productions-list">
                                             <ul class="nav nav-collapse">
-                                             
+
                                                 @if (access.Any(x => x.ToLower() == UserScreen.Sample.ToLower()))
                                                 {
                                                     <li>
@@ -854,7 +864,7 @@
                                                             </i> <span class="sub-item">OutWard</span>
                                                         </a>
                                                     </li>
-                                                } 
+                                                }
                                             </ul>
                                         </div>
                                     </li>
@@ -910,7 +920,7 @@
                                                             </i><span class="sub-item">Downtime Tracking</span>
                                                         </a>
                                                     }
-                                                </li> 
+                                                </li>
                                             </ul>
                                         </div>
                                     </li>
@@ -1056,7 +1066,7 @@
                                                             </i><span class="sub-item">Surveys</span>
                                                         </a>
                                                     }
-                                                </li> 
+                                                </li>
                                             </ul>
                                         </div>
                                     </li>

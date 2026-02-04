@@ -9,7 +9,7 @@ var formDataMultiple = new FormData();
 
 $(document).ready(async function () {
 
-    Common.bindDropDown('ClientId', 'Client');
+    bindDropDownAddItem('ClientId', 'Client');
     Common.bindDropDown('TransactionId', 'TransactionType');
     //Common.bindDropDown('ReceivedFrom', 'JobWorker');
     Common.bindDropDown('ReceivedFrom', 'Client');
@@ -138,6 +138,9 @@ $(document).ready(async function () {
         $('#ModalHeading').text('InWard Details');
         $("#BtnSave span:first").text("Save");
 
+        $('#AlterReceivedFrom').hide();
+        $('#AlterClientId').hide();
+
         $('.Status-Div').hide();
         var currentDate = new Date();
         var formattedDate = currentDate.toISOString().slice(0, 10);
@@ -168,6 +171,9 @@ $(document).ready(async function () {
         $("#BtnSave span:first").text("Update");
         $('#emptyDiv').removeClass('col-lg-4 col-md-4 col-6').addClass('col-lg-2 col-md-2 col-6');
         $('#InWardStatusIdDiv').show();
+
+        $('#AlterReceivedFrom').hide();
+        $('#AlterClientId').hide();
 
         $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
         $('#AddAttachLable, #AddNotesLable').show();
@@ -330,6 +336,59 @@ $(document).ready(async function () {
                 }
             }, null);
         }
+    });
+
+    $(document).on('change', '#ClientId', function () {
+        var $thisVal = $(this).val();
+        $('#ReceivedFrom').val($thisVal).trigger('change');
+        $('#CommonId').val('');
+        if ($thisVal == "AddItem") {
+            $('#AddItemModal').show();
+            $('#AlterReceivedFrom').show();
+            $('#AlterClientId').show();
+            $('#ReceivedFrom').hide();
+            $('#ClientId').hide(); 
+        } else {
+            $('#AddItemModal').hide();
+            $('#AlterReceivedFrom').hide();
+            $('#AlterClientId').hide(); 
+            $('#ReceivedFrom').show();
+            $('#ClientId').show();
+            $('#AlterClientId').val('');
+            $('#AlterReceivedFrom').val('');
+        }
+    });
+
+    $(document).on('click', '#AddItemClose, #AddItemBtnClose', function () {
+        $('#AddItemModal').hide();
+    });
+
+    $(document).on('input', '#AlterClientId', function () {
+        var $thisVal = $(this).val();
+
+        if ($thisVal == '') {
+            $('#AddItemModal').hide();
+            $('#AlterReceivedFrom').hide();
+            $('#AlterClientId').hide();
+            $('#ReceivedFrom').show();
+            $('#ClientId').show();
+            $('#AlterClientId').val('');
+            $('#AlterReceivedFrom').val('');
+            $('#ClientId').val('').trigger('change');
+            $('#ReceivedFrom').val('').trigger('change');
+        } else {
+            $('#AlterReceivedFrom').val($thisVal);
+        }
+    });
+
+    $(document).on('click', '#AddItemSave', function () {
+        if ($("#FromAddItem").valid()) {
+            $('#AddItemModal').hide();
+            var $thisval = $('#CommonId').val();
+            $('#AlterClientId').val($thisval);
+            $('#AlterReceivedFrom').val($thisval);
+            Common.successMsg("Client Saved Successfully.");
+        } 
     });
 });
 
@@ -1007,7 +1066,7 @@ function updateTimelineProgress(progressStatuses) {
         $fillLine.css({ width: "0" });
     }
 }
- 
+
 function ajaxPromise(method, url, data) {
     return new Promise((resolve, reject) => {
         Common.ajaxCall(method, url, data, resolve, reject);
@@ -1015,3 +1074,59 @@ function ajaxPromise(method, url, data) {
 }
 
 /*========================================================End Status Tracking=================================================================*/
+
+/*========================================================DropDown + Add Item=================================================================*/
+
+function bindDropDownAddItem(id, moduleName) {
+
+    var request = {
+        moduleName: moduleName
+    };
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status == true) {
+                bindDropDownSuccessAddItem(response.data, id);
+            }
+        },
+        error: function (response) {
+
+        },
+    });
+}
+
+function bindDropDownSuccessAddItem(response, controlid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        $('#' + controlid).empty();
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+            $('#' + controlid).append($('<option>', {
+                value: 'AddItem',
+                text: '+ Add Item',
+                class: 'add-item-option'
+            }));
+        } else {
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+        }
+    }
+}

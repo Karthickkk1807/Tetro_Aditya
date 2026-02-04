@@ -288,6 +288,8 @@ $(document).ready(function () {
             });
 
             objvalue.ProductSubCategoryId = ProductSubCategoryId != 0 ? parseInt(ProductSubCategoryId) : null;
+            objvalue.ProductCategoryId = parseInt($('#ProductCategoryId').val());
+            objvalue.Productioncost = parseFloat(0.00);
             Common.ajaxCall("POST", "/Settings/InsertUpdateProductSubCategoryInfo", JSON.stringify(objvalue), GetProductSubCategoryInfoReload, null);
         }
     });

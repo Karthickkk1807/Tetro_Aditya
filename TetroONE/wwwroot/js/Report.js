@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     $(document).on('click', '#reportSubmit', function () {
         $("#loader-pms").fadeIn();
-        if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+        if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
             getReportNewSuccess();
         } else {
             getReportSuccess();
@@ -24,7 +24,7 @@ $(document).ready(function () {
     });
 
     $('#ReportCategoryId').on('change input', function () {
-        if ($thisValFromNew != '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+        if ($thisValFromNew != '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
             $('#ReportValueId').empty();
             var reportCategoryName = $('#ReportCategoryId option:selected').text();
             bindDropReportValueDropDown('ReportValueId', reportCategoryName);
@@ -63,7 +63,7 @@ $(document).ready(function () {
 
         activeTabText = tabText;
 
-        PassingText = ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? tabText : activeTabText;
+        PassingText = ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? tabText : activeTabText;
 
         NewLogistics = true;
         bindDropReportCategoryDropDown('ReportCategoryId', PassingText);
@@ -77,7 +77,7 @@ $(document).ready(function () {
             $('.todatediv').show();
         }
 
-        if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+        if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
             if (tabText == "Taget VS Actual") {
                 $('.frmdatediv').hide();
                 $('.todatediv').hide();
@@ -120,7 +120,7 @@ $(document).ready(function () {
 
         activeTabText = tabText;
 
-        if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+        if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
             var objvalue = {
                 ReportName: tabText,
                 FromDate: $('#fromDateRpt').val(),
@@ -161,7 +161,7 @@ $(document).ready(function () {
 
         activeTabText = tabText;
 
-        if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+        if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
             var objvalue = {
                 ReportName: tabText,
                 FromDate: $('#fromDateRpt').val(),
@@ -196,7 +196,7 @@ var PassingText = '';
 $(document).on('change', '#mainModuleDropdown', function () {
     $thisValFromNew = $(this).val();
     getDate();
-    if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+    if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
         $("#loader-pms").fadeIn();
         $('#ReportValueNewHide').show();
         NewLogistics = true;
@@ -273,7 +273,7 @@ function getReportNewSuccess() {
 
 function excelajaxCall(objvalue) {
 
-    var URL = ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? '/Report/CommonExcelDownloadNew' : '/Report/CommonExcelDownload';
+    var URL = ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? '/Report/CommonExcelDownloadNew' : '/Report/CommonExcelDownload';
 
     $.ajax({
         url: URL,
@@ -309,7 +309,7 @@ function excelajaxCall(objvalue) {
 
 function pdfAjaxCall(objvalue) {
 
-    var URL = ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? '/Report/GenerateReportPDFNew' : '/Report/GenerateReportPDF';
+    var URL = ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? '/Report/GenerateReportPDFNew' : '/Report/GenerateReportPDF';
 
     $.ajax({
         url: URL,
@@ -485,7 +485,7 @@ function GetReportName() {
                     $('.todatediv').show();
                 }
 
-                if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+                if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
                     if (tabText == "Taget VS Actual") {
                         $('.frmdatediv').hide();
                         $('.todatediv').hide();
@@ -521,7 +521,7 @@ function GetReportName() {
 
                 activeTabText = tabText;
 
-                PassingText = ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? tabText : activeTabText;
+                PassingText = ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? tabText : activeTabText;
 
                 bindDropReportCategoryDropDown('ReportCategoryId', PassingText);
             }
@@ -538,7 +538,7 @@ function bindDropReportCategoryDropDown(id, reportName) {
         ReportName: reportName
     };
 
-    var URL = ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? '/Report/ReportCategoryDropdownNew' : '/Report/ReportCategoryDropdown';
+    var URL = ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? '/Report/ReportCategoryDropdownNew' : '/Report/ReportCategoryDropdown';
 
     $.ajax({
         type: 'POST',
@@ -581,9 +581,9 @@ function bindReportCategoryDropDownSuccess(response, controlid) {
 // For ReportValue DropDown
 function bindDropReportValueDropDown(id, reportCategoryName) {
 
-    var URL = ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? '/Report/ReportValueDropdownNew' : '/Report/ReportValueDropdown';
+    var URL = ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') ? '/Report/ReportValueDropdownNew' : '/Report/ReportValueDropdown';
 
-    if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+    if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
         var request = {
             ReportName: PassingText
         };
@@ -613,7 +613,7 @@ function bindDropReportValueDropDown(id, reportCategoryName) {
 
 
 $(document).on('change', '#ReportValueId', function () {
-    if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+    if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
         var reportCategoryName = $('#ReportValueId option:selected').text();
         bindDropReportValueNewDropDown('ReportValueNewId', reportCategoryName);
     }
@@ -636,7 +636,7 @@ function bindReportValueDropDownSuccess(response, controlid) {
             });
         }
 
-        if ($thisValFromNew == '9' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
+        if ($thisValFromNew == '13' || $thisValFromNew == '10' || $thisValFromNew == '11' || $thisValFromNew == '12') {
             var reportCategoryName = $('#ReportValueId option:selected').text();
             bindDropReportValueNewDropDown('ReportValueNewId', reportCategoryName);
         } else {
