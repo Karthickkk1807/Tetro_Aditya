@@ -22,3 +22,9 @@ table.dataTable {
 #CompOffTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
     max-height: 354px !important;
 }
+
+@media screen and (max-width : 420px) {
+    .leavesearch {
+        margin-top: 5px !important;
+    }
+}
