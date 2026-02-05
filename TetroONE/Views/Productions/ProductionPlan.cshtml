@@ -234,9 +234,9 @@
                                     </div> 
                                     <div class="col-lg-2 col-md-2 col-sm-6 col-6" id="MLRWaterLevelDiv">
                                         <div class="form-group">
-                                            <label>WaterLevel<span id="Asterisk">*</span></label>
+                                            <label>WaterLevel</label>
                                             <div class="d-flex" style="gap: 5px;">
-                                                <input type="text" class="form-control" id="MLR" name="MLR" placeholder="MLR" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required style="width: 50px;">
+                                                <input type="text" class="form-control" id="MLR" name="MLR" placeholder="MLR" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,5)" style="width: 50px;">
                                                 <div id="ember325" class="input-group">
                                                     <input type="text" class="form-control" id="WaterLevel" name="WaterLevel" disabled placeholder="0.00">
                                                     <button id="ReorderLevelSymbol" class="btn btn-secondary p-0" type="button" style="padding:4px!important;border-top-left-radius:0;border-bottom-left-radius:0;font-size:16px;width:33px;">L</button>
@@ -244,7 +244,7 @@
                                             </div>
                                         </div>
                                     </div> 
-                                    <div class="col-lg-2 col-md-3 col-sm-6 col-6" id="LoadingDateTimeDiv">
+                                   @*<div class="col-lg-2 col-md-3 col-sm-6 col-6" id="LoadingDateTimeDiv">
                                         <div class="form-group">
                                             <label>LoadingDate Time<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control dateTimePicker" id="LoadingDateTime" name="LoadingDateTime" readonly required>
@@ -255,7 +255,7 @@
                                             <label>UnLoadingDate Time<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control dateTimePicker" id="UnLoadingDateTime" name="UnLoadingDateTime" readonly required>
                                         </div>
-                                    </div>
+                                    </div> *@
                                 </div>
                             </form>
                         </div>
@@ -423,10 +423,10 @@
                                 <i class="fas fa-print mr-1"></i> <span> Print QRCode</span><span class="shortcut-key">[ Alt + P ]</span>
                             </button>
 
-                            @* <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlansaveprintbtn">
-                                <i class="fas fa-print mr-1"></i> <span> Save &amp; Print</span><span class="shortcut-key">[ Alt + P ]</span>
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanjobCardBtn">
+                                <i class="fas fa-print mr-1"></i> <span> Job Card Print</span><span class="shortcut-key">[ Alt + V ]</span>
                             </button>
-                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanPreviewPorder">
+                            @*<button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanPreviewPorder">
                                 <i class="fas fa-eye mr-1"></i> <span>Preview</span><span class="shortcut-key">[ Alt + V ]</span>
                             </button>
 
@@ -530,7 +530,7 @@
 </div>
 
 <div id="ChemicalModal" class="modal" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-dialog modal-dialog-centered modal-Chem">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
                 <h2 id="">Chemical Details</h2>
@@ -550,6 +550,9 @@
                     <li class="nav-item" role="presentation">
                         <a class="nav-link navbar-tab titleForHeaderPopRawMatrialTab" id="After-Treatment-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">After-Treatment</a>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link navbar-tab titleForHeaderPopRawMatrialTab" id="After-Treatment-tab" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Finishing</a>
+                    </li>
                 </ul>
                 <form id="FromChemicalDynamic">
                     <div id="ChemicalDynamic-Pre">
@@ -559,6 +562,8 @@
                     <div id="ChemicalDynamic-Dye">
                     </div>
                     <div id="ChemicalDynamic-After">
+                    </div>
+                    <div id="ChemicalDynamic-Finishing">
                     </div>
                 </form>
             </div>
