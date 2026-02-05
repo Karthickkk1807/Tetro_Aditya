@@ -271,7 +271,7 @@ body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdow
     border-radius: 50%;
     height: 30px;
     padding: 4px;
-    margin-top: 21px;
+    margin-top: 26px;
 }
 
     .DynrowRemove i {
@@ -583,6 +583,7 @@ body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdow
     }
     body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdown.hidden-caret.submenu.show > ul, #notificationDropdown {
         left: unset !important;
+        margin-top: 11px;
     }
     #NavCompanyName {
         width: 100%;
@@ -669,4 +670,10 @@ table {
 
 #Subtotal {
     text-align: start !important;
+}
+
+@media (max-width: 480px) {
+    .dataTables_info {
+        display: none;
+    }
 }
