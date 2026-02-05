@@ -29,6 +29,8 @@ namespace TetroONE.Controllers
                 if (authenticationScheme == CookieAuthenticationDefaults.AuthenticationScheme)
                 {
                     _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+                    //var IsUser = Convert.ToString(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Locality).Value);
+
                     DataSet dst = new DataSet();
 
                     using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -42,7 +44,8 @@ namespace TetroONE.Controllers
 
                             command.Parameters.Add("@Status", SqlDbType.Int).Direction = ParameterDirection.Output;
                             command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-                             
+
+
                             SqlDataAdapter adapter = new SqlDataAdapter(command);
                             adapter.Fill(dst);
                             int status = (int)command.Parameters["@Status"].Value;
@@ -59,9 +62,14 @@ namespace TetroONE.Controllers
 
                                 SetAccess(dst.Tables[1]);
                             }
+                            //if (IsUser != "True")
+                            //{
+                            //    return RedirectToAction("Attendance", "HumanResource");
+                            //}
                         }
                     }
-                } 
+                }
+
             }
 
             return View();
@@ -76,7 +84,7 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetDashBoard1")]
-        public IActionResult GetDashBoard1(DateTime FromDate, DateTime ToDate, int FranchiseId,int ReportCategoryId)
+        public IActionResult GetDashBoard1(DateTime FromDate, DateTime ToDate, int FranchiseId, int ReportCategoryId)
         {
             GetDashBoard1 request = new GetDashBoard1()
             {
@@ -92,10 +100,10 @@ namespace TetroONE.Controllers
             return Json(response);
 
         }
-         
+
         [HttpGet]
         [Route("GetDashBoard2")]
-        public IActionResult GetDashBoard2(DateTime FromDate, DateTime ToDate, int FranchiseId, int ReportCategoryId,int ContactId)
+        public IActionResult GetDashBoard2(DateTime FromDate, DateTime ToDate, int FranchiseId, int ReportCategoryId, int ContactId)
         {
             GetDashBoard2 request = new GetDashBoard2()
             {
@@ -104,13 +112,11 @@ namespace TetroONE.Controllers
                 FromDate = FromDate,
                 ToDate = ToDate,
                 ReportCategoryId = ReportCategoryId,
-                ContactId = ContactId
-
+                ContactId = ContactId 
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetDashBoardDetails_2]", request);
-            return Json(response);
-
+            return Json(response); 
         }
 
 

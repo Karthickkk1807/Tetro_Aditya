@@ -8,7 +8,7 @@ $(document).ready(function () {
     const today = new Date().toISOString().split('T')[0];
     $("#CompOffDate").val(today);
 
-    Common.ajaxCall("GET", "/CompOff/GetCompOff", { CompOffId: null, }, CompOffSuccess, null);
+    //Common.ajaxCall("GET", "/CompOff/GetCompOff", { CompOffId: null, }, CompOffSuccess, null);
     $('#AddLeave').attr('title', 'Add Compensatory Off');
 
     $(document).on('change', '#ComEmployeeId', function () {
@@ -115,7 +115,7 @@ $(document).ready(function () {
             $('#CompOffDescriptionCol').removeClass('col-md-12 col-lg-12 col-sm-12 col-12').addClass('col-md-6 col-lg-6 col-sm-6 col-6');
             Common.ajaxCall("POST", "/Leave/GetStatus", JSON.stringify({ ModuleName: 'CompOffStatus', ModuleId: parseInt(compOffId) }), function (response) {
                 Common.bindDropDownSuccess(response.data, 'CompStatusId');
-                Common.ajaxCall("GET", "/CompOff/GetCompOff", { CompOffId: parseInt(compOffId), }, editSuccessComp, null);
+                //Common.ajaxCall("GET", "/CompOff/GetCompOff", { CompOffId: parseInt(compOffId), }, editSuccessComp, null);
             }, null);
         }
     });
@@ -272,7 +272,7 @@ function InsertSuccessCompOff(response) {
         Common.successMsg(response.message);
         $("#CompOffCanvas").css("width", "0%");
         $('#fadeinpage').removeClass('fadeoverlay');
-        Common.ajaxCall("GET", "/CompOff/GetCompOff", { CompOffId: null, }, CompOffSuccess, null);
+        //Common.ajaxCall("GET", "/CompOff/GetCompOff", { CompOffId: null, }, CompOffSuccess, null);
     } else {
         Common.errorMsg(response.message);
     }

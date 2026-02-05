@@ -1188,6 +1188,7 @@ function renderOverviewChart(data) {
         }
     });
 }
+
 function renderIndividualChart(data) {
     if (individualChart) individualChart.destroy();
 

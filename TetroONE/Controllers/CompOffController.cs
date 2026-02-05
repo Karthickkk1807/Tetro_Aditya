@@ -18,21 +18,7 @@ namespace TetroONE.Controllers
         {
             return View();
         }
-         
-        [HttpGet]
-        [Route("GetCompOff")]
-        public IActionResult GetCompOff(int? CompOffId)
-        {
-            GetCompOff Get = new GetCompOff()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                CompOffId = CompOffId
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetCompensatoryOffDetails]", Get);
-            return Json(response);
-        }
-
+          
         [HttpPost]
         [Route("InserUpdatetCompensatoryOff")]
         public IActionResult InserUpdatetLeave([FromBody] InserUpdatetCompensatoryOff request)

@@ -673,8 +673,6 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@TotalWeight", staticDetails.TotalWeight);
                     command.Parameters.AddWithValue("@ColorId", staticDetails.ColorId);
                     command.Parameters.AddWithValue("@MachineId", staticDetails.MachineId);
-                    command.Parameters.AddWithValue("@MLR", staticDetails.MLR);
-                    command.Parameters.AddWithValue("@WaterLevel", staticDetails.WaterLevel);
                     command.Parameters.AddWithValue("@ProductionPlanStatusId", staticDetails.ProductionPlanStatusId);
                     command.Parameters.AddWithValue("@Comments", staticDetails.Comments == null ? (object)DBNull.Value : staticDetails.Comments);
                     command.Parameters.AddWithValue("@PreparedBy", staticDetails.PreparedBy);
@@ -687,8 +685,10 @@ namespace TetroONE.Controllers
                     if (staticDetails.ProductionPlanId > 0)
                     {
                         command.Parameters.AddWithValue("@ProductionPlanId", staticDetails.ProductionPlanId);
-                        command.Parameters.AddWithValue("@LoadingDateTime", staticDetails.LoadingDateTime);
-                        command.Parameters.AddWithValue("@UnLoadingDateTime", staticDetails.UnLoadingDateTime);
+                        command.Parameters.AddWithValue("@WaterLevel", staticDetails.WaterLevel);
+                        command.Parameters.AddWithValue("@MLR", staticDetails.MLR);
+                        //command.Parameters.AddWithValue("@LoadingDateTime", staticDetails.LoadingDateTime);
+                        //command.Parameters.AddWithValue("@UnLoadingDateTime", staticDetails.UnLoadingDateTime);
                     }
 
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -968,6 +968,178 @@ namespace TetroONE.Controllers
         }
 
         [HttpGet]
+        [Route("JobCardPrint")]
+        public IActionResult JobCardPrint(int ModuleId, int NoOfCopies, string printType, string URL)
+        {
+            try
+            {
+                _employeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("[dbo].[USP_GetPrintPDFDetails]", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@LoginUserId", _employeeId);
+                        command.Parameters.AddWithValue("@ModuleName", "Production Plan");
+                        command.Parameters.AddWithValue("@ModuleId", ModuleId);
+
+                        command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                        command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+                        DataSet ds = new DataSet();
+
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        if (ds.Tables.Count >= 8)
+                        {
+                            DataTable dt1 = ds.Tables[0];
+                            DataTable dt2 = ds.Tables[1];
+                            DataTable dt3 = ds.Tables[2];
+                            DataTable dt4 = ds.Tables[3];
+                            DataTable dt5 = ds.Tables[4];
+                            DataTable dt6 = ds.Tables[5];
+                            DataTable dt7 = ds.Tables[6];
+                            DataTable dt8 = ds.Tables[7];
+
+                            // Check if dt1 has rows
+                            if (dt1.Rows.Count > 0)
+                            {
+                                var data = new JobCardPrint
+                                {
+                                    CompanyLogo = dt1.Rows[0]["CompanyLogo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyLogo"]) : null,
+                                    CompanyName = dt1.Rows[0]["CompanyName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyName"]) : null,
+
+                                    Date = dt2.Rows[0]["Date"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Date"]) : null,
+                                    SFNo = dt2.Rows[0]["SFNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["SFNo"]) : null,
+                                    ClientName = dt2.Rows[0]["ClientName"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["ClientName"]) : null,
+                                    Colour = dt2.Rows[0]["Colour"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Colour"]) : null,
+                                    Rolls = dt2.Rows[0]["Rolls"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Rolls"]) : null,
+                                    Fabric = dt2.Rows[0]["Fabric"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Fabric"]) : null,
+                                    Weight = dt2.Rows[0]["Weight"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Weight"]) : null,
+                                    WaterPPM = dt2.Rows[0]["WaterPPM"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["WaterPPM"]) : null,
+                                    LotNo = dt2.Rows[0]["LotNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["LotNo"]) : null,
+                                    DCNo = dt2.Rows[0]["DCNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["DCNo"]) : null,
+                                    OrderNo = dt2.Rows[0]["OrderNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["OrderNo"]) : null,
+                                    Water = dt2.Rows[0]["Water"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Water"]) : null,
+                                    GSM = dt2.Rows[0]["GSM"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["GSM"]) : null,
+                                    RPM = dt2.Rows[0]["RPM"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["RPM"]) : null,
+
+                                    Machine = dt3.Rows[0]["Machine"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["Machine"]) : null,
+                                    NoOfChamber = dt3.Rows[0]["NoOfChamber"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["NoOfChamber"]) : null,
+                                    ChamberQty = dt3.Rows[0]["ChamberQty"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["ChamberQty"]) : null,
+
+                                    PreTreatmentProduct = dt4.Rows[0]["PreTreatmentProduct"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["PreTreatmentProduct"]) : null,
+                                    PreTreatmentUnit = dt4.Rows[0]["PreTreatmentUnit"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["PreTreatmentUnit"]) : null,
+                                    PreTreatmentUnitValue = dt4.Rows[0]["PreTreatmentUnitValue"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["PreTreatmentUnitValue"]) : null,
+                                    PreTreatmentQty = dt4.Rows[0]["PreTreatmentQty"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["PreTreatmentQty"]) : null,
+
+                                    DyeProduct = dt5.Rows[0]["DyeProduct"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DyeProduct"]) : null,
+                                    DyeUnit = dt5.Rows[0]["DyeUnit"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DyeUnit"]) : null,
+                                    DyeUnitValue = dt5.Rows[0]["DyeUnitValue"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DyeUnitValue"]) : null,
+                                    DyeQty = dt5.Rows[0]["DyeQty"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DyeQty"]) : null,
+
+                                    DyeBathProduct = dt6.Rows[0]["DyeBathProduct"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["DyeBathProduct"]) : null,
+                                    DyeBathUnit = dt6.Rows[0]["DyeBathUnit"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["DyeBathUnit"]) : null,
+                                    DyeBathUnitValue = dt6.Rows[0]["DyeBathUnitValue"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["DyeBathUnitValue"]) : null,
+                                    DyeBathQty = dt6.Rows[0]["DyeBathQty"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["DyeBathQty"]) : null,
+
+                                    AfterTreatmentProduct = dt7.Rows[0]["AfterTreatmentProduct"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["AfterTreatmentProduct"]) : null,
+                                    AfterTreatmentUnit = dt7.Rows[0]["AfterTreatmentUnit"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["AfterTreatmentUnit"]) : null,
+                                    AfterTreatmentUnitValue = dt7.Rows[0]["AfterTreatmentUnitValue"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["AfterTreatmentUnitValue"]) : null,
+                                    AfterTreatmentQty = dt7.Rows[0]["AfterTreatmentQty"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["AfterTreatmentQty"]) : null,
+
+                                    FinishingProduct = dt8.Rows[0]["FinishingProduct"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingProduct"]) : null,
+                                    FinishingUnit = dt8.Rows[0]["FinishingUnit"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingUnit"]) : null,
+                                    FinishingUnitValue = dt8.Rows[0]["FinishingUnitValue"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingUnitValue"]) : null,
+                                    FinishingQty = dt8.Rows[0]["FinishingQty"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingQty"]) : null,  
+                                };
+
+                                string LotNumber = dt2.Rows[0]["LotNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["LotNo"]) : null;
+                                string customFileName = $"JobCard_{LotNumber}.pdf";
+                                PDFJobCard pdfService = new PDFJobCard();
+                                byte[] pdfContent = null;
+
+                                pdfContent = pdfService.JobOrderPrint(NoOfCopies, data, URL);
+
+                                switch (printType.ToLower())
+                                {
+                                    case "mail":
+                                        var base64PdfContent = Convert.ToBase64String(pdfContent);
+                                        return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
+
+                                    case "download":
+                                        return File(pdfContent, "application/pdf", "JobCard.pdf");
+
+                                    case "preview":
+                                        Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
+                                        return File(pdfContent, "application/pdf");
+
+                                    case "print":
+                                        return File(pdfContent, "application/pdf");
+
+                                    case "whatsapp":
+                                        string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+                                        string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
+
+                                        if (!Directory.Exists(folderPath))
+                                        {
+                                            Directory.CreateDirectory(folderPath);
+                                        }
+
+                                        string fileName = "Job_" + Guid.NewGuid().ToString() + ".pdf";
+                                        string filePath = Path.Combine(folderPath, fileName);
+
+                                        //string fileName = "PurchaseOrder_" + PurchaseOrderNumber + ".pdf";
+                                        //string filePath = Path.Combine(folderPath, fileName);
+
+                                        //if (System.IO.File.Exists(filePath))
+                                        //{
+                                        //    System.IO.File.Delete(filePath);
+                                        //}
+                                        try
+                                        {
+                                            // Write the PDF file to the specified path
+                                            System.IO.File.WriteAllBytes(filePath, pdfContent);
+
+                                            // Return the response with status, message, and the file URL
+                                            string fileurlpath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
+                                            return Json(new { status = true, message = $"PDF saved successfully at {filePath}", data = fileurlpath });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            return Json(new { success = false, message = "Error saving PDF: " + ex.Message });
+                                        }
+
+                                    default:
+                                        return Json(new { success = false, message = "Invalid print type selected." });
+                                }
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "No data found for the given ModuleId." });
+                            }
+                        }
+                        else
+                        {
+                            // Handle case where expected number of tables is not returned
+                            return Json(new { success = false, message = "Expected number of tables not returned from stored procedure." });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                return Json(new { success = false, message = "An error occurred while generating Job Card print.", error = ex.Message });
+            }
+        }
+
+        [HttpGet]
         [Route("GenerateQrPdf")]
         public IActionResult GenerateQrPdf(string URL, string ProductionPlanNo)
         {
@@ -1113,8 +1285,6 @@ namespace TetroONE.Controllers
             List<AttachmentDetails> existList = JsonConvert.DeserializeObject<List<AttachmentDetails>>(formData);
             return existList;
 
-        }
-
-
+        } 
     }
 }

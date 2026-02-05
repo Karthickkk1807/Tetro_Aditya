@@ -7,6 +7,7 @@ var PreTreatmentChemicalProduct = [];
 var AfterTreatmentChemicalProduct = [];
 var DyeBathChemicalProduct = [];
 var DyeChemicalProduct = [];
+var FinishingChemicalProduct = [];
 var ItemListAdd = [];
 var AlreadyAddedIds = [];
 var ProcessTypeDropdown = [];
@@ -132,6 +133,7 @@ $(document).ready(async function () {
         $('.RowOfChemical-Pre').remove();
         $('.RowOfChemical-DyeBath').remove();
         $('.RowOfChemical-Dye').remove();
+        $('.RowOfChemical-Finishing').remove();
 
         //duplicateRowChemicalPre();
         //duplicateRowChemicalAfter();
@@ -143,8 +145,7 @@ $(document).ready(async function () {
         //$('#ChemicalDynamic-DyeBath').hide();
         //$('#ChemicalDynamic-Dye').hide();
          
-        $("#ProductionPlanSaveBtn span:first").text("Save");
-        $("#ProductionPlansaveprintbtn span:first").text("Save & Print");
+        $("#ProductionPlanSaveBtn span:first").text("Save");  
 
         //$('#emptyDiv').removeClass('col-lg-3 col-md-3 col-6').addClass('col-lg-5 col-md-5 col-6');
         //$('#ProductionPlanStatusIdDiv').hide();
@@ -152,6 +153,11 @@ $(document).ready(async function () {
         $('#LoadingDateTimeDiv').hide();
         $('#UnLoadingDateTimeDiv').hide();
         $('#SubtotalRow').hide();
+        $('#MLRWaterLevelDiv').hide();
+        $('#TotalWeightDiv').hide();
+        $('#ColourDiv').hide();
+        $('#MachineDiv').hide();
+        $('#ProductionPlanjobCardBtn').hide(); 
 
         $("#QRCode").html("");
         $("#AddNotesText").val('');
@@ -213,10 +219,14 @@ $(document).ready(async function () {
         $('#AddAttachment, #AddNotes, #MLRWaterLevelDiv').show();
         $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
 
-        $("#ProductionPlanSaveBtn span:first").text("Update");
-        $("#ProductionPlansaveprintbtn span:first").text("Update & Print");
-
+        $("#ProductionPlanSaveBtn span:first").text("Update");  
+        $('#ProductionPlanjobCardBtn').show();
+ 
         $('.Status-Div').show();
+        $('#MLRWaterLevelDiv').show();
+        $('#TotalWeightDiv').show();
+        $('#ColourDiv').show();
+        $('#MachineDiv').show(); 
         $('#SaveProductionPlan').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
 
         AlreadyAddedIds = [];
@@ -231,10 +241,12 @@ $(document).ready(async function () {
         $('.RowOfChemical-Pre').remove();
         $('.RowOfChemical-DyeBath').remove();
         $('.RowOfChemical-Dye').remove(); 
+        $('.RowOfChemical-Finishing').remove(); 
         $('#ChemicalDynamic-Pre').show();
         $('#ChemicalDynamic-After').hide();
         $('#ChemicalDynamic-DyeBath').hide();
         $('#ChemicalDynamic-Dye').hide();
+        $('#ChemicalDynamic-Finishing').hide();
 
         //$('#emptyDiv').removeClass('col-lg-5 col-md-5 col-6').addClass('col-lg-3 col-md-3 col-6');
         //$('#ProductionPlanStatusIdDiv').show();
@@ -257,11 +269,13 @@ $(document).ready(async function () {
                 DyeChemicalProduct = [];
                 DyeBathChemicalProduct = [];
                 AfterTreatmentChemicalProduct = [];
+                FinishingChemicalProduct = [];
 
                 PreTreatmentChemicalProduct = data[0];
                 DyeChemicalProduct = data[1];
                 DyeBathChemicalProduct = data[2];
                 AfterTreatmentChemicalProduct = data[3];
+                FinishingChemicalProduct = data[4];
 
                 var fnData = Common.getDateFilter('dateDisplay2');
                 Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: parseInt(ProductionPlanId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanNotNullSuccess, null);
@@ -312,7 +326,7 @@ $(document).ready(async function () {
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        var tabOrder = ["Pre-Treatment", "Dye", "DyeBath", "After-Treatment"];
+        var tabOrder = ["Pre-Treatment", "Dye", "DyeBath", "After-Treatment", "Finishing"];
 
         var currentTabText = titleForHeaderPopRawMatrialTab ||
             $('#ChemicalModal .navbar-tab.active').text().trim();
@@ -411,8 +425,8 @@ $(document).ready(async function () {
                 MachineId: parseInt($('#MachineId').val()) || null,
                 MLR: parseFloat($('#MLR').val()) || null,
                 WaterLevel: parseInt($('#WaterLevel').val()) || null,
-                LoadingDateTime: $('#LoadingDateTime').val() || null,
-                UnLoadingDateTime: $('#UnLoadingDateTime').val() || null,
+                //LoadingDateTime: $('#LoadingDateTime').val() || null,
+                //UnLoadingDateTime: $('#UnLoadingDateTime').val() || null,
                 ProductionPlanStatusId: parseInt($('#ProductionPlanStatusId').val()) || null,
                 Comments: $('#AddNotesText').val() || null,
                 PreparedBy: parseInt($('#PreparedBy').val()) || null
@@ -474,7 +488,7 @@ $(document).ready(async function () {
                 });
             });
 
-            // ---------- AFTER-TREATMENT (ProcessType = 2) ----------
+            // ---------- DYE (ProcessType = 2) ----------
             $('#ChemicalDynamic-Dye .RowOfChemical-Dye').each(function () {
                 var $row = $(this);
 
@@ -489,7 +503,7 @@ $(document).ready(async function () {
                 });
             });
 
-            // ---------- AFTER-TREATMENT (ProcessType = 3) ----------
+            // ---------- DYEBATH (ProcessType = 3) ----------
             $('#ChemicalDynamic-DyeBath .RowOfChemical-DyeBath').each(function () {
                 var $row = $(this);
 
@@ -504,7 +518,7 @@ $(document).ready(async function () {
                 });
             });
 
-            // ---------- AFTER-TREATMENT (ProcessType = 2) ----------
+            // ---------- AFTER-TREATMENT (ProcessType = 4) ----------
             $('#ChemicalDynamic-After .RowOfChemical-After').each(function () {
                 var $row = $(this);
 
@@ -512,6 +526,21 @@ $(document).ready(async function () {
                     ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
                     ProcessType: 4,
                     ChemicalId: parseInt($row.find('.ProductIdAfter').val()) || null,
+                    ChemicalType: parseInt($row.find('.DysType').val()) || null,
+                    GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
+                    TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
+                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
+                });
+            });
+
+            // ---------- FINISHING (ProcessType = 5) ----------
+            $('#ChemicalDynamic-Finishing .RowOfChemical-Finishing').each(function () {
+                var $row = $(this);
+
+                ProductionPlanChemicalRequirementDetails.push({
+                    ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
+                    ProcessType: 5,
+                    ChemicalId: parseInt($row.find('.ProductIdFinishing').val()) || null,
                     ChemicalType: parseInt($row.find('.DysType').val()) || null,
                     GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
                     TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
@@ -590,7 +619,7 @@ function activateChemicalTab(tabText) {
         }
     });
 
-    $('#ChemicalDynamic-Pre, #ChemicalDynamic-Dye, #ChemicalDynamic-DyeBath, #ChemicalDynamic-After').hide();
+    $('#ChemicalDynamic-Pre, #ChemicalDynamic-Dye, #ChemicalDynamic-DyeBath, #ChemicalDynamic-After, #ChemicalDynamic-Finishing').hide();
 
     if (tabText === "Pre-Treatment") {
         $('#ChemicalDynamic-Pre').show();
@@ -648,6 +677,18 @@ function activateChemicalTab(tabText) {
                     }
                 });
         }
+    } else if (tabText === "Finishing") {
+        $('#ChemicalDynamic-Finishing').show();
+        if ($('.RowOfChemical-Finishing').length === 0) {
+            Common.ajaxCall("GET", "/Productions/GetDefaultChemicalDetails",
+                { ProcessType: 5, ProductionPlanId: parseInt(ProductionPlanId), ColourValue: null },
+                function (response) {
+                    if (response.status) {
+                        FinishingChemicalProduct = JSON.parse(response.data);
+                        duplicateRowChemicalFinishing();
+                    }
+                });
+        }
     }
 }
 
@@ -663,6 +704,9 @@ function validateCurrentChemicalTab() {
 
     if ($('#ChemicalDynamic-After').is(':visible'))
         return validateChemicalTab('#ChemicalDynamic-After', '.RowOfChemical-After').valid;
+
+    if ($('#ChemicalDynamic-Finishing').is(':visible'))
+        return validateChemicalTab('#ChemicalDynamic-Finishing', '.RowOfChemical-Finishing').valid;
 
     return true;
 } 
@@ -747,13 +791,13 @@ async function GetProductionPlanNotNullSuccess(response) {
             });
         }
 
-        if (header.LoadingDateTime == null || header.LoadingDateTime == '') {
-            SetDateFroLoadingAndUnLoading();
-        }
+        //if (header.LoadingDateTime == null || header.LoadingDateTime == '') {
+        //    SetDateFroLoadingAndUnLoading();
+        //}
 
         Inventory.toggleField(header.Comments, "#AddNotesText", "#AddNotes", "#AddNotesLable", "HideNotesLable");
-        Inventory.toggleFieldForAttachment(data[5][0]?.AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
-        Inventory.bindAttachments(data[5]);
+        Inventory.toggleFieldForAttachment(data[4][0]?.AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
+        Inventory.bindAttachments(data[4]);
 
         if (data[1] && data[1].length > 0) {
 
@@ -787,7 +831,7 @@ async function GetProductionPlanNotNullSuccess(response) {
                     <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
                     <td><input type="text" class="form-control NoOfRolls" value="${item.NoOfRolls}" disabled></td>
                     <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
-                    <td><input type="text" class="form-control qty" value="${item.Quantity || ''}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
+                    <td><input type="text" class="form-control qty" value="${item.Quantity.toFixed(3) || ''}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
                     <td>
                         <select multiple class="form-control Process" id="processRoute${numberIncr}" name="processRoute${numberIncr}">
                             ${processDropdownOptions}
@@ -814,12 +858,15 @@ async function GetProductionPlanNotNullSuccess(response) {
             RenumberRows();
         }
 
-        if (data[4] && data[4].length > 0 && data[4][0].ProductionPlanChemicalRequirementId != null) {
+        if (data[3] && data[3].length > 0 && data[3][0].ProductionPlanChemicalRequirementId != null) {
             // Clear existing rows
             $('#ChemicalDynamic-Pre').html('');
             $('#ChemicalDynamic-After').html('');
+            $('#ChemicalDynamic-Dye').html('');
+            $('#ChemicalDynamic-DyeBath').html('');
+            $('#ChemicalDynamic-Finishing').html('');
 
-            data[4].forEach(item => {
+            data[3].forEach(item => {
                 if (item.ProcessType === 1) {
                     createChemicalRow('Pre', item);
                 } else if (item.ProcessType === 2) {
@@ -828,6 +875,8 @@ async function GetProductionPlanNotNullSuccess(response) {
                     createChemicalRow('DyeBath', item);
                 } else if (item.ProcessType === 4) {
                     createChemicalRow('After', item);
+                }else if (item.ProcessType === 5) {
+                    createChemicalRow('Finishing', item);
                 }
             });
             $('#loader-pms').hide();
@@ -836,6 +885,7 @@ async function GetProductionPlanNotNullSuccess(response) {
             $('.RowOfChemical-Pre').remove();
             $('.RowOfChemical-DyeBath').remove();
             $('.RowOfChemical-Dye').remove();
+            $('.RowOfChemical-Finishing').remove();
 
             $('#loader-pms').hide();
 
@@ -894,6 +944,9 @@ function createChemicalRow(rowType, chemicalData) {
             break;
         case 'DyeBath':
             products = Array.isArray(DyeBathChemicalProduct) ? DyeBathChemicalProduct : [];
+            break;
+        case 'Finishing':
+            products = Array.isArray(FinishingChemicalProduct) ? FinishingChemicalProduct : [];
             break;
     }
 
@@ -961,6 +1014,9 @@ function createChemicalRow(rowType, chemicalData) {
             break;
         case 'DyeBath':
             updateRemoveChemicalDyeBath();
+            break;
+        case 'Finishing':
+            updateRemoveChemicalFinishing();
             break;
     };
 }
@@ -1223,7 +1279,7 @@ $(document).on("click", "#BtnAdd", function () {
                         <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
                         <td><input type="text" class="form-control NoOfRolls" value="${item.NoOfRolls}" disabled></td>
                         <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
-                        <td><input type="text" class="form-control qty" value="${item.AvailableQuantity}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
+                        <td><input type="text" class="form-control qty" value="${item.AvailableQuantity.toFixed(3)}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
                         <td>
                             <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
                             </select>
@@ -1275,10 +1331,20 @@ $(document).on("click", "#BtnAdd", function () {
 
             ItemListAdd = [];
 
-            if (AlreadyAddedIds.length > 0) {
-                $('#MLRWaterLevelDiv').show();
+            if (AlreadyAddedIds.length > 0 && ProductionPlanId != 0) {
+                $('#MLRWaterLevelDiv').show(); 
             } else {
                 $('#MLRWaterLevelDiv').hide();
+            }
+
+            if (AlreadyAddedIds.length > 0) { 
+                $('#TotalWeightDiv').show();
+                $('#ColourDiv').show();
+                $('#MachineDiv').show(); 
+            } else { 
+                $('#TotalWeightDiv').hide();
+                $('#ColourDiv').hide();
+                $('#MachineDiv').hide(); 
             }
 
             $("#ProductionPlanAddItemModal").hide();
@@ -1308,11 +1374,23 @@ $(document).on('click', '.DynremoveBtn', function () {
 
     if (AlreadyAddedIds.length !== 0) {
         $('#MLRWaterLevelDiv').show();
+        $('#TotalWeightDiv').show();
+        $('#ColourDiv').show();
+        $('#MachineDiv').show(); 
     } else {
         $('#MLRWaterLevelDiv').hide();
         $('#MLR').val('');
+        $('#TotalWeightDiv').hide();
+        $('#ColourDiv').hide();
+        $('#MachineDiv').hide(); 
     }
-
+     
+    if (AlreadyAddedIds.length > 0 && ProductionPlanId != 0) {
+        $('#MLRWaterLevelDiv').show();
+    } else {
+        $('#MLRWaterLevelDiv').hide();
+    }
+     
     RenumberRows();
     UpdateMainTableQuantity();
 });
@@ -1514,23 +1592,67 @@ function validateChemicalTab(containerSelector, rowSelector) {
     };
 }
 
+function validateChemicalTab1(containerSelector, rowSelector) {
+
+    var isValid = true;
+
+    $(containerSelector).find(rowSelector + ':visible').each(function () {
+
+        $(this).find('input, select').each(function () {
+
+            // Skip non-required
+            if (!$(this).prop('required')) return true;
+
+            var value = $(this).val();
+
+            if (value === null || value.trim() === "") {
+                isValid = false;
+                $(this).addClass('error');
+            }
+            else if (!this.checkValidity()) {
+                isValid = false;
+                $(this).addClass('error');
+            }
+            else {
+                $(this).removeClass('error');
+            }
+
+        });
+
+    });
+
+    return {
+        valid: isValid
+    };
+}
 
 $(document).on('click', '#BtnAddChemical', function () {
 
-    var pre = validateChemicalTab('#ChemicalDynamic-Pre', '.RowOfChemical-Pre');
-    var dye = validateChemicalTab('#ChemicalDynamic-Dye', '.RowOfChemical-Dye');
-    var dyeBath = validateChemicalTab('#ChemicalDynamic-DyeBath', '.RowOfChemical-DyeBath');
-    var after = validateChemicalTab('#ChemicalDynamic-After', '.RowOfChemical-After');
+    var tabOrder = [
+        { container: '#ChemicalDynamic-Pre', rowClass: '.RowOfChemical-Pre', name: "Pre-Treatment" },
+        { container: '#ChemicalDynamic-Dye', rowClass: '.RowOfChemical-Dye', name: "Dye" },
+        { container: '#ChemicalDynamic-DyeBath', rowClass: '.RowOfChemical-DyeBath', name: "DyeBath" },
+        { container: '#ChemicalDynamic-After', rowClass: '.RowOfChemical-After', name: "After-Treatment" },
+        { container: '#ChemicalDynamic-Finishing', rowClass: '.RowOfChemical-Finishing', name: "Finishing" }
+    ];
 
-    var allValid =
-        pre.valid && pre.filled &&
-        dye.valid && dye.filled &&
-        dyeBath.valid && dyeBath.filled &&
-        after.valid && after.filled;
+    for (var i = 0; i < tabOrder.length; i++) {
 
-    if (!allValid) {
-        Common.errorMsg("Please fill all required fields in all tabs.");
-        return;
+        var tab = tabOrder[i];
+
+        if ($(tab.rowClass).length === 0) {
+            Common.errorMsg(tab.name + " tab has no rows.");
+            activateChemicalTab(tab.name);
+            return false;
+        }
+
+        var result = validateChemicalTab1(tab.container, tab.rowClass);
+
+        if (!result.valid) {
+            Common.errorMsg("Please fill all required fields in " + tab.name + " tab.");
+            activateChemicalTab(tab.name);
+            return false;
+        }
     }
 
     $('#ChemicalModal').hide();
@@ -1544,13 +1666,14 @@ $(document).on('keyup input change', '#ProductionPlanProductTablebody .qty, #MLR
 
 // Dynamically handle input, change, or keyup on any chemical/dye input or type selector
 $(document).on('keyup input change',
-    '#ChemicalDynamic-Pre input, #ChemicalDynamic-After input, #ChemicalDynamic-Dye input, #ChemicalDynamic-DyeBath input,' +
-    '#ChemicalDynamic-Pre .DysType, #ChemicalDynamic-After .DysType, #ChemicalDynamic-Dye .DysType, #ChemicalDynamic-DyeBath .DysType', function () {
-        let $row = $(this).closest('.RowOfChemical-Pre, .RowOfChemical-After, .RowOfChemical-Dye, .RowOfChemical-DyeBath');
+    '#ChemicalDynamic-Pre input, #ChemicalDynamic-After input, #ChemicalDynamic-Dye input, #ChemicalDynamic-DyeBath input, #ChemicalDynamic-Finishing input,' +
+    '#ChemicalDynamic-Pre .DysType, #ChemicalDynamic-After .DysType, #ChemicalDynamic-Dye .DysType, #ChemicalDynamic-DyeBath .DysType, #ChemicalDynamic-Finishing .DysType',
+    function () {
+        let $row = $(this).closest('.RowOfChemical-Pre, .RowOfChemical-After, .RowOfChemical-Dye, .RowOfChemical-DyeBath, .RowOfChemical-Finishing');
         if (!$row.length) return;
 
         // Decide whether it's a chemical or dye row
-        if ($row.hasClass('RowOfChemical-Pre') || $row.hasClass('RowOfChemical-After') || $row.hasClass('RowOfChemical-Dye') || $row.hasClass('RowOfChemical-DyeBath')) {
+        if ($row.hasClass('RowOfChemical-Pre') || $row.hasClass('RowOfChemical-After') || $row.hasClass('RowOfChemical-Dye') || $row.hasClass('RowOfChemical-DyeBath') || $row.hasClass('RowOfChemical-Finishing')) {
             calculateChemicalQty($row);
         } else if ($row.hasClass('RowOfDye')) {
             calculateDyeQty($row);
@@ -2073,6 +2196,119 @@ function removeRowRowChemicalDye(button) {
     refreshProductDropdowns(".ProductSelectDye");
 }
 
+function duplicateRowChemicalFinishing() {
+
+    if (FinishingChemicalProduct == null || FinishingChemicalProduct.length === 0 || FinishingChemicalProduct[0].length === 0) {
+        return;
+    }
+
+    const defaultChemicals = FinishingChemicalProduct[0].filter(c => c.IsDefault === true);
+
+    if (defaultChemicals.length === 0) {
+        duplicateRowChemicalDyeTesting();
+        return;
+    }
+
+    defaultChemicals.forEach(function (chemical) {
+
+        let numberIncr = Math.random().toString(36).substring(2);
+        var rowadd = $('.RowOfChemical-Finishing').length;
+
+        var FinishingChemicalProductSelectOptions = "";
+        var defaultOption = '<option value="">--Select--</option>';
+
+        FinishingChemicalProductSelectOptions = FinishingChemicalProduct[0].map(function (ChemicalId) { return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`; }).join('');
+
+        var htmlRow = `
+            <div class="row RowOfChemical-Finishing">
+                <label class="ProductionPlanChemicalRequirementId d-none"></label>
+
+                <div class="col-md-5 col-lg-5 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                        <select class="form-control ProductSelectFinishing ProductIdFinishing" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                            ${defaultOption}${FinishingChemicalProductSelectOptions}
+                        </select>
+                    </div>
+                </div>
+                  
+                 <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                      <div class="form-group">
+                         <label class="GPLClass">Value<span id="Asterisk">*</span></label>
+                          <div id="ember325" class="input-group ember-view" style="gap: 8px;">
+                               <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                                  <option value="2">%</option>
+                                  <option value="1">GPL</option>
+                               </select>
+                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required/>
+                          </div>
+                      </div>
+                  </div>
+              
+                 <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                        <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                        <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalFinishingTesting(this)" style="position: absolute; top: 22px; right: 14px;">
+                            <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                        </button>
+                    </div>
+                    <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                        <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemoveFinishing mt-0" type="button" onclick="removeRowRowChemicalFinishing(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        $('#ChemicalDynamic-Finishing').append(htmlRow);
+
+        // Set product
+        $(`#ProductId${numberIncr}`).val(chemical.ChemicalId);
+
+        // Set % or GPL based on DefaultUnit
+        $(`#DysType${numberIncr}`).val(chemical.DefaultUnit);
+
+        // Set input value
+        $(`#GPL${numberIncr}`).val(chemical.UnitValue !== null ? Number(chemical.UnitValue).toFixed(3) : '');
+
+        // Automatically calculate Qty based on DefaultUnit and UnitValue
+        calculateChemicalQty($(`#Qty${numberIncr}`).closest('.RowOfChemical-Finishing'));
+    });
+
+    updateRemoveChemicalFinishing();
+}
+
+function updateRemoveChemicalFinishing() {
+    var rows = $('.RowOfChemical-Finishing');
+
+    rows.each(function (index) {
+        var removeButtonDiv = $(this).find('.RowOfChemicalRemoveFinishing');
+        var labels = $(this).find('.ProductClass, .GPLClass, .QtyClass');
+
+        if (index === 0) {
+            labels.show();
+            removeButtonDiv.hide();
+        } else {
+            labels.hide();
+            removeButtonDiv.show();
+        }
+    });
+    refreshProductDropdowns(".ProductSelectDye");
+}
+
+function removeRowRowChemicalFinishing(button) {
+    var totalRows = $('.RowOfChemical-Finishing').length;
+    if (totalRows > 1) {
+        $(button).closest('.RowOfChemical-Finishing').remove();
+    }
+    updateRemoveChemicalFinishing();
+    refreshProductDropdowns(".ProductSelectDye");
+}
+
 function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
     if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
         try {
@@ -2313,8 +2549,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (files.length > 0) {
             preview.style.display = 'block';
-
-
+             
             for (const file of files) {
                 const fileItem = document.createElement('li');
                 const fileName = document.createElement('span');
@@ -2389,7 +2624,7 @@ $(document).keydown(function (event) {
     // Handling alt + v
     if (event.altKey && event.key === 'v') {
         event.preventDefault();
-        $('#ProductionPlanPreviewPorder').click();
+        $('#ProductionPlanjobCardBtn').click();
     }
 
     // Handling Ctrl + s
@@ -2684,6 +2919,64 @@ function duplicateRowChemicalDyeTesting() {
     updateRemoveChemicalDye();
 }
 
+function duplicateRowChemicalFinishingTesting() {
+    let numberIncr = Math.random().toString(36).substring(2);
+    var rowadd = $('.RowOfChemical-Finishing').length;
+
+    var FinishingChemicalSelectOptions = "";
+    var defaultOption = '<option value="">--Select--</option>';
+
+    if (FinishingChemicalProduct != null && FinishingChemicalProduct.length > 0 && FinishingChemicalProduct[0].length > 0) {
+        FinishingChemicalSelectOptions = FinishingChemicalProduct[0].map(function (ChemicalId) {
+            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+        }).join('');
+    }
+
+    var htmlRow = `
+        <div class="row RowOfChemical-Finishing">
+            <label class="ProductionPlanChemicalRequirementId d-none"></label>
+            <div class="col-md-5 col-lg-5 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="ProductClass">Product<span id="Asterisk">*</span></label>
+                    <select class="form-control ProductSelectFinishing ProductIdDye" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
+                        ${defaultOption}${FinishingChemicalSelectOptions}
+                    </select>
+                </div>
+            </div> 
+            <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                    <div class="form-group">
+                    <label class="GPLClass">Value<span id="Asterisk">*</span></label>
+                        <div id="ember325" class="input-group ember-view" style="gap: 8px;">
+                            <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                                <option value="2">%</option>
+                                <option value="1">GPL</option>
+                            </select>
+                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required />
+                        </div>
+                    </div>
+            </div> 
+            <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                <div class="form-group">
+                    <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemicalFinishing(this)" style="position: absolute; top: 22px; right: 14px;">
+                        <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
+                    </button>
+                </div>
+                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemoveFinishing mt-0" type="button" onclick="removeRowRowChemicalFinishing(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    `;
+    $('#ChemicalDynamic-Finishing').append(htmlRow);
+    updateRemoveChemicalFinishing();
+}
+
 /*========================================================Status Tracking=================================================================*/
 
 function StatusActivitySuccess(response) {
@@ -2812,6 +3105,84 @@ $(document).on('click', '#ProductionPlanPreviewbtn', function () {
         }
     });
 });
+
+$(document).on('click', '#ProductionPlanjobCardBtn', function () {
+
+    $('#loader-pms').show();
+    var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+
+    var EditData = {
+        ModuleId: parseInt(ProductionPlanId),
+        NoOfCopies: 1,
+        printType: "Preview",
+        Url: scanUrl
+    };
+
+    $.ajax({
+        type: 'GET',
+        url: '/Productions/JobCardPrint',
+        data: EditData,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function (response) {
+
+            $('#ShareDropdownitems').hide();
+
+            var blob = new Blob([response], { type: 'application/pdf' });
+            var blobUrl = URL.createObjectURL(blob);
+
+            var printType = EditData.printType;
+
+            if (printType === "Preview") {
+
+                var newTab = window.open();
+                if (newTab) {
+                    newTab.document.write(`
+                            <html>
+                            <head>
+                                <title>Purchase Order Preview</title>
+                            </head>
+                            <body style="margin:0; padding:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
+                    newTab.document.close();
+                } else {
+                    Common.warningMsg("Popup blocked. Please allow popups.");
+                }
+
+            } else if (printType === "Download") {
+
+                var link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'Purchase Order.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+            } else if (printType === "Print") {
+
+                var iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = blobUrl;
+                document.body.appendChild(iframe);
+                iframe.onload = function () {
+                    iframe.contentWindow.print();
+                };
+            }
+
+            $('#loader-pms').hide();
+        },
+        error: function () {
+            $('#loader-pms').hide();
+            Common.errorMsg("Print failed");
+        }
+    });
+});
+
+
 
 /*GenerateQrContectPdf*/
 //$(document).on('click', '#ProductionPlanPreviewbtn', function () {

@@ -324,4 +324,53 @@ namespace TetroONE.Models
         public DataTable ProductItemData { get; set; }
     }
 
+    public class JobCardPrint
+    {
+        public string? CompanyLogo { get; set; }
+        public string? CompanyName { get; set; }
+
+        public string? Date { get; set; }
+        public string? SFNo { get; set; }
+        public string? ClientName { get; set; }
+        public string? Colour { get; set; }
+        public string? Rolls { get; set; }
+        public string? Fabric { get; set; }
+        public string? Weight { get; set; }
+        public string? WaterPPM { get; set; }
+        public string? LotNo { get; set; }
+        public string? DCNo { get; set; }
+        public string? OrderNo { get; set; }
+        public string? Water { get; set; }
+        public string? GSM { get; set; }
+        public string? RPM { get; set; }
+
+        public string? Machine { get; set; }
+        public string? NoOfChamber { get; set; }
+        public string? ChamberQty { get; set; }
+        
+        public string? PreTreatmentProduct { get; set; }
+        public string? PreTreatmentUnit { get; set; }
+        public string? PreTreatmentUnitValue { get; set; }
+        public string? PreTreatmentQty { get; set; }
+
+        public string? DyeProduct { get; set; }
+        public string? DyeUnit { get; set; }
+        public string? DyeUnitValue { get; set; }
+        public string? DyeQty { get; set; }
+
+        public string? DyeBathProduct { get; set; }
+        public string? DyeBathUnit { get; set; }
+        public string? DyeBathUnitValue { get; set; }
+        public string? DyeBathQty { get; set; }
+
+        public string? AfterTreatmentProduct { get; set; }
+        public string? AfterTreatmentUnit { get; set; }
+        public string? AfterTreatmentUnitValue { get; set; }
+        public string? AfterTreatmentQty { get; set; }
+
+        public string? FinishingProduct { get; set; }
+        public string? FinishingUnit { get; set; }
+        public string? FinishingUnitValue { get; set; }
+        public string? FinishingQty { get; set; }
+    }
 }

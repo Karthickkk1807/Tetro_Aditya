@@ -259,3 +259,7 @@ textarea.form-controltext {
     overflow-x: auto;
     overflow-y: hidden;
 }
+
+.modal-Chem {
+    max-width: 41%; /* 80% of screen width */
+}
