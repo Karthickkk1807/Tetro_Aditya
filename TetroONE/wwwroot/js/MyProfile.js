@@ -527,7 +527,7 @@ function ManageUserSuccess(response) {
                     }
                     let displayName = user.UserName.length > 17 ? user.UserName.substring(0, 18) + ". . .": user.UserName;
                     manageUser += `
-                    <div class="col-sm-6 col-md-4 managee-user-sepe-grid">
+                    <div class="col-sm-6 col-md-6 col-lg-4 managee-user-sepe-grid">
                         <a href="#" onclick="manageUserClick(${user.UserId}); return false;">
                             <div class="box_shadow card-stats card-round p-0" style="margin-bottom: 20px !important;">
                                 <div class="card-body p-0-imp" style="box-shadow: 5px;background-color: ${backgroundColor};">
