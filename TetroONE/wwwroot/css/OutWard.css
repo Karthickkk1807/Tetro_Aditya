@@ -1,0 +1,15 @@
+﻿
+@media screen and (max-width: 991px){
+    #ShipFromColumn {
+        border-top: 1px solid #c7c7c7;
+    }
+    #ShipToColumn {
+        border-top: 1px solid #c7c7c7;
+    }
+}
+
+.OutWardtable-scroll {
+    max-height: 229px;
+    overflow-y: auto;
+    display: block;
+}

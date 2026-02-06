@@ -555,9 +555,90 @@ body > div.wrapper > div.main-panel > div.container-fluid > div > div.col-lg-8.c
     width: 100% !important
 }
 
-@media screen and (max-width: 800px){
-    .filter-Column{
+
+/*@media (max-width:816px) {
+
+    #filter-Column {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #AdminDatePicker {
+        width: 100%;
         flex-wrap: wrap;
     }
-}
 
+    #searchColAdmin {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+}*/
+
+/*@media (max-width:466px) {
+
+    #AdminDatePicker {
+        display: grid;
+        grid-template-columns: auto auto;*/ /* ⭐ key change */
+        /*justify-content: flex-start;*/ /* ⭐ stop stretching */
+        /*gap: 10px;
+    }
+
+    .employeeTypeCol,
+    .dropdown,
+    .ftdate {
+        width: auto;*/ /* ⭐ remove full width pushing */
+    /*}
+}*/
+
+
+/*last changed*/
+/*@media (max-width:466px) {
+
+
+    #AdminDatePicker {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+    }
+
+
+    .employeeTypeCol {
+        width: 100%;
+    }
+
+    .dropdown {
+        grid-column: 1 / 2;
+    }
+
+
+    .ftdate {
+        grid-column: 2 / 3;
+        width: 100%;
+    }
+
+    #fromtodateCol .d-flex {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    #frmDate,
+    #toDate {
+        width: 100%;
+    }
+
+
+    #searchColAdmin {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    #searchBox {
+        flex: 1;
+    }
+}
+*/

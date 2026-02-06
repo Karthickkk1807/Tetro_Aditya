@@ -3,8 +3,10 @@
     UserAccessOption access = GenericTetroONE.GetUserAccessSession(UserScreen.OutWard, Context.Session);
     var LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
 }
-<style>
 
+<link href="~/css/outward.css" rel="stylesheet" />
+
+<style>  
     #OutWardTable {
         width: 100% !important;
         margin-top: 12px !important;
@@ -638,34 +640,34 @@
                         <div class="Statuscolumn col-12 order-3">
                             <form id="FormStatus" novalidate="novalidate">
                                 <div class="row" style="margin-top: 5px;">
-                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6" id="emptyDiv">
+                                    <div class="col-sm-12 col-lg-4 col-md-12 col-12" id="emptyDiv">
                                     </div>
-                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                    <div class="col-md-3 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Vehicle No<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: TN36KS8055" id="VehicleNO" name="VehicleNO" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                    <div class="col-md-3 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Driver Name</label>
                                             <input type="text" class="form-control" placeholder="Ex: Arun" id="DriverName" name="DriverName" />
                                         </div>
                                     </div>
-                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                    <div class="col-md-3 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Packing Slip No<span id="Asterisk">*</span></label>
                                             <input type="text" class="form-control" placeholder="Ex: PACK/NO/2021" id="PackingSlipNo" name="PackingSlipNo" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                    <div class="col-md-3 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>OutWard By<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="OutWardBy" name="OutWardBy" required>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6" id="OutWardStatusIdDiv">
+                                    <div class="col-md-3 col-lg-2 col-sm-6 col-6" id="OutWardStatusIdDiv">
                                         <div class="form-group">
                                             <label>Status<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="OutWardStatus" name="OutWardStatus" required>
