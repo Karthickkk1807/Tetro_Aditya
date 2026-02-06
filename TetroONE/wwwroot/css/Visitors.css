@@ -56,3 +56,15 @@ textarea.form-controltext {
 #LookForwardHoleDivHide > div.form-check.d-flex.align-items-center.mt-2.maxdevicecolumns > label {
     margin-right: 10px;
 }
+
+.intimealign{
+margin-left:-9px !important
+}
+
+.intime{
+margin-left:10px !important
+}
+
+.outtime{
+padding-right:16px !important;
+}
