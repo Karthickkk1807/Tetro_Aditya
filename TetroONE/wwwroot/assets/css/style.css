@@ -13016,7 +13016,7 @@ div.table-responsive > div.dataTables_wrapper > div.row {
     }
 
     .navbar-header .navbar-nav {
-        width: 100%;
+        width: 245px;
         flex-direction: row;
         justify-content: center;
         margin-left: 0px !important;
@@ -13073,13 +13073,13 @@ div.table-responsive > div.dataTables_wrapper > div.row {
         }
 }
 
+}
 /*@media screen and (min-width : 640px) and (max-width : 991px) {
     #UserFranchiseMappingId {
         width: 10em !important;
         
     }
 }*/
-
 @media screen and (min-width: 856px) {
     .mail-wrapper .aside-nav {
         display: block !important;
@@ -14856,6 +14856,7 @@ td.vcenter {
     width: 100%;
     max-width: 200px;
     display: inline-flex;
+    justify-content: end;
 }
 
 .searchbar--max-width {
