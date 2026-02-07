@@ -75,6 +75,7 @@ $(document).ready(function () {
     var windowWidth = $(window).width();
     if (windowWidth < 576) {
         $('.month-text').text("");
+        //$('.month-text').text("");
     }
 
     $(document).on('click', '.dropdown-item', function () {
