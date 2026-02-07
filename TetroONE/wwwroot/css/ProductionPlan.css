@@ -263,3 +263,9 @@ textarea.form-controltext {
 .modal-Chem {
     max-width: 41%; /* 80% of screen width */
 }
+
+.Purchasetable-container, .table-wrapper {
+    overflow-y: auto;
+    display: block;
+}
+

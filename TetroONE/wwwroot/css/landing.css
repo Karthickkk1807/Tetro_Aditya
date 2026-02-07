@@ -677,3 +677,22 @@ table {
         display: none;
     }
 }
+
+@media (max-width:576px) {
+    .searchbar__input {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) and (min-width: 497px) {
+    .topbar-nav{
+        width: 245px;
+    }
+}
+
+@media (max-width: 576px) {
+    .topheader {
+        display:flex !important;
+        justify-content: center !important;
+    }
+}
