@@ -23,8 +23,21 @@ table.dataTable {
     max-height: 354px !important;
 }
 
-@media screen and (max-width : 420px) {
-    .leavesearch {
-        margin-top: 5px !important;
+@media (max-width: 576px) {
+    .searchbar__input {
+        display: block !important;
     }
 }
+
+@media screen and (max-width : 420px) {
+    .searchbar {
+        margin-top: 7px ;
+    }
+}
+
+
+/*@media (max-width : 436px) {
+    .searchbar {
+        margin-top: 7px;
+    }
+}*/
