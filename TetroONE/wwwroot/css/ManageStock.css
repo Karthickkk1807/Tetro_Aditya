@@ -73,44 +73,7 @@
     height: 36px;
 }
 
-@media (max-width: 576px) {
 
-    /* Stack top + bottom sections */
-    #filter-Column {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    /* Month picker full width */
-    .month-piker {
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: end;
-    }
-
-    /* Move search bar to next line */
-    #filter-Column > .d-flex.justify-content-end {
-        width: 100%;
-        justify-content: flex-end;
-        margin-top: 10px;
-    }
-
-    /* Prevent date inputs from shrinking */
-    #fromtodateCol {
-        display: flex;
-        flex-wrap: nowrap;
-    }
-
-        #fromtodateCol .col-6 {
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
-
-    /* Fix search bar width */
-    .searchbar {
-        max-width: 220px;
-    }
-}
 
 
 
