@@ -28,7 +28,7 @@ $(document).ready(function () {
     Common.ajaxCall("GET", "/Common/Getlanding", null, landingsusccess, null);
 
 });
- 
+
 $(document).ready(function () {
     var currentURL = window.location.pathname;
 
@@ -75,7 +75,6 @@ $(document).ready(function () {
     var windowWidth = $(window).width();
     if (windowWidth < 576) {
         $('.month-text').text("");
-        //$('.month-text').text("");
     }
 
     $(document).on('click', '.dropdown-item', function () {

@@ -548,6 +548,45 @@ $(document).ready(function () {
             }, null);
         }
     });
+
+
+
+    var windowWidth = $(window).width();
+    if (windowWidth < 576) {
+        $('.month-text').text("");
+        //$('.month-text').text("");
+    }
+
+    $(document).on('click', '.dropdown-item', function () {
+        var selectedText = $(this).text();
+        if (windowWidth > 576) {
+            $('.month-text').text(selectedText);
+        } else {
+            $('.month-text').text("");
+        }
+        $('.dropdown-menu .dropdown-item').removeClass('active');
+        $(this).addClass('active');
+        $('.dropdown-menu').removeClass('show');
+
+        if (selectedText == "Custom") {
+            $('#monthPickerCol').hide();
+            $('#fromtodateCol').show();
+
+            if (windowWidth <= 600) {
+                $("#filter-Column").removeClass("Date-SearchColumn");
+                $("#Human-Filter-Column").removeClass("date-column");
+            } else {
+                $("#Human-Filter-Column").addClass("Date-SearchColumn");
+                $("#Human-Filter-Column").addClass("date-column");
+            }
+        } else {
+            $('#monthPickerCol').show();
+            $('#fromtodateCol').hide();
+            $("#filter-Column").addClass("Date-SearchColumn");
+            $("#Human-Filter-Column").addClass("date-column");
+        }
+    });
+
 });
 
 function getManualSuccess(response) {
@@ -2005,3 +2044,98 @@ function bindTableManual(tableid, data, columns, scrollpx) {
     var tableId = $('#' + tableid).DataTable();
     Common.autoAdjustColumns(tableId);
 }
+
+
+
+
+//document.addEventListener("DOMContentLoaded", function () {
+//    const searchBtn = document.querySelector("#searchColEmployee .searchbar__button");
+//    const searchInput = document.querySelector("#searchColEmployee .searchbar__input");
+//    const searchGroup = document.querySelector("#searchColEmployee .searchInput-group");
+
+//    searchBtn.addEventListener("click", () => {
+//        if (window.innerWidth <= 576) {
+//            if (searchInput.style.display === "block") {
+//                searchInput.style.display = "none";
+//                searchInput.style.zIndex = "2";
+//                searchBtn.style.borderRadius = "5px";
+//                //searchGroup.classList.remove("active");
+//            }
+//            else {
+//                searchInput.style.display = "block";
+//                //searchGroup.classList.add("active");
+//                searchBtn.style.borderRadius = "0 5px 5px 0";
+//            }
+//        }
+//    });
+//});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBtn = document.querySelector("#searchColTeamTable .searchbar__button");
+    const searchInput = document.querySelector("#searchColTeamTable .searchbar__input");
+    const searchGroup = document.querySelector("#searchColTeamTable .searchInput-group");
+
+    searchBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 576) {
+            if (searchInput.style.display === "block") {
+                searchInput.style.display = "none";
+                searchInput.style.zIndex = "2";
+                searchBtn.style.borderRadius = "5px";
+                //searchGroup.classList.remove("active");
+            }
+            else {
+                searchInput.style.display = "block";
+                //searchGroup.classList.add("active");
+                searchBtn.style.borderRadius = "0 5px 5px 0";
+            }
+        }
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBtn = document.querySelector("#searchColAdmin .searchbar__button");
+    const searchInput = document.querySelector("#searchColAdmin .searchbar__input");
+    const searchGroup = document.querySelector("#searchColAdmin .searchInput-group");
+
+    searchBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 576) {
+            if (searchInput.style.display === "block") {
+                searchInput.style.display = "none";
+                searchInput.style.zIndex = "2";
+                searchBtn.style.borderRadius = "5px";
+                //searchGroup.classList.remove("active");
+            }
+            else {
+                searchInput.style.display = "block";
+                //searchGroup.classList.add("active");
+                searchBtn.style.borderRadius = "0 5px 5px 0";
+            }
+        }
+    });
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBtn = document.querySelector("#add_manualattend .searchbar__button");
+    const searchInput = document.querySelector("#add_manualattend .searchbar__input");
+    const searchGroup = document.querySelector("#add_manualattend .searchInput-group");
+
+    searchBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 576) {
+            if (searchInput.style.display === "block") {
+                searchInput.style.display = "none";
+                searchInput.style.zIndex = "2";
+                searchBtn.style.borderRadius = "5px";
+                //searchGroup.classList.remove("active");
+            }
+            else {
+                searchInput.style.display = "block";
+                //searchGroup.classList.add("active");
+                searchBtn.style.borderRadius = "0 5px 5px 0";
+            }
+        }
+    });
+});
