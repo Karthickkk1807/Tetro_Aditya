@@ -5,6 +5,7 @@ var ColorId = 0;
 var ProductCategoryId = 0;
 var ProductSubCategoryId = 0;
 var AutoGeneratePrefixId = 0;
+var DefaultProductId = 0;
 
 function getMasterData(moduleName) {
     return new Promise((resolve, reject) => {
@@ -26,6 +27,7 @@ Common.ajaxCall("GET", "/Settings/GetProductSubCategory", { ProductSubCategoryId
 Common.ajaxCall("GET", "/Settings/GetMachine", { MachineId: null }, MachineSuccess, null);
 Common.ajaxCall("GET", "/Settings/GetColor", { ColorId: null }, ColorSuccess, null);
 Common.ajaxCall("GET", "/Settings/GetAutoGeneratePrefixDetails", { AutoGeneratePrefixId: null, PlantId: parseInt(PlantMappingId) }, AutoGeneratePrefixSuccess, null);
+Common.ajaxCall("GET", "/Settings/GetDefaultProduct", { DefaultProductId: null }, DefaultProductSuccess, null);
 
 Common.bindDropDownParent('ProductTypeId', 'FormProductCategory', 'ProductType');
 Common.bindDropDownParent('ProductCategoryId', 'FormProductSubCategory', 'ProductCategory');
@@ -573,6 +575,38 @@ function GetAutoGeneratePrefixNotNullSuccess(response) {
 }
 
 function AutoGeneratePrefixSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+
+        var columns = Common.bindColumn(data[0], ['AutoGeneratePrefixId']);
+        bindTableParaDifSettings('AutoGeneratePrefixTable', data[0], columns, -1, 'AutoGeneratePrefixId', '271px', true);
+    }
+}
+
+/*=================================================================DefaultProduct=====================================================================*/
+
+function GetDefaultProductInfoReload(response) {
+    if (response.status) {
+        Common.successMsg(response.message);
+        $('#AutoGeneratePrefixModal').hide();
+        //Common.removevalidation('FormAutoGeneratePrefix');
+        //Common.removeMessage('FormAutoGeneratePrefix');
+        DefaultProductId = 0;
+        Common.ajaxCall("GET", "/Settings/GetDefaultProduct", { DefaultProductId: null }, DefaultProductSuccess, null);
+    }
+    else {
+        Common.errorMsg(response.message);
+    }
+}
+
+function GetDefaultProductNotNullSuccess(response) {
+    if (response.status) {
+        var data = JSON.parse(response.data);
+        Common.bindData(data[0]);
+    }
+}
+
+function DefaultProductSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
 

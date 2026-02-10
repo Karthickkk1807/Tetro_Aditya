@@ -10,6 +10,8 @@ $(document).ready(function () {
 
     Common.ajaxCall("GET", "/Contact/GetClient", {}, ClientSuccess, null);
     Common.bindDropDownParent('State', 'FormClient', 'State');
+    $('#CreditLimit').attr('required', true);
+
     setPrimaryCheckboxEventListeners();
     $('#ShopAccordian').hide();
     $('#IsActiveHide').hide();

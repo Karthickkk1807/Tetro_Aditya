@@ -59,7 +59,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductDetails]", GetProduct);
             return Json(response);
         }
-         
+        
         public partial class GetProductProcess_1
         {
             public int LoginUserId	 { get; set; }

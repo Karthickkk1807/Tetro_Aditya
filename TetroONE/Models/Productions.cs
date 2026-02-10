@@ -90,6 +90,7 @@ namespace TetroONE.Models
         public int PlantId { get; set; }
         public DateTime? InWardDate { get; set; }
         public string? InWardNo { get; set; }
+        public int? InwardType { get; set; }
         public int? PaymentTypeId { get; set; }
         public int? ClientId { get; set; }
         public string? ClientDcNumber { get; set; }

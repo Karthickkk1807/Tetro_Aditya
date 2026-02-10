@@ -325,9 +325,16 @@
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
+                                            <label>Inward Type<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="InwardTypeId" name="InwardTypeId" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
                                             <label>Payment<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="PaymentTypeId" name="PaymentTypeId" required>
-                                            </select>
+                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
@@ -382,6 +389,24 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Applicable Machine</label>
+                                            <input type="text" class="form-control" placeholder="Ex: Sample 10KG - 50KG" id="ApplicableMachine" name="ApplicableMachine" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>No Of Chambers</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 2" id="NoOfChambers" name="NoOfChambers" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Chamber Weight</label>
+                                            <input type="text" class="form-control" placeholder="Ex: 360 KG" id="ChamberWeight" name="ChamberWeight" disabled />
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -399,12 +424,13 @@
                                                 <tr>
                                                     <th>S.No</th>
                                                     <th>Fabric<span style="visibility: hidden;">111111111</span></th>
-                                                    <th>Process<span style="visibility: hidden;">111111111111111111111111111</span></th>
+                                                    <th>Process<span style="visibility: hidden;">111111111111111111</span></th>
                                                     <th>Dia<span style="visibility: hidden;">111</span></th>
-                                                    <th>GSM<span style="visibility: hidden;">111</span></th>
-                                                    <th>Qty (KG)<span style="visibility: hidden;">111</span></th>
-                                                    <th>#Rolls<span style="visibility: hidden;">1</span></th>
+                                                    <th>GSM<span style="visibility: hidden;">11</span></th>
+                                                    <th>Qty (KG)<span style="visibility: hidden;">11</span></th>
+                                                    <th>#Rolls<span style="visibility: hidden;"></span></th>
                                                     <th>Width<span style="visibility: hidden;">11111</span></th>
+                                                    <th>RopeLen<span style="visibility: hidden;">11</span></th>
                                                     <th style="text-align: center;">
                                                         Action<span style="visibility: hidden;">1</span><span>
                                                             <button id="dyanmicplusbtn" class="btn AddStockBtn" type="button" onclick="duplicateFabric(this)">

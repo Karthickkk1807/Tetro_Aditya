@@ -206,6 +206,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@PlantId", staticDetails.PlantId);
                     command.Parameters.AddWithValue("@InWardDate", staticDetails.InWardDate);
                     command.Parameters.AddWithValue("@InWardNo", staticDetails.InWardNo);
+                    command.Parameters.AddWithValue("@InwardType", staticDetails.InwardType);
                     command.Parameters.AddWithValue("@PaymentTypeId", staticDetails.PaymentTypeId);
                     command.Parameters.AddWithValue("@ClientId", staticDetails.ClientId);
                     command.Parameters.AddWithValue("@ClientDcNumber", staticDetails.ClientDcNumber);
@@ -453,7 +454,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@OutwardNo", staticDetails.OutwardNo);
                     command.Parameters.AddWithValue("@OutWardTo", staticDetails.OutWardTo);
                     command.Parameters.AddWithValue("@ProductionPlanId", staticDetails.ProductionPlanId);
-                    command.Parameters.AddWithValue("@PackingSlipNo", staticDetails.PackingSlipNo);
+                    command.Parameters.AddWithValue("@PackingSlipNo", staticDetails.PackingSlipNo == null ? (object)DBNull.Value : staticDetails.PackingSlipNo);
                     command.Parameters.AddWithValue("@ShipFrom", staticDetails.ShipFrom);
                     command.Parameters.AddWithValue("@ShipTo", staticDetails.ShipTo);
                     command.Parameters.AddWithValue("@ShipToAddress", staticDetails.ShipToAddress);
@@ -1285,6 +1286,51 @@ namespace TetroONE.Controllers
             List<AttachmentDetails> existList = JsonConvert.DeserializeObject<List<AttachmentDetails>>(formData);
             return existList;
 
-        } 
+        }
+
+        [HttpGet]
+        [Route("GetApplicableMachineData")]
+        public IActionResult GetApplicableMachineData(int companyId, decimal totalWeight)
+        {
+            string query = @"
+                            SELECT  TOP 1 
+                                    MachineName
+                                    ,NoOfChambers
+                                    ,(@TotalWeight / NoOfChambers) AS ChamberWeight
+                            FROM MachineDetails
+                            WHERE @TotalWeight BETWEEN MinCapacity AND MaxCapacity
+                              AND CompanyId = @CompanyId";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@CompanyId", companyId);
+                cmd.Parameters.AddWithValue("@TotalWeight", totalWeight);
+
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        var result = new
+                        {
+                            MachineName = reader["MachineName"] == DBNull.Value ? null : reader["MachineName"].ToString(),
+                            NoOfChambers = reader["NoOfChambers"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["NoOfChambers"]),
+                            ChamberWeight = reader["ChamberWeight"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["ChamberWeight"])
+                        };
+
+                        return Ok(result); // JSON response
+                    }
+                }
+            }
+
+            return Ok(new
+            {
+                MachineName = (string?)null,
+                NoOfChambers = (int?)null,
+                ChamberWeight = (decimal?)null
+            });
+        }
+
     }
 }

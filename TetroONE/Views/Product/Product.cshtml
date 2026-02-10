@@ -215,28 +215,27 @@
                                             <select class="form-control" id="ProductSubCategoryId" name="ProductSubCategoryId" required>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6 ProductFlavors">
-                                        <div class="form-group">
-                                            <label>Product Flavour<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProductFlavourId" name="ProductFlavourId">
-                                            </select>
-                                        </div>
-                                    </div>
+                                    </div> 
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-12 ProductDescription">
                                         <div class="form-group">
                                             <label>Description</label>
                                             <textarea rows="1" cols="50" id="ProductDescription" name="ProductDescription" autocomplete="off" maxlength="500" class="form-control" placeholder="Description"></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-6">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Unit<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="PrimaryUnitId" name="PrimaryUnitId" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @*<div class="col-lg-3 col-md-3 col-sm-3 col-6">
                                         <div class="form-group">
                                             <label>Primary Unit<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="PrimaryUnitId" name="PrimaryUnitId" required>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-6">
+                                    </div><div class="col-lg-3 col-md-3 col-sm-3 col-6">
                                         <div class="form-group">
                                             <label>Secondary Unit<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="SecondaryUnitId" name="SecondaryUnitId" required>
@@ -256,9 +255,17 @@
                                                 </button>
                                             </div>
                                         </div>
+                                    </div>*@
+                                    <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                                        <div class="form-group">
+                                            <label>Price</label>
+                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                                <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-right-radius: 0;border-bottom-right-radius: 0;font-size:12px; width: auto;"> ₹ </button>
+                                                <input type="text" class="form-control PrimaryPrice" id="PrimaryPrice" name="PrimaryPrice" placeholder="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" required>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div class="col-md-3 col-lg-3 col-sm-3 col-6">
+                                    @*<div class="col-md-3 col-lg-3 col-sm-3 col-6">
                                         <div class="form-group">
                                             <label>Primary Price</label>
                                             <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
@@ -276,14 +283,14 @@
                                                 <input type="text" class="form-control SecondaryPrice" id="SecondaryPrice" name="SecondaryPrice" placeholder="0" value="0" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,8)" disabled required>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>*@
                                      
                                     <div class="col-md-4 col-lg-4 col-sm-4 col-6">
                                         <div class="form-group">
                                             <label>Reorder Level</label>
                                             <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
                                                 <input type="text" class="form-control ReOrderLevel" id="ReOrderLevel" name="ReOrderLevel" placeholder="Ex : 350" autocomplete="off" maxlength="10" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required>
-                                                <button id="ReorderLevelSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:12px; width: 48px;"> Unit </button>
+                                                <button id="ReorderLevelSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:12px; width: auto;"> Unit </button>
                                             </div>
                                         </div>
                                     </div>
@@ -295,12 +302,12 @@
                                             </select>
                                         </div>
                                     </div>  
-                                    <div class="col-md-4 col-lg-4 col-sm-4 col-6" style="margin-top: 27px; display: flex;" id="IsDefaultHide">
+                                    @* <div class="col-md-4 col-lg-4 col-sm-4 col-6" style="margin-top: 27px; display: flex;" id="IsDefaultHide">
                                         <div class="form-group">
                                             <input type="checkbox" id="IsDefault" name="IsDefault">
                                             <label for="IsDefault"> Is Default </label>
                                         </div>
-                                    </div>
+                                    </div> *@
                                 </div>
                             </form>
                         </div>

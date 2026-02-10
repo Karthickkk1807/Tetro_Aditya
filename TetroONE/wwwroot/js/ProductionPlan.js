@@ -198,10 +198,10 @@ $(document).ready(async function () {
         $('#ProductionPlanStatusId').val('1').trigger('change');
         $('.modal-body').animate({ scrollTop: 0 }, 300);
         $('#ProductionPlanSaveBtn').show();
-        $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
-            'pointer-events': 'auto',
-            'opacity': 1
-        });
+        //$('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
+        //    'pointer-events': 'auto',
+        //    'opacity': 1
+        //});
         $('#PreparedBy').prop('selectedIndex', 1);
         $('#ProductionPlanPreviewbtn').hide();
         $('#ProductionPlanModal').show();
@@ -774,21 +774,21 @@ async function GetProductionPlanNotNullSuccess(response) {
         if ([1, 2].includes(header.ProductionPlanStatusId)) {
             $('#ProductionPlanSaveBtn').show();
             $('#ProductionPlanPreviewbtn').hide();
-            $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
-                'pointer-events': 'auto',
-                'opacity': 1
-            });
+            //$('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
+            //    'pointer-events': 'auto',
+            //    'opacity': 1
+            //});
         } else {
             $('#ProductionPlanSaveBtn').hide();
             $('#ProductionPlanPreviewbtn').show();
-            $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow').css({
-                'pointer-events': 'none',
-                'opacity': 0.9
-            });
-            $('#SubtotalRow').css({
-                'pointer-events': 'auto',
-                'opacity': 1
-            });
+            //$('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow').css({
+            //    'pointer-events': 'none',
+            //    'opacity': 0.9
+            //});
+            //$('#SubtotalRow').css({
+            //    'pointer-events': 'auto',
+            //    'opacity': 1
+            //});
         }
 
         //if (header.LoadingDateTime == null || header.LoadingDateTime == '') {
@@ -1429,7 +1429,7 @@ $(document).on('click', '#AddItemBtn', function () {
         var data = JSON.parse(response.data);
 
         if (data[0][0].InwardFabricId == null) {
-            Common.warningMsg('');
+            Common.warningMsg('No grey fabric stock is available.');
         }
 
         var items = data[0];
