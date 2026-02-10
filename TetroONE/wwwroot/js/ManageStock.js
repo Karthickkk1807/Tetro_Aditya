@@ -618,3 +618,26 @@ function bindTableEditManageStock(tableid, data, columns, scrollpx) {
         Common.autoAdjustColumns(table1);
     }, 100);
 }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBtn = document.querySelector("#ManageStockModal .searchbar__button");
+    const searchInput = document.querySelector("#ManageStockModal .searchbar__input");
+    const searchGroup = document.querySelector("#ManageStockModal .searchInput-group");
+
+    searchBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 576) {
+            if (searchInput.style.display === "block") {
+                searchInput.style.display = "none";
+                searchInput.style.zIndex = "2";
+                searchBtn.style.borderRadius = "5px";
+                //searchGroup.classList.remove("active");
+            }
+            else {
+                searchInput.style.display = "block";
+                //searchGroup.classList.add("active");
+                searchBtn.style.borderRadius = "0 5px 5px 0";
+            }
+        }
+    });
+});

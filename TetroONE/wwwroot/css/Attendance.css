@@ -555,9 +555,16 @@ body > div.wrapper > div.main-panel > div.container-fluid > div > div.col-lg-8.c
     width: 100% !important
 }
 
-@media screen and (max-width: 800px){
-    .filter-Column{
-        flex-wrap: wrap;
-    }
-}
 
+/*@media(max-width:576px){
+    .reflexed {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: flex-start !important;
+    }
+    .flexed {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+}*/

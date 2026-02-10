@@ -603,7 +603,7 @@ function QuotationNotNullSuccess(response) {
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2 col-lg-2 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv">
+                    <div class="col-md-2 col-lg-2 col-sm-3 col-3 ProposedPriceClassDiv">
                         <div class="form-group">
                             <label class="ProposedPriceClass">Proposed (₹)<span id="Asterisk">*</span></label>
                             <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required value="${ProposedPrice.toFixed(2)}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
@@ -790,7 +790,7 @@ function duplicateRowColor() {
                 </select>
             </div>
         </div>
-        <div class="col-md-2 col-lg-2 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv">
+        <div class="col-md-2 col-lg-2 col-sm-3 col-3 ProposedPriceClassDiv">
             <div class="form-group">
                 <label class="ProposedPriceClass">Proposed (₹)<span id="Asterisk">*</span></label>
                 <input type="text" class="form-control ProposedPrice" placeholder="Ex: 12000/-" id="ProposedPrice${numberIncr}" name="ProposedPrice${numberIncr}" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"/>
@@ -815,13 +815,13 @@ function duplicateRowColor() {
     if (QuotationId == 0) {
         $('.FabricClassDiv').removeClass('col-md-4 col-lg-4 col-sm-5 col-5 pr-0 FabricClassDiv').addClass('col-md-3 col-lg-3 col-sm-5 col-5 pr-0 FabricClassDiv');
         $('.ColorClassDiv').removeClass('col-md-2 col-lg-3 col-sm-5 col-5 ColorClassDiv').addClass('col-md-4 col-lg-4 col-sm-5 col-5 ColorClassDiv');
-        $('.ProposedPriceClassDiv').removeClass('col-md-3 col-lg-3 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv').addClass('col-md-3 col-lg-3 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv');
+        $('.ProposedPriceClassDiv').removeClass('col-md-3 col-lg-3 col-sm-3 col-3 ProposedPriceClassDiv').addClass('col-md-3 col-lg-3 col-sm-3 col-3 ProposedPriceClassDiv');
         $('.thiswillColorshow').removeClass('col-lg-1 col-md-1 col-sm-3 col-3 thiswillColorshow p-0 mt--1').addClass('col-lg-2 col-md-2 col-sm-3 col-3 thiswillColorshow p-0 mt--1');
         $('.ApprovedPriceClassDiv').hide();
     } else {
         $('.FabricClassDiv').removeClass('col-md-3 col-lg-3 col-sm-5 col-5 pr-0 FabricClassDiv').addClass('col-md-3 col-lg-3 col-sm-5 col-5 pr-0 FabricClassDiv');
         $('.ColorClassDiv').removeClass('col-md-4 col-lg-4 col-sm-5 col-5 ColorClassDiv').addClass('col-md-2 col-lg-3 col-sm-5 col-5 ColorClassDiv');
-        $('.ProposedPriceClassDiv').removeClass('col-md-3 col-lg-3 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv').addClass('col-md-2 col-lg-2 col-sm-3 col-3 pr-0 pl-0 ProposedPriceClassDiv');
+        $('.ProposedPriceClassDiv').removeClass('col-md-3 col-lg-3 col-sm-3 col-3 ProposedPriceClassDiv').addClass('col-md-2 col-lg-2 col-sm-3 col-3 ProposedPriceClassDiv');
         $('.thiswillColorshow').removeClass('col-lg-2 col-md-2 col-sm-3 col-3 thiswillColorshow p-0 mt--1').addClass('col-lg-1 col-md-1 col-sm-3 col-3 thiswillColorshow p-0 mt--1');
         $('.ApprovedPriceClassDiv').show();
     }
@@ -907,7 +907,7 @@ function duplicateRowProcess() {
         $('.ApprovedPriceProcessDiv').hide();
     } else {
         $('.ProcessTypeDiv').removeClass('col-md-7 col-lg-7 col-sm-5 col-5 ProcessTypeDiv').addClass('col-md-6 col-lg-6 col-sm-5 col-5 ProcessTypeDiv');
-        $('.ProposedPriceClassProcessDiv').removeClass('col-md-3 col-lg-3 col-sm-3 col-3 pl-0 pr-0 ProposedPriceClassDiv').addClass('col-md-2 col-lg-2 col-sm-3 col-3 pl-0 pr-0 ProposedPriceClassProcessDiv');
+        $('.ProposedPriceClassProcessDiv').removeClass('col-md-3 col-lg-3 col-sm-3 ProposedPriceClassDiv').addClass('col-md-2 col-lg-2 col-sm-3 col-3 ProposedPriceClassProcessDiv');
         $('.thiswillProcessshow').removeClass('col-lg-1 col-md-1 col-sm-3 col-3 thiswillColorshow p-0 mt--1').addClass('col-lg-1 col-md-1 col-sm-3 col-3 thiswillColorshow p-0 mt--1');
         $('.ApprovedPriceProcessDiv').show();
     }

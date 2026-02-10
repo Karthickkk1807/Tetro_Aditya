@@ -28,7 +28,7 @@ $(document).ready(function () {
     Common.ajaxCall("GET", "/Common/Getlanding", null, landingsusccess, null);
 
 });
- 
+
 $(document).ready(function () {
     var currentURL = window.location.pathname;
 
@@ -72,9 +72,18 @@ $(document).ready(function () {
         event.stopPropagation();
     });
 
+    var windowWidth = $(window).width();
+    if (windowWidth < 576) {
+        $('.month-text').text("");
+    }
+
     $(document).on('click', '.dropdown-item', function () {
         var selectedText = $(this).text();
-        $('.Bulk-Action').text(selectedText);
+        if (windowWidth > 576) {
+            $('.month-text').text(selectedText);
+        } else {
+            $('.month-text').text("");
+        }
         $('.dropdown-menu .dropdown-item').removeClass('active');
         $(this).addClass('active');
         $('.dropdown-menu').removeClass('show');
@@ -82,7 +91,7 @@ $(document).ready(function () {
         if (selectedText == "Custom") {
             $('#monthPickerCol').hide();
             $('#fromtodateCol').show();
-            var windowWidth = $(window).width();
+
             if (windowWidth <= 600) {
                 $("#filter-Column").removeClass("Date-SearchColumn");
                 $("#Human-Filter-Column").removeClass("date-column");
@@ -260,3 +269,25 @@ function NotificationReload() {
     }, null);
 
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBtn = document.querySelector(".searchbar__button");
+    const searchInput = document.querySelector(".searchbar__input");
+    const searchGroup = document.querySelector(".searchInput-group");
+
+    searchBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 576) {
+            if (searchInput.style.display === "block") {
+                searchInput.style.display = "none";
+                searchInput.style.zIndex = "2";
+                searchBtn.style.borderRadius = "5px";
+                //searchGroup.classList.remove("active");
+            }
+            else {
+                searchInput.style.display = "block";
+                //searchGroup.classList.add("active");
+                searchBtn.style.borderRadius = "0 5px 5px 0";
+            }
+        }
+    });
+});
