@@ -179,10 +179,11 @@ namespace TetroONE.Models
         public int? ProcessCount { get; set; }
         public decimal? Dia { get; set; }
         public decimal? GSM { get; set; }
-        public decimal? Qty { get; set; }
+        public decimal? ProductionPlanQty { get; set; }
         public int? NoOfRolls { get; set; }
         public int? Width { get; set; }
         public int? RowNo { get; set; }
+        public decimal? OutWardQty { get; set; }
         public int? OutwardId { get; set; }
     }
 

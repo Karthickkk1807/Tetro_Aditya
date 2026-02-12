@@ -31,12 +31,12 @@ namespace TetroONE.Controllers
 			{
 				return BadRequest(new { isSuccess = false, message = "Failed to retrieve sale details" });
 			}
-			var saleResponse = GetSaleDetails(request.SaleId); // Replace with actual values
+			//var saleResponse = GetSaleDetails(request.SaleId); // Replace with actual values
 
-			if (saleResponse == null)
-			{
-				return BadRequest(new { isSuccess = false, message = "Failed to retrieve sale details" });
-			}
+			//if (saleResponse == null)
+			//{
+			//	return BadRequest(new { isSuccess = false, message = "Failed to retrieve sale details" });
+			//}
 
 			var ewaybillDataResponse = new EwayBillJSONData
 			{
@@ -1021,17 +1021,6 @@ namespace TetroONE.Controllers
 
 				return responseObj;
 			}
-		}
-		private object GetSaleDetails(int SaleId)
-		{
-			GetSale getInfo = new GetSale()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				SaleId = SaleId,
-
-			};
-
-			return GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetSaleDetails]", getInfo);
 		}
 	}
 }

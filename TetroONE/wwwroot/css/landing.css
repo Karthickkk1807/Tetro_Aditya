@@ -439,7 +439,7 @@ body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdow
     }
 
 .qty-input {
-    width: 66px;
+    width: 89px;
     text-align: center;
     font-size: 16px;
     border: none;
@@ -447,7 +447,7 @@ body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdow
 
 .unit-select {
     height: 35px;
-    width: 133px;
+    width: 96px;
     font-size: 12px;
     border-radius: 5px;
     border: 1px solid #ccc;

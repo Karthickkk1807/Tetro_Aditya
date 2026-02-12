@@ -225,3 +225,8 @@ table th:first-child {
     transition: background 0.25s, box-shadow 0.25s;
     width: 100%;
 }
+
+/*#collapsed th:nth-child(2),
+#collapsed td:nth-child(2) {
+    text-align: center;
+}*/

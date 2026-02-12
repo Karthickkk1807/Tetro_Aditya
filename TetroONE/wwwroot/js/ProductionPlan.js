@@ -32,7 +32,7 @@ $(document).ready(async function () {
 
     var dyeDropdown = await Common.bindDropDownSync('DyeProduct');
     DyeDropdown = JSON.parse(dyeDropdown);
-     
+
     var processTypeDropdown = await Common.bindDropDownSync('ProcessType');
     ProcessTypeDropdown = JSON.parse(processTypeDropdown);
 
@@ -144,8 +144,8 @@ $(document).ready(async function () {
         //$('#ChemicalDynamic-After').hide();
         //$('#ChemicalDynamic-DyeBath').hide();
         //$('#ChemicalDynamic-Dye').hide();
-         
-        $("#ProductionPlanSaveBtn span:first").text("Save");  
+
+        $("#ProductionPlanSaveBtn span:first").text("Save");
 
         //$('#emptyDiv').removeClass('col-lg-3 col-md-3 col-6').addClass('col-lg-5 col-md-5 col-6');
         //$('#ProductionPlanStatusIdDiv').hide();
@@ -157,7 +157,7 @@ $(document).ready(async function () {
         $('#TotalWeightDiv').hide();
         $('#ColourDiv').hide();
         $('#MachineDiv').hide();
-        $('#ProductionPlanjobCardBtn').hide(); 
+        $('#ProductionPlanjobCardBtn').hide();
 
         $("#QRCode").html("");
         $("#AddNotesText").val('');
@@ -198,10 +198,10 @@ $(document).ready(async function () {
         $('#ProductionPlanStatusId').val('1').trigger('change');
         $('.modal-body').animate({ scrollTop: 0 }, 300);
         $('#ProductionPlanSaveBtn').show();
-        //$('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
-        //    'pointer-events': 'auto',
-        //    'opacity': 1
-        //});
+        $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
+            'pointer-events': 'auto',
+            'opacity': 1
+        });
         $('#PreparedBy').prop('selectedIndex', 1);
         $('#ProductionPlanPreviewbtn').hide();
         $('#ProductionPlanModal').show();
@@ -219,14 +219,14 @@ $(document).ready(async function () {
         $('#AddAttachment, #AddNotes, #MLRWaterLevelDiv').show();
         $('#AddAttachLable, #AddNotesLable, #HideAttachlable, #HideNotesLable').hide();
 
-        $("#ProductionPlanSaveBtn span:first").text("Update");  
+        $("#ProductionPlanSaveBtn span:first").text("Update");
         $('#ProductionPlanjobCardBtn').show();
- 
+
         $('.Status-Div').show();
         $('#MLRWaterLevelDiv').show();
         $('#TotalWeightDiv').show();
         $('#ColourDiv').show();
-        $('#MachineDiv').show(); 
+        $('#MachineDiv').show();
         $('#SaveProductionPlan').text('Update').removeClass('btn btn-success m-r-20 text-white').addClass('btn btn-primary m-r-20 text-white');
 
         AlreadyAddedIds = [];
@@ -240,13 +240,15 @@ $(document).ready(async function () {
         $('.RowOfChemical-After').remove();
         $('.RowOfChemical-Pre').remove();
         $('.RowOfChemical-DyeBath').remove();
-        $('.RowOfChemical-Dye').remove(); 
-        $('.RowOfChemical-Finishing').remove(); 
+        $('.RowOfChemical-Dye').remove();
+        $('.RowOfChemical-Finishing').remove();
         $('#ChemicalDynamic-Pre').show();
         $('#ChemicalDynamic-After').hide();
         $('#ChemicalDynamic-DyeBath').hide();
         $('#ChemicalDynamic-Dye').hide();
         $('#ChemicalDynamic-Finishing').hide();
+
+        $('#ProductionPlanPreviewbtn').show();
 
         //$('#emptyDiv').removeClass('col-lg-5 col-md-5 col-6').addClass('col-lg-3 col-md-3 col-6');
         //$('#ProductionPlanStatusIdDiv').show();
@@ -335,13 +337,13 @@ $(document).ready(async function () {
 
         var currentIndex = tabOrder.indexOf(currentTabText);
         var clickedIndex = tabOrder.indexOf(clickedTabText);
-         
+
         if (skipChemicalTabValidation) {
             skipChemicalTabValidation = false;
             activateChemicalTab(clickedTabText);
             return;
         }
-         
+
         if (!validateCurrentChemicalTab()) {
             Common.errorMsg("Please fill all required fields in the current tab.");
 
@@ -403,6 +405,7 @@ $(document).ready(async function () {
     });
 
     $(document).on('click', '#ProductionPlanSaveBtn', function () {
+        $('#loader-pms').show();
 
         var TableLenthDynamicRow = $('.AddedRow').length;
         if (TableLenthDynamicRow == 0) {
@@ -411,8 +414,17 @@ $(document).ready(async function () {
             return false;
         }
 
-        if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
-            $('#loader-pms').show();
+        var ProductionPlanStatusId = $('#ProductionPlanStatusId').val();
+
+        if (ProductionPlanStatusId == 3) {
+            if (!validateUpdateAllChemicalTabs()) {
+                Common.warningMsg('Please Fill the all Chemical Details');
+                $('#loader-pms').hide();
+                return false;
+            }
+        }
+
+        if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) { 
             getExistFiles();
 
             var objvalue = {
@@ -572,12 +584,14 @@ $(document).ready(async function () {
                         Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
                     }
                     else {
+                        $('#loader-pms').hide();
                         formDataMultiple = new FormData();
                         Common.errorMsg(response.message);
                     }
                 },
 
                 error: function (response) {
+                    $('#loader-pms').hide();
                     Common.errorMsg(response.message);
                 }
             });
@@ -692,6 +706,56 @@ function activateChemicalTab(tabText) {
     }
 }
 
+function validateUpdateAllChemicalTabs() {
+
+    var tabs = [
+        { container: '#ChemicalDynamic-Pre', rows: '.RowOfChemical-Pre' },
+        { container: '#ChemicalDynamic-Dye', rows: '.RowOfChemical-Dye' },
+        { container: '#ChemicalDynamic-DyeBath', rows: '.RowOfChemical-DyeBath' },
+        { container: '#ChemicalDynamic-After', rows: '.RowOfChemical-After' },
+        { container: '#ChemicalDynamic-Finishing', rows: '.RowOfChemical-Finishing' }
+    ];
+
+    for (var i = 0; i < tabs.length; i++) {
+
+        // 🔥 DO NOT SKIP HIDDEN TABS
+
+        if (!validateUpdateChemicalTab(tabs[i].container, tabs[i].rows)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+function validateUpdateChemicalTab(container, rowClass) {
+
+    let isValid = true;
+
+    $(container).find(rowClass).each(function () {
+
+        let product = $(this).find('select[id^="ProductId"]').val();
+        let gpl = $(this).find('input[id^="GPL"]').val();
+        let qty = $(this).find('input[id^="Qty"]').val();
+
+        product = product ? product.trim() : "";
+        gpl = gpl ? gpl.trim() : "";
+        qty = qty ? qty.trim() : "";
+
+        // If ANY field empty → fail
+        if (product === "" || gpl === "" || qty === "") {
+            isValid = false;
+            return false; // break loop
+        }
+
+    });
+
+    return isValid;
+}
+
+
+
 function validateCurrentChemicalTab() {
     if ($('#ChemicalDynamic-Pre').is(':visible'))
         return validateChemicalTab('#ChemicalDynamic-Pre', '.RowOfChemical-Pre').valid;
@@ -709,7 +773,7 @@ function validateCurrentChemicalTab() {
         return validateChemicalTab('#ChemicalDynamic-Finishing', '.RowOfChemical-Finishing').valid;
 
     return true;
-} 
+}
 
 function CalcuWetreLevel() {
     var $thisVal = $('#MLR').val();
@@ -771,24 +835,22 @@ async function GetProductionPlanNotNullSuccess(response) {
         $('#MLR').val(header.MLR);
         $('#WaterLevel').val(header.WaterLevel);
 
-        if ([1, 2].includes(header.ProductionPlanStatusId)) {
+        if (![7, 8, 9].includes(header.ProductionPlanStatusId)) {
             $('#ProductionPlanSaveBtn').show();
-            $('#ProductionPlanPreviewbtn').hide();
-            //$('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
-            //    'pointer-events': 'auto',
-            //    'opacity': 1
-            //});
+            $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow, #SubtotalRow').css({
+                'pointer-events': 'auto',
+                'opacity': 1
+            });
         } else {
             $('#ProductionPlanSaveBtn').hide();
-            $('#ProductionPlanPreviewbtn').show();
-            //$('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow').css({
-            //    'pointer-events': 'none',
-            //    'opacity': 0.9
-            //});
-            //$('#SubtotalRow').css({
-            //    'pointer-events': 'auto',
-            //    'opacity': 1
-            //});
+            $('#ShippingColumn, #MainProductionPlanPopTable, .DynmicTableRow').css({
+                'pointer-events': 'none',
+                'opacity': 0.9
+            });
+            $('#SubtotalRow').css({
+                'pointer-events': 'auto',
+                'opacity': 1
+            });
         }
 
         //if (header.LoadingDateTime == null || header.LoadingDateTime == '') {
@@ -875,7 +937,7 @@ async function GetProductionPlanNotNullSuccess(response) {
                     createChemicalRow('DyeBath', item);
                 } else if (item.ProcessType === 4) {
                     createChemicalRow('After', item);
-                }else if (item.ProcessType === 5) {
+                } else if (item.ProcessType === 5) {
                     createChemicalRow('Finishing', item);
                 }
             });
@@ -894,7 +956,7 @@ async function GetProductionPlanNotNullSuccess(response) {
             //duplicateRowChemicalDyeBath();
             //duplicateRowChemicalDye();
         }
-         
+
         $("#QRCode").html("");
 
         let qrData = {
@@ -930,7 +992,7 @@ function createChemicalRow(rowType, chemicalData) {
 
     let selectOptions = "";
     let defaultOption = '<option value="">--Select--</option>';
-     
+
     let products = [];
     switch (rowType) {
         case 'Pre':
@@ -953,7 +1015,7 @@ function createChemicalRow(rowType, chemicalData) {
     selectOptions = Array.isArray(products)
         ? products.map(c => `<option value="${c.ChemicalId}">${c.ChemicalName}</option>`).join('')
         : '';
-    
+
     let htmlRow = `
         <div class="row RowOfChemical-${rowType}">
             <label class="ProductionPlanChemicalRequirementId d-none">${chemicalData.ProductionPlanChemicalRequirementId}</label>
@@ -996,10 +1058,10 @@ function createChemicalRow(rowType, chemicalData) {
         </div>
     `;
 
-    $(`#ChemicalDynamic-${rowType}`).append(htmlRow); 
+    $(`#ChemicalDynamic-${rowType}`).append(htmlRow);
 
     $(`#ChemicalDynamic-${rowType} .ProductId${rowType}`).last().val(String(chemicalData.ChemicalId));
-         
+
     $(`#ChemicalDynamic-${rowType} .DysType`).last().val(String(chemicalData.ChemicalType));
 
     switch (rowType) {
@@ -1029,10 +1091,10 @@ function LoadPopupItems(allItems) {
 
         let fabricQty = item.FabricQty;
         let matches = fabricQty.match(/^([\d,]+\.?\d*)\s*(\w+)$/);
-        let qtyValue;
+        let qtyValue = "0";
 
         if (matches) {
-            qtyValue = matches[1];
+            qtyValue = matches[1].replace(/,/g, "");  // removes commas
         }
 
         const row = `
@@ -1040,11 +1102,12 @@ function LoadPopupItems(allItems) {
                 <td>
                     <div class="d-flex align-items-center">
                         <input type="checkbox" class="mr-2 ItemCheckbox" id="${uniqueId}">
-                        <label for="${uniqueId}" class="Customer mb-0" style="color : ${item.StatusColor}!important;">${item.MachineName}</label>
+                        <label for="${uniqueId}" class="MachineName mb-0" style="color : ${item.StatusColor}!important; white-space: pre-line;">${item.MachineName}</label>
                     </div>
                 </td> 
-                <td><label class="Customer mb-0">${item.Customer}</label></td>
+                <td><label class="Customer mb-0" style="white-space: pre-line;">${item.Customer}</label></td>
                 <td><label class="d-none InWardNo">${item.InWardId}</label><label class="LotNo mb-0">${item.InWardNo}</label></td>
+                <td><label class="d-none InWardTypeNo"></label><label class="InWardType mb-0">${item.InWardType}</label></td>
                 <td><label class="d-none ColorId">${item.ColorId}</label><label class="Colour mb-0">${item.ColorName}</label></td>
                 <td><label class="d-none FabricId">${item.FabricId}</label><label class="FabricType mb-0">${item.Fabric}</label></td>
                 <td><label class="Dia mb-0">${item.Dia}</label></td>
@@ -1134,7 +1197,7 @@ $(document).on('change', '.ItemCheckbox', function () {
         NoOfRolls: $row.find(".NoOfRolls").text() || '',
         Width: $row.find(".Width").text() || '',
         Quantity: parseFloat($row.find(".Quantity").text()) || 0,
-        AvailableQuantity: parseFloat($row.find(".AvailableQuantity").val()) || 0,
+        AvailableQuantity: parseFloat(($row.find(".AvailableQuantity").val() || "0").replace(/,/g, "")) || 0,
         ProcessList: $row.data('id'),
         IsChecked: $(this).prop("checked"),
     };
@@ -1200,14 +1263,31 @@ $(document).on("click", "#BtnAdd", function () {
     // 2️⃣ CHECK: Are all selected colours same?
     // -----------------------------------------
 
-    let commonColour = checkedRows[0].find('.Colour').text().trim();  // Note uppercase 'C'
-    let firstColor = commonColour;
-    let allSameColor = checkedRows.every(row => row.find('.Colour').text().trim() === commonColour);
+    let commonColour = checkedRows[0].find('.Colour').text().trim();  // Note uppercase 'C' 
+
+    let firstColor = commonColour; 
+    let allSameColor = checkedRows.every(row => row.find('.Colour').text().trim() === commonColour); 
 
     if (!allSameColor) {
         Common.warningMsg('Selected rows must have the same Colour.');
         return;
     }
+
+    // -----------------------------------------
+    // CHECK: Are all selected Customers same?
+    // -----------------------------------------
+
+    let commonCustomer = checkedRows[0].find('.Customer').text().trim();
+
+    let allSameCustomer = checkedRows.every(row =>
+        row.find('.Customer').text().trim() === commonCustomer
+    );
+
+    if (!allSameCustomer) {
+        Common.warningMsg('Selected rows must have the same Customer.');
+        return;
+    }
+
     // -----------------------------------------
     // 3️⃣ CALCULATE BEFORE AJAX
     // -----------------------------------------
@@ -1251,7 +1331,7 @@ $(document).on("click", "#BtnAdd", function () {
                     Dia: $(this).find('.Dia').text(),
                     NoOfRolls: $(this).find('.NoOfRolls').text(),
                     Width: $(this).find('.Width').text(),
-                    AvailableQuantity: $(this).find('.AvailableQuantity').val(),
+                    AvailableQuantity: $(this).find('.AvailableQuantity').val().replace(/,/g, ''),
                     ProcessList: $(this).data('id')
                 };
 
@@ -1332,19 +1412,19 @@ $(document).on("click", "#BtnAdd", function () {
             ItemListAdd = [];
 
             if (AlreadyAddedIds.length > 0 && ProductionPlanId != 0) {
-                $('#MLRWaterLevelDiv').show(); 
+                $('#MLRWaterLevelDiv').show();
             } else {
                 $('#MLRWaterLevelDiv').hide();
             }
 
-            if (AlreadyAddedIds.length > 0) { 
+            if (AlreadyAddedIds.length > 0) {
                 $('#TotalWeightDiv').show();
                 $('#ColourDiv').show();
-                $('#MachineDiv').show(); 
-            } else { 
+                $('#MachineDiv').show();
+            } else {
                 $('#TotalWeightDiv').hide();
                 $('#ColourDiv').hide();
-                $('#MachineDiv').hide(); 
+                $('#MachineDiv').hide();
             }
 
             $("#ProductionPlanAddItemModal").hide();
@@ -1376,21 +1456,21 @@ $(document).on('click', '.DynremoveBtn', function () {
         $('#MLRWaterLevelDiv').show();
         $('#TotalWeightDiv').show();
         $('#ColourDiv').show();
-        $('#MachineDiv').show(); 
+        $('#MachineDiv').show();
     } else {
         $('#MLRWaterLevelDiv').hide();
         $('#MLR').val('');
         $('#TotalWeightDiv').hide();
         $('#ColourDiv').hide();
-        $('#MachineDiv').hide(); 
+        $('#MachineDiv').hide();
     }
-     
+
     if (AlreadyAddedIds.length > 0 && ProductionPlanId != 0) {
         $('#MLRWaterLevelDiv').show();
     } else {
         $('#MLRWaterLevelDiv').hide();
     }
-     
+
     RenumberRows();
     UpdateMainTableQuantity();
 });
@@ -1641,7 +1721,7 @@ $(document).on('click', '#BtnAddChemical', function () {
         var tab = tabOrder[i];
 
         if ($(tab.rowClass).length === 0) {
-            Common.errorMsg(tab.name + " tab has no rows.");
+            //Common.errorMsg(tab.name + " tab has no rows.");
             activateChemicalTab(tab.name);
             return false;
         }
@@ -1744,7 +1824,7 @@ function calculateChemicalQty($row) {
 
     $row.find('input[type="text"]').last().val(qty.toFixed(3));
 }
- 
+
 function duplicateRowChemicalPre() {
     if (!PreTreatmentChemicalProduct || !PreTreatmentChemicalProduct[0] || PreTreatmentChemicalProduct[0].length === 0) {
         return;
@@ -2455,8 +2535,9 @@ function applyProductionFilters() {
         let gsm = $(this).find('.GSM').text().toLowerCase();
         let width = $(this).find('.Width').text().toLowerCase();
         let quantity = $(this).find('.Quantity').text().toLowerCase();
+        let inWardType = $(this).find('.InWardType').text().toLowerCase();
 
-        let rowText = customer + ' ' + lotNo + ' ' + colour + ' ' + fabricType + ' ' + gsm + ' ' + width + ' ' + quantity;
+        let rowText = customer + ' ' + lotNo + ' ' + colour + ' ' + fabricType + ' ' + gsm + ' ' + width + ' ' + quantity + ' ' + inWardType;
 
         let isVisible = !searchValue || rowText.includes(searchValue);
 
@@ -2549,7 +2630,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (files.length > 0) {
             preview.style.display = 'block';
-             
+
             for (const file of files) {
                 const fileItem = document.createElement('li');
                 const fileName = document.createElement('span');
@@ -3181,8 +3262,6 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
         }
     });
 });
-
-
 
 /*GenerateQrContectPdf*/
 //$(document).on('click', '#ProductionPlanPreviewbtn', function () {

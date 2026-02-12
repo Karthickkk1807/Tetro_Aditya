@@ -197,21 +197,20 @@ namespace TetroONE.Controllers
 		 
         [HttpGet]
 		[Route("GetSale")]
-		public IActionResult GetSale(DateTime FromDate, DateTime ToDate, int FranchiseId)
+		public IActionResult GetSale(DateTime FromDate, DateTime ToDate, int? SaleId)
 		{
 			GetSale request = new GetSale()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				SaleId = null,
-				FromDate = FromDate,
+                SaleId = SaleId == 0 ? null : SaleId,
+                FromDate = FromDate,
 				ToDate = ToDate,
-				FranchiseId = FranchiseId 
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetSaleDetails]", request);
 			return Json(response);
 		}
-		 
+		
 		[HttpPost]
 		[Route("InsertUpdateSale")]
 		public async Task<IActionResult> InsertUpdateSale()
@@ -230,7 +229,7 @@ namespace TetroONE.Controllers
 					AttachmentFilePath = attachment.Item2,
 					ModuleRefId = null,
 					ModuleName = "Sale"
-				});
+                });
 			}
 
 			bool isuploaded = await GenericTetroONE.IsAttachmentUploaded(file, lstattachment);
@@ -250,55 +249,38 @@ namespace TetroONE.Controllers
 			dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
 
 			SaleDetailsStatic SaleDetailsStatic = JsonConvert.DeserializeObject<SaleDetailsStatic>(Request.Form["SaleDetailsStatic"]);
-			List<SaleProductMappingDetails>? SaleProductMappingDetails = JsonConvert.DeserializeObject<List<SaleProductMappingDetails>?>(Request.Form["SaleProductMappingDetails"]);
-			List<SaleOtherChargesMappingDetails>? SaleOtherChargesMappingDetails = JsonConvert.DeserializeObject<List<SaleOtherChargesMappingDetails>?>(Request.Form["SaleOtherChargesMappingDetails"]);
+			List<SaleOutWardMappingDetails>? SaleOutWardMappingDetails = JsonConvert.DeserializeObject<List<SaleOutWardMappingDetails>?>(Request.Form["SaleOutWardMappingDetails"]);
+			List<SaleOutWardFabricDetails>? SaleOutWardFabricDetails = JsonConvert.DeserializeObject<List<SaleOutWardFabricDetails>?>(Request.Form["SaleOutWardFabricDetails"]);
+			List<PurchaseSaleOtherChargesMappingDetails>? PurchaseSaleOtherChargesMappingDetails = JsonConvert.DeserializeObject<List<PurchaseSaleOtherChargesMappingDetails>?>(Request.Form["PurchaseSaleOtherChargesMappingDetails"]);
 
-			DataTable dtproductData = new DataTable();
-			dtproductData = GenericTetroONE.ToDataTable(SaleProductMappingDetails);
+			DataTable saleOutWardMappingDetails = new DataTable();
+            saleOutWardMappingDetails = GenericTetroONE.ToDataTable(SaleOutWardMappingDetails);
 
-			DataTable dtOtherChargesData = new DataTable();
-			dtOtherChargesData = GenericTetroONE.ToDataTable(SaleOtherChargesMappingDetails);
+			DataTable saleOutWardFabricDetails = new DataTable();
+            saleOutWardFabricDetails = GenericTetroONE.ToDataTable(SaleOutWardFabricDetails);
 
-
+			DataTable purchaseSaleOtherChargesMappingDetails = new DataTable();
+            purchaseSaleOtherChargesMappingDetails = GenericTetroONE.ToDataTable(PurchaseSaleOtherChargesMappingDetails);
 
 			InsertUpdateSale request = new InsertUpdateSale()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				SaleId = SaleDetailsStatic.SaleId,
-				FranchiseId = SaleDetailsStatic.FranchiseId,
-				BillingFranchiseId = SaleDetailsStatic.BillingFranchiseId,
-				BillFromFranchiseId = SaleDetailsStatic.BillFromFranchiseId,
-				SaleDate = SaleDetailsStatic.SaleDate,
-				SaleNo = SaleDetailsStatic.SaleNo,
-				EstimateId = SaleDetailsStatic.EstimateId,
-				ClientId = SaleDetailsStatic.ClientId,
-				DeliveryChallanId = SaleDetailsStatic.DeliveryChallanId,
-				DeliveryChallanDate = SaleDetailsStatic.DeliveryChallanDate,
-				GoodsDeliveryDate = SaleDetailsStatic.GoodsDeliveryDate,
-				EstimateDate = SaleDetailsStatic.EstimateDate,
-				Notes = SaleDetailsStatic.Notes,
-				SubTotal = SaleDetailsStatic.SubTotal,
-				GrantTotal = SaleDetailsStatic.GrantTotal,
-				RoundOffValue = SaleDetailsStatic.RoundOffValue,
-				SaleStatusId = SaleDetailsStatic.SaleStatusId,
-				TermsAndCondition = SaleDetailsStatic.TermsAndCondition,
-				//TransporterId = SaleDetailsStatic.TransporterId,
-				//TransportName = SaleDetailsStatic.TransportName,
-				//ModeofTransport = SaleDetailsStatic.ModeofTransport,
-				//Distance = SaleDetailsStatic.Distance,
-				//TransportDocNo = SaleDetailsStatic.TransportDocNo,
-				//TransportDocDate = SaleDetailsStatic.TransportDocDate,
-				//VehicleNumber = SaleDetailsStatic.VehicleNumber,
-				//VehicleType = SaleDetailsStatic.VehicleType, 
-				//DocumentType = SaleDetailsStatic.DocumentType,
-				//SupplyType = SaleDetailsStatic.SupplyType,
-				//TransactionType = SaleDetailsStatic.TransactionType,
-				//DispatchAddressId = SaleDetailsStatic.DispatchAddressId, 
-				//ShippingAddressId = SaleDetailsStatic.ShippingAddressId,
-				 
+                SaleId = SaleDetailsStatic.SaleId,
+                SaleNo = SaleDetailsStatic.SaleNo,
+                SaleDate = SaleDetailsStatic.SaleDate,
+                BillFrom = SaleDetailsStatic.BillFrom,
+                ClientId = SaleDetailsStatic.ClientId,
+                InWardId = SaleDetailsStatic.InWardId,
+                SubTotal = SaleDetailsStatic.SubTotal,
+                RoundOffValue = SaleDetailsStatic.RoundOffValue,
+                GrantTotal = SaleDetailsStatic.GrantTotal,
+                DueDate = SaleDetailsStatic.DueDate,
+                SaleStatusId = SaleDetailsStatic.SaleStatusId,
+                Notes = SaleDetailsStatic.Notes,
 
-				TVP_Sale_ProductMappingDetails = dtproductData,
-				TVP_PurchaseSaleOtherChargesMappingDetails = dtOtherChargesData,
+                TVP_SaleOutWardMappingDetails = saleOutWardMappingDetails,
+                TVP_SaleOutWardFabricDetails = saleOutWardFabricDetails,
+                TVP_PurchaseSaleOtherChargesMappingDetails = purchaseSaleOtherChargesMappingDetails,
 
 				TVP_AttachmentDetails = dtattachment
 			};
@@ -323,7 +305,7 @@ namespace TetroONE.Controllers
 		 
 		[HttpGet]
 		[Route("DeleteSaleDetails")]
-		public IActionResult DeletePurchaseBillDetails(int SaleId)
+		public IActionResult DeleteSaleDetails(int SaleId)
 		{ 
 			DeleteSale getInfo = new DeleteSale()
 			{
@@ -546,7 +528,7 @@ namespace TetroONE.Controllers
 				}
 			}
 		}
-		 
+		
         [HttpGet]
         [Route("SaleOrderPrint")]
         public IActionResult SaleOrderPrint(int NoOfCopies, string printType)
@@ -744,26 +726,21 @@ namespace TetroONE.Controllers
                 return Json(new { success = false, message = "An error occurred while generating purchase order print.", error = ex.Message });
             }
         }
-		  
+		
         [HttpGet]
-		[Route("GetCreditLimitDetails")]
-		public IActionResult GetCreditLimitDetails(int ModuleId, bool IsEdit, int clientId, int FranchiseId)
+		[Route("GetOutwardDetails_ByInWardId")]
+		public IActionResult GetOutwardDetails_ByInWardId(int InWardId, int OutWardId)
 		{
-			GetCreditLimitDetails request = new GetCreditLimitDetails()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value), 
-				ModuleId = ModuleId,
-				IsEdit = IsEdit,
-				ClientId = clientId,
-				FranchiseId = FranchiseId 
-			};
+            GetOutwardDetails_ByInWardId request = new GetOutwardDetails_ByInWardId()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
+                InWardId = InWardId,
+                OutWardId = OutWardId,
+            };
 
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetCreditLimitDetails]", request);
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[DD_USP_GetOutwardDetails_ByInWardId]", request);
 			return Json(response);
 		}
-
-
-
 
         private (string, string) GetFilePath(string reqfilename)
         {

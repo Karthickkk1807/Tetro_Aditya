@@ -37,8 +37,6 @@ namespace TetroONE.Controllers
 			return Json(response);
 		}
 
-
-
 		[HttpPost]
 		[Route("InsertUpdateExpenseDetails")]
 		public async Task<IActionResult> InsertUpdateExpenseDetails()
@@ -109,10 +107,8 @@ namespace TetroONE.Controllers
 				}
 			}
 
-			return Json(response);
-
+			return Json(response); 
 		}
-
 
 		[HttpGet]
 		[Route("NotNullGetExpense")]
@@ -132,13 +128,12 @@ namespace TetroONE.Controllers
 
 		[HttpGet]
 		[Route("DeleteExpense")]
-		public IActionResult DeleteExpense(int ExpenseId, int FranchiseId)
+		public IActionResult DeleteExpense(int ExpenseId)
 		{
 			DeleteExpense getInfo = new DeleteExpense()
 			{
 				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-				ExpenseId = ExpenseId,
-                FranchiseId = FranchiseId
+				ExpenseId = ExpenseId
 			};
 
 			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteExpenseDetails]", getInfo);

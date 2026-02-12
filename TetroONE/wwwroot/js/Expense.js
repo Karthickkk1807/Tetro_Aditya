@@ -8,8 +8,6 @@ var claimData = [];
 
 let dropdownCache = {
     ExpenseCategory: [],
-
-
 };
 
 $(document).ready(function () {
@@ -273,7 +271,7 @@ $('#ExpenseData').on('click', '.btn-delete', async function () {
     if (response == true) {
         var ExpenseId = $(this).data('id');
         var PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
-        Common.ajaxCall("GET", "/Expense/DeleteExpense", { ExpenseId: parseInt(ExpenseId), FranchiseId: PlantMappingId }, ExpenseReload, null);
+        Common.ajaxCall("GET", "/Expense/DeleteExpense", { ExpenseId: parseInt(ExpenseId) }, ExpenseReload, null);
     }
 });
 
@@ -365,13 +363,13 @@ function ExpenseGetNotNull(response) {
                           <div class="col-lg-4 col-md-6 col-sm-6 col-6">
                               <div class="form-group">
                                  <label>Amount <span id="Asterisk">*</span></label>
-                                  <input type="text" class="form-control ExpenseAmount" id="ExpenseAmount${numberIncr}" name="ExpenseAmount${numberIncr}" value="${value.ExpenseAmount}" required  ${value.ClaimId != null && value.ClaimId != "" ? 'disabled' : ''}>
+                                  <input type="text" class="form-control ExpenseAmount" id="ExpenseAmount${numberIncr}" name="ExpenseAmount${numberIncr}" value="${value.ExpenseAmount}" required  ${value.ClaimId != null && value.ClaimId != "" ? 'disabled' : ''} autocomplete="off" oninput="Common.allowOnlyNumbersAndDecimalInventory(this)">
                               </div>
                           </div>
                           <div class="col-lg-8 col-md-10 col-sm-10 col-10">
                               <div class="form-group">
                                  <label>Description</label>
-                                  <input type="text" class="form-control Comments" id="Comments${numberIncr}" name="Comments${numberIncr}"autocomplete="off" value="${value.Description}"
+                                  <input type="text" class="form-control Comments" id="Comments${numberIncr}" name="Comments${numberIncr}"autocomplete="off" maxlength="100" value="${value.Description}"
                                          placeholder="Description">
                               </div>
                           </div>  
@@ -490,8 +488,7 @@ $(document).on('click', '#dyanmicplusbtn', function () {
          <div class="col-lg-8 col-md-10 col-sm-10 col-10">
              <div class="form-group">
                 <label>Description</label>
-                 <input type="text" class="form-control Comments" id="Comments${numberIncr}" name="Comments${numberIncr}"autocomplete="off"
-                        placeholder="Description">
+                 <input type="text" class="form-control Comments" id="Comments${numberIncr}" name="Comments${numberIncr}"autocomplete="off" maxlength="100" placeholder="Description">
              </div>
          </div>  
          <div class="col-lg-4 col-md-4 col-sm-2 col-2 p-1 d-flex justify-content-center align-items-center">
@@ -501,7 +498,6 @@ $(document).on('click', '#dyanmicplusbtn', function () {
          </div>
     </div>`;
     $('#ExpanseDynRow').append(newRowDataHtml)
-
 
     let $latestRow = $('#ExpanseDynRow .duplicaterow').last();
 

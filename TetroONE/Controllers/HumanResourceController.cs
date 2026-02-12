@@ -1017,21 +1017,20 @@ namespace TetroONE.Controllers
 
         }
 
+        //[HttpGet]
+        //[Route("GetExpenseNo")]
+        //public IActionResult GetExpenseNo(int? ModuleId, string ModuleName)
+        //{
+        //    GetExpenseNo Get = new GetExpenseNo()
+        //    {
+        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //        ModuleId = ModuleId,
+        //        ModuleName = ModuleName
+        //    };
 
-        [HttpGet]
-        [Route("GetExpenseNo")]
-        public IActionResult GetExpenseNo(int? ModuleId, string ModuleName)
-        {
-            GetExpenseNo Get = new GetExpenseNo()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                ModuleId = ModuleId,
-                ModuleName = ModuleName
-            };
-
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetExpenseClaimDetails]", Get);
-            return Json(response);
-        }
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetExpenseClaimDetails]", Get);
+        //    return Json(response);
+        //}
 
         [HttpGet]
         [Route("GetUserTypeId")]

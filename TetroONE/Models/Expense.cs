@@ -14,7 +14,6 @@ namespace TetroONE.Models
     public class DeleteExpense
     {
         public int LoginUserId { get; set; }
-        public int FranchiseId { get; set; }
         public int ExpenseId { get; set; }
     }
 

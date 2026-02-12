@@ -629,19 +629,19 @@ namespace TetroONE.Controllers
 
         /*=================================================================DefaultProduct=====================================================================*/
 
-        [HttpGet]
-        [Route("GetDefaultProduct")]
-        public IActionResult GetDefaultProduct(int DefaultProductId)
-        {
-            GetDefaultProduct Get = new GetDefaultProduct()
-            {
-                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId
-            };
+        //[HttpGet]
+        //[Route("GetDefaultProduct")]
+        //public IActionResult GetDefaultProduct(int DefaultProductId)
+        //{
+        //    GetDefaultProduct Get = new GetDefaultProduct()
+        //    {
+        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //        DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId
+        //    };
 
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetColorDetails]", Get);
-            return Json(response);
-        }
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetColorDetails]", Get);
+        //    return Json(response);
+        //}
 
         [HttpPost]
         [Route("InsertDefaultProductDetails")]

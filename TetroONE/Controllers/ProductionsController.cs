@@ -645,7 +645,7 @@ namespace TetroONE.Controllers
 
             List<ProductionPlanFabricProcessMappingDetails>? ProductionPlanFabricProcessMappingDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanFabricProcessMappingDetails>?>(Request.Form["ProductionPlanFabricProcessMappingDetails"]);
             DataTable ProductionPlanFabricProcessMappingDetails = GenericTetroONE.ToDataTable(ProductionPlanFabricProcessMappingDetails1);
-             
+
             List<ProductionPlanChemicalRequirementDetails>? ProductionPlanChemicalRequirementDetails1 = JsonConvert.DeserializeObject<List<ProductionPlanChemicalRequirementDetails>?>(Request.Form["ProductionPlanChemicalRequirementDetails"]);
             DataTable ProductionPlanChemicalRequirementDetails = GenericTetroONE.ToDataTable(ProductionPlanChemicalRequirementDetails1);
 
@@ -679,7 +679,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@PreparedBy", staticDetails.PreparedBy);
 
                     command.Parameters.AddWithValue("@TVP_ProductionPlanFabricDetails", ProductionPlanFabricDetails);
-                    command.Parameters.AddWithValue("@TVP_ProductionPlanFabricProcessMappingDetails", ProductionPlanFabricProcessMappingDetails); 
+                    command.Parameters.AddWithValue("@TVP_ProductionPlanFabricProcessMappingDetails", ProductionPlanFabricProcessMappingDetails);
                     command.Parameters.AddWithValue("@TVP_ProductionPlanChemicalRequirementDetails", ProductionPlanChemicalRequirementDetails);
                     command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
 
@@ -1056,7 +1056,7 @@ namespace TetroONE.Controllers
                                     FinishingProduct = dt8.Rows[0]["FinishingProduct"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingProduct"]) : null,
                                     FinishingUnit = dt8.Rows[0]["FinishingUnit"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingUnit"]) : null,
                                     FinishingUnitValue = dt8.Rows[0]["FinishingUnitValue"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingUnitValue"]) : null,
-                                    FinishingQty = dt8.Rows[0]["FinishingQty"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingQty"]) : null,  
+                                    FinishingQty = dt8.Rows[0]["FinishingQty"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingQty"]) : null,
                                 };
 
                                 string LotNumber = dt2.Rows[0]["LotNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["LotNo"]) : null;
@@ -1173,7 +1173,7 @@ namespace TetroONE.Controllers
         }
 
         [HttpGet]
-        [Route("GenerateQrContectPdf")] 
+        [Route("GenerateQrContectPdf")]
         public IActionResult GenerateQrContectPdf(string URL, string ProductionPlanNo)
         {
             using (var stream = new MemoryStream())
@@ -1293,13 +1293,12 @@ namespace TetroONE.Controllers
         public IActionResult GetApplicableMachineData(int companyId, decimal totalWeight)
         {
             string query = @"
-                            SELECT  TOP 1 
-                                    MachineName
+                            SELECT  TOP 1 MachineName
                                     ,NoOfChambers
                                     ,(@TotalWeight / NoOfChambers) AS ChamberWeight
-                            FROM MachineDetails
-                            WHERE @TotalWeight BETWEEN MinCapacity AND MaxCapacity
-                              AND CompanyId = @CompanyId";
+                            FROM    [dbo].[MachineDetails]
+                            WHERE   @TotalWeight BETWEEN MinCapacity AND MaxCapacity
+                            AND     CompanyId = @CompanyId";
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -1318,19 +1317,12 @@ namespace TetroONE.Controllers
                             NoOfChambers = reader["NoOfChambers"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["NoOfChambers"]),
                             ChamberWeight = reader["ChamberWeight"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(reader["ChamberWeight"])
                         };
-
                         return Ok(result); // JSON response
                     }
                 }
             }
 
-            return Ok(new
-            {
-                MachineName = (string?)null,
-                NoOfChambers = (int?)null,
-                ChamberWeight = (decimal?)null
-            });
+            return Ok(new { MachineName = (string?)null, NoOfChambers = (int?)null, ChamberWeight = (decimal?)null });
         }
-
     }
 }

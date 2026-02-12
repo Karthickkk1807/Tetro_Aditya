@@ -20,7 +20,6 @@ $(document).ready(function () {
     $('#LookForwardHoleDivHide').hide();
     $('#CheckInOutHoleDivHide').hide();
     $('#StaticAttachment').hide();
-    $('#ForLableEmpAttend').text('Attendant');
     $('.mydatetimepicker').mdtimepicker();
     $('#queryTextarea').css('height', '33px');
 });
@@ -310,7 +309,6 @@ $(document).on('change', '#EnquiryTypeId', function () {
         $('#LookForwardHoleDivHide').show();
         $('#StaticAttachment').show();
         $('#CheckInOutHoleDivHide').hide();
-        $('#ForLableEmpAttend').text('Attendant');
         $('#queryTextarea').css('height', '77px');
         if (enquiryId != 0) {
             $('#followupdetails').show();
@@ -328,7 +326,6 @@ $(document).on('change', '#EnquiryTypeId', function () {
         $('#LookForwardHoleDivHide').hide();
         $('#StaticAttachment').hide();
         $('#CheckInOutHoleDivHide').show();
-        $('#ForLableEmpAttend').text('Employee');
         $('#queryTextarea').css('height', '113px');
         if (enquiryId != 0) {
             $('#followupdetails').hide();
@@ -352,7 +349,6 @@ $(document).on('change', '#EnquiryTypeId', function () {
         $('#LookForwardHoleDivHide').hide();
         $('#CheckInOutHoleDivHide').hide();
         $('#StaticAttachment').hide();
-        $('#ForLableEmpAttend').text('Attendant');
         $('#followupdetails').hide();
         $('#queryTextarea').css('height', '33px');
         if (enquiryId != 0) {
