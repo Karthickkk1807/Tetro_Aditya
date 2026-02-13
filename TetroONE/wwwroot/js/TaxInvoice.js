@@ -36,6 +36,7 @@ async function initializePage() {
     Common.bindDropDownParent('BillFrom', 'FormBillFrom', 'BillFrom');
     Common.bindDropDownParent('ClientId', 'FormClient', 'Client');
     Common.bindDropDownParent('SaleStatusId', 'FormStatus', 'SaleStatus');
+    Common.bindDropDownParent('TaxInfoId', 'FormRightSideHeader', 'TaxInfo');
 
     var otherChangesDiscountDropdown = await Common.bindDropDownSync('OtherChargesDiscount');
     OtherChangesDiscountDropdown = JSON.parse(otherChangesDiscountDropdown);
@@ -212,6 +213,7 @@ $(document).on('click', '#customBtn_SaleData', function () {
 
     $('#SaleStatusId').val('1');
 
+    $('#TaxInfoIdDiv').hide();
     $('.Status-Div').hide();
     $("#TaxInvoiceModal .modal-body").animate({ scrollTop: 0 }, "fast");
 
@@ -250,6 +252,7 @@ $('#SaleData').on('click', '.btn-edit', function () {
     resetCommonData();
 
     $('.Status-Div').hide();
+    $('#TaxInfoIdDiv').hide();
     $("#TaxInvoiceModal .modal-body").animate({ scrollTop: 0 }, "fast");
 
     $('#TaxInvoiceModal').show();
@@ -264,8 +267,10 @@ $(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
     e.stopPropagation();
 
     const $rows = $('#ClientColumn .row.mt-3');
+    const $taxDiv = $('#TaxInfoIdDiv');
 
-    $rows.stop(true, true).slideToggle(300);
+    // Toggle both rows and Tax div together
+    $rows.add($taxDiv).stop(true, true).slideToggle(300);
 
     const $icon = $('#toggleIconShipTo');
     $icon.toggleClass('fa-chevron-up fa-chevron-down');
@@ -450,6 +455,17 @@ function UpdateSaleTableSerialNumbers() {
     });
 }
 
+// ===============================
+// Tax Change Event
+// ===============================
+$(document).on('change', '#TaxInfoId', function () {
+    CalculateSubtotal();
+});
+
+
+// ===============================
+// Rate Input Change
+// ===============================
 $(document).on('input', '.Rate', function () {
 
     var $row = $(this).closest('tr');
@@ -468,11 +484,17 @@ $(document).on('input', '.Rate', function () {
         total = qty * rate;
     }
 
+    total = parseFloat(total.toFixed(2));
+
     $row.find('.Amount').val(formatRupee(total));
 
     CalculateSubtotal();
 });
 
+
+// ===============================
+// Calculate Subtotal
+// ===============================
 function CalculateSubtotal() {
 
     var subtotal = 0;
@@ -486,17 +508,76 @@ function CalculateSubtotal() {
 
     $('#Subtotal').val(formatRupee(subtotal));
 
-    CalculateRoundOffAndGrandTotal(subtotal);
-    calculateOtherCharges();
+    // 🔥 Pass subtotal to next step
+    calculateFinalAmount(subtotal);
 }
 
-// ===============================
-// Calculate Round Off & Grand Total
-// ===============================
-function CalculateRoundOffAndGrandTotal(subtotal) {
-    var roundedTotal = Math.round(subtotal);
-    var roundOffValue = roundedTotal - subtotal;
 
+// ===============================
+// GST + Round Off + Grand Total
+// ===============================
+function calculateFinalAmount(subtotal) {
+
+    let finalTotal = subtotal;
+
+    // ===============================
+    // APPLY OTHER CHARGES
+    // ===============================
+    $("#dynamicBindRow .OtherChargesRow").each(function () {
+
+        let row = $(this);
+        let type = row.attr("data-id");
+
+        let value = getNumber(row.find(".OtherValueInsert").val());
+        let isPercentage = row.find("input[value='1']").is(":checked");
+
+        let calcValue = 0;
+
+        if (isPercentage) {
+            calcValue = (subtotal * value) / 100;
+        } else {
+            calcValue = value;
+        }
+
+        calcValue = parseFloat(calcValue.toFixed(2));
+
+        row.find(".otherChargeValue").val(formatRupee(calcValue));
+
+        if (type === "Discount") {
+            finalTotal -= calcValue;
+        } else {
+            finalTotal += calcValue;
+        }
+    });
+
+    finalTotal = parseFloat(finalTotal.toFixed(2));
+
+    // ===============================
+    // APPLY GST
+    // ===============================
+    var gstPercent = 0;
+    var selectedVal = $('#TaxInfoId').val();
+
+    if (selectedVal == "1") gstPercent = 5;
+    else if (selectedVal == "2") gstPercent = 12;
+    else if (selectedVal == "3") gstPercent = 18;
+    else if (selectedVal == "4") gstPercent = 28;
+
+    var gstAmount = (finalTotal * gstPercent) / 100;
+    gstAmount = parseFloat(gstAmount.toFixed(2));
+
+    $('#GSTAmount').val(formatRupee(gstAmount));
+
+    finalTotal += gstAmount;
+    finalTotal = parseFloat(finalTotal.toFixed(2));
+
+    // ===============================
+    // ROUND OFF
+    // ===============================
+    let roundedTotal = Math.round(finalTotal);
+    let roundOffValue = parseFloat((roundedTotal - finalTotal).toFixed(2));
+
+    // ✅ Keep original sign for color logic
     if (roundOffValue > 0) {
         $('#roundOff').css('color', 'green');
     } else if (roundOffValue < 0) {
@@ -505,7 +586,9 @@ function CalculateRoundOffAndGrandTotal(subtotal) {
         $('#roundOff').css('color', 'blue');
     }
 
+    // ✅ Always show positive value
     $('#roundOff').val(formatRupee(Math.abs(roundOffValue)));
+
     $('#GrantTotal').val(formatRupee(roundedTotal));
 }
 
@@ -587,6 +670,13 @@ function saveSaleOrder(callback, options = {}) {
         return;
     }
 
+    var $thisValOfTax = $('#TaxInfoId').val();
+    if ($thisValOfTax == "") {
+        Common.warningMsg('Please fill in the Tax and click the arrow to expand.');
+        $('#loader-pms').hide();
+        return false;
+    }
+
     const ClientInput = $('#ClientId').val();
     if (ClientInput === '') {
         Common.warningMsg('Click + Add Client and Fill the Input');
@@ -614,6 +704,7 @@ function saveSaleOrder(callback, options = {}) {
         DueDate: $('#DueDate').val(),
         SaleStatusId: parseInt($('#SaleStatusId').val()),
         Notes: $('#Notes').val(),
+        TaxInfoId: parseInt($('#TaxInfoId').val()),
     };
 
     // Prepare SaleOutWardMappingDetails
@@ -642,7 +733,7 @@ function saveSaleOrder(callback, options = {}) {
             NoOfRolls: safeParseInt($row.find('.Roll').val()),
             OutWardQty: safeParseFloat($row.find('.Weight').val()),
             Rate: safeParseFloat($row.find('.Rate').val()),
-            Amount: safeParseFloat($row.find('.Amount').val()),
+            Amount: parseFloatValueInsert($row.find('.Amount').val()),
             SaleId: EditSaleId > 0 ? EditSaleId : null,
         });
     });
@@ -741,9 +832,7 @@ $(document).on('click', '.btn-delete', async function () {
     }
 });
 
-
 /* ========================================= NOT NULL GET ========================================== */
-
 
 async function GetNotNullSale(response) {
     if (response.status) {
@@ -759,6 +848,7 @@ async function GetNotNullSale(response) {
         $('#GrantTotal').val(data[0][0].GrantTotal);
         $('#DueDate').val(formatDateForInput(data[0][0].DueDate));
         $('#SaleStatusId').val(data[0][0].SaleStatusId);
+        $('#TaxInfoId').val(data[0][0].TaxInfoId);
 
         toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "#HideNotes");
         toggleFieldForAttachment(data[4][0].AttachmentId, "#AddAttachment", "#AddAttachLable", "#hideAttach");
@@ -1307,12 +1397,11 @@ $(document).on('change', '.taxandothers', function () {
 
 $(document).on('click', '.OtherDynamicRemove', function () {
     $(this).closest('.OtherChargesRow').remove();
-    calculateOtherCharges();
     CalculateSubtotal();
 });
 
 $(document).on("input change", ".calculateinventory, .OtherValueInsert", function () {
-    calculateOtherCharges();
+    CalculateSubtotal();
 });
 
 function calculateOtherCharges() {

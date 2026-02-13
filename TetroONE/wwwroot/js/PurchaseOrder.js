@@ -717,57 +717,6 @@ $(document).ready(function () {
         calculateGrandTotal();
     });
 
-    $(document).on('click', '#btnPrintSale', function () {
-        $('#loader-pms').show();
-        var EditData = { ModuleId: parseInt(purchaseOrderId), NoOfCopies: 1, printType: "preview" }
-
-        $.ajax({
-            url: '/Sale/SaleOrderPrint',
-            method: 'GET',
-            data: EditData,
-            xhrFields: {
-                responseType: 'blob'
-            },
-            success: function (response) {
-                var printType = "Preview";
-                $('#ShareDropdownitems').css('display', 'none');
-                var blob = new Blob([response], { type: 'application/pdf' });
-                var blobUrl = URL.createObjectURL(blob);
-                if (printType == "Preview") {
-                    var newTab = window.open();
-                    if (newTab) {
-                        newTab.document.write(`
-                                              <html>
-                                              <head><title>TaxInvoice Preview</title></head>
-                                              <body style="margin:0;">
-                                                  <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-                                              </body>
-                                              </html>
-                                          `);
-                        newTab.document.close();
-                    }
-                } else if (printType == "Download") {
-                    var link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = 'Purchase Order.pdf';
-                    link.click();
-                } else if (printType == "Print") {
-                    var iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = blobUrl;
-                    document.body.appendChild(iframe);
-                    iframe.contentWindow.print();
-                }
-                $('#loader-pms').hide();
-                /* Print*/
-            },
-            error: function () {
-                $('#loader-pms').hide();
-                Common.errorMsg(response.message);
-            }
-        });
-    });
-
     $(document).on('click', '#btnPordersaveprintbtn', function () {
 
         $('#loader-pms').show();

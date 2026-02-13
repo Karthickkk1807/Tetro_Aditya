@@ -995,7 +995,7 @@ namespace TetroONE.Controllers
                             adapter.Fill(ds);
                         }
 
-                        if (ds.Tables.Count >= 8)
+                        if (ds.Tables.Count >= 9)
                         {
                             DataTable dt1 = ds.Tables[0];
                             DataTable dt2 = ds.Tables[1];
@@ -1005,6 +1005,7 @@ namespace TetroONE.Controllers
                             DataTable dt6 = ds.Tables[5];
                             DataTable dt7 = ds.Tables[6];
                             DataTable dt8 = ds.Tables[7];
+                            DataTable dt9 = ds.Tables[8];
 
                             // Check if dt1 has rows
                             if (dt1.Rows.Count > 0)
@@ -1017,46 +1018,37 @@ namespace TetroONE.Controllers
                                     Date = dt2.Rows[0]["Date"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Date"]) : null,
                                     SFNo = dt2.Rows[0]["SFNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["SFNo"]) : null,
                                     ClientName = dt2.Rows[0]["ClientName"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["ClientName"]) : null,
-                                    Colour = dt2.Rows[0]["Colour"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Colour"]) : null,
-                                    Rolls = dt2.Rows[0]["Rolls"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Rolls"]) : null,
                                     Fabric = dt2.Rows[0]["Fabric"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Fabric"]) : null,
                                     Weight = dt2.Rows[0]["Weight"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Weight"]) : null,
+                                    Rolls = dt2.Rows[0]["Rolls"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Rolls"]) : null,
+                                    GSM = dt2.Rows[0]["GSM"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["GSM"]) : null,
+                                    Width = dt2.Rows[0]["Width"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Width"]) : null,
+                                    Colour = dt2.Rows[0]["Colour"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Colour"]) : null,
                                     WaterPPM = dt2.Rows[0]["WaterPPM"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["WaterPPM"]) : null,
                                     LotNo = dt2.Rows[0]["LotNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["LotNo"]) : null,
                                     DCNo = dt2.Rows[0]["DCNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["DCNo"]) : null,
                                     OrderNo = dt2.Rows[0]["OrderNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["OrderNo"]) : null,
                                     Water = dt2.Rows[0]["Water"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Water"]) : null,
-                                    GSM = dt2.Rows[0]["GSM"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["GSM"]) : null,
                                     RPM = dt2.Rows[0]["RPM"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["RPM"]) : null,
 
                                     Machine = dt3.Rows[0]["Machine"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["Machine"]) : null,
                                     NoOfChamber = dt3.Rows[0]["NoOfChamber"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["NoOfChamber"]) : null,
                                     ChamberQty = dt3.Rows[0]["ChamberQty"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["ChamberQty"]) : null,
 
-                                    PreTreatmentProduct = dt4.Rows[0]["PreTreatmentProduct"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["PreTreatmentProduct"]) : null,
-                                    PreTreatmentUnit = dt4.Rows[0]["PreTreatmentUnit"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["PreTreatmentUnit"]) : null,
-                                    PreTreatmentUnitValue = dt4.Rows[0]["PreTreatmentUnitValue"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["PreTreatmentUnitValue"]) : null,
-                                    PreTreatmentQty = dt4.Rows[0]["PreTreatmentQty"] != DBNull.Value ? Convert.ToString(dt4.Rows[0]["PreTreatmentQty"]) : null,
+                                    LoadingDate = dt9.Rows[0]["LoadingDate"] != DBNull.Value ? Convert.ToString(dt9.Rows[0]["LoadingDate"]) : null,
+                                    LoadingTime = dt9.Rows[0]["LoadingTime"] != DBNull.Value ? Convert.ToString(dt9.Rows[0]["LoadingTime"]) : null,
+                                    UnloadingDate = dt9.Rows[0]["UnloadingDate"] != DBNull.Value ? Convert.ToString(dt9.Rows[0]["UnloadingDate"]) : null,
+                                    UnloadingTime = dt9.Rows[0]["UnloadingTime"] != DBNull.Value ? Convert.ToString(dt9.Rows[0]["UnloadingTime"]) : null,
 
-                                    DyeProduct = dt5.Rows[0]["DyeProduct"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DyeProduct"]) : null,
-                                    DyeUnit = dt5.Rows[0]["DyeUnit"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DyeUnit"]) : null,
-                                    DyeUnitValue = dt5.Rows[0]["DyeUnitValue"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DyeUnitValue"]) : null,
-                                    DyeQty = dt5.Rows[0]["DyeQty"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DyeQty"]) : null,
+                                    PreTreatmentProductItemData = dt4,
 
-                                    DyeBathProduct = dt6.Rows[0]["DyeBathProduct"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["DyeBathProduct"]) : null,
-                                    DyeBathUnit = dt6.Rows[0]["DyeBathUnit"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["DyeBathUnit"]) : null,
-                                    DyeBathUnitValue = dt6.Rows[0]["DyeBathUnitValue"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["DyeBathUnitValue"]) : null,
-                                    DyeBathQty = dt6.Rows[0]["DyeBathQty"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["DyeBathQty"]) : null,
+                                    DyeProductItemData = dt5,
 
-                                    AfterTreatmentProduct = dt7.Rows[0]["AfterTreatmentProduct"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["AfterTreatmentProduct"]) : null,
-                                    AfterTreatmentUnit = dt7.Rows[0]["AfterTreatmentUnit"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["AfterTreatmentUnit"]) : null,
-                                    AfterTreatmentUnitValue = dt7.Rows[0]["AfterTreatmentUnitValue"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["AfterTreatmentUnitValue"]) : null,
-                                    AfterTreatmentQty = dt7.Rows[0]["AfterTreatmentQty"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["AfterTreatmentQty"]) : null,
+                                    DyeBathProductItemData = dt6,
 
-                                    FinishingProduct = dt8.Rows[0]["FinishingProduct"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingProduct"]) : null,
-                                    FinishingUnit = dt8.Rows[0]["FinishingUnit"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingUnit"]) : null,
-                                    FinishingUnitValue = dt8.Rows[0]["FinishingUnitValue"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingUnitValue"]) : null,
-                                    FinishingQty = dt8.Rows[0]["FinishingQty"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["FinishingQty"]) : null,
+                                    AfterTreatmentProductItemData = dt7,
+
+                                    FinishingProductItemData = dt8,
                                 };
 
                                 string LotNumber = dt2.Rows[0]["LotNo"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["LotNo"]) : null;

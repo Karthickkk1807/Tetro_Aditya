@@ -32,6 +32,7 @@ namespace TetroONE.Models
 		public DateTime? DueDate { get; set; }
 		public int? SaleStatusId { get; set; }
 		public string? Notes { get; set; }
+        public int? TaxInfoId { get; set; }
     }
 
     public class InsertUpdateSale
@@ -49,6 +50,7 @@ namespace TetroONE.Models
         public DateTime? DueDate { get; set; }
         public int? SaleStatusId { get; set; }
         public string? Notes { get; set; }
+        public int? TaxInfoId { get; set; }
         public DataTable TVP_SaleOutWardMappingDetails { get; set; }
         public DataTable TVP_SaleOutWardFabricDetails { get; set; }
         public DataTable TVP_PurchaseSaleOtherChargesMappingDetails { get; set; } 
@@ -116,7 +118,6 @@ namespace TetroONE.Models
         public string? CustomerName { get; set; }
         public string? MobileNumber { get; set; }
 
-
         public string? CompanyName { get; set; }
         public string? CompanyLogo { get; set; }
         public string? CompanyAddress { get; set; }
@@ -126,7 +127,6 @@ namespace TetroONE.Models
         public string? CompanyContactNumber { get; set; }
         public string? CompanyEmail { get; set; }
         public string? CompanyWebsite { get; set; }
-
 
         public string? ClientName { get; set; }
         public string? ClientAddress { get; set; }
@@ -197,6 +197,53 @@ namespace TetroONE.Models
 
     }
 
+    public class SaleOrderPrintNew
+    {
+        public string? CompanyLogo { get; set; }
+        public string? CompanyName { get; set; }
+        public string? Address1 { get; set; }
+        public string? Address2 { get; set; }
+        public string? Phone { get; set; }
+        public string? PFCodeNo { get; set; }
+        public string? ESICodeNo { get; set; }
+        public string? Email { get; set; }
+        public string? GSTin { get; set; }
+        public string? MSMERegistrationNo { get; set; }
+
+        public string? ClientName { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? GSTNumber { get; set; }
+
+        public string? SaleId { get; set; }
+        public string? SaleNo { get; set; }
+        public string? SaleDate { get; set; }
+        public string? HSNSAC { get; set; }
+
+        public string? BankName { get; set; }
+        public string? BranchName { get; set; }
+        public string? AccountNumber { get; set; }
+        public string? IFSCCode { get; set; }
+
+        public string? SubTotal { get; set; }
+        public string? CGST_Percentage { get; set; }
+        public string? SGST_Percentage { get; set; }
+        public string? CGST_Amount { get; set; }
+        public string? SGST_Amount { get; set; }
+        public string? RoundOffValue { get; set; }
+        public string? GrantTotal { get; set; }
+        public string? RupeesInWords { get; set; }
+        
+        public string? ArbitrationClause { get; set; }
+        public string? Value1 { get; set; }
+        public string? Value2 { get; set; }
+
+        public string? Roll { get; set; }
+        public string? Weight { get; set; }
+
+        public DataTable? SaleDetailsTable { get; set; }
+    }
+     
     public class GetOutwardDetails_ByInWardId
     {
         public int LoginUserId { get; set; }
