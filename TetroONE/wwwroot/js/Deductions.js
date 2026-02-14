@@ -264,7 +264,7 @@ $(document).ready(function () {
 
     $('#FormAdvance #AdvanceStatusId').change(function () {
         var selectedText = $(this).find('option:selected').text();
-        if (selectedText == "Approved") {
+        if (selectedText == "Rejected") {
             $('#advanceCmtCol').show();
         } else {
             $('#advanceCmtCol').hide();
@@ -273,7 +273,7 @@ $(document).ready(function () {
 
     $('#FormLoan #LoanStatusId').change(function () {
         var selectedText = $(this).find('option:selected').text();
-        if (selectedText == "Approved") {
+        if (selectedText == "Rejected") {
             $('#loanCmtCol').show();
         } else {
             $('#loanCmtCol').hide();
