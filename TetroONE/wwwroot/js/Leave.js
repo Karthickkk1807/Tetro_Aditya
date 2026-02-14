@@ -4,7 +4,7 @@ var compOffId = 0;
 var isHalfVal = null;
 
 $(document).ready(function () {
-    Common.bindDropDownParent('LevEmployeeId', 'FormLeave', 'Employee');
+    Common.bindDropDownParent('LevEmployeeId', 'FormLeave', 'LeaveEmployee');
     Common.bindDropDownParent('LeaveTypeId', 'FormLeave', 'LeaveType');
 
     Common.ajaxCall("GET", "/Leave/GetLeave", { LeaveId: null, }, LeaveSuccess, null);
@@ -72,6 +72,7 @@ $(document).ready(function () {
             $('#IsHalfDay').prop('disabled', false);
             $('#LeaveStatusId').prop('disabled', false);
             $('#LeaveTypeId').val('3');
+
             isHalfVal = null;
             if (isAdminAccess != "True") {
                 $('#LevEmployeeId').val(UserId).trigger('change');
@@ -139,8 +140,6 @@ $(document).ready(function () {
     $('#FromDate').on('change', function () {
         var fromDate = $(this).val();
         $('#ToDate').val(fromDate);
-        /* $('#NoOfDays').val("1 Day");*/
-        //$('#RemainingLeaves').val("0");
     });
 
     $('#IsHalfDay').on('change', function () {

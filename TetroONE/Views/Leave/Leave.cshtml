@@ -270,10 +270,9 @@
                     <div class="col-md-6 col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Type	 <span id="Asterisk">*</span></label>
-                            <select class="form-control" id="Type" name="Type" required>
+                            <select class="form-control" id="Type" name="Type" disabled>
                                 <option value="">--Select--</option>
-                                <option value="1">Permission</option>
-                                <option value="2">Comp Off</option>
+                                <option value="1" selected>Permission</option>
                             </select>
                         </div>
                     </div>
@@ -337,7 +336,7 @@
 
                     <div class="col-md-12 col-lg-12 col-sm-12 col-12" id="PermissionComments">
                         <div class="form-group">
-                            <label>Comments</label>
+                            <label>Comments <span id="Asterisk">*</span></label>
                             <textarea class="form-control" id="Comments" autocomplete="off" name="Comments" rows="1" oninput="Common.allowAllCharacters(this,250)" required placeholder="Comments"></textarea>
                         </div>
                     </div>

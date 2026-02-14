@@ -10,9 +10,9 @@ $(document).ready(function () {
 
     Common.ajaxCall("GET", "/HumanResource/GetAdvance", { AdvanceId: null }, getSuccess, null);
 
-    Common.bindDropDownParent('RequestedBy', 'FormClaim', 'Employee');
-    Common.bindDropDownParent('EmployeeId', 'FormAdvance', 'Employee');
-    Common.bindDropDownParent('LoanEmployeeId', 'FormLoan', 'Employee');
+    Common.bindDropDownParent('RequestedBy', 'FormClaim', 'LeaveEmployee');
+    Common.bindDropDownParent('EmployeeId', 'FormAdvance', 'LeaveEmployee');
+    Common.bindDropDownParent('LoanEmployeeId', 'FormLoan', 'LeaveEmployee');
     Common.bindDropDownParent('ClaimTypeId', 'FormClaim', 'ClaimType');
 
     Common.ajaxCall("GET", "/HumanResource/GetExpenseNo", { ModuleId: null, ModuleName: "Expense" }, function (response) {
@@ -264,7 +264,7 @@ $(document).ready(function () {
 
     $('#FormAdvance #AdvanceStatusId').change(function () {
         var selectedText = $(this).find('option:selected').text();
-        if (selectedText == "Approved") {
+        if (selectedText == "Rejected") {
             $('#advanceCmtCol').show();
         } else {
             $('#advanceCmtCol').hide();
@@ -273,7 +273,7 @@ $(document).ready(function () {
 
     $('#FormLoan #LoanStatusId').change(function () {
         var selectedText = $(this).find('option:selected').text();
-        if (selectedText == "Approved") {
+        if (selectedText == "Rejected") {
             $('#loanCmtCol').show();
         } else {
             $('#loanCmtCol').hide();
@@ -386,6 +386,36 @@ $(document).ready(function () {
             $('#DiffAmount').css('color', '');
         }
     });
+
+    $('#AdvanceAmount').on('input', function () {
+        GetAdvancelimit();
+        advancelimitamount();
+        var advanceval = Common.parseFloatInputValue('AdvanceAmount');
+        if (advanceval == null || advanceval == "") {
+            $('#RemainingAmount').val("");
+        }
+    });
+
+    $('#FormAdvance #EmployeeId').on('change', async function () {
+        GetAdvancelimit();
+        $('#AdvanceAmount').prop('disabled', false);
+    });
+
+
+
+    $('#FormLoan #EmployeeId').on('change', async function () {
+        GetLoanlimit();
+        $('#LoanAmount').prop('readonly', false);
+    });
+
+    $('#FormLoan #LoanAmount').on('input', function () {
+        GetLoanlimit();
+        loanlimitamount();
+        var loanVal = Common.parseFloatInputValue("LoanAmount");
+        if (loanVal == null || loanVal == "") {
+            $('#RemainingAmount').val("");
+        }
+    });
 });
 
 function truncateToFixed(num, decimals) {
@@ -428,7 +458,7 @@ function getSuccess(response) {
             //$("#CounterTextBox2").text('Requested');
             //$("#CounterTextBox3").text('Approved');
             //$("#CounterTextBox4").text('Rejected');
-            
+
             //$('#CounterValBox1').text('31 / ₹ 29,758.00');
             //$('#CounterValBox2').text('4 / ₹ 6590.00');
             //$('#CounterValBox3').text('12 / ₹ 18,555.00');
@@ -444,7 +474,7 @@ function getSuccess(response) {
             //$("#CounterTextBox2").text('Total Due');
             //$("#CounterTextBox3").text('No Of Request');
             //$("#CounterTextBox4").text('No Of Rejected');
-            
+
             //$('#CounterValBox1').text('28 / ₹ 3,90,000.00');
             //$('#CounterValBox2').text('₹ 31,000.00');
             //$('#CounterValBox3').text('7 / ₹ 38,000.00');
@@ -460,7 +490,7 @@ function getSuccess(response) {
             //$("#CounterTextBox2").text('Total Due');
             //$("#CounterTextBox3").text('No Of Request');
             //$("#CounterTextBox4").text('No Of Rejected');
-            
+
             //$('#CounterValBox1').text('23 / ₹ 7,22,000.00');
             //$('#CounterValBox2').text('₹ 57,000.00');
             //$('#CounterValBox3').text('5 / ₹ 51,000.00');
@@ -606,6 +636,8 @@ function editLoanSuccess(response) {
                 $('#LoanDate,#LoanAmount,#NoOfDues,#LoanStatusId').prop('disabled', false);
             }
         }
+
+        GetLoanlimit();
     }
 }
 
@@ -628,6 +660,150 @@ function SaveSuccess(response) {
         Common.errorMsg(response.message);
     }
 }
+
+
+async function GetAdvancelimit() {
+    var resquest = {
+        EmployeeId: Common.parseInputValue('EmployeeId'),
+        Module: ('Advance'),
+        ModuleId: advanceId == 0 ? null : advanceId
+    };
+    if (resquest.EmployeeId > 0) {
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: '/Common/GetAdvancelimit',
+            data: JSON.stringify(resquest),
+            success: function (response) {
+                if (response.status) {
+                    if (response.data != null && response.data.length > 0) {
+                        var values = JSON.parse(response.data);
+                        if (advanceId == 0) {
+                            $('#LimitAmount').val(values[0][0].LimitAmount);
+                            var advance = values[0][0].LimitAmount;
+                        } else {
+                            $('#LimitAmount').val(values[0][0].LimitAmount + values[0][0].AdvanceAmount);
+                            var advance = values[0][0].LimitAmount + values[0][0].AdvanceAmount;
+                        }
+
+                        var advanceval = Common.parseFloatInputValue('AdvanceAmount');
+                        if (values != null && values?.length > 0) {
+                            $('#DueAmount').val(values[0][0].DueAmount);
+                            advancelimitamount();
+                        }
+                        if (advanceval > advance) {
+                            $('#AdvanceAmount').val(advance);
+                            $('#RemainingAmount').val(0);
+                            Common.warning('You have exceed the limit');
+                        }
+                        $("#SaveAdvance").show()
+                    }
+                } else {
+                    Common.warning(response.message);
+                    $('#advancebtn').hide();
+                    $('#LimitAmount').val('');
+                    $("#SaveAdvance").hide()
+                }
+            },
+            error: function (response) {
+
+            },
+        });
+    }
+}
+function advancelimitamount() {
+    var advanceval = Common.parseFloatInputValue('AdvanceAmount');
+    var limitval = Common.parseFloatInputValue('LimitAmount');
+    if (advanceval != null && advanceval != '') {
+        var totalval = limitval - advanceval;
+        $('#RemainingAmount').val(totalval);
+
+    }
+
+}
+
+
+
+
+async function GetLoanlimit() {
+    var resquest = {
+        EmployeeId: Common.parseInputValue('LoanEmployeeId'),
+        Module: ('Loan'),
+        ModuleId: loanId == 0 ? null : loanId
+    };
+    if (resquest.EmployeeId > 0) {
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: '/Common/GetAdvancelimit',
+            data: JSON.stringify(resquest),
+            success: function (response) {
+                if (response.status == true) {
+                    if (response.data != null && response.data.length > 0) {
+                        var values = JSON.parse(response.data);
+                        if (loanId == 0) {
+                            $('#LoanMaxAmount').val(values[0][0].LimitAmount);
+                            var loan = values[0][0].LimitAmount;
+                        } else {
+                            $('#LoanMaxAmount').val(values[0][0].LimitAmount + values[0][0].AdvanceAmount);
+                            var loan = values[0][0].LimitAmount + values[0][0].AdvanceAmount;
+                        }
+
+                        var loanval = Common.parseFloatInputValue('LoanAmount');
+                        if (values != null && values?.length > 0) {
+                            $('#DueAmount').val(values[0][0].DueAmount);
+                            performDivision();
+                            loanlimitamount();
+                        }
+                        if (loanval > loan) {
+                            $('#LoanAmount').val(loan);
+                            $('#RemainingAmount').val(0);
+                            Common.warning('You have exceed the limit');
+                        }
+                        $('#SaveLoan').show();
+                    }
+                } else {
+                    Common.warning(response.message);
+                    $('#SaveLoan').hide();
+                    $('#LimitAmount').val('');
+                }
+            },
+            error: function (response) {
+
+            },
+        });
+    }
+
+}
+function loanlimitamount() {
+    var loanval = Common.parseFloatInputValue('LoanAmount');
+    var limitval = Common.parseFloatInputValue('LoanMaxAmount');
+    if (loanval != null && loanval != '') {
+        var totalval = limitval - loanval;
+        $('#RemainingAmount').val(totalval);
+
+    }
+}
+
+
+
+function performDivision() {
+    var value1 = parseFloat($("#LoanAmount").val());
+    var value2 = parseFloat($("#NoOfDues").val());
+
+    if (!isNaN(value1) && !isNaN(value2) && value2 !== 0) {
+        var result = value1 / value2;
+        result = result.toFixed(2);
+        $("#DueAmount").val(result);
+    }
+}
+
+
+
+
+
 
 $(document).on('click', '#deletefile', function () {
     var listItem = $(this).closest('li');
