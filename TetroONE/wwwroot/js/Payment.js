@@ -329,10 +329,9 @@ function EditPaymentSuccess(response) {
         $('#ContactRequestId').val(data[0][0].ContactId); 
     }
     else {
-        $('#ContactReceivableId').val(data[0][0].PaymentTypeId).trigger('change');
-        $('#PaymentTypeReceivableId').val(data[0][0].ContactId);  
+        $('#PaymentTypeReceivableId').val(data[0][0].PaymentTypeId).trigger('change');
+        $('#ContactReceivableId').val(data[0][0].ContactId);  
     }
-
 
     var dateStr = data[0][0].PaymentDate;
     var dateParts = dateStr.split('-');
@@ -803,7 +802,7 @@ $(document).on('change', '.billNumber', function () {
         var otherRow = $(this).closest('tr');
         if ($(this).val() === currentBillNumberVal && otherRow[0] !== currentRow[0]) {
             isDuplicate = true;
-            duplicateBalanceAmount = otherRow.find('.balanceAmount').val();
+            duplicateBalanceAmount = parseFloat(otherRow.find('.balanceAmount').val()).toFixed(2);
             return false;
         }
     });
@@ -816,7 +815,7 @@ $(document).on('change', '.billNumber', function () {
 
         if (lastMatch) {
             duplicateBalanceAmount = lastMatch.BalanceAmount;
-            currentRow.find('.totalAmount').val(duplicateBalanceAmount);
+            currentRow.find('.totalAmount').val(duplicateBalanceAmount.toFixed(2));
         } else {
             currentRow.find('.totalAmount').val('');
         }
@@ -825,7 +824,7 @@ $(document).on('change', '.billNumber', function () {
         Common.ajaxCall("GET", "/Payment/GetPaymentBillNoAmount", editData, function (response) {
             if (response != null) {
                 var data = JSON.parse(response.data);
-                row.find('.totalAmount').val(data[0][0].TotalAmount).toFixed(2);
+                row.find('.totalAmount').val(data[0][0].TotalAmount.toFixed(2));
             }
         }, null);
     }
@@ -1342,8 +1341,18 @@ function recalcBillRows(billNo) {
 
     let $firstRow = $(rows[0]);
 
-    let contactIdVal = parseInt($('#ContactId').val());
-    let paymentTypeVal = parseInt($('#PaymentTypeId').val());
+    let contactIdVal = 0;
+    let paymentTypeVal = 0;
+
+    if (titleForHeaderProductTab === "Accounts Payable") {
+        contactIdVal = parseInt($('#PaymentTypeRequestId').val());
+        paymentTypeVal = parseInt($('#ContactRequestId').val());
+    }
+    else {
+        contactIdVal = parseInt($('#PaymentTypeReceivableId').val());
+        paymentTypeVal = parseInt($('#ContactReceivableId').val());
+    }
+
     let editData = {
         PaymentTypeId: paymentTypeVal,
         ContactId: contactIdVal,

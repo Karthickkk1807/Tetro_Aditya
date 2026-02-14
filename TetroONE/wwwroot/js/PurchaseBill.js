@@ -154,6 +154,8 @@ $(document).ready(async function () {
 
         ClearInputs(); // Clear inputs
 
+        $('#toggleIconShipTo').attr('title', 'Click to expand');
+
         $('#PurchaseInvoiceModal').show();
         $("#PurchaseInvoiceModal .modal-body").animate({ scrollTop: 0 }, "fast");
     });
@@ -179,13 +181,46 @@ $(document).ready(async function () {
             '#PurchaseOrderNoDiv'
         );
 
-        $rows.stop(true, true).slideToggle(300);
+        $rows.stop(true, true).slideToggle(300); 
 
-        $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+        const $icon = $('#toggleIconShipTo');
+        $icon.toggleClass('fa-chevron-up fa-chevron-down');
+
+        // Change title based on arrow direction
+        if ($icon.hasClass('fa-chevron-up')) {
+            $icon.attr('title', 'Click to expand');
+        } else {
+            $icon.attr('title', 'Click to collapse');
+        }
 
         $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead')
             .css('border-bottom', '1px solid #c7c7c7');
     });
+
+    //$(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
+    //    e.preventDefault();
+    //    e.stopPropagation();
+
+    //    const $rows = $(
+    //        '#VendorColumn .row.mt-3, ' +
+    //        '#ShippingColumn .row.mt-3, ' +
+    //        '#OriginalInvoiceNoDiv, ' +
+    //        '#PurchaseOrderNoDiv'
+    //    );
+    //    // Change title based on arrow direction
+    //    if ($icon.hasClass('fa-chevron-up')) {
+    //        $icon.attr('title', 'Click to collapse');
+    //    } else {
+    //        $icon.attr('title', 'Click to expand');
+    //    }
+
+    //    $rows.stop(true, true).slideToggle(300);
+
+    //    $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+
+    //    $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead')
+    //        .css('border-bottom', '1px solid #c7c7c7');
+    //});
 
     $(document).on('click', '#PurchaseInvoiceCancelBtn, #PurchaseinvoiceClose', function () {
         $('#PurchaseInvoiceModal').hide();
@@ -366,6 +401,12 @@ $(document).ready(async function () {
             return false;
         }
 
+        var $thisValOfVendorInvoiceNo = $('#InvoiceNoOriginal').val();
+        if ($thisValOfVendorInvoiceNo == "") {
+            Common.warningMsg('Please fill in the Vendor Invoice Number and click the arrow to expand.');
+            return false;
+        }
+         
         var vendorInput = $('#Vendor').val();
 
         if (vendorInput == '') {
@@ -488,10 +529,12 @@ $(document).ready(async function () {
                     }
 
                 } else {
+                    formDataMultiple = new FormData();
                     Common.errorMsg(response.message);
                 }
             },
             error: function (response) {
+                formDataMultiple = new FormData();
                 Common.errorMsg(response.message);
             }
         });
@@ -531,7 +574,11 @@ $(document).ready(async function () {
         $("#btnPordersaveprintbtn span:first").text("Update & Print");
         $("#btnPreviewPInvoicebtn span:first").text("Update & Preview");
 
+        $('#toggleIconShipTo').attr('title', 'Click to expand');
+
         ProductIdArray = [];
+        existFiles = [];
+        formDataMultiple = new FormData();
         $('#selectedFiles').empty();
         $('#ExistselectedFiles').empty();
 
@@ -677,7 +724,7 @@ $(document).ready(async function () {
                     parseFloat(cessAmt)
                 ).toFixed(2);
 
-                var unitDropdownHtml = '<select class="form-control ForBindtableProductUnit" data-productid="' + ProductId + '">';
+                var unitDropdownHtml = '<select class="form-control ForBindtableProductUnit" disabled data-productid="' + ProductId + '" style="width: 90px;">';
                 $unitSelect.find('option').each(function () {
                     var optionValue = $(this).val();
                     var optionText = $(this).text();
@@ -702,8 +749,8 @@ $(document).ready(async function () {
                             <input type="text" class="form-control SellingPrice" value="${SelectedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" />
                         </td>
                         <td data-label="QTY">
-                            <div class="input-group" style="width: 124px;">
-                                <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" />
+                            <div class="input-group" style="width: 158px;">
+                                <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" />
                                 <div class="input-group-append">
                                     <span class="unit-dropdown">${unitDropdownHtml}</span>
                                 </div>
@@ -713,26 +760,26 @@ $(document).ready(async function () {
                             </div>
                         </td>
                         <td data-label="SubTotal" class="SubTotal">
-                            <input type="text" class="form-control SubTotalQty DisabledTextBox" value="₹ ${SubTotal || ''}" />
+                            <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${formatRupee(SubTotal) || ''}" />
                         </td>
                         <td data-label="CGST" class="CGST">
                             <input type="text" class="form-control CGST DisabledTextBox" value="${productInfo.CGST || 0} %" />
-                            <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cgstAmt}</small>
+                            <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cgstAmt)}</small>
                         </td>
                         <td data-label="SGST" class="SGST">
                             <input type="text" class="form-control SGST DisabledTextBox" value="${productInfo.SGST || 0} %" />
-                            <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${sgstAmt}</small>
+                            <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(sgstAmt)}</small>
                         </td>
                         <td data-label="IGST" class="IGST">
                             <input type="text" class="form-control IGST DisabledTextBox" value="${productInfo.IGST || 0} %" />
-                            <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${igstAmt}</small>
+                            <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(igstAmt)}</small>
                         </td>
                         <td data-label="CESS" class="CESS">
                             <input type="text" class="form-control CESS DisabledTextBox" value="${productInfo.CESS || 0} %" />
-                            <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cessAmt}</small>
+                            <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cessAmt)}</small>
                         </td>
                         <td data-label="Total" class="Total">
-                            <input type="text" class="form-control Total DisabledTextBox" value="₹ ${totalAmount || 0}" />
+                            <input type="text" class="form-control Total DisabledTextBox" value="${formatRupee(totalAmount) || 0}" />
                         </td>
                         <td data-label="Action" style="text-align:center;">
                             <button class="btn DynremoveBtn DynrowRemove" type="button">
@@ -1197,7 +1244,7 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
 
         ProductIdArray.push(ProductId);
 
-        var unitDropdownHtml = `<select class="form-control ForBindtableProductUnit" data-productid="${ProductId}">`;
+        var unitDropdownHtml = `<select class="form-control ForBindtableProductUnit" disabled data-productid="${ProductId}" style="width: 90px;">`;
         unitDropdownHtml += `<option value="${productInfo.PrimaryUnitId}" ${productInfo.UnitId == productInfo.PrimaryUnitId ? 'selected' : ''}>${productInfo.PrimaryUnitName}</option>`;
         unitDropdownHtml += `<option value="${productInfo.SecondaryUnitId}" ${productInfo.UnitId == productInfo.SecondaryUnitId ? 'selected' : ''}>${productInfo.SecondaryUnitName}</option>`;
         unitDropdownHtml += `</select>`;
@@ -1215,11 +1262,11 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
                     <textarea class="form-control mt-2 descriptiontdtext" placeholder="Description">${defaultDescription}</textarea>
                 </td>
                 <td data-label="Price">
-                    <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" />
+                    <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)"/>
                 </td>
                 <td data-label="Quantity">
-                    <div class="input-group" style="width: 124px;">
-                        <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" />
+                    <div class="input-group" style="width: 158px;">
+                        <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" />
                         <div class="input-group-append">
                             <span class="unit-dropdown">${unitDropdownHtml}</span>
                         </div>
@@ -1229,26 +1276,26 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
                     </div>
                 </td> 
                 <td data-label="SubTotal" class="SubTotal">
-                    <input type="text" class="form-control SubTotalQty DisabledTextBox" value="₹ ${SubTotal}" />
+                    <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${formatRupee(SubTotal)}" />
                 </td>
                 <td data-label="CGST" class="CGST">
                     <input type="text" class="form-control CGST DisabledTextBox" value="${CGST} %" />
-                    <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cgstAmt}</small>
+                    <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cgstAmt)}</small>
                 </td>
                 <td data-label="SGST" class="SGST">
                     <input type="text" class="form-control SGST DisabledTextBox" value="${SGST} %" />
-                    <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${sgstAmt}</small>
+                    <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(sgstAmt)}</small>
                 </td>
                 <td data-label="IGST" class="IGST">
                     <input type="text" class="form-control IGST DisabledTextBox" value="${IGST} %" />
-                    <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${igstAmt}</small>
+                    <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(igstAmt)}</small>
                 </td>
                 <td data-label="CESS" class="CESS">
                     <input type="text" class="form-control CESS DisabledTextBox" value="${CESS} %" />
-                    <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cessAmt}</small>
+                    <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cessAmt)}</small>
                 </td>
                 <td data-label="Total" class="Total">
-                    <input type="text" class="form-control Total DisabledTextBox" value="₹ ${totalAmount}" />
+                    <input type="text" class="form-control Total DisabledTextBox" value="${formatRupee(totalAmount)}" />
                 </td>
                 <td data-label="Action" style="text-align:center;">
                     <button class="btn DynremoveBtn DynrowRemove" type="button">
@@ -1315,11 +1362,10 @@ function OtherChangesNotNull(OtherChargesArray) {
                         </div>
 
                         <!-- ENTERED VALUE -->
-                        <input type="text" class="form-control discount-input OtherValueInsert" id="Value${uniqueId}" name="Value${uniqueId}" value="${value.OtherChargeValue ?? ""}" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,8)"
-                        >
+                        <input type="text" class="form-control discount-input OtherValueInsert" id="Value${uniqueId}" name="Value${uniqueId}" value="${value.Value.toFixed(2) ?? ""}" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,8)">
 
                         <!-- CALCULATED VALUE -->
-                        <input type="text" class="form-control discount-input otherChargeValue" name="OtherChargeValue${uniqueId}" value="${value.Value ?? ""}" style="background-color:#dee2e647" readonly disabled>
+                        <input type="text" class="form-control discount-input otherChargeValue" name="OtherChargeValue${uniqueId}" value="${value.OtherChargeValue ?? ""}" style="background-color:#dee2e647" readonly disabled>
 
                         <!-- DELETE BUTTON -->
                         <button class="btn OtherDynamicRemove DynrowRemove" type="button">
@@ -1374,15 +1420,15 @@ function GetProductPopSuccess(response) {
                     </td>
                     <td><label class="ProductSubCategoryName">${product.ProductSubCategoryName}</label></td>
                     <td><label class="ProductCategoryName">${product.ProductCategoryName}</label></td>
-                    <td><label class="SellingPrice">${product.SecondaryPrice}</label></td>
-                    <td><label class="SecondaryUnitStockInHand">${product.SecondaryUnitStockInHand}</label></td>
+                    <td><label class="SellingPrice">${product.PrimaryPrice.toFixed(2)}</label></td>
+                    <td><label class="SecondaryUnitStockInHand">${product.SecondaryUnitStockInHand.toFixed(3)}</label></td> 
                     <td style="width:16%">
                         <button type="button" class="btn btn-custom addQtyBtn">+ Add</button>
                         <div class="align-items-center OtyColumn d-none">
                             <div class="d-flex align-items-center qty-wrapper justify-content-center">
                                 <div class="qty-group">
                                     <button type="button" class="btn btn-primary RowMinus qty-btn qty-decrease">-</button>
-                                    <input type="text" class="form-control text-center qty-input QtyProductAdd" value="1" min="1" step="0.0001" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,4)">
+                                    <input type="text" class="form-control text-center qty-input QtyProductAdd" value="1" min="1" step="0.0001" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this,4)">
                                     <button type="button" class="btn btn-primary RowPlus qty-btn qty-increase">+</button>
                                 </div>
                                 <div class="input-group-append">
@@ -1402,7 +1448,7 @@ function GetProductPopSuccess(response) {
                 const $lastRow = $('#product-table-body tr').last();
                 const $unitDropdownContainer = $lastRow.find('.unit-dropdown');
 
-                const $select = $(`<select class="additemdrop unit-select form-control unit-dropdown-select" data-productid="${product.ProductId}"></select>`);
+                const $select = $(`<select class="additemdrop unit-select form-control unit-dropdown-select" data-productid="${product.ProductId}" disabled></select>`);
 
                 if (product.PrimaryUnitId && product.PrimaryUnitName) {
                     const $primaryOption = $('<option></option>').val(product.PrimaryUnitId).text(product.PrimaryUnitName).attr('data-unitid', product.PrimaryUnitId)
@@ -1551,113 +1597,6 @@ function updateGSTVisibility(firstStateId, secondStateId) {
         $('.ProductTableRow .CGST, .ProductTableRow .SGST').show();
     }
 }
-
-// ========== Row Calculation Function ==========
-//function calculateRow($row) {
-//    var SecondaryPrice = parseFloat($row.find(".SellingPrice").val()) || 0;
-//    var QtyProductAdd = parseFloat($row.find(".TableRowQty").val()) || 0;
-
-//    // Get % values (remove % sign)
-//    var CGST = parseFloat(($row.find(".CGST input").val() || "0").replace('%', '').trim()) || 0;
-//    var SGST = parseFloat(($row.find(".SGST input").val() || "0").replace('%', '').trim()) || 0;
-//    var IGST = parseFloat(($row.find(".IGST input").val() || "0").replace('%', '').trim()) || 0;
-//    var CESS = parseFloat(($row.find(".CESS input").val() || "0").replace('%', '').trim()) || 0;
-
-//    var vendorState = ($("#VendorStateName").text() || '').trim().toLowerCase();
-//    var buyerState = ($("#StateName").text() || '').trim().toLowerCase();
-
-//    var SubTotal = SecondaryPrice * QtyProductAdd;
-//    var cgstAmt = 0, sgstAmt = 0, igstAmt = 0, cessAmt = 0;
-
-//    // GST logic based on state
-//    if (vendorState && buyerState && vendorState !== buyerState) {
-//        igstAmt = (SubTotal * IGST / 100).toFixed(2);
-//        cessAmt = (SubTotal * CESS / 100).toFixed(2);
-//        cgstAmt = sgstAmt = (0).toFixed(2);
-//    } else {
-//        cgstAmt = (SubTotal * CGST / 100).toFixed(2);
-//        sgstAmt = (SubTotal * SGST / 100).toFixed(2);
-//        cessAmt = (SubTotal * CESS / 100).toFixed(2);
-//        igstAmt = (0).toFixed(2);
-//    }
-
-//    var totalAmount = (
-//        parseFloat(SubTotal) +
-//        parseFloat(cgstAmt) +
-//        parseFloat(sgstAmt) +
-//        parseFloat(igstAmt) +
-//        parseFloat(cessAmt)
-//    ).toFixed(2);
-
-//    // Update row values
-//    $row.find(".SubTotal input").val(SubTotal.toFixed(2));
-//    $row.find(".CGSTAmount").text(cgstAmt);
-//    $row.find(".SGSTAmount").text(sgstAmt);
-//    $row.find(".IGSTAmount").text(igstAmt);
-//    $row.find(".CESSAmount").text(cessAmt);
-//    $row.find(".Total input").val(totalAmount);
-
-//    // Store numeric values for total calculation
-//    $row.find('.subtotal').val(SubTotal.toFixed(2));
-//    $row.find('.cgst-amt').val(cgstAmt);
-//    $row.find('.sgst-amt').val(sgstAmt);
-//    $row.find('.igst-amt').val(igstAmt);
-//    $row.find('.cess-amt').val(cessAmt);
-//    $row.find('.totalValue').val(totalAmount);
-//}
-
-//// ========== Table Total Calculation ==========
-//function calculateGrandTotal() {
-//    let subtotalTotal = 0,
-//        cgstTotal = 0,
-//        sgstTotal = 0,
-//        igstTotal = 0,
-//        cessTotal = 0,
-//        grandTotal = 0;
-
-//    $('#PIProductTablebody .ProductTableRow').each(function () {
-//        let $row = $(this);
-
-//        let subtotal = parseFloat($row.find('.SubTotal input').val()) || 0;
-//        let cgst = parseFloat($row.find('.CGSTAmount').text()) || 0;
-//        let sgst = parseFloat($row.find('.SGSTAmount').text()) || 0;
-//        let igst = parseFloat($row.find('.IGSTAmount').text()) || 0;
-//        let cess = parseFloat($row.find('.CESSAmount').text()) || 0;
-//        let total = parseFloat($row.find('.Total input').val()) || 0;
-
-//        subtotalTotal += subtotal;
-//        cgstTotal += cgst;
-//        sgstTotal += sgst;
-//        igstTotal += igst;
-//        cessTotal += cess;
-//        grandTotal += total;
-//    });
-
-//    $('#SubtotalRow #SubTotalTotal').val(subtotalTotal.toFixed(2));
-//    $('#SubtotalRow #CGSTTotal').val(cgstTotal.toFixed(2));
-//    $('#SubtotalRow #SGSTTotal').val(sgstTotal.toFixed(2));
-//    $('#SubtotalRow #IGSTTotal').val(igstTotal.toFixed(2));
-//    $('#SubtotalRow #CESSTotal').val(cessTotal.toFixed(2));
-//    $('#SubtotalRow #Subtotal').val(grandTotal.toFixed(2));
-
-//    // Round-off logic
-//    var decimalPart = grandTotal.toFixed(2).split('.')[0];
-//    var roundedDecimal = Math.ceil(decimalPart);
-//    var AddOrSub = roundedDecimal;
-
-//    var RoundOffValu = grandTotal.toFixed(2).split('.')[1];
-//    if (RoundOffValu >= 50) {
-//        $('#roundOff').css('color', 'green');
-//        AddOrSub++;
-//    } else if (RoundOffValu == '00') {
-//        $('#roundOff').css('color', 'blue');
-//    } else if (RoundOffValu <= 50) {
-//        $('#roundOff').css('color', 'orange');
-//    }
-
-//    $('#roundOff').val('0.' + RoundOffValu);
-//    $('#GrantTotal').val(AddOrSub.toFixed(2));
-//}
 
 function calculateRow($row) {
 
@@ -1903,11 +1842,6 @@ function bindHeaderNormal() {
                     </div>
                     <div class="info-row" style="margin-right:15px; width:unset;">
                         <div class="info-value">
-                            <a id="BillFromName" name="BillFromName"></a>
-                        </div>
-                    </div>
-                    <div class="info-row" style="margin-right:15px; width:unset;">
-                        <div class="info-value">
                             <a id="BillFromAddress" name="BillFromAddress"></a>
                         </div>
                     </div>
@@ -2132,7 +2066,7 @@ $(document).on('click', '#deletefile', function () {
     var moduleRefId = $(this).attr('ModuleRefId');
     deletedFiles.push({
         AttachmentId: attachmentid,
-        ModuleName: "Client",
+        ModuleName: "PurchaseBill",
         ModuleRefId: parseInt(moduleRefId),
         AttachmentFileName: fileText,
         AttachmentFilePath: src
@@ -2151,7 +2085,7 @@ function getExistFiles() {
         var moduleRefId = $(value).find('.delete-buttonattach').attr('ModuleRefId');
         existFiles.push({
             AttachmentId: attachmentid,
-            ModuleName: "Client",
+            ModuleName: "PurchaseBill",
             ModuleRefId: parseInt(moduleRefId),
             AttachmentFileName: fileText,
             AttachmentFilePath: src

@@ -90,6 +90,7 @@ namespace TetroONE.Models
         public int PlantId { get; set; }
         public DateTime? InWardDate { get; set; }
         public string? InWardNo { get; set; }
+        public int? InwardType { get; set; }
         public int? PaymentTypeId { get; set; }
         public int? ClientId { get; set; }
         public string? ClientDcNumber { get; set; }
@@ -178,10 +179,11 @@ namespace TetroONE.Models
         public int? ProcessCount { get; set; }
         public decimal? Dia { get; set; }
         public decimal? GSM { get; set; }
-        public decimal? Qty { get; set; }
+        public decimal? ProductionPlanQty { get; set; }
         public int? NoOfRolls { get; set; }
         public int? Width { get; set; }
         public int? RowNo { get; set; }
+        public decimal? OutWardQty { get; set; }
         public int? OutwardId { get; set; }
     }
 
@@ -342,35 +344,22 @@ namespace TetroONE.Models
         public string? OrderNo { get; set; }
         public string? Water { get; set; }
         public string? GSM { get; set; }
+        public string? Width { get; set; }
         public string? RPM { get; set; }
 
         public string? Machine { get; set; }
         public string? NoOfChamber { get; set; }
         public string? ChamberQty { get; set; }
-        
-        public string? PreTreatmentProduct { get; set; }
-        public string? PreTreatmentUnit { get; set; }
-        public string? PreTreatmentUnitValue { get; set; }
-        public string? PreTreatmentQty { get; set; }
 
-        public string? DyeProduct { get; set; }
-        public string? DyeUnit { get; set; }
-        public string? DyeUnitValue { get; set; }
-        public string? DyeQty { get; set; }
+        public string? LoadingDate { get; set; }
+        public string? LoadingTime { get; set; }
+        public string? UnloadingDate { get; set; }
+        public string? UnloadingTime { get; set; } 
 
-        public string? DyeBathProduct { get; set; }
-        public string? DyeBathUnit { get; set; }
-        public string? DyeBathUnitValue { get; set; }
-        public string? DyeBathQty { get; set; }
-
-        public string? AfterTreatmentProduct { get; set; }
-        public string? AfterTreatmentUnit { get; set; }
-        public string? AfterTreatmentUnitValue { get; set; }
-        public string? AfterTreatmentQty { get; set; }
-
-        public string? FinishingProduct { get; set; }
-        public string? FinishingUnit { get; set; }
-        public string? FinishingUnitValue { get; set; }
-        public string? FinishingQty { get; set; }
+        public DataTable PreTreatmentProductItemData { get; set; }
+        public DataTable DyeProductItemData { get; set; }
+        public DataTable DyeBathProductItemData { get; set; }
+        public DataTable AfterTreatmentProductItemData { get; set; }
+        public DataTable FinishingProductItemData { get; set; } 
     }
 }

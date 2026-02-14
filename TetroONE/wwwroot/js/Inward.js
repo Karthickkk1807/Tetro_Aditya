@@ -18,6 +18,7 @@ $(document).ready(async function () {
     Common.bindDropDown('PaymentTypeId', 'PaymentType');
     Common.bindDropDown('InWardStatusId', 'InWardStatus');
     Common.bindDropDown('StorageLocationId', 'StorageLocation');
+    Common.bindDropDown('InwardTypeId', 'InWardType');
 
     var fabricTypeDropdown = await Common.bindDropDownSync('FabricType');
     FabricTypeDropdown = JSON.parse(fabricTypeDropdown);
@@ -153,6 +154,7 @@ $(document).ready(async function () {
         $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
         $('#AddAttachLable, #AddNotesLable').show();
         $('#Notes').val('');
+        $('#InwardTypeId').val('1');
 
         $('.modal-body').animate({ scrollTop: 0 }, 300);
         $('#InWardModal').show();
@@ -160,7 +162,7 @@ $(document).ready(async function () {
 
     $(document).on('click', '.btn-edit', async function () {
         InWardId = $(this).data('id');
-
+        $('#loader-pms').show();
         deletedFiles = [];
         existFiles = [];
         formDataMultiple = new FormData();
@@ -220,6 +222,7 @@ $(document).ready(async function () {
             objvalue.ClientId = parseInt($('#ClientId').val()) || null;
             objvalue.ReceivedFrom = parseInt($('#ReceivedFrom').val()) || null;
             objvalue.ColorId = parseInt($('#ColorId').val()) || null;
+            objvalue.InwardType = parseInt($('#InwardTypeId').val()) || null;
             objvalue.StorageLocationId = parseInt($('#StorageLocationId').val()) || null;
             objvalue.ReceivedBy = parseInt($('#ReceivedBy').val()) || null;
             objvalue.StorageLocationId = parseInt($('#StorageLocationId').val()) || null;
@@ -347,11 +350,11 @@ $(document).ready(async function () {
             $('#AlterReceivedFrom').show();
             $('#AlterClientId').show();
             $('#ReceivedFrom').hide();
-            $('#ClientId').hide(); 
+            $('#ClientId').hide();
         } else {
             $('#AddItemModal').hide();
             $('#AlterReceivedFrom').hide();
-            $('#AlterClientId').hide(); 
+            $('#AlterClientId').hide();
             $('#ReceivedFrom').show();
             $('#ClientId').show();
             $('#AlterClientId').val('');
@@ -388,7 +391,7 @@ $(document).ready(async function () {
             $('#AlterClientId').val($thisval);
             $('#AlterReceivedFrom').val($thisval);
             Common.successMsg("Client Saved Successfully.");
-        } 
+        }
     });
 });
 
@@ -483,16 +486,17 @@ function GetInwardNotNullSuccess(response) {
                 <select multiple class="select2 Process" data-coreui-search="true" required>
                     ${ProcessTypeDropdown[0].map(p =>
             `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
-                            ${p.ProcessTypeName}
-                        </option>`
+                                            ${p.ProcessTypeName}
+                                        </option>`
         ).join('')}
                 </select>
             </td> 
             <td><input class="form-control DiaInput" value="${item.Dia || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"></td>
             <td><input class="form-control GsmInput" value="${item.GSM || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)"></td>
             <td><input class="form-control QtyInput" value="${Number(item.Qty || 0).toFixed(3)}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
-            <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}" oninput="Common.allowOnlyNumberLength(this,3)"></td> 
+            <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}" placeholder="Ex: 8" oninput="Common.allowOnlyNumberLength(this,3)"></td> 
             <td><select class="form-control WidthSelect">${WidthHTML}</select></td> 
+            <td><input type="text" class="form-control RopeLenghtInput" id="RopeLenght_${uid}" name="RopeLenght_${uid}" placeholder="Ex: 250" disabled /></td> 
             <td style="text-align:center">
                 ${isParentRow ?
                 `<button class="btn AddStockBtn AddFabric"><i class="fas fa-plus"></i></button>`
@@ -520,6 +524,7 @@ function GetInwardNotNullSuccess(response) {
 
     updateSerialNumbers();
     refreshProductDropdowns(".FabricSelect");
+    $('#loader-pms').hide();
 }
 
 function duplicateFabric() {
@@ -550,11 +555,12 @@ function duplicateFabric() {
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required /></td> 
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required /></td> 
             <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" required /></td> 
-            <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" oninput="Common.allowOnlyNumberLength(this,3)" required /></td> 
+            <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="Ex: 8" oninput="Common.allowOnlyNumberLength(this,3)" required /></td> 
             <td>
                 <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
                 </select>
             </td> 
+            <td><input type="text" class="form-control RopeLenghtInput" id="RopeLenght_${uid}" name="RopeLenght_${uid}" placeholder="Ex: 250" disabled /></td> 
             <td style="text-align: center;">
                 <button id="dyanmicplusbtn" class="btn AddStockBtn AddFabric" type="button">
                     <i class="fas fa-plus" id="AddButton"></i>
@@ -615,11 +621,12 @@ function addNewFabricRow(afterRow) {
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)" required /></td> 
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" required /></td> 
             <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" required /></td> 
-            <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" oninput="Common.allowOnlyNumberLength(this,3)" required /></td> 
+            <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="Ex: 8" oninput="Common.allowOnlyNumberLength(this,3)" required /></td> 
             <td>
                 <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
                 </select>
             </td> 
+            <td><input type="text" class="form-control RopeLenghtInput" id="RopeLenght_${uid}" name="RopeLenght_${uid}" placeholder="Ex: 250" disabled /></td> 
             <td style="text-align: end;padding-right: 21px;">
                 <button class="btn DynrowRemove removeRowBtn" type="button">
                     <i class="fas fa-trash-alt"></i>
@@ -649,8 +656,7 @@ function addNewFabricRow(afterRow) {
 
 function updateSerialNumbers() {
     let count = 0;
-    $("#InwardTableBody .dynamic-item-row").each(function (i) {
-
+    $("#InwardTableBody .dynamic-item-row").each(function (i) { 
         $(this).find(".sno").text(i + 1);
         if ($(this).find("select.FabricSelect").length > 0) {
             count++;
@@ -695,13 +701,13 @@ $(document).on('input', '.QtyInput, .RollsInput', function () {
 });
 
 function calculateGsmNoOfRollTotal() {
-    let totalGsm = 0;
+    let totalQty = 0;
     let totalNoOfRoll = 0;
 
     $(".QtyInput").each(function () {
         let value = parseFloat($(this).val());
         if (!isNaN(value)) {
-            totalGsm += value;
+            totalQty += value;
         }
     });
     $(".RollsInput").each(function () {
@@ -711,8 +717,60 @@ function calculateGsmNoOfRollTotal() {
         }
     });
 
-    $("#TotalQty").val(totalGsm.toFixed(3));
+    $("#TotalQty").val(totalQty.toFixed(3));
     $("#TotalRolls").val(totalNoOfRoll.toFixed(2));
+
+    Common.ajaxCall("GET", "/Productions/GetApplicableMachineData", { companyId: 1, totalWeight: parseFloat(totalQty) }, function (response) {
+        if (response) {
+            $('#ApplicableMachine').val(response.machineName || '');
+            $('#NoOfChambers').val(response.noOfChambers || '');
+            $('#ChamberWeight').val(response.chamberWeight != null ? response.chamberWeight.toFixed(3) + ' KG' : '');
+            // Recalculate rope length for all rows
+            recalculateAllRopeLengths();
+        }
+    }, null);
+}
+
+$(document).on('input', '.DiaInput, .GsmInput, .QtyInput', function () {
+    RopeLenCalculate(this);
+});
+
+
+$(document).on('input', '.DiaInput, .GsmInput', function () {
+    RopeLenCalculate(this);
+});
+
+/* -------------------------------
+   ROPE LENGTH CALCULATION
+-------------------------------- */
+function RopeLenCalculate(input) {
+    const $row = $(input).closest('tr');
+
+    const dia = parseFloat($row.find('.DiaInput').val());
+    const gsm = parseFloat($row.find('.GsmInput').val());
+
+    // ChamberWeight contains text like "12.345 KG"
+    const chamberWeight = parseFloat($('#ChamberWeight').val());
+
+    if (isNaN(dia) || isNaN(gsm) || isNaN(chamberWeight) || dia === 0 || gsm === 0) {
+        $row.find('.RopeLenghtInput').val('');
+        return;
+    }
+
+    const result = (19685 / (dia * gsm)) * chamberWeight;
+    $row.find('.RopeLenghtInput').val(result.toFixed(2));
+}
+
+/* -------------------------------
+   RECALCULATE ALL ROWS
+-------------------------------- */
+function recalculateAllRopeLengths() {
+    $('.dynamic-item-row, .dynamic-item-row_Second').each(function () {
+        const diaInput = $(this).find('.DiaInput')[0];
+        if (diaInput) {
+            RopeLenCalculate(diaInput);
+        }
+    });
 }
 
 /* ================= ===================== Common Function ================== ============ ========== */

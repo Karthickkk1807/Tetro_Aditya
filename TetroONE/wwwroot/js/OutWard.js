@@ -131,6 +131,7 @@ $(document).ready(async function () {
         $('#selectedFiles').empty();
         $('#ExistselectedFiles').empty();
         $('.Status-Div').hide();
+        $('#AddNotesText').val(''); 
 
         Common.removevalidation('TopStatic');
         Common.removevalidation('FormShipping');
@@ -197,6 +198,11 @@ $(document).ready(async function () {
 
         $('#emptyDiv').removeClass('col-lg-4 col-md-4 col-6').addClass('col-lg-2 col-md-2 col-6');
         $('#OutWardStatusIdDiv').show();
+
+        existFiles = [];
+        formDataMultiple = new FormData();
+        $('#selectedFiles').empty();
+        $('#ExistselectedFiles').empty();
 
         $('.ShipTo-edit').show();
 
@@ -363,13 +369,7 @@ $(document).ready(async function () {
             return;
         }
 
-        if (
-            !$("#TopStatic").valid() ||
-            !$("#FormShipping").valid() ||
-            !$("#FormShipTo").valid() ||
-            !$("#TableInputs").valid() ||
-            !$("#FormStatus").valid()
-        ) {
+        if (!$("#TopStatic").valid() || !$("#FormShipping").valid() || !$("#FormShipTo").valid() || !$("#TableInputs").valid() || !$("#FormStatus").valid()) {
             return;
         }
 
@@ -433,7 +433,8 @@ $(document).ready(async function () {
                 ProcessCount: row.find(".Process").val()?.length || 0,
                 Dia: parseFloat(row.find(".DiaInput").val()) || null,
                 GSM: parseFloat(row.find(".GsmInput").val()) || null,
-                Qty: parseFloat(row.find(".QtyInput").val()) || null,
+                ProductionPlanQty: parseFloat(row.find(".QtyInput").val()) || null,
+                OutWardQty: parseFloat(row.find(".OutWardQty").val()) || null,
                 NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
                 Width: parseInt(row.find(".WidthSelect").val()) || null,
                 OutwardId: OutWardId > 0 ? parseInt(OutWardId) : null,
@@ -491,11 +492,9 @@ $(document).ready(async function () {
         });
     }
 
-    $(document).on('click', '#BtnSavePreviewbtn', function () {
-
-        $('#loader-pms').show();
-
+    $(document).on('click', '#BtnSavePreviewbtn', function () { 
         saveOutward(function (outwardId) {
+            $('#loader-pms').show();
 
             if (!outwardId) {
                 $('#loader-pms').hide();
@@ -593,7 +592,7 @@ function GetOutwardNotNullSuccess(response) {
     $('#OutwardDate').val(header.Date);
     $('#OutwardNo').val(header.OutwardNo);
     $('#PackingSlipNo').val(header.PackingSlipNo);
-    $('#OutWardBy').val(header.OutWardedBy); 
+    $('#OutWardBy').val(header.OutWardedBy);
     $('#NoofFabric').val(header.NoOfFabric);
     $('#TotalQty').val(header.TotalQty);
     $('#TotalRolls').val(header.TotalRolls);
@@ -602,7 +601,7 @@ function GetOutwardNotNullSuccess(response) {
     $('#OutWardStatus').val(header.OutWardStatusId);
     $('#InwardNo').val(header.InwardId);
 
-    $('#ShipToId').prop('disabled', true); 
+    $('#ShipToId').prop('disabled', true);
 
     //Common.ajaxCall("GET", "/Productions/GetOutWardTypeContactDetails", { OutwardType: parseInt(header.OutWardTo) }, function (responseOutWardType) {
     Common.ajaxCall("POST", "/Common/GetDropDown", JSON.stringify({ MasterInfoId: null, ModuleName: 'OutWardType' }), function (responseOutwardTo) {
@@ -662,6 +661,21 @@ function GetOutwardNotNullSuccess(response) {
 
         let uid = `row_${index}_${Date.now()}`;
 
+        let qty = parseFloat(item.ProductionPlanQty) || 0;
+        let outwardQty = parseFloat(item.OutWardQty) || 0;
+
+        // Prevent outward > qty
+        if (outwardQty > qty) {
+            outwardQty = qty;
+        }
+
+        let lossPercent = 0;
+        if (qty > 0) {
+            lossPercent = ((qty - outwardQty) / qty) * 100;
+        }
+
+        let lossValue = qty > 0 ? lossPercent.toFixed(2) + '%' : '';
+
         // Width options
         let WidthHTML = WidthDropdown[0]
             .map(w =>
@@ -706,8 +720,7 @@ function GetOutwardNotNullSuccess(response) {
             <td>
                 <select class="form-control FabricSelect">${FabricHTML}</select>
                 <label class="InwardFabricId d-none">${item.FabricTypeId || ''}</label>
-            </td>
-
+            </td> 
             <td>
               <label class="InwardFabricProcessMappingId d-none">${processMappingIds}</label>
                 <label class="InwardFabricProcessMappingId d-none">${processMappingIds}</label>
@@ -718,9 +731,10 @@ function GetOutwardNotNullSuccess(response) {
 
             <td><input class="form-control DiaInput" value="${item.Dia || ''}"></td>
             <td><input class="form-control GsmInput" value="${item.GSM || ''}"></td>
-            <td><input class="form-control QtyInput" value="${item.Qty.toFixed(3) || ''}"></td>
-            <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td>
-
+            <td><input class="form-control QtyInput" value="${item.ProductionPlanQty != null ? item.ProductionPlanQty.toFixed(3) : ''}" disabled></td>
+            <td><input class="form-control OutWardQty" value="${item.OutWardQty != null ? item.OutWardQty.toFixed(3) : ''}"></td>
+            <td><input class="form-control Loss" value="${lossValue}" required></td>
+            <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td> 
             <td>
                 <select class="form-control WidthSelect">${WidthHTML}</select>
             </td>
@@ -734,11 +748,17 @@ function GetOutwardNotNullSuccess(response) {
     `;
 
         // Insert row after last row of the same fabric or default location
+        //let $newRow;
         if (fabricGroup[item.FabricTypeId]) {
             $(`tr[data-id='${fabricGroup[item.FabricTypeId]}']`).after(html);
+            //$newRow = $(`tr[data-id='${fabricGroup[item.FabricTypeId]}']`).after(html);
         } else {
+            //$newRow = $("#AddItemButtonRow").before(html);
             $("#AddItemButtonRow").before(html);
         }
+
+        // Initial loss calculation
+        //calculateOutwardLoss($newRow);
 
         // Update the last row UID for this fabric
         fabricGroup[item.FabricTypeId] = uid;
@@ -840,7 +860,9 @@ function GetProductionPlanNotNullSuccess(response) {
 
                 <td><input class="form-control DiaInput" value="${item.Dia || ''}"></td>
                 <td><input class="form-control GsmInput" value="${item.GSM || ''}"></td>
-                <td><input class="form-control QtyInput" value="${item.Quantity || ''}"></td>
+                <td><input class="form-control QtyInput" value="${item.Quantity || ''}" disabled></td>
+                <td><input class="form-control OutWardQty" value="${item.OutWardQty || ''}"></td>
+                <td><input class="form-control Loss" value="" required></td>
                 <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td>
 
                 <td>
@@ -948,7 +970,9 @@ function duplicateFabric() {
             </td> 
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
-            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
+            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" disabled oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
+            <td><input type="text" class="form-control OutWardQty" id="OutWardQty${uid}" name="OutWardQty${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
+            <td><input class="form-control Loss" value="" required></td>
             <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" required oninput="Common.allowOnlyNumberLength(this,3)" ></td> 
             <td>
                 <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
@@ -1004,7 +1028,7 @@ function addNewFabricRow(afterRow) {
     let newRow = `
         <tr class="dynamic-item-row_Second" data-id="${uid}">
             <td class="sno"></td> 
-            <td><lable class="outwardFabricId d-none"></lable></td> 
+            <td><lable class="outwardFabricId d-none"></lable></td>
             <td data-id="">
                  <lable class="OutwardFabricProcessMappingId d-none"></lable>
                  <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
@@ -1012,7 +1036,9 @@ function addNewFabricRow(afterRow) {
             </td> 
             <td><input type="text" class="form-control DiaInput" id="Dia_${uid}" name="Dia_${uid}" placeholder="Dia" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td>
-            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
+            <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="Qty" disabled oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
+            <td><input type="text" class="form-control OutWardQty" id="OutWardQty${uid}" name="OutWardQty${uid}" placeholder="OutWardQty" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
+            <td><input class="form-control Loss" value="" required></td>
             <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" required oninput="Common.allowOnlyNumberLength(this,3)" ></td> 
             <td>
                 <select class="form-control WidthSelect" id="Width_${uid}" name="Width_${uid}" required> 
@@ -1057,6 +1083,33 @@ function updateSerialNumbers() {
 
     $("#NoofFabric").val(count);
     calculateGsmNoOfRollTotal();
+}
+
+
+$(document).on('input', '.QtyInput, .OutWardQty', function () {
+    let row = $(this).closest('tr');
+    calculateOutwardLoss(row);
+});
+
+function calculateOutwardLoss(row) { 
+    let qtyInput = row.find('.QtyInput');
+    let outwardQtyInput = row.find('.OutWardQty');
+    let lossInput = row.find('.Loss');
+
+    let qty = parseFloat(qtyInput.val()) || 0;
+    let outwardQty = parseFloat(outwardQtyInput.val()) || 0;
+     
+    if (outwardQty > qty) {
+        outwardQty = qty;
+        outwardQtyInput.val(qty);
+    }
+
+    let lossPercent = 0;
+    if (qty > 0) {
+        lossPercent = ((qty - outwardQty) / qty) * 100;
+    }
+
+    lossInput.val(lossPercent.toFixed(2) + '%');
 }
 
 //$(document).on("click", ".removeRowBtn", function () {
@@ -1226,7 +1279,7 @@ function afterRowChange() {
 ////    }
 ////});
 
-$(document).on('input', '.QtyInput, .RollsInput', function () {
+$(document).on('input', '.QtyInput, .RollsInput, .OutWardQty', function () {
     calculateGsmNoOfRollTotal();
 });
 
@@ -1240,7 +1293,8 @@ function calculateGsmNoOfRollTotal() {
             totalGsm += value;
         }
     });
-    $(".RollsInput").each(function () {
+    //$(".RollsInput").each(function () {
+    $(".OutWardQty").each(function () {
         let value = parseFloat($(this).val());
         if (!isNaN(value)) {
             totalNoOfRoll += value;
@@ -1248,7 +1302,7 @@ function calculateGsmNoOfRollTotal() {
     });
 
     $("#TotalQty").val(totalGsm.toFixed(3));
-    $("#TotalRolls").val(totalNoOfRoll.toFixed(2));
+    $("#TotalRolls").val(totalNoOfRoll.toFixed(3));
 }
 
 /* ================= ===================== Common Function ================== ============ ========== */

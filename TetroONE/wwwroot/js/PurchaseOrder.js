@@ -419,13 +419,14 @@ $(document).ready(function () {
                         var dataId = JSON.parse(response.data);
                         EditPurchaseId = dataId[0][0].PurchaseOrderId;
                         callback(dataId[0][0].PurchaseOrderId);
-                    }
-
+                    } 
                 } else {
+                    formDataMultiple = new FormData();
                     Common.errorMsg(response.message);
                 }
             },
             error: function (response) {
+                formDataMultiple = new FormData();
                 Common.errorMsg(response.message);
             }
         });
@@ -596,7 +597,7 @@ $(document).ready(function () {
                     parseFloat(cessAmt)
                 ).toFixed(2);
 
-                var unitDropdownHtml = '<select class="form-control ForBindtableProductUnit" data-productid="' + ProductId + '">';
+                var unitDropdownHtml = '<select class="form-control ForBindtableProductUnit" disabled data-productid="' + ProductId + '" style="width: 90px;">';
                 $unitSelect.find('option').each(function () {
                     var optionValue = $(this).val();
                     var optionText = $(this).text();
@@ -621,8 +622,8 @@ $(document).ready(function () {
                             <input type="text" class="form-control SellingPrice" value="${SelectedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" />
                         </td>
                         <td data-label="QTY">
-                            <div class="input-group" style="width: 124px;">
-                                <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" />
+                            <div class="input-group" style="width: 158px;">
+                                <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" />
                                 <div class="input-group-append">
                                     <span class="unit-dropdown">${unitDropdownHtml}</span>
                                 </div>
@@ -632,26 +633,26 @@ $(document).ready(function () {
                             </div>
                         </td>
                         <td data-label="SubTotal" class="SubTotal">
-                            <input type="text" class="form-control SubTotalQty DisabledTextBox" value="₹ ${SubTotal || ''}" />
+                            <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${formatRupee(SubTotal) || ''}" />
                         </td>
                         <td data-label="CGST" class="CGST">
                             <input type="text" class="form-control CGST DisabledTextBox" value="${productInfo.CGST || 0} %" />
-                            <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cgstAmt}</small>
+                            <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cgstAmt)}</small>
                         </td>
                         <td data-label="SGST" class="SGST">
                             <input type="text" class="form-control SGST DisabledTextBox" value="${productInfo.SGST || 0} %" />
-                            <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${sgstAmt}</small>
+                            <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(sgstAmt)}</small>
                         </td>
                         <td data-label="IGST" class="IGST">
                             <input type="text" class="form-control IGST DisabledTextBox" value="${productInfo.IGST || 0} %" />
-                            <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${igstAmt}</small>
+                            <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(igstAmt)}</small>
                         </td>
                         <td data-label="CESS" class="CESS">
                             <input type="text" class="form-control CESS DisabledTextBox" value="${productInfo.CESS || 0} %" />
-                            <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cessAmt}</small>
+                            <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cessAmt)}</small>
                         </td>
                         <td data-label="Total" class="Total">
-                            <input type="text" class="form-control Total DisabledTextBox" value="₹ ${totalAmount || 0}" />
+                            <input type="text" class="form-control Total DisabledTextBox" value="${formatRupee(totalAmount) || 0}" />
                         </td>
                         <td data-label="Action" style="text-align:center;">
                             <button class="btn DynremoveBtn DynrowRemove" type="button">
@@ -714,57 +715,6 @@ $(document).ready(function () {
 
         calculateRow($row);
         calculateGrandTotal();
-    });
-
-    $(document).on('click', '#btnSalePreviewbtn', function () {
-        $('#loader-pms').show();
-        var EditData = { ModuleId: parseInt(purchaseOrderId), NoOfCopies: 1, printType: "preview" }
-
-        $.ajax({
-            url: '/Sale/SaleOrderPrint',
-            method: 'GET',
-            data: EditData,
-            xhrFields: {
-                responseType: 'blob'
-            },
-            success: function (response) {
-                var printType = "Preview";
-                $('#ShareDropdownitems').css('display', 'none');
-                var blob = new Blob([response], { type: 'application/pdf' });
-                var blobUrl = URL.createObjectURL(blob);
-                if (printType == "Preview") {
-                    var newTab = window.open();
-                    if (newTab) {
-                        newTab.document.write(`
-                                              <html>
-                                              <head><title>TaxInvoice Preview</title></head>
-                                              <body style="margin:0;">
-                                                  <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-                                              </body>
-                                              </html>
-                                          `);
-                        newTab.document.close();
-                    }
-                } else if (printType == "Download") {
-                    var link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = 'Purchase Order.pdf';
-                    link.click();
-                } else if (printType == "Print") {
-                    var iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = blobUrl;
-                    document.body.appendChild(iframe);
-                    iframe.contentWindow.print();
-                }
-                $('#loader-pms').hide();
-                /* Print*/
-            },
-            error: function () {
-                $('#loader-pms').hide();
-                Common.errorMsg(response.message);
-            }
-        });
     });
 
     $(document).on('click', '#btnPordersaveprintbtn', function () {
@@ -1135,7 +1085,7 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
 
         ProductIdArray.push(ProductId);
 
-        var unitDropdownHtml = `<select class="form-control ForBindtableProductUnit" data-productid="${ProductId}">`;
+        var unitDropdownHtml = `<select class="form-control ForBindtableProductUnit" disabled data-productid="${ProductId}" style="width: 90px;">`;
         unitDropdownHtml += `<option value="${productInfo.PrimaryUnitId}" ${productInfo.UnitId == productInfo.PrimaryUnitId ? 'selected' : ''}>${productInfo.PrimaryUnitName}</option>`;
         unitDropdownHtml += `<option value="${productInfo.SecondaryUnitId}" ${productInfo.UnitId == productInfo.SecondaryUnitId ? 'selected' : ''}>${productInfo.SecondaryUnitName}</option>`;
         unitDropdownHtml += `</select>`;
@@ -1153,11 +1103,11 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
                     <textarea class="form-control mt-2 descriptiontdtext" placeholder="Description">${defaultDescription}</textarea>
                 </td>
                 <td data-label="Price">
-                    <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" />
+                    <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)"/>
                 </td>
                 <td data-label="Quantity">
-                    <div class="input-group" style="width: 124px;">
-                        <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" />
+                    <div class="input-group" style="width: 158px;">
+                        <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" />
                         <div class="input-group-append">
                             <span class="unit-dropdown">${unitDropdownHtml}</span>
                         </div>
@@ -1167,26 +1117,26 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
                     </div>
                 </td> 
                 <td data-label="SubTotal" class="SubTotal">
-                    <input type="text" class="form-control SubTotalQty DisabledTextBox" value="₹ ${SubTotal}" />
+                    <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${formatRupee(SubTotal)}" />
                 </td>
                 <td data-label="CGST" class="CGST">
                     <input type="text" class="form-control CGST DisabledTextBox" value="${CGST} %" />
-                    <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cgstAmt}</small>
+                    <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cgstAmt)}</small>
                 </td>
                 <td data-label="SGST" class="SGST">
                     <input type="text" class="form-control SGST DisabledTextBox" value="${SGST} %" />
-                    <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${sgstAmt}</small>
+                    <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(sgstAmt)}</small>
                 </td>
                 <td data-label="IGST" class="IGST">
                     <input type="text" class="form-control IGST DisabledTextBox" value="${IGST} %" />
-                    <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${igstAmt}</small>
+                    <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(igstAmt)}</small>
                 </td>
                 <td data-label="CESS" class="CESS">
                     <input type="text" class="form-control CESS DisabledTextBox" value="${CESS} %" />
-                    <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">₹ ${cessAmt}</small>
+                    <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cessAmt)}</small>
                 </td>
                 <td data-label="Total" class="Total">
-                    <input type="text" class="form-control Total DisabledTextBox" value="₹ ${totalAmount}" />
+                    <input type="text" class="form-control Total DisabledTextBox" value="${formatRupee(totalAmount)}" />
                 </td>
                 <td data-label="Action" style="text-align:center;">
                     <button class="btn DynremoveBtn DynrowRemove" type="button">
@@ -1243,15 +1193,15 @@ function GetProductPopSuccess(response) {
                     </td>
                     <td><label class="ProductSubCategoryName">${product.ProductSubCategoryName}</label></td>
                     <td><label class="ProductCategoryName">${product.ProductCategoryName}</label></td>
-                    <td><label class="SellingPrice">${product.SecondaryPrice}</label></td>
-                    <td><label class="SecondaryUnitStockInHand">${product.SecondaryUnitStockInHand}</label></td>
+                    <td><label class="SellingPrice">${product.PrimaryPrice.toFixed(2)}</label></td>
+                    <td><label class="SecondaryUnitStockInHand">${product.SecondaryUnitStockInHand.toFixed(3)}</label></td>
                     <td style="width:16%">
                         <button type="button" class="btn btn-custom addQtyBtn">+ Add</button>
                         <div class="align-items-center OtyColumn d-none">
                             <div class="d-flex align-items-center qty-wrapper justify-content-center">
                                 <div class="qty-group">
                                     <button type="button" class="btn btn-primary RowMinus qty-btn qty-decrease">-</button>
-                                    <input type="text" class="form-control text-center qty-input QtyProductAdd" value="1" min="1" step="0.0001" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,4)">
+                                    <input type="text" class="form-control text-center qty-input QtyProductAdd" value="1" min="1" step="0.0001" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this,4)">
                                     <button type="button" class="btn btn-primary RowPlus qty-btn qty-increase">+</button>
                                 </div>
                                 <div class="input-group-append">
@@ -1271,7 +1221,7 @@ function GetProductPopSuccess(response) {
                 const $lastRow = $('#product-table-body tr').last();
                 const $unitDropdownContainer = $lastRow.find('.unit-dropdown');
 
-                const $select = $(`<select class="additemdrop unit-select form-control unit-dropdown-select" data-productid="${product.ProductId}"></select>`);
+                const $select = $(`<select class="additemdrop unit-select form-control unit-dropdown-select" data-productid="${product.ProductId}" disabled></select>`);
 
                 if (product.PrimaryUnitId && product.PrimaryUnitName) {
                     const $primaryOption = $('<option></option>').val(product.PrimaryUnitId).text(product.PrimaryUnitName).attr('data-unitid', product.PrimaryUnitId)
@@ -1649,11 +1599,9 @@ function bindHeaderNormal() {
                  </div>
              </div>
          </div>
-
-    
+         
          <div class="col-lg-12 col-md-12 col-sm-12 col-12" id="BillFromColumn" style="position: relative; display: none;">
              <form id="FormBillFrom" novalidate="novalidate">
-
                  <div class="row BillFrom-info-container mt-2">
                      <div class="info-row" style="margin-right:15px; width:unset;">
                          <div class="info-label-Purchase" style="margin-top:10px;width: 75px;font-size: 15px; font-weight: 700; white-space: nowrap;">Bill From<span id="Asterisk">*</span></div>

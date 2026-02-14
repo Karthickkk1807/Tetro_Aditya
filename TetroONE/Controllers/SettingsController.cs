@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Crypto.Operators;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Reflection.PortableExecutable;
 using System.Security.Claims;
 using TetroONE.Models;
@@ -623,6 +624,59 @@ namespace TetroONE.Controllers
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteAutoGeneratePrefixDetails]", Get);
             return Json(response);
-        } 
+        }
+
+
+        /*=================================================================DefaultProduct=====================================================================*/
+
+        //[HttpGet]
+        //[Route("GetDefaultProduct")]
+        //public IActionResult GetDefaultProduct(int DefaultProductId)
+        //{
+        //    GetDefaultProduct Get = new GetDefaultProduct()
+        //    {
+        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //        DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId
+        //    };
+
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetColorDetails]", Get);
+        //    return Json(response);
+        //}
+
+        [HttpPost]
+        [Route("InsertDefaultProductDetails")]
+        public IActionResult InsertDefaultProductDetails([FromBody] InsertDefaultProductDetails request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string[] Exculuted = (request.DefaultProductId != null)
+                ? new string[] { "" }
+                : new string[] { "DefaultProductId" };
+
+            string storedProcedure = (request.DefaultProductId != null)
+                ? "[dbo].[USP_UpdateDefaultProductDetails]"
+                : "[dbo].[USP_InsertDefaultProductDetails]";
+
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteDefaultProduct")]
+        public IActionResult DeleteDefaultProduct(int DefaultProductId, int ProcessId)
+        {
+            DeleteDefaultProduct Get = new DeleteDefaultProduct()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProcessId = ProcessId,
+                DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteDefaultProductDetails]", Get);
+            return Json(response);
+        }
+
+        /*=================================================================End DefaultProduct=====================================================================*/
+
     }
 }

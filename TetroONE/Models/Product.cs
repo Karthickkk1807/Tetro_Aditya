@@ -26,13 +26,9 @@ namespace TetroONE.Models
         public int ProductSubCategoryId { get; set; } 
         public string? ProductDescription { get; set; }
         public int PrimaryUnitId { get; set; }
-        public int SecondaryUnitId { get; set; }
-        public decimal ConvertionValue { get; set; }
         public decimal PrimaryPrice { get; set; }
-        public decimal SecondaryPrice { get; set; }
         public decimal ReOrderLevel { get; set; }
         public int? TaxInfoId { get; set; }
-        public bool? IsDefault { get; set; }
         //public decimal? CGST { get; set; }
         //public decimal? SGST { get; set; }
         //public decimal? IGST { get; set; }

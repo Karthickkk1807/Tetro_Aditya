@@ -226,4 +226,31 @@ namespace TetroONE.Models
         public int? AutoGeneratePrefixId { get; set; }
     }
 
+    /*=================================================================DefaultProduct=====================================================================*/
+    public class GetDefaultProduct
+    {
+        public int LoginUserId { get; set; }
+        public int? DefaultProductId { get; set; } 
+    }
+
+    public class InsertDefaultProductDetails 
+    {
+        public int LoginUserId { get; set; }
+        public int? DefaultProductId { get; set; }
+        public int? ProcessId { get; set; }
+        public int? ProductId { get; set; } 
+        public int? Unit { get; set; }
+        public decimal? UnitValue { get; set; }
+        public string? Description { get; set; }
+        public int? IsBelowGSM { get; set; }
+        public int? ColourType { get; set; }
+    }
+     
+    public class DeleteDefaultProduct
+    {
+        public int LoginUserId { get; set; } 
+        public int? ProcessId { get; set; } 
+        public int? DefaultProductId { get; set; }
+    }
+
 }

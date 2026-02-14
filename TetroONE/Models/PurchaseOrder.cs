@@ -160,7 +160,7 @@ namespace TetroONE.Models
 
         public string? RupeesInWords { get; set; } 
 
-        public DataTable ProductItemData { get; set; } 
+        public DataTable ProductItemData { get; set; }
     }
 
     public class UpdateBankInfo

@@ -21,7 +21,6 @@ $(document).ready(async function () {
     Common.bindDropDownParent('SecondaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('ProductTypeId', 'ProductInfoForm', 'ProductType');
     Common.bindDropDownParent('ProductCategoryId', 'ProductInfoForm', 'ProductCategory');
-    Common.bindDropDownParent('ProductFlavourId', 'ProductInfoForm', 'ProductFlavour');
     Common.bindDropDownParent('TaxInfoId', 'ProductInfoForm', 'TaxInfo');
 
     $('#ProcessBtnhide').show();
@@ -155,14 +154,11 @@ $(document).ready(async function () {
         objvalue.ProductCategoryId = Common.parseInputValue('ProductCategoryId') || null;
         objvalue.ProductSubCategoryId = Common.parseInputValue('ProductSubCategoryId') || null;
         objvalue.PrimaryUnitId = Common.parseInputValue('PrimaryUnitId') || null;
-        objvalue.SecondaryUnitId = Common.parseInputValue('SecondaryUnitId') || null;
         objvalue.TaxInfoId = Common.parseInputValue('TaxInfoId') || null;
-        objvalue.ConvertionValue = Common.parseFloatInputValue('ConvertionValue') || null;
         objvalue.PrimaryPrice = Common.parseFloatInputValue('PrimaryPrice') || null;
-        objvalue.SecondaryPrice = Common.parseFloatInputValue('SecondaryPrice') || null;
         objvalue.ReOrderLevel = Common.parseFloatInputValue('ReOrderLevel') || null;
 
-        objvalue.IsDefault = $('#ProductInfoForm #IsDefault').is(':checked');
+        //objvalue.IsDefault = $('#ProductInfoForm #IsDefault').is(':checked');
 
         //objvalue.CGST = Common.parseFloatInputValue('CGST') || null;
         //objvalue.SGST = Common.parseFloatInputValue('SGST') || null;
@@ -337,16 +333,12 @@ $(document).ready(async function () {
 
     $(document).on('change', '#ProductTypeId', function () {
         var ProductTypeIdVal = $(this).val();
-        if (ProductTypeIdVal == 2) {
-            $('.ProductFlavors').show();
-            $('#ProductFlavourId').attr('required', true);
+        if (ProductTypeIdVal == 2) { 
             $('#ProductProcessHide').show();
             $('#RawMaterialInfoHide').show();
             $('.ProductDescription').addClass('col-lg-12 col-md-12 col-sm-12 col-12').removeClass('col-lg-6 col-md-6 col-sm-6 col-6');
         }
-        else {
-            $('.ProductFlavors').hide();
-            $('#ProductFlavourId').attr('required', false);
+        else { 
             $('#ProductProcessHide').hide();
             $('#RawMaterialInfoHide').hide();
             $('.ProductDescription').addClass('col-lg-6 col-md-6 col-sm-6 col-6').removeClass('col-lg-12 col-md-12 col-sm-12 col-12');

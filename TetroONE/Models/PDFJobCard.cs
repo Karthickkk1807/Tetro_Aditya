@@ -162,7 +162,7 @@ namespace TetroONE.Models
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("SF.NO").SetFont(kabrioFont).SetMarginTop(10).SetMarginLeft(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetVerticalAlignment(VerticalAlignment.MIDDLE).SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("PLN_ATP2526/0004").SetFont(kabrioFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.SFNo).SetFont(kabrioFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Company").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
@@ -178,7 +178,7 @@ namespace TetroONE.Models
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Qty").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("500.000 KG, 1000.000 KG").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Weight).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Rolls").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
@@ -186,11 +186,11 @@ namespace TetroONE.Models
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Machine").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Sample 1000.000 – 1500.000 KG").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Machine).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Weight").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("500.00 KG").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ChamberQty).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("NoOfChamber").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
@@ -212,11 +212,11 @@ namespace TetroONE.Models
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Width").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Tubler").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Width).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Lot No").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("INW_ATP2526/0001").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.LotNo).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("DC No").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
@@ -224,7 +224,7 @@ namespace TetroONE.Models
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Order No").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("-").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.OrderNo).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Water").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
@@ -245,66 +245,44 @@ namespace TetroONE.Models
                             PreTreatmentHeadingTable.SetBorderTop(new SolidBorder(1));
                             PreTreatmentHeadingTable.SetBorderBottom(new SolidBorder(0));
 
-                            PreTreatmentHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("PRE TREATMENT").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
+                            PreTreatmentHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("PRE TREATMENT").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetMarginTop(3).SetMarginBottom(3).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
 
                             document.Add(PreTreatmentHeadingTable);
 
-                            Table PreTreatmentMainTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.33f, 33.33f, 33.33f })).UseAllAvailableWidth();
-                            PreTreatmentMainTable.SetBorderRight(new SolidBorder(1));
-                            PreTreatmentMainTable.SetBorderLeft(new SolidBorder(1));
-                            PreTreatmentMainTable.SetBorderTop(new SolidBorder(1));
-                            PreTreatmentMainTable.SetBorderBottom(new SolidBorder(1));
+                            if (data.PreTreatmentProductItemData != null && data.PreTreatmentProductItemData.Columns.Count > 0)
+                            {
+                                // Create dynamic column width array (equal width)
+                                float[] columnWidths = Enumerable
+                                    .Repeat(100f / data.PreTreatmentProductItemData.Columns.Count, data.PreTreatmentProductItemData.Columns.Count)
+                                    .ToArray();
 
-                            Table PreTreatmentFirstColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            PreTreatmentFirstColumnTable.SetBorderRight(new SolidBorder(0));
-                            PreTreatmentFirstColumnTable.SetBorderLeft(new SolidBorder(1));
-                            PreTreatmentFirstColumnTable.SetBorderTop(new SolidBorder(0));
-                            PreTreatmentFirstColumnTable.SetBorderBottom(new SolidBorder(1));
+                                Table PreTreatmentMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
+                                PreTreatmentMainTable.SetBorder(new SolidBorder(1));
 
-                            PreTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Wetting Oil").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Bio-Scour").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Caustic").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Peroxide").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Acetic").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Killer").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Bio-Enzyme").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                // ---------------------------
+                                // HEADER ROW (Dynamic)
+                                // ---------------------------
+                                foreach (DataColumn column in data.PreTreatmentProductItemData.Columns)
+                                {
+                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
 
-                            Table PreTreatmentSecondColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            PreTreatmentSecondColumnTable.SetBorderRight(new SolidBorder(0));
-                            PreTreatmentSecondColumnTable.SetBorderLeft(new SolidBorder(0));
-                            PreTreatmentSecondColumnTable.SetBorderTop(new SolidBorder(0));
-                            PreTreatmentSecondColumnTable.SetBorderBottom(new SolidBorder(1));
+                                    PreTreatmentMainTable.AddHeaderCell(headerCell);
+                                }
 
-                            PreTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Unit Value").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("0.5").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("0.8").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("0.2").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("-").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                // ---------------------------
+                                // DATA ROWS (Dynamic)
+                                // ---------------------------
+                                foreach (DataRow row in data.PreTreatmentProductItemData.Rows)
+                                {
+                                    foreach (var item in row.ItemArray)
+                                    {
+                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        PreTreatmentMainTable.AddCell(cell);
+                                    }
+                                }
 
-                            Table PreTreatmentThirdColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            PreTreatmentThirdColumnTable.SetBorderRight(new SolidBorder(1));
-                            PreTreatmentThirdColumnTable.SetBorderLeft(new SolidBorder(0));
-                            PreTreatmentThirdColumnTable.SetBorderTop(new SolidBorder(0));
-                            PreTreatmentThirdColumnTable.SetBorderBottom(new SolidBorder(1));
-
-                            PreTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Amount Of Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("28.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("7.0000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("10.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2.6000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            PreTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("-").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-
-                            PreTreatmentMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(PreTreatmentFirstColumnTable));
-                            PreTreatmentMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(PreTreatmentSecondColumnTable));
-                            PreTreatmentMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(PreTreatmentThirdColumnTable));
-
-                            document.Add(PreTreatmentMainTable);
+                                document.Add(PreTreatmentMainTable);
+                            }
 
                             Table DyeHeadingTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             DyeHeadingTable.SetBorderRight(new SolidBorder(1));
@@ -312,54 +290,41 @@ namespace TetroONE.Models
                             DyeHeadingTable.SetBorderTop(new SolidBorder(0));
                             DyeHeadingTable.SetBorderBottom(new SolidBorder(0));
 
-                            DyeHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("DYE").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
+                            DyeHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("DYE").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetMarginTop(3).SetMarginBottom(3).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
 
                             document.Add(DyeHeadingTable);
 
-                            Table DyeMainTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.33f, 33.33f, 33.33f })).UseAllAvailableWidth();
-                            DyeMainTable.SetBorderRight(new SolidBorder(1));
-                            DyeMainTable.SetBorderLeft(new SolidBorder(1));
-                            DyeMainTable.SetBorderTop(new SolidBorder(1));
-                            DyeMainTable.SetBorderBottom(new SolidBorder(1));
+                            if (data.DyeProductItemData != null && data.DyeProductItemData.Columns.Count > 0)
+                            { 
+                                float[] columnWidths = Enumerable.Repeat(100f / data.DyeProductItemData.Columns.Count, data.DyeProductItemData.Columns.Count).ToArray();
 
-                            Table DyeFirstColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            DyeFirstColumnTable.SetBorderRight(new SolidBorder(0));
-                            DyeFirstColumnTable.SetBorderLeft(new SolidBorder(1));
-                            DyeFirstColumnTable.SetBorderTop(new SolidBorder(0));
-                            DyeFirstColumnTable.SetBorderBottom(new SolidBorder(1));
+                                Table DyeMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
+                                DyeMainTable.SetBorder(new SolidBorder(1));
 
-                            DyeFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Caustic").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Stablizer").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Lubricant").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                // ---------------------------
+                                // HEADER ROW (Dynamic)
+                                // ---------------------------
+                                foreach (DataColumn column in data.DyeProductItemData.Columns)
+                                {
+                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
 
-                            Table DyeSecondColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            DyeSecondColumnTable.SetBorderRight(new SolidBorder(0));
-                            DyeSecondColumnTable.SetBorderLeft(new SolidBorder(0));
-                            DyeSecondColumnTable.SetBorderTop(new SolidBorder(0));
-                            DyeSecondColumnTable.SetBorderBottom(new SolidBorder(1));
+                                    DyeMainTable.AddHeaderCell(headerCell);
+                                }
 
-                            DyeSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Unit Value").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("6.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("8.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("05.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                // ---------------------------
+                                // DATA ROWS (Dynamic)
+                                // ---------------------------
+                                foreach (DataRow row in data.DyeProductItemData.Rows)
+                                {
+                                    foreach (var item in row.ItemArray)
+                                    {
+                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        DyeMainTable.AddCell(cell);
+                                    }
+                                }
 
-                            Table DyeThirdColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            DyeThirdColumnTable.SetBorderRight(new SolidBorder(1));
-                            DyeThirdColumnTable.SetBorderLeft(new SolidBorder(0));
-                            DyeThirdColumnTable.SetBorderTop(new SolidBorder(0));
-                            DyeThirdColumnTable.SetBorderBottom(new SolidBorder(1));
-
-                            DyeThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Amount Of Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("15.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("98.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("25.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-
-                            DyeMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DyeFirstColumnTable));
-                            DyeMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DyeSecondColumnTable));
-                            DyeMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DyeThirdColumnTable));
-
-                            document.Add(DyeMainTable);
+                                document.Add(DyeMainTable);
+                            }
 
                             Table DyeBathHeadingTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             DyeBathHeadingTable.SetBorderRight(new SolidBorder(1));
@@ -367,51 +332,41 @@ namespace TetroONE.Models
                             DyeBathHeadingTable.SetBorderTop(new SolidBorder(0));
                             DyeBathHeadingTable.SetBorderBottom(new SolidBorder(0));
 
-                            DyeBathHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("DYE BATH").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
+                            DyeBathHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("DYE BATH").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetMarginTop(3).SetMarginBottom(3).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
 
                             document.Add(DyeBathHeadingTable);
 
-                            Table DyeBathMainTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.33f, 33.33f, 33.33f })).UseAllAvailableWidth();
-                            DyeBathMainTable.SetBorderRight(new SolidBorder(1));
-                            DyeBathMainTable.SetBorderLeft(new SolidBorder(1));
-                            DyeBathMainTable.SetBorderTop(new SolidBorder(1));
-                            DyeBathMainTable.SetBorderBottom(new SolidBorder(1));
+                            if (data.DyeBathProductItemData != null && data.DyeBathProductItemData.Columns.Count > 0)
+                            {
+                                float[] columnWidths = Enumerable.Repeat(100f / data.DyeBathProductItemData.Columns.Count, data.DyeBathProductItemData.Columns.Count).ToArray();
 
-                            Table DyeBathFirstColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            DyeBathFirstColumnTable.SetBorderRight(new SolidBorder(0));
-                            DyeBathFirstColumnTable.SetBorderLeft(new SolidBorder(1));
-                            DyeBathFirstColumnTable.SetBorderTop(new SolidBorder(0));
-                            DyeBathFirstColumnTable.SetBorderBottom(new SolidBorder(1));
+                                Table DyeBathMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
+                                DyeBathMainTable.SetBorder(new SolidBorder(1));
 
-                            DyeBathFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeBathFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Rol").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeBathFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Sequestering").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                // ---------------------------
+                                // HEADER ROW (Dynamic)
+                                // ---------------------------
+                                foreach (DataColumn column in data.DyeBathProductItemData.Columns)
+                                {
+                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
 
-                            Table DyeBathSecondColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            DyeBathSecondColumnTable.SetBorderRight(new SolidBorder(0));
-                            DyeBathSecondColumnTable.SetBorderLeft(new SolidBorder(0));
-                            DyeBathSecondColumnTable.SetBorderTop(new SolidBorder(0));
-                            DyeBathSecondColumnTable.SetBorderBottom(new SolidBorder(1));
+                                    DyeBathMainTable.AddHeaderCell(headerCell);
+                                }
 
-                            DyeBathSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Unit Value").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeBathSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeBathSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                // ---------------------------
+                                // DATA ROWS (Dynamic)
+                                // ---------------------------
+                                foreach (DataRow row in data.DyeBathProductItemData.Rows)
+                                {
+                                    foreach (var item in row.ItemArray)
+                                    {
+                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        DyeBathMainTable.AddCell(cell);
+                                    }
+                                }
 
-                            Table DyeBathThirdColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            DyeBathThirdColumnTable.SetBorderRight(new SolidBorder(1));
-                            DyeBathThirdColumnTable.SetBorderLeft(new SolidBorder(0));
-                            DyeBathThirdColumnTable.SetBorderTop(new SolidBorder(0));
-                            DyeBathThirdColumnTable.SetBorderBottom(new SolidBorder(1));
-
-                            DyeBathThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Amount Of Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeBathThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            DyeBathThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-
-                            DyeBathMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DyeBathFirstColumnTable));
-                            DyeBathMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DyeBathSecondColumnTable));
-                            DyeBathMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DyeBathThirdColumnTable));
-
-                            document.Add(DyeBathMainTable);
+                                document.Add(DyeBathMainTable);
+                            }
 
                             Table AfterTreatmentHeadingTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             AfterTreatmentHeadingTable.SetBorderRight(new SolidBorder(1));
@@ -419,103 +374,86 @@ namespace TetroONE.Models
                             AfterTreatmentHeadingTable.SetBorderTop(new SolidBorder(0));
                             AfterTreatmentHeadingTable.SetBorderBottom(new SolidBorder(0));
 
-                            AfterTreatmentHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("AFTER TREATMENT").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
+                            AfterTreatmentHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("AFTER TREATMENT").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetMarginTop(3).SetMarginBottom(3).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
 
                             document.Add(AfterTreatmentHeadingTable);
 
-                            Table AfterTreatmentMainTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.33f, 33.33f, 33.33f })).UseAllAvailableWidth();
-                            AfterTreatmentMainTable.SetBorderRight(new SolidBorder(1));
-                            AfterTreatmentMainTable.SetBorderLeft(new SolidBorder(1));
-                            AfterTreatmentMainTable.SetBorderTop(new SolidBorder(1));
-                            AfterTreatmentMainTable.SetBorderBottom(new SolidBorder(1));
 
-                            Table AfterTreatmentFirstColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            AfterTreatmentFirstColumnTable.SetBorderRight(new SolidBorder(0));
-                            AfterTreatmentFirstColumnTable.SetBorderLeft(new SolidBorder(1));
-                            AfterTreatmentFirstColumnTable.SetBorderTop(new SolidBorder(0));
-                            AfterTreatmentFirstColumnTable.SetBorderBottom(new SolidBorder(1));
+                            if (data.AfterTreatmentProductItemData != null && data.AfterTreatmentProductItemData.Columns.Count > 0)
+                            {
+                                float[] columnWidths = Enumerable.Repeat(100f / data.AfterTreatmentProductItemData.Columns.Count, data.AfterTreatmentProductItemData.Columns.Count).ToArray();
 
-                            AfterTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            AfterTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Final Acetic Acid").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            AfterTreatmentFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Soaping").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                Table AfterTreatmentMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
+                                AfterTreatmentMainTable.SetBorder(new SolidBorder(1));
 
-                            Table AfterTreatmentSecondColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            AfterTreatmentSecondColumnTable.SetBorderRight(new SolidBorder(0));
-                            AfterTreatmentSecondColumnTable.SetBorderLeft(new SolidBorder(0));
-                            AfterTreatmentSecondColumnTable.SetBorderTop(new SolidBorder(0));
-                            AfterTreatmentSecondColumnTable.SetBorderBottom(new SolidBorder(1));
+                                // ---------------------------
+                                // HEADER ROW (Dynamic)
+                                // ---------------------------
+                                foreach (DataColumn column in data.AfterTreatmentProductItemData.Columns)
+                                {
+                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
 
-                            AfterTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Unit Value").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            AfterTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            AfterTreatmentSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("4.5").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                    AfterTreatmentMainTable.AddHeaderCell(headerCell);
+                                }
 
-                            Table AfterTreatmentThirdColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            AfterTreatmentThirdColumnTable.SetBorderRight(new SolidBorder(1));
-                            AfterTreatmentThirdColumnTable.SetBorderLeft(new SolidBorder(0));
-                            AfterTreatmentThirdColumnTable.SetBorderTop(new SolidBorder(0));
-                            AfterTreatmentThirdColumnTable.SetBorderBottom(new SolidBorder(1));
+                                // ---------------------------
+                                // DATA ROWS (Dynamic)
+                                // ---------------------------
+                                foreach (DataRow row in data.AfterTreatmentProductItemData.Rows)
+                                {
+                                    foreach (var item in row.ItemArray)
+                                    {
+                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        AfterTreatmentMainTable.AddCell(cell);
+                                    }
+                                }
 
-                            AfterTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Amount Of Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            AfterTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            AfterTreatmentThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("-").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                document.Add(AfterTreatmentMainTable);
+                            }
 
-                            AfterTreatmentMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(AfterTreatmentFirstColumnTable));
-                            AfterTreatmentMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(AfterTreatmentSecondColumnTable));
-                            AfterTreatmentMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(AfterTreatmentThirdColumnTable));
-
-                            document.Add(AfterTreatmentMainTable);
 
                             Table FinishingHeadingTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             FinishingHeadingTable.SetBorderRight(new SolidBorder(1));
                             FinishingHeadingTable.SetBorderLeft(new SolidBorder(1));
-                            FinishingHeadingTable.SetBorderTop(new SolidBorder(1));
+                            FinishingHeadingTable.SetBorderTop(new SolidBorder(0));
                             FinishingHeadingTable.SetBorderBottom(new SolidBorder(0));
 
-                            FinishingHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("FINISHING").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
+                            FinishingHeadingTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("FINISHING").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetMarginTop(3).SetMarginBottom(3).SetFontSize(15).SetTextAlignment(TextAlignment.CENTER)));
 
                             document.Add(FinishingHeadingTable);
 
-                            Table FinishingMainTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.33f, 33.33f, 33.33f })).UseAllAvailableWidth();
-                            FinishingMainTable.SetBorderRight(new SolidBorder(0));
-                            FinishingMainTable.SetBorderLeft(new SolidBorder(0));
-                            FinishingMainTable.SetBorderTop(new SolidBorder(0));
-                            FinishingMainTable.SetBorderBottom(new SolidBorder(0));
+                            if (data.FinishingProductItemData != null && data.FinishingProductItemData.Columns.Count > 0)
+                            {
+                                float[] columnWidths = Enumerable.Repeat(100f / data.FinishingProductItemData.Columns.Count, data.FinishingProductItemData.Columns.Count).ToArray();
 
-                            Table FinishingFirstColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            FinishingFirstColumnTable.SetBorderRight(new SolidBorder(0));
-                            FinishingFirstColumnTable.SetBorderLeft(new SolidBorder(1));
-                            FinishingFirstColumnTable.SetBorderTop(new SolidBorder(0));
-                            FinishingFirstColumnTable.SetBorderBottom(new SolidBorder(0));
+                                Table FinishingMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
+                                FinishingMainTable.SetBorder(new SolidBorder(1));
 
-                            FinishingFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            FinishingFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Silicone Softener").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            FinishingFirstColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Cationic Softener").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                // ---------------------------
+                                // HEADER ROW (Dynamic)
+                                // ---------------------------
+                                foreach (DataColumn column in data.FinishingProductItemData.Columns)
+                                {
+                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
 
-                            Table FinishingSecondColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            FinishingSecondColumnTable.SetBorderRight(new SolidBorder(0));
-                            FinishingSecondColumnTable.SetBorderLeft(new SolidBorder(0));
-                            FinishingSecondColumnTable.SetBorderTop(new SolidBorder(0));
-                            FinishingSecondColumnTable.SetBorderBottom(new SolidBorder(0));
+                                    FinishingMainTable.AddHeaderCell(headerCell);
+                                }
 
-                            FinishingSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Unit Value").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            FinishingSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            FinishingSecondColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1.0").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                                // ---------------------------
+                                // DATA ROWS (Dynamic)
+                                // ---------------------------
+                                foreach (DataRow row in data.FinishingProductItemData.Rows)
+                                {
+                                    foreach (var item in row.ItemArray)
+                                    {
+                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        FinishingMainTable.AddCell(cell);
+                                    }
+                                }
 
-                            Table FinishingThirdColumnTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            FinishingThirdColumnTable.SetBorderRight(new SolidBorder(0));
-                            FinishingThirdColumnTable.SetBorderLeft(new SolidBorder(0));
-                            FinishingThirdColumnTable.SetBorderTop(new SolidBorder(0));
-                            FinishingThirdColumnTable.SetBorderBottom(new SolidBorder(0));
+                                document.Add(FinishingMainTable);
+                            }
 
-                            FinishingThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Amount Of Chemicals").SetFont(kabrioBoldFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            FinishingThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14.000").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-                            FinishingThirdColumnTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("-").SetFont(kabrioFont).SetFixedLeading(20).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
-
-                            FinishingMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(FinishingFirstColumnTable));
-                            FinishingMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(FinishingSecondColumnTable));
-                            FinishingMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(FinishingThirdColumnTable));
-
-                            document.Add(FinishingMainTable);
 
                             Table FooterMainTable = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 })).UseAllAvailableWidth();
                             FooterMainTable.SetBorderRight(new SolidBorder(1));
@@ -527,26 +465,39 @@ namespace TetroONE.Models
                             FooterLeftMainTable.SetBorder(Border.NO_BORDER);
 
                             FooterLeftMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("LOADING").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(13).SetTextAlignment(TextAlignment.LEFT)));
-                            FooterLeftMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Date : 04-02-2026").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            FooterLeftMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Time : 10:50 AM").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            FooterLeftMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Date : " + data.LoadingDate).SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            FooterLeftMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Time : " + data.LoadingTime).SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             Table FooterRightMainTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             FooterRightMainTable.SetBorder(Border.NO_BORDER);
 
                             FooterRightMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("UNLOADING").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(13).SetTextAlignment(TextAlignment.LEFT)));
-                            FooterRightMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Date : 05-02-2026").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            FooterRightMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Time : 09:20 PM").SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            FooterRightMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Date : " + data.UnloadingDate).SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            FooterRightMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Time : " + data.UnloadingTime).SetFont(kabrioFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             FooterMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(FooterLeftMainTable));
                             FooterMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(FooterRightMainTable));
 
+                            // --- ADD FOOTER ROW WITH BOTTOM BORDER ---
+                            int footerColumnsCount = 2;  // FooterMainTable has 2 columns
+                            for (int i = 0; i < footerColumnsCount; i++)
+                            {
+                                Cell footerCell = new Cell()
+                                    .SetBorderTop(Border.NO_BORDER)
+                                    .SetBorderLeft(Border.NO_BORDER)
+                                    .SetBorderRight(Border.NO_BORDER)
+                                    .SetBorderBottom(new SolidBorder(1));
+                                FooterMainTable.AddFooterCell(footerCell);
+                            }
+                            FooterMainTable.SetSkipLastFooter(false);
+
                             document.Add(FooterMainTable);
 
                             Table FooterSignatureTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.3f, 33.33f, 33.33f })).UseAllAvailableWidth();
-                            FooterSignatureTable.SetBorderRight(new SolidBorder(0));
-                            FooterSignatureTable.SetBorderLeft(new SolidBorder(0));
+                            FooterSignatureTable.SetBorderRight(new SolidBorder(1));
+                            FooterSignatureTable.SetBorderLeft(new SolidBorder(1));
                             FooterSignatureTable.SetBorderTop(Border.NO_BORDER);
-                            FooterSignatureTable.SetBorderBottom(new SolidBorder(0));
+                            FooterSignatureTable.SetBorderBottom(new SolidBorder(1));
                             FooterSignatureTable.SetHeight(80);
 
                             FooterSignatureTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Signature Of Owner").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(13).SetTextAlignment(TextAlignment.LEFT)));
