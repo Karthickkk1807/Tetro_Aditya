@@ -25,7 +25,7 @@
 	{
 		public int LoginUserId { get; set; }
 		public string ModuleName { get; set; }
-		public int ModuleId { get; set; }
+		public int? ModuleId { get; set; }
 
 	}
 
