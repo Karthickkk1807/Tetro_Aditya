@@ -356,6 +356,10 @@ namespace TetroONE.Models
         public string? UnloadingDate { get; set; }
         public string? UnloadingTime { get; set; } 
 
+        public string? ApprovedBy { get; set; }
+        public string? VerifiedBy { get; set; }
+        public string? PreparedBy { get; set; } 
+
         public DataTable PreTreatmentProductItemData { get; set; }
         public DataTable DyeProductItemData { get; set; }
         public DataTable DyeBathProductItemData { get; set; }

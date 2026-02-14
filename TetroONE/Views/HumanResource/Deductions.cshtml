@@ -33,7 +33,7 @@
         width: 100%;
         max-height: 355px !important;
     }
-     
+
     table.dataTable {
         clear: both;
         margin-top: 6px !important;
@@ -42,7 +42,6 @@
         /* border-collapse: separate !important; */
     }
 
-   
 </style>
 
 
@@ -259,7 +258,7 @@
                     <div class="form-group">
                         <label>Approved Amount <span id="Asterisk">*</span></label>
                         <input type="text" class="form-control" placeholder="Approved Amount" id="ApprovedAmount" name="ApprovedAmount" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this,8)" />
-                        <input type="text" class="form-control" placeholder="Approved Amount" id="LimitAmount" name="LimitAmount" style="display:none" />
+
                     </div>
                 </div>
 
@@ -331,6 +330,7 @@
                     <div class="form-group">
                         <label>Advance Amount <span id="Asterisk">*</span></label>
                         <input type="text" class="form-control" placeholder="Advance Amount" id="AdvanceAmount" name="AdvanceAmount" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" required />
+                        <input type="text" class="form-control" placeholder="Approved Amount" id="LimitAmount" name="LimitAmount" style="display:none" />
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2" id="AdvanceDueCol">
@@ -404,6 +404,7 @@
                     <div class="form-group">
                         <label>Loan Amount <span id="Asterisk">*</span></label>
                         <input type="text" class="form-control" placeholder="Loan Amount" id="LoanAmount" name="LoanAmount" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" required />
+                        <input type="text" class="form-control" placeholder="Approved Amount" id="LoanMaxAmount" name="LoanMaxAmount" style="display:none" />
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2">

@@ -762,11 +762,11 @@ async function GetLoanlimit() {
                             $('#RemainingAmount').val(0);
                             Common.warning('You have exceed the limit');
                         }
-                        $('#loanbtn').show();
+                        $('#SaveLoan').show();
                     }
                 } else {
                     Common.warning(response.message);
-                    $('#loanbtn').hide();
+                    $('#SaveLoan').hide();
                     $('#LimitAmount').val('');
                 }
             },
@@ -789,6 +789,16 @@ function loanlimitamount() {
 
 
 
+function performDivision() {
+    var value1 = parseFloat($("#LoanAmount").val());
+    var value2 = parseFloat($("#NoOfDues").val());
+
+    if (!isNaN(value1) && !isNaN(value2) && value2 !== 0) {
+        var result = value1 / value2;
+        result = result.toFixed(2);
+        $("#DueAmount").val(result);
+    }
+}
 
 
 
