@@ -497,14 +497,43 @@ namespace TetroONE.Models
                             FooterSignatureTable.SetBorderRight(new SolidBorder(1));
                             FooterSignatureTable.SetBorderLeft(new SolidBorder(1));
                             FooterSignatureTable.SetBorderTop(Border.NO_BORDER);
-                            FooterSignatureTable.SetBorderBottom(new SolidBorder(1));
-                            FooterSignatureTable.SetHeight(80);
+                            FooterSignatureTable.SetBorderBottom(Border.NO_BORDER);
+                            FooterSignatureTable.SetHeight(110);
 
-                            FooterSignatureTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Signature Of Owner").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(13).SetTextAlignment(TextAlignment.LEFT)));
-                            FooterSignatureTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Signature Of Master").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            FooterSignatureTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Signature Of Supervisor").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            FooterSignatureTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ApprovedBy ?? "").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(13).SetTextAlignment(TextAlignment.CENTER)));
+                            FooterSignatureTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.VerifiedBy ?? "").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                            FooterSignatureTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.PreparedBy ?? "").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+
+                            //// --- ADD FOOTER ROW WITH BOTTOM BORDER ---
+                            //// Row 2 - Signature Line (Top Border Only)
+                            //for (int i = 0; i < 3; i++)
+                            //{
+                            //    FooterSignatureTable.AddCell(
+                            //        new Cell()
+                            //            .SetBorderTop(new SolidBorder(1))
+                            //            .SetBorderLeft(Border.NO_BORDER)
+                            //            .SetBorderRight(Border.NO_BORDER)
+                            //            .SetBorderBottom(Border.NO_BORDER)
+                            //            .SetHeight(20)
+                            //    );
+                            //}
 
                             document.Add(FooterSignatureTable);
+
+                            Table FooterSignatureTable1 = new Table(UnitValue.CreatePercentArray(new float[] { 33.3f, 33.33f, 33.33f })).UseAllAvailableWidth();
+                            FooterSignatureTable1.SetBorderRight(new SolidBorder(1));
+                            FooterSignatureTable1.SetBorderLeft(new SolidBorder(1));
+                            FooterSignatureTable1.SetBorderTop(Border.NO_BORDER);
+                            FooterSignatureTable1.SetBorderBottom(new SolidBorder(1));
+
+                            FooterSignatureTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("ApprovedBy").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetMarginTop(-40).SetFontSize(13).SetTextAlignment(TextAlignment.CENTER)));
+                            FooterSignatureTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("VerifiedBy").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetMarginTop(-40).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                            FooterSignatureTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("PreparedBy").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetMarginTop(-40).SetFontSize(12).SetTextAlignment(TextAlignment.CENTER)));
+                            //FooterSignatureTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Signature Of Owner").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(13).SetTextAlignment(TextAlignment.LEFT)));
+                            //FooterSignatureTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Signature Of Master").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //FooterSignatureTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Signature Of Supervisor").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginTop(50).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+
+                            document.Add(FooterSignatureTable1);
 
                             document.Close();
                         }

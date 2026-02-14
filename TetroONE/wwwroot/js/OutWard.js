@@ -612,7 +612,7 @@ function GetOutwardNotNullSuccess(response) {
         Common.ajaxCall("GET", "/Productions/GetOutWardTypeContactDetails", { OutwardType: parseInt(1) }, function (responseOutWardType) {
             if (responseOutWardType.status) {
                 Common.bindDropDownSuccess(responseOutWardType.data, "ShipToId");
-                bindDropDownNotNull(parseInt(header.InwardId), 'ProductionPlan', 'ProductionPlanId', 'TopStatic', header.ProductionPlanId);
+                bindDropDownNotNull(parseInt(header.InwardId), 'ProductionPlanEdit', 'ProductionPlanId', 'TopStatic', header.ProductionPlanId);
 
                 Common.ajaxCall("GET", "/Settings/GetPlantDetails", { PlantId: parseInt(header.ShipFrom) }, function (responsePlantDetails) {
                     if (responsePlantDetails.status) {
