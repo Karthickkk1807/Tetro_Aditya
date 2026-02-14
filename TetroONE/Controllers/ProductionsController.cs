@@ -995,7 +995,7 @@ namespace TetroONE.Controllers
                             adapter.Fill(ds);
                         }
 
-                        if (ds.Tables.Count >= 9)
+                        if (ds.Tables.Count >= 10)
                         {
                             DataTable dt1 = ds.Tables[0];
                             DataTable dt2 = ds.Tables[1];
@@ -1006,6 +1006,7 @@ namespace TetroONE.Controllers
                             DataTable dt7 = ds.Tables[6];
                             DataTable dt8 = ds.Tables[7];
                             DataTable dt9 = ds.Tables[8];
+                            DataTable dt10 = ds.Tables[9];
 
                             // Check if dt1 has rows
                             if (dt1.Rows.Count > 0)
@@ -1039,6 +1040,10 @@ namespace TetroONE.Controllers
                                     LoadingTime = dt9.Rows[0]["LoadingTime"] != DBNull.Value ? Convert.ToString(dt9.Rows[0]["LoadingTime"]) : null,
                                     UnloadingDate = dt9.Rows[0]["UnloadingDate"] != DBNull.Value ? Convert.ToString(dt9.Rows[0]["UnloadingDate"]) : null,
                                     UnloadingTime = dt9.Rows[0]["UnloadingTime"] != DBNull.Value ? Convert.ToString(dt9.Rows[0]["UnloadingTime"]) : null,
+
+                                    ApprovedBy = dt10.Rows[0]["ApprovedBy"] != DBNull.Value ? Convert.ToString(dt10.Rows[0]["ApprovedBy"]) : null,
+                                    VerifiedBy = dt10.Rows[0]["VerifiedBy"] != DBNull.Value ? Convert.ToString(dt10.Rows[0]["VerifiedBy"]) : null,
+                                    PreparedBy = dt10.Rows[0]["PreparedBy"] != DBNull.Value ? Convert.ToString(dt10.Rows[0]["PreparedBy"]) : null,
 
                                     PreTreatmentProductItemData = dt4,
 

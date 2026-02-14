@@ -399,11 +399,19 @@ $(document).ready(async function () {
         });
     });
     
-    $(document).on("change", ".FabricType", function () {
+    //$(document).on("change", ".FabricType", function () {
 
-        const classMap = [".FabricType"];
-        const changedClass = classMap.find(c => $(this).hasClass(c.substring(1)));
-        refreshProductDropdowns(changedClass);
+    //    const classMap = [".FabricType"];
+    //    const changedClass = classMap.find(c => $(this).hasClass(c.substring(1)));
+    //    refreshProductDropdowns(changedClass);
+    //});
+    
+    $(document).on("change", ".FabricType", function () {
+        refreshColorDropdowns();
+    });
+
+    $(document).on("change", ".Color", function () {
+        refreshColorDropdowns();
     });
 
     $(document).on("change", ".ProcessTypeId", function () {
@@ -625,6 +633,7 @@ function QuotationNotNullSuccess(response) {
                 $('.DynamicColorList').append(htmlRow);
             });
             updateRemoveButtonsColor();
+            refreshColorDropdowns();
         }
 
         if (data[2][0].QuotationProcessTypeMappingId != null && data[2][0].QuotationProcessTypeMappingId != "") {
@@ -731,7 +740,6 @@ function refreshProductDropdowns(selector) {
     });
 }
 
-
 function refreshProductProcessTypedowns(selector) {
 
     let selectedValues = $(selector).map(function () {
@@ -747,6 +755,51 @@ function refreshProductProcessTypedowns(selector) {
                 $(this).find(`option[value="${val}"]`).prop("disabled", true).addClass("d-none");
             }
         });
+    });
+}
+
+function refreshColorDropdowns() {
+
+    // Get all selected combinations
+    let selectedCombinations = [];
+
+    $(".ColorListRow").each(function () {
+        let fabric = $(this).find(".FabricType").val();
+        let color = $(this).find(".Color").val();
+
+        if (fabric && color) {
+            selectedCombinations.push(fabric + "_" + color);
+        }
+    });
+
+    // Now loop again and disable duplicate color options
+    $(".ColorListRow").each(function () {
+
+        let currentRow = $(this);
+        let currentFabric = currentRow.find(".FabricType").val();
+        let currentColor = currentRow.find(".Color").val();
+
+        let colorDropdown = currentRow.find(".Color");
+
+        // Reset options
+        colorDropdown.find("option")
+            .prop("disabled", false)
+            .removeClass("d-none");
+
+        // Disable colors already selected for same fabric
+        selectedCombinations.forEach(function (combo) {
+
+            let parts = combo.split("_");
+            let fabric = parts[0];
+            let color = parts[1];
+
+            if (fabric === currentFabric && color !== currentColor) {
+                colorDropdown.find('option[value="' + color + '"]')
+                    .prop("disabled", true)
+                    .addClass("d-none");
+            }
+        });
+
     });
 }
 
@@ -827,8 +880,10 @@ function duplicateRowColor() {
     }
 
     updateRemoveButtonsColor();
-    refreshProductDropdowns(".FabricType");
+    //refreshProductDropdowns(".FabricType");
+    refreshColorDropdowns();
 }
+
 function updateRemoveButtonsColor() {
     var rows = $('.ColorListRow');
 
@@ -851,7 +906,8 @@ function removeRowColor(button) {
     if (totalRows > 1) {
         $(button).closest('.ColorListRow').remove();
         updateRemoveButtonsColor();
-        refreshProductDropdowns(".FabricType");
+        //refreshProductDropdowns(".FabricType");
+        refreshColorDropdowns();
     }
 }
 

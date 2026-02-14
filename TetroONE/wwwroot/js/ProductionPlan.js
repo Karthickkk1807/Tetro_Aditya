@@ -16,6 +16,13 @@ var existFiles = [];
 var formDataMultiple = new FormData();
 var skipChemicalTabValidation = false;
 
+// ===== Global Chemical Edit Lists =====
+var EditPreTreatmentChemicalProduct = [];
+var EditDyeBathChemicalProduct = [];
+var EditAfterTreatmentChemicalProduct = [];
+var EditFinishingChemicalProduct = [];
+
+
 $(document).ready(async function () {
 
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
@@ -262,25 +269,29 @@ $(document).ready(async function () {
         //const today = new Date().toISOString().split('T')[0];
         //$("#BatchDate").val(today);
         //$('#MachineId').prop('disabled', false);
-
-        Common.ajaxCall("GET", "/Productions/GetDefaultChemicalDetails", { ProcessType: null, ProductionPlanId: parseInt(ProductionPlanId), ColourValue: null }, function (response) {
+        Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", { MasterInfoId: null, ModuleName: "DefaultChemicalEdit" }, function (response) {
             if (response.status) {
                 var data = JSON.parse(response.data);
 
-                PreTreatmentChemicalProduct = [];
-                DyeChemicalProduct = [];
-                DyeBathChemicalProduct = [];
-                AfterTreatmentChemicalProduct = [];
-                FinishingChemicalProduct = [];
-
                 PreTreatmentChemicalProduct = data[0];
-                DyeChemicalProduct = data[1];
-                DyeBathChemicalProduct = data[2];
-                AfterTreatmentChemicalProduct = data[3];
-                FinishingChemicalProduct = data[4];
+                DyeBathChemicalProduct = data[1];
+                AfterTreatmentChemicalProduct = data[2];
+                FinishingChemicalProduct = data[3];
 
-                var fnData = Common.getDateFilter('dateDisplay2');
-                Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: parseInt(ProductionPlanId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanNotNullSuccess, null);
+                Common.ajaxCall("GET", "/Productions/GetDefaultChemicalDetails", { ProcessType: null, ProductionPlanId: parseInt(ProductionPlanId), ColourValue: null }, function (response) {
+                    if (response.status) {
+                        var data = JSON.parse(response.data);
+                         
+                        EditPreTreatmentChemicalProduct = data[0];
+                        EditDyeChemicalProduct = data[1];
+                        EditDyeBathChemicalProduct = data[2];
+                        EditAfterTreatmentChemicalProduct = data[3];
+                        EditFinishingChemicalProduct = data[4];
+
+                        var fnData = Common.getDateFilter('dateDisplay2');
+                        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: parseInt(ProductionPlanId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanNotNullSuccess, null);
+                    }
+                }, null);
             }
         }, null);
 
@@ -424,7 +435,7 @@ $(document).ready(async function () {
             }
         }
 
-        if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) { 
+        if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
             getExistFiles();
 
             var objvalue = {
@@ -728,7 +739,6 @@ function validateUpdateAllChemicalTabs() {
     return true;
 }
 
-
 function validateUpdateChemicalTab(container, rowClass) {
 
     let isValid = true;
@@ -753,8 +763,6 @@ function validateUpdateChemicalTab(container, rowClass) {
 
     return isValid;
 }
-
-
 
 function validateCurrentChemicalTab() {
     if ($('#ChemicalDynamic-Pre').is(':visible'))
@@ -987,72 +995,127 @@ async function GetProductionPlanNotNullSuccess(response) {
 }
 
 function createChemicalRow(rowType, chemicalData) {
+
     let numberIncr = Math.random().toString(36).substring(2);
     let rowadd = $(`.RowOfChemical-${rowType}`).length;
 
-    let selectOptions = "";
     let defaultOption = '<option value="">--Select--</option>';
 
-    let products = [];
+    let editProducts = [];
+    let masterProducts = [];
+
+    // 🔹 Get correct arrays
     switch (rowType) {
+
         case 'Pre':
-            products = Array.isArray(PreTreatmentChemicalProduct) ? PreTreatmentChemicalProduct : [];
+            editProducts = EditPreTreatmentChemicalProduct || [];
+            masterProducts = PreTreatmentChemicalProduct || [];
             break;
+
         case 'After':
-            products = Array.isArray(AfterTreatmentChemicalProduct) ? AfterTreatmentChemicalProduct : [];
+            editProducts = EditAfterTreatmentChemicalProduct || [];
+            masterProducts = AfterTreatmentChemicalProduct || [];
             break;
+
         case 'Dye':
-            products = Array.isArray(DyeChemicalProduct) ? DyeChemicalProduct : [];
+            editProducts = EditDyeChemicalProduct || [];
+            masterProducts = EditDyeChemicalProduct || []; // 🔥 IMPORTANT
             break;
+
         case 'DyeBath':
-            products = Array.isArray(DyeBathChemicalProduct) ? DyeBathChemicalProduct : [];
+            editProducts = EditDyeBathChemicalProduct || [];
+            masterProducts = DyeBathChemicalProduct || [];
             break;
+
         case 'Finishing':
-            products = Array.isArray(FinishingChemicalProduct) ? FinishingChemicalProduct : [];
+            editProducts = EditFinishingChemicalProduct || [];
+            masterProducts = FinishingChemicalProduct || [];
             break;
     }
 
-    selectOptions = Array.isArray(products)
-        ? products.map(c => `<option value="${c.ChemicalId}">${c.ChemicalName}</option>`).join('')
-        : '';
+    // 🔹 Remove duplicates (Edit first, remaining from Master)
+    let editIds = editProducts.map(e => e.ChemicalId);
+    let remainingProducts = masterProducts.filter(m => !editIds.includes(m.ChemicalId));
+    let finalProducts = [...editProducts, ...remainingProducts];
+
+    // 🔹 Build dropdown
+    let selectOptions = finalProducts.map(c => `
+        <option value="${c.ChemicalId}" 
+            ${chemicalData.ChemicalId == c.ChemicalId ? 'selected' : ''}>
+            ${c.ChemicalName}
+        </option>
+    `).join('');
 
     let htmlRow = `
         <div class="row RowOfChemical-${rowType}">
-            <label class="ProductionPlanChemicalRequirementId d-none">${chemicalData.ProductionPlanChemicalRequirementId}</label>
+            <label class="ProductionPlanChemicalRequirementId d-none">
+                ${chemicalData.ProductionPlanChemicalRequirementId || ''}
+            </label>
+
             <div class="col-md-5 col-lg-5 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="ProductClass">Product<span id="Asterisk">*</span></label>
-                    <select class="form-control ProductSelect${rowType} ProductId${rowType}" id="ProductId${numberIncr}" name="ProductId${numberIncr}" required>
-                        ${defaultOption}${selectOptions}
+                    <select class="form-control ProductSelect${rowType} ProductId${rowType}" 
+                            id="ProductId${numberIncr}" 
+                            name="ProductId${numberIncr}" required>
+                        ${defaultOption}
+                        ${selectOptions}
                     </select>
                 </div>
             </div> 
+
             <div class="col-md-4 col-lg-4 col-sm-6 col-6">
                 <div class="form-group">
-                <label class="GPLClass">Value<span id="Asterisk">*</span></label>
-                    <div id="ember325" class="input-group ember-view" style="gap: 8px;">
-                        <select class="form-control DysType" id="DysType${numberIncr}" name="DysType${numberIncr}" required style="border-top-right-radius: 3px;border-bottom-right-radius: 3px;">
+                    <label class="GPLClass">Value<span id="Asterisk">*</span></label>
+                    <div class="input-group" style="gap: 8px;">
+                        <select class="form-control DysType" 
+                                id="DysType${numberIncr}" 
+                                name="DysType${numberIncr}" required>
                             <option value="2">%</option>
                             <option value="1">GPL</option>
                         </select>
-                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" value="${chemicalData.GPL != null ? Number(chemicalData.GPL).toFixed(3) : ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required/>
+                        <input type="text" class="form-control" 
+                               placeholder="Ex: 8.3"
+                               id="GPL${numberIncr}" 
+                               name="GPL${numberIncr}" 
+                               value="${chemicalData.GPL != null ? Number(chemicalData.GPL).toFixed(3) : ''}"
+                               oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" 
+                               required/>
                     </div>
                 </div>
             </div> 
+
             <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                 <div class="form-group">
                     <label class="QtyClass">Qty<span id="Asterisk">*</span></label>
-                    <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" value="${chemicalData.TotalQty != null ? Number(chemicalData.TotalQty).toFixed(3) : ''}" oninput="Common.allowOnlyNumberLength(this,3)" required/>
+                    <input type="text" class="form-control" 
+                           placeholder="Ex: 0"
+                           id="Qty${numberIncr}" 
+                           name="Qty${numberIncr}" 
+                           value="${chemicalData.TotalQty != null ? Number(chemicalData.TotalQty).toFixed(3) : ''}"
+                           oninput="Common.allowOnlyNumberLength(this,3)" 
+                           required/>
                 </div>
             </div>
+
             <div class="col-lg-1 col-md-1 col-sm-3 col-3 p-0 thiswillshow">
-                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'block' : 'none'}">
-                    <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical${rowType}Testing(this)" style="position: absolute; top: 22px; right: 14px;">
+                <div class="p-1 align-items-center buttonsRow" 
+                     style="display: ${rowadd == 0 ? 'block' : 'none'}">
+                    <button class="btn AddStockBtn" type="button"
+                        onclick="duplicateRowChemical${rowType}Testing(this)"
+                        style="position: absolute; top: 22px; right: 14px;">
                         <i class="fas fa-plus" style="color: #000000;"></i>
                     </button>
                 </div>
-                <div class="p-1 align-items-center buttonsRow" style="display: ${rowadd == 0 ? 'none' : 'block'}">
-                    <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemove${rowType} mt-0" type="button" onclick="removeRowRowChemical${rowType}(this)" style="top: 4px; position: absolute; right: 13px;"><i class="fas fa-trash-alt"></i></button>
+
+                <div class="p-1 align-items-center buttonsRow" 
+                     style="display: ${rowadd == 0 ? 'none' : 'block'}">
+                    <button class="btn DynrowRemove RowOfChemicalRemove${rowType} mt-0" 
+                            type="button"
+                            onclick="removeRowRowChemical${rowType}(this)"
+                            style="top: 4px; position: absolute; right: 13px;">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1060,10 +1123,14 @@ function createChemicalRow(rowType, chemicalData) {
 
     $(`#ChemicalDynamic-${rowType}`).append(htmlRow);
 
-    $(`#ChemicalDynamic-${rowType} .ProductId${rowType}`).last().val(String(chemicalData.ChemicalId));
+    // 🔹 Set selected values safely
+    $(`#ChemicalDynamic-${rowType} .ProductId${rowType}`).last()
+        .val(String(chemicalData.ChemicalId || ''));
 
-    $(`#ChemicalDynamic-${rowType} .DysType`).last().val(String(chemicalData.ChemicalType));
+    $(`#ChemicalDynamic-${rowType} .DysType`).last()
+        .val(String(chemicalData.ChemicalType || '2'));
 
+    // 🔹 Update remove button logic
     switch (rowType) {
         case 'Pre':
             updateRemoveChemicalPre();
@@ -1071,7 +1138,7 @@ function createChemicalRow(rowType, chemicalData) {
         case 'After':
             updateRemoveChemicalAfter();
             break;
-        case 'Dyr':
+        case 'Dye':
             updateRemoveChemicalDye();
             break;
         case 'DyeBath':
@@ -1080,9 +1147,8 @@ function createChemicalRow(rowType, chemicalData) {
         case 'Finishing':
             updateRemoveChemicalFinishing();
             break;
-    };
+    }
 }
-
 function LoadPopupItems(allItems) {
     $("#ProductionPlanAddItem-table-body").empty();
 
@@ -1265,8 +1331,8 @@ $(document).on("click", "#BtnAdd", function () {
 
     let commonColour = checkedRows[0].find('.Colour').text().trim();  // Note uppercase 'C' 
 
-    let firstColor = commonColour; 
-    let allSameColor = checkedRows.every(row => row.find('.Colour').text().trim() === commonColour); 
+    let firstColor = commonColour;
+    let allSameColor = checkedRows.every(row => row.find('.Colour').text().trim() === commonColour);
 
     if (!allSameColor) {
         Common.warningMsg('Selected rows must have the same Colour.');
@@ -2377,7 +2443,7 @@ function updateRemoveChemicalFinishing() {
             removeButtonDiv.show();
         }
     });
-    refreshProductDropdowns(".ProductSelectDye");
+    refreshProductDropdowns(".ProductSelectFinishing");
 }
 
 function removeRowRowChemicalFinishing(button) {
@@ -2386,7 +2452,7 @@ function removeRowRowChemicalFinishing(button) {
         $(button).closest('.RowOfChemical-Finishing').remove();
     }
     updateRemoveChemicalFinishing();
-    refreshProductDropdowns(".ProductSelectDye");
+    refreshProductDropdowns(".ProductSelectFinishing");
 }
 
 function bindTable(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
@@ -2771,9 +2837,22 @@ function duplicateRowChemicalAfterTesting() {
     var AfterTreatmentSelectOptions = "";
     var defaultOption = '<option value="">--Select--</option>';
 
-    if (AfterTreatmentChemicalProduct != null && AfterTreatmentChemicalProduct.length > 0 && AfterTreatmentChemicalProduct[0].length > 0) {
-        AfterTreatmentSelectOptions = AfterTreatmentChemicalProduct[0].map(function (ChemicalId) {
-            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //if (AfterTreatmentChemicalProduct != null && AfterTreatmentChemicalProduct.length > 0 && AfterTreatmentChemicalProduct[0].length > 0) {
+    //    AfterTreatmentSelectOptions = AfterTreatmentChemicalProduct[0].map(function (ChemicalId) {
+    //        return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //    }).join('');
+    //}
+
+
+    if (Array.isArray(AfterTreatmentChemicalProduct) &&
+        AfterTreatmentChemicalProduct.length > 0) {
+
+        let chemicalList = Array.isArray(AfterTreatmentChemicalProduct[0])
+            ? AfterTreatmentChemicalProduct[0]
+            : AfterTreatmentChemicalProduct;
+
+        AfterTreatmentSelectOptions = chemicalList.map(function (item) {
+            return `<option value="${item.ChemicalId}">${item.ChemicalName}</option>`;
         }).join('');
     }
 
@@ -2823,18 +2902,42 @@ function duplicateRowChemicalAfterTesting() {
     updateRemoveChemicalAfter();
 }
 
-
-
 function duplicateRowChemicalPreTesting() {
     let numberIncr = Math.random().toString(36).substring(2);
     var rowadd = $('.RowOfChemical-Pre').length;
 
+    //var PreTreatmentSelectOptions = "";
+    //var defaultOption = '<option value="">--Select--</option>';
+
+    //if (PreTreatmentChemicalProduct != null && PreTreatmentChemicalProduct.length > 0 && PreTreatmentChemicalProduct[0].length > 0) {
+    //    PreTreatmentSelectOptions = PreTreatmentChemicalProduct[0].map(function (ChemicalId) {
+    //        return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //    }).join('');
+    //}
+
+    //var PreTreatmentSelectOptions = "";
+    //var defaultOption = '<option value="">--Select--</option>';
+
+    //if (Array.isArray(PreTreatmentChemicalProduct) && PreTreatmentChemicalProduct.length > 0) {
+    //    PreTreatmentSelectOptions = PreTreatmentChemicalProduct.map(function (item) {
+    //        return `<option value="${item.ChemicalId}">${item.ChemicalName}</option>`;
+    //    }).join('');
+    //}
+
+
     var PreTreatmentSelectOptions = "";
     var defaultOption = '<option value="">--Select--</option>';
 
-    if (PreTreatmentChemicalProduct != null && PreTreatmentChemicalProduct.length > 0 && PreTreatmentChemicalProduct[0].length > 0) {
-        PreTreatmentSelectOptions = PreTreatmentChemicalProduct[0].map(function (ChemicalId) {
-            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    if (Array.isArray(PreTreatmentChemicalProduct) &&
+        PreTreatmentChemicalProduct.length > 0) {
+
+        // If nested array → take first element
+        let chemicalList = Array.isArray(PreTreatmentChemicalProduct[0])
+            ? PreTreatmentChemicalProduct[0]
+            : PreTreatmentChemicalProduct;
+
+        PreTreatmentSelectOptions = chemicalList.map(function (item) {
+            return `<option value="${item.ChemicalId}">${item.ChemicalName}</option>`;
         }).join('');
     }
 
@@ -2891,9 +2994,21 @@ function duplicateRowChemicalDyeBathTesting() {
     var DyeBathChemicalSelectOptions = "";
     var defaultOption = '<option value="">--Select--</option>';
 
-    if (DyeBathChemicalProduct != null && DyeBathChemicalProduct.length > 0 && DyeBathChemicalProduct[0].length > 0) {
-        DyeBathChemicalSelectOptions = DyeBathChemicalProduct[0].map(function (ChemicalId) {
-            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //if (DyeBathChemicalProduct != null && DyeBathChemicalProduct.length > 0 && DyeBathChemicalProduct[0].length > 0) {
+    //    DyeBathChemicalSelectOptions = DyeBathChemicalProduct[0].map(function (ChemicalId) {
+    //        return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //    }).join('');
+    //}
+
+    if (Array.isArray(DyeBathChemicalProduct) &&
+        DyeBathChemicalProduct.length > 0) {
+
+        let chemicalList = Array.isArray(DyeBathChemicalProduct[0])
+            ? DyeBathChemicalProduct[0]
+            : DyeBathChemicalProduct;
+
+        DyeBathChemicalSelectOptions = chemicalList.map(function (item) {
+            return `<option value="${item.ChemicalId}">${item.ChemicalName}</option>`;
         }).join('');
     }
 
@@ -2949,9 +3064,20 @@ function duplicateRowChemicalDyeTesting() {
     var DyeChemicalSelectOptions = "";
     var defaultOption = '<option value="">--Select--</option>';
 
-    if (DyeChemicalProduct != null && DyeChemicalProduct.length > 0 && DyeChemicalProduct[0].length > 0) {
-        DyeChemicalSelectOptions = DyeChemicalProduct[0].map(function (ChemicalId) {
-            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //if (DyeChemicalProduct != null && DyeChemicalProduct.length > 0 && DyeChemicalProduct[0].length > 0) {
+    //    DyeChemicalSelectOptions = DyeChemicalProduct[0].map(function (ChemicalId) {
+    //        return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //    }).join('');
+    //}
+
+    if (Array.isArray(DyeChemicalProduct) && DyeChemicalProduct.length > 0) {
+
+        let chemicalList = Array.isArray(DyeChemicalProduct[0])
+            ? DyeChemicalProduct[0]
+            : DyeChemicalProduct;
+
+        DyeChemicalSelectOptions = chemicalList.map(function (item) {
+            return `<option value="${item.ChemicalId}">${item.ChemicalName}</option>`;
         }).join('');
     }
 
@@ -3007,9 +3133,21 @@ function duplicateRowChemicalFinishingTesting() {
     var FinishingChemicalSelectOptions = "";
     var defaultOption = '<option value="">--Select--</option>';
 
-    if (FinishingChemicalProduct != null && FinishingChemicalProduct.length > 0 && FinishingChemicalProduct[0].length > 0) {
-        FinishingChemicalSelectOptions = FinishingChemicalProduct[0].map(function (ChemicalId) {
-            return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //if (FinishingChemicalProduct != null && FinishingChemicalProduct.length > 0 && FinishingChemicalProduct[0].length > 0) {
+    //    FinishingChemicalSelectOptions = FinishingChemicalProduct[0].map(function (ChemicalId) {
+    //        return `<option value="${ChemicalId.ChemicalId}">${ChemicalId.ChemicalName}</option>`;
+    //    }).join('');
+    //}
+
+    if (Array.isArray(FinishingChemicalProduct) &&
+        FinishingChemicalProduct.length > 0) {
+
+        let chemicalList = Array.isArray(FinishingChemicalProduct[0])
+            ? FinishingChemicalProduct[0]
+            : FinishingChemicalProduct;
+
+        FinishingChemicalSelectOptions = chemicalList.map(function (item) {
+            return `<option value="${item.ChemicalId}">${item.ChemicalName}</option>`;
         }).join('');
     }
 

@@ -437,7 +437,7 @@ function BindTheDataOfTable(data) {
                 <td><input type="text" class="form-control DisabledTextBox ColourProcess" value="${ColourProcess}" /></td> 
                 <td><input type="text" class="form-control DisabledTextBox Roll" value="${Roll}" /></td> 
                 <td><input type="text" class="form-control DisabledTextBox Weight" value="${Weight}" /></td> 
-                <td><input type="text" class="form-control Rate" value="${Rate}" id="${numberIncr}" name="${numberIncr}"/></td> 
+                <td><input type="text" class="form-control Rate" value="${Rate}" id="${numberIncr}" name="${numberIncr}" required/></td> 
                 <td><input type="text" class="form-control DisabledTextBox Amount" value="${formatRupee(total)}" /></td>
             </tr>
         `;
@@ -1139,6 +1139,8 @@ function resetCommonData() {
     $('#HideNotes').show();
     $('#roundOff').css('color', 'black');
 
+    $('#Notes').val('');
+
     const $rows = $('#ClientColumn .row.mt-3');
     const $icon = $('#toggleIconShipTo');
     $rows.hide();
@@ -1522,12 +1524,14 @@ $(document).on('click', '#btnPrintSale', function () {
             return;
         }
 
+        $('#loader-pms').show();
+
         const EditData = {
             ModuleId: parseInt(saleId),
             NoOfCopies: 1,
             printType: "Print"
         };
-
+        
         $.ajax({
             type: 'GET',
             url: '/Sale/SaleOrderPrint',
@@ -1571,6 +1575,8 @@ $(document).on('click', '#btnPreviewSale', function () {
             Common.errorMsg("Sale ID not found");
             return;
         }
+
+        $('#loader-pms').show();
 
         const EditData = {
             ModuleId: parseInt(saleId),
