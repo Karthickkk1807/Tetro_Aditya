@@ -99,3 +99,50 @@ tbody tr:hover {
     .badge.low {
         background: #6c757d;
     }
+
+.stock-row:last-child {
+    border-bottom: none;
+}
+
+.product-name {
+    font-weight: 500;
+}
+
+.quantity {
+    font-weight: 600;
+}
+
+/* Status colors */
+.stock-row.low .quantity {
+    color: #ff9800;
+}
+
+.stock-row.critical .quantity {
+    color: #e53935;
+}
+
+.expense-row {
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0; /* x-axis line */
+}
+
+    .expense-row:last-child {
+        border-bottom: none; /* remove last line */
+    }
+
+    .expense-row:hover {
+        background: #f8f9fa;
+    }
+
+.reminder-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+    .reminder-row:last-child {
+        border-bottom: none;
+    }
+    .reminder-row:hover {
+        background: #f8f9fa;
+    }
+

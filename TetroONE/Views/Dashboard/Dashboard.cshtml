@@ -7,9 +7,13 @@
             <div class="counter-box">
                 <div class="cunter-content">
                     <img src="~/assets/moduleimages/dashboard/community (1).png" width="30" height="30" />
+
                     <div>
                         <h5>Employee Present</h5>
-                        <span>64/70</span>
+                        <div class="d-flex justify-content-between">
+                            <span>64/70</span>
+                            <span style="color:green">+ 4</span>
+                        </div>
                     </div>
                 </div>
 
@@ -22,7 +26,10 @@
                     <img src="~/assets/moduleimages/dashboard/inarrows.png" width="28" height="28" />
                     <div>
                         <h5>Inward</h5>
-                        <span>12/12,000kg</span>
+                        <div class="d-flex justify-content-between">
+                            <span>12/12,000kg</span>
+                            <span style="color:green">80 %</span>
+                        </div>
                     </div>
                 </div>
 
@@ -46,11 +53,10 @@
                 <div class="cunter-content">
                     <img src="~/assets/moduleimages/dashboard/outarrows (1).png" width="28" height="28" />
                     <div>
-                        <h5>Outward</h5>
-                        <span>50/150kg/45/300kg</span>
+                        <h5>Outward / Delivered </h5>
+                        <span>50/150kg  /  45/300kg</span>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -81,6 +87,8 @@
         </div>
 
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 ">
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 col-6 ">
             <div class="form-group">
                 <label class="form-label">From Date</label>
                 <input type="date" class="form-control">
@@ -98,124 +106,325 @@
 
 
     <div class="row">
-        <div class="col-lg-8">
-            <div class="row">
-                <div class="col-6">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3>Production And Inward</h3>
-                        </div>
-                        <div class="box-content" style="overflow:auto">
-                            <canvas id="productionInward" width="400" height="200"></canvas>
-                        </div>
-                    </div>
+
+        <div class="col-12 col-lg-4 col-md-4 col-sm-12">
+            <div class="box" style="height:230px">
+                <div class="box-header">
+                    <h3>Ongoing Production Info</h3>
                 </div>
-                <div class="col-6">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3>Inward</h3>
+                <div class="box-content" style="overflow-y:auto; height:166px">
+                    <div class="scroll-bar ui-draggable ui-draggable-handle" style="position: relative;">
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>PLN_ATP2526/0001</div>
+                                <div>Eastman Exports</div>
+                            </div>
+                            <div>
+                                Reversing-Started
+                            </div>
                         </div>
-                        <div class="box-content" style="overflow:auto">
-                            <canvas id="inwardTrend" width="400" height="200"></canvas>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>PLN_ATP2526/0002</div>
+                                <div>SCM Garments Pvt Ltd</div>
+                            </div>
+                            <div>
+                                Stitching-Started
+                            </div>
+                        </div>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>PLN_ATP2526/0003</div>
+                                <div>Best Corporation Pvt Ltd</div>
+                            </div>
+                            <div>
+                                Dyeing-Started
+                            </div>
+                        </div>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>PLN_ATP2526/0004</div>
+                                <div>Poppys Knitwear</div>
+                            </div>
+                            <div>
+                                Dyeing-Finished
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-6">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3>Quotation</h3>
-                        </div>
-                        <div class="box-content" style="overflow:auto">
-                            <canvas id="Quotation" width="400" height="200"></canvas>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-4 col-md-4 col-sm-12 ">
+            <div class="box" style="height:230px">
+                <div class="box-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Prod Trend</h3>
+
+                    <div class="form-group mb-0" style="width:100px;">
+                        <select class="form-control" id="EnquiryTypeId" required>
+                            <option value="1">Client</option>
+                            <option value="2">Color</option>
+                            <option value="3">Fabric</option>
+                            <option value="4">Dia</option>
+                            <option value="5">GSM</option>
+                            <option value="6">Width</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-0" style="width:100px;">
+                        <select class="form-control" id="EnquiryTypeId" required>
+                            <option value="">-- Select --</option>
+                            <option value="1">Client</option>
+                            <option value="2">Color</option>
+                            <option value="3">Fabric</option>
+                            <option value="4">Dia</option>
+                            <option value="5">GSM</option>
+                            <option value="6">Width</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow:auto; height:180px">
+                    <canvas id="productionGaugChart" height="150" width="150"></canvas>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 col-md-4 col-sm-12">
+            <div class="box" style="height:230px">
+                <div class="box-header">
+                    <h3>Remainder</h3>
+                </div>
+                <div class="box-content" style="overflow:auto; height:166px">
+                    <div class="modal-body">
+                        <div class="reminder-row d-flex justify-content-between align-items-start">
+                            <!-- Left Content -->
+                            <div>
+                                <p class="mb-1 fw-bold" style="font-size: 13px;">#457623</p>
+                                <p class="mb-0" style="font-size: 13px;">Leave Approval</p>
+                            </div>
+
+                            <!-- Right Content -->
+                            <div class="text-end">
+                                <p class="mb-1 text-danger" style="font-size: 12px;">Due Time</p>
+                                <p class="mb-0" style="font-size: 12px;">Today 10:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="reminder-row d-flex justify-content-between align-items-start">
+                            <!-- Left Content -->
+                            <div>
+                                <p class="mb-1 fw-bold" style="font-size: 13px;">#457321</p>
+                                <p class="mb-0" style="font-size: 13px;">Client 1 Delivery </p>
+                            </div>
+
+                            <!-- Right Content -->
+                            <div class="text-end">
+                                <p class="mb-1 text-danger" style="font-size: 12px;">Due Time</p>
+                                <p class="mb-0" style="font-size: 12px;">Toady 10:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="reminder-row d-flex justify-content-between align-items-start">
+                            <!-- Left Content -->
+                            <div>
+                                <p class="mb-1 fw-bold" style="font-size: 13px;">#457823</p>
+                                <p class="mb-0" style="font-size: 13px;">Client Delivery</p>
+                            </div>
+
+                            <!-- Right Content -->
+                            <div class="text-end">
+                                <p class="mb-1 text-danger" style="font-size: 12px;">Due Time</p>
+                                <p class="mb-0" style="font-size: 12px;">Today 10:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="reminder-row d-flex justify-content-between align-items-start">
+                            <!-- Left Content -->
+                            <div>
+                                <p class="mb-1 fw-bold" style="font-size: 13px;">#457823</p>
+                                <p class="mb-0" style="font-size: 13px;">Client Delivery</p>
+                            </div>
+
+                            <!-- Right Content -->
+                            <div class="text-end">
+                                <p class="mb-1 text-danger" style="font-size: 12px;">Due Time</p>
+                                <p class="mb-0" style="font-size: 12px;">Today 10:00 PM</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 col-md-4 col-sm-12 mt-3">
+            <div class="box" style="height:230px">
+                <div class="box-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Grey Fabric Stock</h3>
+
+                    <div class="form-group mb-0" style="width:100px;">
+                        <select class="form-control" id="EnquiryTypeId" required>
+
+                            <option value="1">Client</option>
+                            <option value="2">Color</option>
+                            <option value="3">Fabric</option>
+                            <option value="4">Dia</option>
+                            <option value="5">GSM</option>
+                            <option value="6">Width</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="box-content" style="overflow:auto; height:180px">
+                    <canvas id="clientInfoChart" height="150" width="150"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 col-md-4 col-sm-12 mt-3">
+            <div class="box" style="height:230px">
+                <div class="box-header d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Finish Fabric Stock</h3>
+
+                    <div class="form-group mb-0" style="width:100px;">
+                        <select class="form-control" id="EnquiryTypeId" required>
+
+                            <option value="1">Client</option>
+                            <option value="2">Color</option>
+                            <option value="3">Fabric</option>
+                            <option value="4">Dia</option>
+                            <option value="5">GSM</option>
+                            <option value="6">Width</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="box-content" style="overflow:auto; height:180px">
+                    <canvas id="finishClient" height="150" width="150"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 col-md-4 col-sm-12 mt-3">
+            <div class="box" style="height:230px">
+                <div class="box-header">
+                    <h3>Pending Payments</h3>
+                </div>
+                <div class="box-content" style="overflow-y:auto; height:166px">
+                    <div class="scroll-bar ui-draggable ui-draggable-handle" style="position: relative;">
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>PB_001</div>
+                                <div>Eastman Exports</div>
+                            </div>
+                            <div>₹ 12k</div>
+                        </div>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>PB_002</div>
+                                <div>SCM Garments Pvt Ltd</div>
+                            </div>
+                            <div>₹ 10k</div>
+                        </div>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>PB_003</div>
+                                <div>Best Corporation Pvt Ltd</div>
+                            </div>
+                            <div>₹ 24k</div>
+                        </div>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>PB_004</div>
+                                <div>Poppys Knitwear</div>
+                            </div>
+                            <div>₹ 45k</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 col-md-4 col-sm-12 mt-3">
+            <div class="box" style="height:230px">
+                <div class="box-header">
+                    <h3>Production And Outward Trend</h3>
+                </div>
+                <div class="box-content" style="overflow:auto;height:186px">
+                    <canvas id="productionInward" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 col-md-4 col-sm-12 mt-3">
+            <div class="box" style="height:230px">
+                <div class="box-header">
+                    <h3>Low Stock Alerts</h3>
+                </div>
+                <div class="box-content" style="overflow-y:auto; height:166px">
+                    <div class="scroll-bar ui-draggable ui-draggable-handle" style="position: relative;">
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>Acid Dye</div>
+                            </div>
+                            <div>20kg</div>
+                        </div>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div> Direct Dye</div>
+                            </div>
+                            <div>10kg</div>
+                        </div>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+                                <div>Disperse Dye</div>
+                            </div>
+                            <div>5kg</div>
+                        </div>
+
+                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
+                            <div>
+
+                                <div>Solvent Dye</div>
+                            </div>
+                            <div>25kg</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4 col-md-4 col-sm-12 mt-3">
             <div class="box">
                 <div class="box-header">
-                    <h3>Project Overview</h3>
-
+                    <h3>Quotation</h3>
                 </div>
                 <div class="box-content" style="overflow:auto">
-                    <table id="projectTable" width="100%">
-                        <thead>
-                            <tr>
-                                <th>Project Name</th>
-                                <th>Client Name</th>
-                                <th>Duration</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>Chennai Outer Ring Road</td>
-                                <td>TN Highways Dept</td>
-                                <td>3 Months</td>
-                                <td>
-                                    <span class="badge bg-warning">
-                                        In Progress
-                                    </span>
-                                </td>
-                                <td class="text-center editProject">
-                                    <img src="/assets/images/commonimages/attendanceeye.svg">
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Coimbatore Flyover Phase 2</td>
-                                <td>L&amp;T Infra</td>
-                                <td>6 Months</td>
-                                <td>
-                                    <span class="badge bg-warning">
-                                        In Progress
-                                    </span>
-                                </td>
-                                <td class="text-center editProject">
-                                    <img src="/assets/images/commonimages/attendanceeye.svg">
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Salem Bypass Extension</td>
-                                <td>NHAI</td>
-                                <td>8 Months</td>
-                                <td>
-                                    <span class="badge bg-warning">
-                                        In Progress
-                                    </span>
-                                </td>
-                                <td class="text-center editProject">
-                                    <img src="/assets/images/commonimages/attendanceeye.svg">
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Trichy River Bridge Work</td>
-                                <td>State PWD</td>
-                                <td>6 Months</td>
-                                <td>
-                                    <span class="badge bg-danger">
-                                        Yet to Start
-                                    </span>
-                                </td>
-                                <td class="text-center editProject">
-                                    <img src="/assets/images/commonimages/attendanceeye.svg">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <canvas id="Quotation" width="400" height="430"></canvas>
                 </div>
             </div>
         </div>
+
+        <div class="col-12 col-lg-8 col-md-4 col-sm-12 mt-3">
+            <div class="box">
+                <div class="box-header">
+                    <h3>Inward Trend</h3>
+                </div>
+                <div class="box-content" style="overflow:auto">
+                    <canvas id="inwardTrend" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
     </div>
-
-
-
 </div>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="~/js/dashboard.js"></script>
