@@ -146,3 +146,22 @@ tbody tr:hover {
         background: #f8f9fa;
     }
 
+.donut-wrapper {
+    position: relative;
+    width: 45px;
+    height: 45px;
+}
+
+    .donut-wrapper canvas {
+        width: 37px !important;
+        height: 37px !important;
+    }
+
+.donut-text {
+    position: absolute;
+    top: 43%;
+    left: 42%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+    font-weight: 600;
+}

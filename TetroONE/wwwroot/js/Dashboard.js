@@ -1,23 +1,23 @@
 ﻿const ctx = document.getElementById('productionInward').getContext('2d');
 
 new Chart(ctx, {
-    type: 'line',   // 🔁 changed from 'bar' to 'line'
+    type: 'line',
     data: {
         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
         datasets: [
             {
                 label: 'Production',
                 data: [3, 6, 4, 6, 7],
-                backgroundColor: '#3498db',
                 borderColor: '#3498db',
-                tension: 0.4,        // smooth line
-                fill: false          // no area fill
+                backgroundColor: '#3498db',
+                tension: 0.4,
+                fill: false
             },
             {
                 label: 'Outward',
                 data: [5, 4, 7, 3, 6],
-                backgroundColor: '#2ecc71',
                 borderColor: '#2ecc71',
+                backgroundColor: '#2ecc71',
                 tension: 0.4,
                 fill: false
             }
@@ -25,28 +25,26 @@ new Chart(ctx, {
     },
     options: {
         responsive: true,
+        maintainAspectRatio: false,   // ✅ key line
         scales: {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    callback: function (value) {
-                        return value + ' kg';
-                    }
+                    callback: value => value + ' kg'
                 }
             }
         },
         plugins: {
             tooltip: {
                 callbacks: {
-                    label: function (context) {
-                        return context.dataset.label + ': '
-                            + context.parsed.y + ' kg';
-                    }
+                    label: ctx =>
+                        ctx.dataset.label + ': ' + ctx.parsed.y + ' kg'
                 }
             }
         }
     }
 });
+
 
 
 const cty = document.getElementById('inwardTrend').getContext('2d');
@@ -62,7 +60,7 @@ new Chart(cty, {
                 backgroundColor: 'grey'
             },
             {
-                label: 'Raw Matrical',
+                label: 'Raw Material',
                 data: [5, 4, 7, 3, 6],
                 backgroundColor: 'purple'
             }
@@ -70,28 +68,27 @@ new Chart(cty, {
     },
     options: {
         responsive: true,
+        maintainAspectRatio: false,   // ✅ key line
         scales: {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    callback: function (value) {
-                        return value + ' kg';   // Y-axis label
-                    }
+                    callback: value => value + ' kg'
                 }
             }
         },
         plugins: {
             tooltip: {
                 callbacks: {
-                    label: function (context) {
-                        return context.dataset.label + ': '
-                            + context.parsed.y + ' kg'; // Tooltip
-                    }
+                    label: ctx =>
+                        ctx.dataset.label + ': ' + ctx.parsed.y + ' kg'
                 }
             }
         }
     }
 });
+
+
 const ctz = document.getElementById('Quotation').getContext('2d');
 
 new Chart(ctz, {
@@ -245,56 +242,6 @@ new Chart(finish, {
     }
 });
 
-//var percentValue = 85.8;
-
-//var percentageChart = $('#percentageChart')[0].getContext('2d');
-
-//new Chart(percentageChart, {
-//    type: 'doughnut',
-//    data: {
-//        datasets: [{
-//            data: [percentValue, 100 - percentValue],
-//            backgroundColor: [
-//                '#1296f0',
-//                '#e6e6e6'
-//            ],
-//            borderWidth: 0
-//        }]
-//    },
-//    options: {
-//        responsive: true,              // ✅ native responsiveness
-//        maintainAspectRatio: true,     // ✅ auto resize
-//        aspectRatio: 1,                // ✅ keeps circle
-//        cutout: '75%',
-//        rotation: -90,
-//        plugins: {
-//            legend: { display: false },
-//            tooltip: { enabled: false }
-//        }
-//    },
-//    plugins: [{
-//        id: 'centerText',
-//        afterDraw: function (chart) {
-//            var ctx = chart.ctx;
-//            var width = chart.width;
-//            var height = chart.height;
-
-//            ctx.save();
-
-//            // 🔹 font auto scales
-//            var fontSize = (height / 5).toFixed(0);
-//            ctx.font = 'bold ' + fontSize + 'px Arial';
-//            ctx.fillStyle = '#7a7a7a';
-//            ctx.textAlign = 'center';
-//            ctx.textBaseline = 'middle';
-
-//            ctx.fillText(percentValue + '%', width / 2, height / 2);
-//            ctx.restore();
-//        }
-//    }]
-//});
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -389,6 +336,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 ctx.fillText(value + '%', cx, cy - 20);
             }
         }]
+    });
+
+});
+
+
+document.querySelectorAll('.statusDonut').forEach(canvas => {
+
+    const percent = Number(canvas.dataset.percent);
+
+    new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [percent, 100 - percent],
+                backgroundColor: ['#28a745', '#e9ecef'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: false,
+            cutout: '70%',
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            }
+        }
     });
 
 });
