@@ -386,9 +386,9 @@ namespace TetroONE.Models
 
                 // Set border property to NONE for each cell to remove table border
                 Cell imageCell = new Cell();
-                iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create("wwwroot/assets/PreviewPDF/KaalaiyanPDFLogo.png"));
-                img.SetWidth(70);
-                img.SetHeight(70);
+                iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create("wwwroot/assets/ModuleImages/PDFImages/AdhithiyaTextilesProcessLogo.png"));
+                img.SetWidth(130);
+                img.SetHeight(130);
                 imageCell.SetBorder(Border.NO_BORDER);
                 imageCell.SetHorizontalAlignment(HorizontalAlignment.CENTER);
                 imageCell.SetVerticalAlignment(VerticalAlignment.MIDDLE);

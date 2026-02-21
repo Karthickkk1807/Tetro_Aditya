@@ -107,8 +107,7 @@ namespace TetroONE.Controllers
                     TVP_Purchase_ProductMappingDetails = dtproductData,
 					TVP_AttachmentDetails = dtattachment
 				};
-                
-
+                 
                 if (PurchaseDetailsStatic.PurchaseOrderId > 0)
 					response = GenericTetroONE.ExecuteReturnData(_connectionString, "[dbo].[USP_UpdatePurchaseOrderDetails_DBT]", request);
 				else

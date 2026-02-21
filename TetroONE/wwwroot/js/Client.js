@@ -1,17 +1,22 @@
 ﻿var clientId = 0;
 var deletedFiles = [];
 var existFiles = [];
-var formDataMultiple = new FormData(); 
+var formDataMultiple = new FormData();
 
-$(document).ready(function () { 
+$(document).ready(function () {
 
-    Common.ajaxCall("GET", "/Contact/GetClient", { }, ClientSuccess, null);
-    Common.bindDropDownParent('State', 'FormClient', 'State'); 
+    var $cols = $('#FormClient .row > div');
+    $cols.eq(0).hide();
+
+    Common.ajaxCall("GET", "/Contact/GetClient", {}, ClientSuccess, null);
+    Common.bindDropDownParent('State', 'FormClient', 'State');
+    $('#CreditLimit').attr('required', true);
+
     setPrimaryCheckboxEventListeners();
     $('#ShopAccordian').hide();
     $('#IsActiveHide').hide();
     //$('#CurrentlimitHide').removeClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2').addClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2');
-    
+
     $(document).on('click', '#SaveClient', function (e) {
         if (!Common.validateEmailwithErrorwithParent('FormClient', 'Email')) {
             return false;
@@ -45,12 +50,12 @@ $(document).ready(function () {
                 objvalue[item.name] = item.value;
             });
 
-            objvalue.ClientId = clientId > 0 ? clientId : null; 
+            objvalue.ClientId = clientId > 0 ? clientId : null;
             objvalue.State = Common.parseInputValue('State') || null;
             objvalue.CreditLimit = Common.parseFloatInputValue('CreditLimit') || null;
             objvalue.CurrentCreditLimit = Common.parseFloatInputValue('CurrentCreditLimit') || null;
 
-            objvalue.IsActive = $('#FormClient #IsActive').is(':checked'); 
+            objvalue.IsActive = $('#FormClient #IsActive').is(':checked');
 
             var ContactPerson = [];
             var ClosestDiv = $('#FormContactClient .Clientcontact');
@@ -95,7 +100,7 @@ $(document).ready(function () {
                             </div>
                         </div>`;
                         $('#ClientGridDynamic').append(html);
-                        Common.ajaxCall("GET", "/Contact/GetClient", { }, ClientSuccess, null);
+                        Common.ajaxCall("GET", "/Contact/GetClient", {}, ClientSuccess, null);
                     }
                     else {
                         formDataMultiple = new FormData();
@@ -108,9 +113,8 @@ $(document).ready(function () {
             });
         }
     });
-     
 });
-
+ 
 function ClientSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
@@ -179,16 +183,23 @@ $(document).on('click', '#AddClient', function () {
     $("#FormClient")[0].reset();
 
     $('#TransactionsHide').hide();
-    Common.removevalidation('FormClient'); 
+    Common.removevalidation('FormClient');
     Common.removeMessage('FormClient');
-    
-    clientId = 0;
+
+    deletedFiles = [];
+    existFiles = [];
+    formDataMultiple = new FormData();
     $('#selectedFiles').empty();
     $('#ExistselectedFiles').empty();
+
+    clientId = 0;
     $("#FormClient select").val("").trigger("change");
     $('#SaveClient').text('Save').addClass('btn-success').removeClass('btn-update');
     $('#loader-pms').hide();
     $('#IsActiveHide').hide();
+    $('#CurrentlimitHide').hide();
+    $('#MaxCurrentlimitHide').removeClass('col-md-3 col-lg-3 col-sm-3 col-6').addClass('col-md-6 col-lg-6 col-sm-6 col-6');
+    $('#RemarksDiv').removeClass('col-md-7 col-lg-7 col-sm-7 col-7').addClass('col-md-12 col-lg-12 col-sm-12 col-12');
     //$('#CurrentlimitHide').removeClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2').addClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2'); 
     $('#ClientCanvas .collapse').removeClass('show');
     $('#collapse1').addClass('show');
@@ -249,13 +260,22 @@ $(document).on('click', '.btn-edit', function () {
     Common.removeMessage('FormClient');
     $('#ShopAccordian').show();
     $('#IsActiveHide').show();
+    $('#MaxCurrentlimitHide').removeClass('col-md-6 col-lg-6 col-sm-6 col-6').addClass('col-md-3 col-lg-3 col-sm-3 col-6');
+    $('#RemarksDiv').removeClass('col-md-12 col-lg-12 col-sm-12 col-12').addClass('col-md-7 col-lg-7 col-sm-7 col-12');
     //$('#CurrentlimitHide').removeClass('col-md-6 col-lg-6 col-sm-6 col-6 mt-2').addClass('col-md-3 col-lg-3 col-sm-3 col-6 mt-2');
     $("#ClientHeader").text('Edit Client Details');
     $('#fadeinpage').addClass('fadeoverlay');
     $('#SaveClient').text('Update').addClass('btn-update').removeClass('btn-success');
+    $('#CurrentlimitHide').show();
     $('#loader-pms').hide();
     existFiles = [];
     clientId = $(this).data('id');
+
+    deletedFiles = [];
+    existFiles = [];
+    formDataMultiple = new FormData();
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
 
     var PasseingData = { ClientId: clientId }
     Common.ajaxCall("GET", "/Contact/GetClientID", PasseingData, editSuccess, null);
@@ -267,12 +287,14 @@ function editSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
         Common.bindData(data[0]);
-         
+
+        Common.renderRatingStars(data[0][0].Ratings, "RatingStars");
+
         if (data[0][0].IsActive == true)
             $('#FormClient #IsActive').prop('checked', true);
         else
             $('#FormClient #IsActive').prop('checked', false);
-              
+
         $('#FormContactClient').empty('');
         $.each(data[1], function (index, value) {
             var rowadd = $('.Vendorcontact').length;
@@ -377,8 +399,8 @@ function editSuccess(response) {
          `;
         $('#TransactionsInfo').append(html);
 
-        var columns = Common.bindColumn(data[3], ['PurchaseRequestId', 'Status_Color']);
-        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'PurchaseRequestId', '151px', true);
+        var columns = Common.bindColumn(data[3], ['TransactionId', 'Status_Color']);
+        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'TransactionId', '151px', true);
 
         updateRemoveButtons();
     }
@@ -388,7 +410,7 @@ function formatDateForInput(dateStr) {
     const [day, month, year] = dateStr.split("-");
     return `${year}-${month}-${day}`;
 }
- 
+
 $(document).on('click', '#CloseCanvas', function () {
     $("#ClientCanvas").css("width", "0%");
     $('#fadeinpage').removeClass('fadeoverlay');
@@ -398,7 +420,7 @@ $(document).on('click', '.btn-delete', async function () {
     var response = await Common.askConfirmation();
     if (response == true) {
         var clientId = $(this).data('id');
-        Common.ajaxCall("GET", "/Contact/DeleteClient", { ClientId: clientId }, ReloadSuccess, null); 
+        Common.ajaxCall("GET", "/Contact/DeleteClient", { ClientId: clientId }, ReloadSuccess, null);
     }
 });
 
@@ -640,7 +662,7 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
             var input = $(this);
             var value = input.val().trim();
             var minLength = input.attr('minlength');
-            var maxLength = input.attr('maxlength');            
+            var maxLength = input.attr('maxlength');
             var errorMessage = errorMessageDefault;
 
             var isInvalid = false;
@@ -670,7 +692,7 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
                 input.nextAll('.invalid-feedback, .error').remove();
             }
         });
-         
+
         if (isCurrentValid) {
             currentAccordion.find('.collapse').collapse('hide');
         }
@@ -682,7 +704,7 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
 
     return isFormValid;
 }
- 
+
 $(document).on("input", '#FormClient #Email', function (event) {
     var inputElement = $(this);
     if (Common.validateEmailwithErrorwithParent('FormClient', 'Email')) {
@@ -692,7 +714,7 @@ $(document).on("input", '#FormClient #Email', function (event) {
         }
     }
 });
- 
+
 $(document).on('input', '.Email', function () {
     var inputField = $(this);
     var parentElement = inputField.closest('.form-group');
@@ -723,7 +745,7 @@ $(document).on('input', '.Email', function () {
 
     return true;
 });
- 
+
 function bindTableForClient(tableid, data, columns, actionTarget, editcolumn, scrollpx, isAction, access) {
     if ($.fn.DataTable.isDataTable('#' + tableid)) {
         $('#' + tableid).DataTable().clear().destroy();
@@ -821,9 +843,9 @@ function bindTableForClient(tableid, data, columns, actionTarget, editcolumn, sc
         $('.btn-Shop').hide();
     } else {
         $('.btn-Shop').show();
-    } 
+    }
 }
-  
+
 /*====================================dynamic Attachment====================================*/
 
 let fileList = []; // Franchise selected files
@@ -1010,4 +1032,60 @@ function bindTableTransactionsInfo(tableid, data, columns, actionTarget, editcol
     var tableId = $('#' + tableid).DataTable();
     Common.autoAdjustColumns(tableId);
 
+}
+
+let lastGST = "";
+
+$('#GSTNumber').on('input', function () {
+
+    let gst = $(this).val().toUpperCase();
+    $(this).val(gst);
+
+    if (gst.length < 15) {
+        clearGSTDetails();
+        lastGST = "";
+        return;
+    }
+
+    if (gst.length === 15 && gst !== lastGST) {
+        lastGST = gst;
+        verifyGST(gst);
+    }
+});
+
+function verifyGST(gstNumber) {
+
+    $.ajax({
+        url: '/Contact/VerifyGST',   // ✅ correct
+        type: 'GET',
+        data: { gstNumber: gstNumber },
+        success: function (res) {
+            if (res.flag) {
+                //$('#LegalName').val(res.legalName);
+                //$('#State').val(res.state);
+                //$('#Status').val(res.status);
+                let msg =
+                    "GST VERIFIED ✅\n\n" +
+                    "GSTIN            : " + res.data.gstin + "\n" +
+                    "Legal Name       : " + res.data.lgnm + "\n" +
+                    "Trade Name       : " + res.data.tradeNam + "\n" +
+                    "Constitution     : " + res.data.ctb + "\n" +
+                    "Registration Dt  : " + res.data.rgdt + "\n" +
+                    "Status           : " + res.data.sts + "\n\n" +
+                    "Address:\n" +
+                    res.data.pradr.adr;
+
+                alert(msg);
+                console.log(res);
+            } else {
+                alert(res.message);
+            }
+        }
+    });
+}
+
+function clearGSTDetails() {
+    $('#LegalName').val('');
+    $('#State').val('');
+    $('#Status').val('');
 }

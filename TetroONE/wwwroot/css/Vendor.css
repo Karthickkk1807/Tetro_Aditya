@@ -22,8 +22,8 @@ input[type="checkbox"]:checked + .checkbox-label {
 #VendorTable {
     width: 100% !important;
 }
-#Managetable{
-    width:500px;
+#Managetable {
+    width: 100% !important;
 }
 .dataTables_scrollBody {
     height: 350px !important;

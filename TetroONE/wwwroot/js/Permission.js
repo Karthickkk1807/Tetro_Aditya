@@ -2,7 +2,7 @@
 var remHours;
 
 $(document).ready(function () {
-    Common.bindDropDownParent('PerEmployeeId', 'FormPermission', 'Employee');
+    Common.bindDropDownParent('PerEmployeeId', 'FormPermission', 'LeaveEmployee');
 
     $('#SavePermission').click(function () {
         if ($('#FormPermission').valid()) {
@@ -40,11 +40,13 @@ $(document).ready(function () {
             $('#SavePermission').text('Save').removeClass('btn-update').addClass('btn-success');
             $('#PermissionHeader').text('Add Permission');
             $('#StartTime').prop('disabled', true);
+            $("#StartTime, #EndTime").val("")
+
             $('#StartTime').css('background-color', 'rgb(233, 236, 239)');
             $('#LableChange').text('Description');
             $('#StatusPerCol').hide();
             $('#PermissionComments').hide();
-            $('#Type').prop('disabled', false);
+            $('#Type').prop('disabled', true);
             $('#Comments').val('');
             $('#PerEmployeeId').val(null).trigger('change');
             $('#NoOfHoursId').prop('disabled', true);
@@ -65,6 +67,8 @@ $(document).ready(function () {
             $('#SavePermission').text('Update').removeClass('btn-success').addClass('btn-update');
             $('#PermissionHeader').text('Permission Info');
             $('#StatusPerCol').show();
+            $('#Type').prop('disabled', true);
+
             if (isAdminAccess != "True") {
                 $('#PerEmployeeId').prop('disabled', true);
             }
@@ -199,46 +203,30 @@ function PermissionSuccess(response) {
 
         $('#permissionTblCol').html('<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PermissionTable"></table>');
 
-        //$("#CounterTextBox1").text(CounterBox[0]);
-        //$("#CounterTextBox2").text(CounterBox[1]);
-        //$("#CounterTextBox3").text(CounterBox[2]);
-        //$("#CounterTextBox4").text(CounterBox[3]);
+        $("#CounterTextBox1").text(CounterBox[0]);
+        $("#CounterTextBox2").text(CounterBox[1]);
+        $("#CounterTextBox3").text(CounterBox[2]);
+        $("#CounterTextBox4").text(CounterBox[3]);
 
-        //$('#CounterValBox1').text(data[0][0][CounterBox[0]]);
-        //$('#CounterValBox2').text(data[0][0][CounterBox[1]]);
-        //$('#CounterValBox3').text(data[0][0][CounterBox[2]]);
-        //$('#CounterValBox4').text(data[0][0][CounterBox[3]]);
-         
-        $("#CounterTextBox1").text('Total');
-        $("#CounterTextBox2").text('Requested');
-        $("#CounterTextBox3").text('Approved');
-        $("#CounterTextBox4").text('Rejected');
-
-        $('#CounterValBox1').text('113');
-        $('#CounterValBox2').text('25');
-        $('#CounterValBox3').text('59');
-        $('#CounterValBox4').text('29');
-
+        $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
+        $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
+        $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
+        $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
         var columns = Common.bindColumn(data[1], ['PermissionId', 'Status_Color']);
         Common.bindTable('PermissionTable', data[1], columns, -1, 'PermissionId', '330px', true, accessPermission);
 
         $('#permissionTblCol').show();
         $('#leaveTblCol').hide();
+        $('#CompOffTblCol').hide();
     }
 }
 
 function editSuccessPermission(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
-        var windowWidth = $(window).width();
-        if (windowWidth <= 600) {
-            $("#PermissionCanvas").css("width", "95%");
-        } else if (windowWidth <= 992) {
-            $("#PermissionCanvas").css("width", "50%");
-        } else {
-            $("#PermissionCanvas").css("width", "39%");
-        }
+
+
         $('#fadeinpage').addClass('fadeoverlay');
         Common.bindParentData(data[0], 'FormPermission');
         $('#PerEmployeeId').val(data[0][0].EmployeeId).trigger('change');
@@ -258,9 +246,9 @@ function editSuccessPermission(response) {
         let formattedDate;
         try {
             const [day, month, year] = data[0][0].PermissionDate.split("-");
-            const rawDate = new Date(`${year}-${month}-${day}`); // Reformatted to ISO
+            const rawDate = new Date(`${year}-${month}-${day}`);
             if (isNaN(rawDate.getTime())) throw new Error("Invalid date format");
-            formattedDate = rawDate.toISOString().split('T')[0]; // "yyyy-MM-dd"
+            formattedDate = rawDate.toISOString().split('T')[0]; 
         } catch (e) {
             console.error("Invalid PermissionDate:", data[0][0].PermissionDate);
             formattedDate = null;
@@ -274,6 +262,16 @@ function editSuccessPermission(response) {
             }
         }, null);
 
+        var windowWidth = $(window).width();
+        if (windowWidth <= 600) {
+            $("#PermissionCanvas").css("width", "95%");
+        } else if (windowWidth <= 992) {
+            $("#PermissionCanvas").css("width", "50%");
+        } else {
+            $("#PermissionCanvas").css("width", "39%");
+        }
+
+
         if (isAdminAccess != "True") {
             if ($("#PermissionStatusId option:selected").text() == "Approved") {
                 $('#Type,#PermissionDate,#NoOfHoursId,#StartTime').prop('disabled', true);
@@ -286,6 +284,9 @@ function editSuccessPermission(response) {
                 $('#StartTime').css('background-color', 'rgb(225, 225, 225)');
             }
         }
+
+
+
     }
 }
 

@@ -109,4 +109,12 @@
 
     }
 
+    public class GetAdvanceLimit
+    {
+        public int LoginUserId { get; set; }
+        public int? ModuleId { get; set; }
+        public int? EmployeeId { get; set; }
+        public string Module { get; set; }
+    }
+
 }

@@ -11,7 +11,7 @@ var TriggerValues = true;
 var PurchaseOrderNOData = true;
 
 $(document).ready(async function () {
-    $('.Status-Div').removeClass('d-block').addClass('d-none');
+    //$('.Status-Div').removeClass('d-block').addClass('d-none');
 
     var otherChangesDiscountDropdown = await Common.bindDropDownSync('OtherChargesDiscount');
     OtherChangesDiscountDropdown = JSON.parse(otherChangesDiscountDropdown);
@@ -154,9 +154,73 @@ $(document).ready(async function () {
 
         ClearInputs(); // Clear inputs
 
+        $('#toggleIconShipTo').attr('title', 'Click to expand');
+
         $('#PurchaseInvoiceModal').show();
         $("#PurchaseInvoiceModal .modal-body").animate({ scrollTop: 0 }, "fast");
     });
+
+    //$(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
+    //    e.preventDefault();
+    //    e.stopPropagation();
+    //    const $rows = $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3');
+    //    const isCurrentlyVisible = $rows.is(':visible');
+    //    $rows.stop(true, true).slideToggle(300);
+    //    $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+    //    $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead').css('border-bottom', '1px solid #c7c7c7');
+    //});
+
+    $(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const $rows = $(
+            '#VendorColumn .row.mt-3, ' +
+            '#ShippingColumn .row.mt-3, ' +
+            '#OriginalInvoiceNoDiv, ' +
+            '#PurchaseOrderNoDiv'
+        );
+
+        $rows.stop(true, true).slideToggle(300); 
+
+        const $icon = $('#toggleIconShipTo');
+        $icon.toggleClass('fa-chevron-up fa-chevron-down');
+
+        // Change title based on arrow direction
+        if ($icon.hasClass('fa-chevron-up')) {
+            $icon.attr('title', 'Click to expand');
+        } else {
+            $icon.attr('title', 'Click to collapse');
+        }
+
+        $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead')
+            .css('border-bottom', '1px solid #c7c7c7');
+    });
+
+    //$(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
+    //    e.preventDefault();
+    //    e.stopPropagation();
+
+    //    const $rows = $(
+    //        '#VendorColumn .row.mt-3, ' +
+    //        '#ShippingColumn .row.mt-3, ' +
+    //        '#OriginalInvoiceNoDiv, ' +
+    //        '#PurchaseOrderNoDiv'
+    //    );
+    //    // Change title based on arrow direction
+    //    if ($icon.hasClass('fa-chevron-up')) {
+    //        $icon.attr('title', 'Click to collapse');
+    //    } else {
+    //        $icon.attr('title', 'Click to expand');
+    //    }
+
+    //    $rows.stop(true, true).slideToggle(300);
+
+    //    $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+
+    //    $('#VendorColumn .BilAddHead, #ShippingColumn .BilAddHead')
+    //        .css('border-bottom', '1px solid #c7c7c7');
+    //});
 
     $(document).on('click', '#PurchaseInvoiceCancelBtn, #PurchaseinvoiceClose', function () {
         $('#PurchaseInvoiceModal').hide();
@@ -169,6 +233,7 @@ $(document).ready(async function () {
     $(document).on('click', '#AddVendorLable', function () {
         VendorAlignmentOpen();
         $('#BillFrom').val('1').trigger('change');
+        $('#AlternativeCompanyAddress').val(PlantMappingId).trigger('change');
     });
 
     $(document).on('change', '#VendorColumn #Vendor', async function () {
@@ -180,9 +245,10 @@ $(document).ready(async function () {
             var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
             if (response !== null) {
                 BillToAddress(response);
+                $('#AlternativeCompanyAddress').val(PlantMappingId).trigger('change');
                 updateGSTVisibility('#VendorStateName', '#StateName');
             }
-            if (BillToId != '' || BillToId != null) {
+            if (BillToId != "" || BillToId != null) {
                 updateGSTVisibility('#VendorStateName', '#StateName');
             } else {
                 BillToAddressClear();
@@ -200,14 +266,14 @@ $(document).ready(async function () {
                 if (responsePlant !== null) {
                     ShipToAddress(responsePlant);
                     updateGSTVisibility('#VendorStateName', '#StateName');
-                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(VendorId), PlantId: parseInt(ShipToId) }, function (responseOrderNo) {
+                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(VendorId), PlantId: parseInt(ShipToId), PurchaseOrderId: null }, function (responseOrderNo) {
                         if (responseOrderNo !== null) {
                             Common.bindDropDownSuccess(responseOrderNo.data, "PurchaseOrderNo");
                         }
                     }, null);
                 }
             }, null);
-            if (ShipToId != '' || ShipToId != null) {
+            if (ShipToId != "" || ShipToId != null) {
                 updateGSTVisibility('#VendorStateName', '#StateName');
             } else {
                 ShipToAddressClear();
@@ -242,7 +308,7 @@ $(document).ready(async function () {
     });
 
     $(document).on('click', '#AddItemBtn', function () {
-        var FromBranch = $('#FromAddressId').val();
+        var FromBranch = $('#Vendor').val();
         if (FromBranch != "") {
 
             $('#loader-pms').show();
@@ -290,8 +356,34 @@ $(document).ready(async function () {
         updateSelectedItemCount();
     });
 
+
     $(document).on('click', '#PurchaseInvoiceSaveBtn', function () {
 
+        savePurchaseInvoice(function () {
+            $("#PurchaseInvoiceModal").hide();
+
+            var fnData = Common.getDateFilter('dateDisplay2');
+            Common.ajaxCall(
+                "GET",
+                "/PurchaseInvoice/GetPurchaseBill",
+                {
+                    PlantId: parseInt(PlantMappingId),
+                    PurchaseBillId: null,
+                    FromDate: fnData.startDate.toISOString(),
+                    ToDate: fnData.endDate.toISOString()
+                },
+                GetPurchaseInvoiceSuccess,
+                null
+            );
+        }, {
+            showSuccessMsg: true
+        });
+    });
+
+    function savePurchaseInvoice(callback, options = {}) {
+
+        const showSuccessMsg = options.showSuccessMsg !== false; // default = true
+        // ===== ALL YOUR VALIDATION CODE STAYS SAME =====
         getExistFiles();
 
         var RightSideHeaderFormIsValid = $("#FormRightSideHeader").validate().form();
@@ -300,6 +392,7 @@ $(document).ready(async function () {
         var StatusFormIsValid = $("#FormStatus").validate().form();
         var BillFromIsValid = $("#FormBillFrom").validate().form();
         var TaxdiscountFormIsValid = $('#frmtaxdiscountothers').validate().form();
+
         if (!RightSideHeaderFormIsValid || !ShippingFormIsValid || !VendorFormIsValid || !StatusFormIsValid || !BillFromIsValid || !TaxdiscountFormIsValid) {
             $('#PurchaseInvoiceSaveBtn-error').insertAfter('#statusError');
             $('#Vendor-error').insertAfter('.vendorerror');
@@ -308,6 +401,12 @@ $(document).ready(async function () {
             return false;
         }
 
+        var $thisValOfVendorInvoiceNo = $('#InvoiceNoOriginal').val();
+        if ($thisValOfVendorInvoiceNo == "") {
+            Common.warningMsg('Please fill in the Vendor Invoice Number and click the arrow to expand.');
+            return false;
+        }
+         
         var vendorInput = $('#Vendor').val();
 
         if (vendorInput == '') {
@@ -341,10 +440,10 @@ $(document).ready(async function () {
             PurchaseOrderId: $('#PurchaseOrderNo').val(),
 
             OriginalInvoiceNo: $('#InvoiceNoOriginal').val(),
-            SubTotal: parseFloat($('#Subtotal').val() || 0.00),
-            RoundOffValue: parseFloat($('#roundOff').val() || 0.00),
-            GrantTotal: parseFloat($('#GrantTotal').val() || 0.00),
-            BalanceAmount: parseFloat($('#BalanceAmount').val() || 0.00),
+            SubTotal: parseFloatValueInsert($('#Subtotal').val() || 0.00),
+            RoundOffValue: parseFloatValueInsert($('#roundOff').val() || 0.00),
+            GrantTotal: parseFloatValueInsert($('#GrantTotal').val() || 0.00),
+            BalanceAmount: parseFloatValueInsert($('#BalanceAmount').val() || 0.00),
             Notes: $('#AddNotesText').val(),
             TermsAndCondition: $('#TermsAndCondition').val(),
             PurchaseBillStatusId: parseInt(PIStatusId),
@@ -360,23 +459,23 @@ $(document).ready(async function () {
             //var productInfo = JSON.parse(productInfoStr);
 
             var productDetail = {
-                PurchaseOrderProductMappingId: PurchaseBillProductMappingId == 0 ? null : parseInt(PurchaseBillProductMappingId),
+                PurchaseProductMappingId: PurchaseBillProductMappingId == 0 ? null : parseInt(PurchaseBillProductMappingId),
                 ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null,
                 ProductId: parseInt(productId),
                 PurchasePrice: Common.parseFloatValue($rowTable.find('.SellingPrice').val()),
                 Quantity: Common.parseFloatValue($rowTable.find('.TableRowQty').val() || 0),
                 UnitId: parseInt($rowTable.find('.ForBindtableProductUnit').val()),
                 ProductDescription: $rowTable.find('.descriptiontdtext').val(),
-                SubTotal: Common.parseFloatValue($rowTable.find('.SubTotalQty').val()),
-                CGST_Percentage: Common.parseFloatValue($rowTable.find('.CGST input').val().replace('%', '').trim()),
-                CGST_Value: Common.parseFloatValue($rowTable.find('.CGST .CGSTAmount').text().trim()),
-                SGST_Percentage: Common.parseFloatValue($rowTable.find('.SGST input').val().replace('%', '').trim()),
-                SGST_Value: Common.parseFloatValue($rowTable.find('.SGST .SGSTAmount').text().trim()),
-                IGST_Percentage: Common.parseFloatValue($rowTable.find('.IGST input').val().replace('%', '').trim()),
-                IGST_Value: Common.parseFloatValue($rowTable.find('.IGST .IGSTAmount').text().trim()),
-                CESS_Percentage: Common.parseFloatValue($rowTable.find('.CESS input').val().replace('%', '').trim()),
-                CESS_Value: Common.parseFloatValue($rowTable.find('.CESS .CESSAmount').text().trim()),
-                TotalAmount: Common.parseFloatValue($rowTable.find('.Total input').val()),
+                SubTotal: parseFloatValueInsert($rowTable.find('.SubTotalQty').val()),
+                CGST_Percentage: parseFloatValueInsert($rowTable.find('.CGST input').val().replace('%', '').trim()),
+                CGST_Value: parseFloatValueInsert($rowTable.find('.CGST .CGSTAmount').text().trim()),
+                SGST_Percentage: parseFloatValueInsert($rowTable.find('.SGST input').val().replace('%', '').trim()),
+                SGST_Value: parseFloatValueInsert($rowTable.find('.SGST .SGSTAmount').text().trim()),
+                IGST_Percentage: parseFloatValueInsert($rowTable.find('.IGST input').val().replace('%', '').trim()),
+                IGST_Value: parseFloatValueInsert($rowTable.find('.IGST .IGSTAmount').text().trim()),
+                CESS_Percentage: parseFloatValueInsert($rowTable.find('.CESS input').val().replace('%', '').trim()),
+                CESS_Value: parseFloatValueInsert($rowTable.find('.CESS .CESSAmount').text().trim()),
+                TotalAmount: parseFloatValueInsert($rowTable.find('.Total input').val()),
             };
             PurchaseBillProductMappingDetails.push(productDetail);
         });
@@ -385,7 +484,7 @@ $(document).ready(async function () {
         var PurhInvoiceOtherChargesMappingDetails = $("#dynamicBindRow .dynamicBindRow");
 
         $.each(PurhInvoiceOtherChargesMappingDetails, function (index, value) {
-            var PurchaseSaleOtherChargesMappingId = $(value).find('.dynamicBindRow').attr('data-OtherChargeMapping-id');
+            var PurchaseSaleOtherChargesMappingId = $(value).find('.dynamicBindRow').attr('data-OtherChargeMapping-id') || null;
             var ispercentageval = $(value).find("input[type='radio']").attr("name");
             var oid = $(value).find('.taxandothers').val();
             if (oid != undefined) {
@@ -394,8 +493,8 @@ $(document).ready(async function () {
                     OtherChargesId: parseInt($(value).find('.taxandothers').val() || 0),
                     OtherChargesType: $(value).find('.taxandothers').attr('OtherChargesType'),
                     IsPercentage: $(value).find("input[name='" + ispercentageval + "']:checked").val() === "1",
-                    Value: parseFloat($(value).find('.OtherValueInsert').val() || 0),
-                    OtherChargeValue: parseFloat($(value).find('.otherChargeValue').val() || 0),
+                    Value: parseFloatValueInsert($(value).find('.OtherValueInsert').val() || 0),
+                    OtherChargeValue: parseFloatValueInsert($(value).find('.otherChargeValue').val() || 0),
                     ModuleId: EditPurchaseBillId > 0 ? EditPurchaseBillId : null
                 });
             }
@@ -413,24 +512,33 @@ $(document).ready(async function () {
             data: formDataMultiple,
             contentType: false,
             processData: false,
-            success: function (response) {
+            success: function (response) { 
                 if (response.status) {
                     formDataMultiple = new FormData();
-                    Common.successMsg(response.message);
-                    $("#PurchaseInvoiceModal").hide();
-                    var fnData = Common.getDateFilter('dateDisplay2');
-                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseBill", { PlantId: parseInt(PlantMappingId), PurchaseBillId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseInvoiceSuccess, null);
-                }
-                else {
+
+                    // ✅ Show success only when allowed
+                    if (showSuccessMsg) {
+                        Common.successMsg(response.message);
+                    }
+
+                    // 🔑 IMPORTANT: return PurchaseBillId
+                    if (callback) {
+                        var dataId = JSON.parse(response.data);
+                        EditPurchaseBillId = dataId[0][0].PurchaseBillId;
+                        callback(dataId[0][0].PurchaseBillId);
+                    }
+
+                } else {
                     formDataMultiple = new FormData();
                     Common.errorMsg(response.message);
                 }
             },
             error: function (response) {
+                formDataMultiple = new FormData();
                 Common.errorMsg(response.message);
             }
         });
-    });
+    }
 
     $(document).on('change', '#PurchaseOrderNo', function () {
         var $thisVal = $(this).val();
@@ -439,6 +547,7 @@ $(document).ready(async function () {
             Common.ajaxCall("GET", "/PurchaseInvoice/DD_GetPurchaseOrderNo", { ModuleId: parseInt($thisVal), ModuleName: "PurchaseBill" }, PurchaseBillGetNotNull, null);
         }
         else {
+            ClearInputs(); // Clear inputs 
             PurchaseOrderNOData = true;
         }
     })
@@ -465,7 +574,11 @@ $(document).ready(async function () {
         $("#btnPordersaveprintbtn span:first").text("Update & Print");
         $("#btnPreviewPInvoicebtn span:first").text("Update & Preview");
 
+        $('#toggleIconShipTo').attr('title', 'Click to expand');
+
         ProductIdArray = [];
+        existFiles = [];
+        formDataMultiple = new FormData();
         $('#selectedFiles').empty();
         $('#ExistselectedFiles').empty();
 
@@ -473,6 +586,12 @@ $(document).ready(async function () {
 
         $("#PurchaseInvoiceModal .modal-body").animate({ scrollTop: 0 }, "fast");
         $('#PurchaseInvoiceModal').show();
+
+        const activityResponse = await ajaxPromise("GET", "/Common/ActivityHistoryDetails", {
+            ModuleName: "PurchaseBill",
+            ModuleId: EditPurchaseBillId
+        });
+        StatusActivitySuccess(activityResponse);
 
         var fnData = Common.getDateFilter('dateDisplay2');
 
@@ -489,8 +608,8 @@ $(document).ready(async function () {
     $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
         if (response == true) {
-            var EditPurchaseBillId = $(this).data('id');
-            Common.ajaxCall("GET", "/PurchaseInvoice/DeletePurchaseOrderDetails", { PurchaseBillId: parseInt(EditPurchaseBillId) }, function (response) {
+            EditPurchaseBillId = $(this).data('id');
+            Common.ajaxCall("GET", "/PurchaseInvoice/DeletePurchaseBillDetails", { PurchaseBillId: parseInt(EditPurchaseBillId) }, function (response) {
                 response = response.status ? Common.successMsg(response.message) : Common.errorMsg(response.message);
                 var fnData = Common.getDateFilter('dateDisplay2');
                 Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseBill", { PlantId: parseInt(PlantMappingId), PurchaseBillId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseInvoiceSuccess, null);
@@ -521,8 +640,42 @@ $(document).ready(async function () {
             if ($checkbox.prop('checked')) {
                 var ProductId = $row.find('.ProductId').text().trim();
                 var ProductName = $row.find('.ProductName').text().trim();
-                var SecondaryPrice = parseFloat($row.find('.SellingPrice').text().trim()) || 0;
-                SecondaryPrice = SecondaryPrice.toFixed(2);
+                //var SecondaryPrice = parseFloat($row.find('.SellingPrice').text().trim()) || 0;
+                //SecondaryPrice = SecondaryPrice.toFixed(2);
+
+                var productInfoStr = $row.attr('data-product-info');
+                var productInfo = {};
+
+                try {
+                    productInfo = JSON.parse(productInfoStr.replace(/&quot;/g, '"'));
+                } catch (e) {
+                    console.error("Failed to parse productInfo for ProductId:", ProductId, e);
+                    return;
+                }
+
+                productInfo.PrimaryPrice = parseFloat(productInfo.PrimaryPrice) || 0;
+                productInfo.SecondaryPrice = parseFloat(productInfo.SecondaryPrice) || 0;
+
+                var $unitSelect = $row.find('select.unit-dropdown-select');
+
+                var selectedIndex = $unitSelect.prop("selectedIndex");  // 0 or 1
+
+                var option0 = $unitSelect.find("option").eq(0).val() || "";
+                var option1 = $unitSelect.find("option").eq(1).val() || "";
+
+                var PrimaryPrice = productInfo.PrimaryPrice;
+                var SecondaryPrice = productInfo.SecondaryPrice;
+
+                var SelectedPrice;
+
+                if (option0 === option1) {
+                    SelectedPrice = PrimaryPrice;
+                }
+                else {
+                    SelectedPrice = selectedIndex === 0 ? PrimaryPrice : SecondaryPrice;
+                }
+
+                SelectedPrice = SelectedPrice.toFixed(2);
 
                 var QtyProductAdd = $row.find('.QtyProductAdd').val().trim() || 1;
                 var defaultDescription = ProductName;
@@ -547,7 +700,7 @@ $(document).ready(async function () {
                 var IGST = parseFloat(productInfo.IGST) || 0;
                 var CESS = parseFloat(productInfo.CESS) || 0;
 
-                var SubTotal = (SecondaryPrice * QtyProductAdd).toFixed(2);
+                var SubTotal = (SelectedPrice * QtyProductAdd).toFixed(2);
 
                 var BillToState = $('#VendorStateName').text().toLowerCase();
                 var ShipToState = $('#StateName').text().toLowerCase();
@@ -571,7 +724,7 @@ $(document).ready(async function () {
                     parseFloat(cessAmt)
                 ).toFixed(2);
 
-                var unitDropdownHtml = '<select class="form-control ForBindtableProductUnit" data-productid="' + ProductId + '">';
+                var unitDropdownHtml = '<select class="form-control ForBindtableProductUnit" disabled data-productid="' + ProductId + '" style="width: 90px;">';
                 $unitSelect.find('option').each(function () {
                     var optionValue = $(this).val();
                     var optionText = $(this).text();
@@ -593,40 +746,40 @@ $(document).ready(async function () {
                             <textarea class="form-control mt-2 descriptiontdtext" placeholder="Description">${defaultDescription}</textarea>
                         </td>
                         <td data-label="Selling Price">
-                            <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" />
+                            <input type="text" class="form-control SellingPrice" value="${SelectedPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)" />
                         </td>
                         <td data-label="QTY">
-                            <div class="input-group" style="width: 124px;">
-                                <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" />
+                            <div class="input-group" style="width: 158px;">
+                                <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" />
                                 <div class="input-group-append">
                                     <span class="unit-dropdown">${unitDropdownHtml}</span>
                                 </div>
                             </div>
-                            <div style="justify-content:center;display:flex;margin-top:5px;">
+                            <div style="justify-content:center;display:flex;margin-top:0px;">
                                 <span class="remaining-stock ml-2 d-none" style="color:green;">(${productInfo.SecondaryUnitStockInHand || 0})</span>
                             </div>
                         </td>
                         <td data-label="SubTotal" class="SubTotal">
-                            <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${SubTotal || ''}" />
+                            <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${formatRupee(SubTotal) || ''}" />
                         </td>
                         <td data-label="CGST" class="CGST">
                             <input type="text" class="form-control CGST DisabledTextBox" value="${productInfo.CGST || 0} %" />
-                            <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${cgstAmt}</small>
+                            <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cgstAmt)}</small>
                         </td>
                         <td data-label="SGST" class="SGST">
                             <input type="text" class="form-control SGST DisabledTextBox" value="${productInfo.SGST || 0} %" />
-                            <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${sgstAmt}</small>
+                            <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(sgstAmt)}</small>
                         </td>
                         <td data-label="IGST" class="IGST">
                             <input type="text" class="form-control IGST DisabledTextBox" value="${productInfo.IGST || 0} %" />
-                            <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${igstAmt}</small>
+                            <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(igstAmt)}</small>
                         </td>
                         <td data-label="CESS" class="CESS">
                             <input type="text" class="form-control CESS DisabledTextBox" value="${productInfo.CESS || 0} %" />
-                            <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${cessAmt}</small>
+                            <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cessAmt)}</small>
                         </td>
                         <td data-label="Total" class="Total">
-                            <input type="text" class="form-control Total DisabledTextBox" value="${totalAmount || 0}" />
+                            <input type="text" class="form-control Total DisabledTextBox" value="${formatRupee(totalAmount) || 0}" />
                         </td>
                         <td data-label="Action" style="text-align:center;">
                             <button class="btn DynremoveBtn DynrowRemove" type="button">
@@ -695,58 +848,267 @@ $(document).ready(async function () {
     });
 
     $(document).on('click', '#btnPordersaveprintbtn', function () {
-        $('#loader-pms').show();
-        var EditData = { NoOfCopies: 1, printType: "preview" }
 
-        $.ajax({
-            url: '/PurchaseInvoice/PurchaseIvnoicePrint',
-            method: 'GET',
-            data: EditData,
-            xhrFields: {
-                responseType: 'blob'
-            },
-            success: function (response) {
-                var printType = "Preview";
-                $('#ShareDropdownitems').css('display', 'none');
-                var blob = new Blob([response], { type: 'application/pdf' });
-                var blobUrl = URL.createObjectURL(blob);
-                if (printType == "Preview") {
-                    var newTab = window.open();
-                    if (newTab) {
-                        newTab.document.write(`
-                                              <html>
-                                              <head><title>Purchase Bill Preview</title></head>
-                                              <body style="margin:0;">
-                                                  <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-                                              </body>
-                                              </html>
-                                          `);
-                        newTab.document.close();
+        $('#loader-pms').show();
+
+        savePurchaseInvoice(function (purchaseBillId) {
+
+            // 🔴 Safety check
+            if (!purchaseBillId) {
+                $('#loader-pms').hide();
+                Common.errorMsg("Purchase Bill ID not returned");
+                return;
+            }
+
+            var EditData = {
+                ModuleId: parseInt(purchaseBillId),
+                NoOfCopies: 1,
+                printType: "Print"
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: '/PurchaseInvoice/PurchaseBillPrint',
+                data: EditData,
+                xhrFields: { responseType: 'blob' },
+
+                success: function (response) {
+
+                    $('#ShareDropdownitems').hide();
+
+                    var blob = new Blob([response], { type: 'application/pdf' });
+                    var blobUrl = URL.createObjectURL(blob);
+
+                    // 🔹 PRINT TYPE HANDLER
+                    if (EditData.printType === "Preview") {
+
+                        var newTab = window.open();
+                        if (newTab) {
+                            newTab.document.write(`
+                            <html>
+                            <head>
+                                <title>Purchase Bill Preview</title>
+                            </head>
+                            <body style="margin:0; padding:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
+                            newTab.document.close();
+                        } else {
+                            Common.warningMsg("Popup blocked. Please allow popups.");
+                        }
+
+                    } else if (EditData.printType === "Download") {
+
+                        var link = document.createElement('a');
+                        link.href = blobUrl;
+                        link.download = 'Purchase Bill.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                    } else if (EditData.printType === "Print") {
+
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = blobUrl;
+                        document.body.appendChild(iframe);
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+                        };
                     }
 
-                } else if (printType == "Download") {
-                    var link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = 'Purchase Order.pdf';
-                    link.click();
-                } else if (printType == "Print") {
-                    var iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = blobUrl;
-                    document.body.appendChild(iframe);
-                    iframe.contentWindow.print();
-                }
-                $('#loader-pms').hide();
-                /* Print*/
+                    $('#loader-pms').hide();
+                },
 
-            },
-            error: function () {
-                $('#loader-pms').hide();
-                Common.errorMsg(response.message);
-            }
+                error: function () {
+                    $('#loader-pms').hide();
+                    Common.errorMsg("Print failed");
+                }
+            });
+
+        }, {
+            showSuccessMsg: false   // ❌ SUCCESS MESSAGE DISABLED
         });
+
+    });
+
+    $(document).on('click', '#btnPreviewPInvoicebtn', function () {
+
+        $('#loader-pms').show();
+
+        savePurchaseInvoice(function (purchaseBillId) {
+
+            // 🔴 Safety check
+            if (!purchaseBillId) {
+                $('#loader-pms').hide();
+                Common.errorMsg("Purchase Bill ID not returned");
+                return;
+            }
+
+            var EditData = {
+                ModuleId: parseInt(purchaseBillId),
+                NoOfCopies: 1,
+                printType: "Preview"
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: '/PurchaseInvoice/PurchaseBillPrint',
+                data: EditData,
+                xhrFields: { responseType: 'blob' },
+
+                success: function (response) {
+
+                    $('#ShareDropdownitems').hide();
+
+                    var blob = new Blob([response], { type: 'application/pdf' });
+                    var blobUrl = URL.createObjectURL(blob);
+
+                    // 🔹 PRINT TYPE HANDLER
+                    if (EditData.printType === "Preview") {
+
+                        var newTab = window.open();
+                        if (newTab) {
+                            newTab.document.write(`
+                            <html>
+                            <head>
+                                <title>Purchase Bill Preview</title>
+                            </head>
+                            <body style="margin:0; padding:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
+                            newTab.document.close();
+                        } else {
+                            Common.warningMsg("Popup blocked. Please allow popups.");
+                        }
+
+                    } else if (EditData.printType === "Download") {
+
+                        var link = document.createElement('a');
+                        link.href = blobUrl;
+                        link.download = 'Purchase Bill.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                    } else if (EditData.printType === "Print") {
+
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = blobUrl;
+                        document.body.appendChild(iframe);
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+                        };
+                    }
+
+                    $('#loader-pms').hide();
+                },
+
+                error: function () {
+                    $('#loader-pms').hide();
+                    Common.errorMsg("Print failed");
+                }
+            });
+
+        }, {
+            showSuccessMsg: false   // ❌ SUCCESS MESSAGE DISABLED
+        });
+
     });
 });
+
+
+/*========================================================Status Tracking=================================================================*/
+function StatusActivitySuccess(response) {
+    var parsedData = JSON.parse(response.data);
+    var timelineData = parsedData[0];
+
+    var $timeline = $(".horizontal-timeline");
+
+    // Remove existing stages
+    $timeline.find(".timeline-stage").remove();
+    var progressStatuses = [];
+
+    // Append new timeline stages
+    $.each(timelineData, function (index, item) {
+        var status = item.InventoryStatusName || "Unknown";
+        var user = item.UserName || "N/A";
+        var color = item.Status_Color || "#000";
+
+        var date = new Date(item.CreatedDate);
+        var formattedDate = date.toLocaleDateString('en-GB') + ', ' +
+            date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        var statusClass = "status-" + status.toLowerCase().replace(/\s+/g, '');
+
+        var $stage = $('<div>', {
+            class: `timeline-stage ${statusClass}`
+        });
+
+        var $marker = $('<div>', { class: 'stage-marker' });
+
+        var $statusSpan = $('<span>', {
+            class: 'stage-status',
+            text: status,
+            css: { color: color }
+        });
+
+        $marker.append($statusSpan);
+
+        var $content = $('<div>', { class: 'stage-content' });
+        $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
+        $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
+
+        $stage.append($marker).append($content);
+        $timeline.append($stage);
+
+        progressStatuses.push(status);
+
+    });
+
+    setTimeout(function () {
+        updateTimelineProgress(progressStatuses);
+    }, 1000);
+}
+
+function updateTimelineProgress(progressStatuses) {
+    var $timeline = $(".horizontal-timeline");
+    var $fillLine = $timeline.find(".timeline-progress-line-fill");
+    var $stages = $timeline.find(".timeline-stage");
+
+    if ($stages.length === 0) return;
+
+    let $lastValidStage = null;
+
+    $stages.each(function () {
+        const statusText = $(this).find(".stage-status").text().trim();
+        if (progressStatuses.includes(statusText)) {
+            $lastValidStage = $(this);
+        }
+    });
+
+    if ($lastValidStage) {
+        const $marker = $lastValidStage.find(".stage-marker");
+        const timelineLeft = $timeline.offset().left;
+        const markerCenter = $marker.offset().left + ($marker.outerWidth() / 2);
+
+        const fillWidth = markerCenter - timelineLeft;
+
+        $fillLine.css({
+            width: fillWidth + "px"
+        });
+    } else {
+        $fillLine.css({ width: "0" });
+    }
+}
+
+/*========================================================End Status Tracking=================================================================*/
+
 
 async function PurchaseBillGetNotNull(response) {
     if (!response.status) return;
@@ -786,7 +1148,7 @@ async function PurchaseBillGetNotNull(response) {
                 if (plantResponse) {
                     ShipToAddress(plantResponse);
                     $('#AlternativeCompanyAddress').val(data[1][0].ShipToPlantId).trigger('change');
-                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(data[1][0].VendorId), PlantId: parseInt(data[1][0].ShipToPlantId) }, function (responseOrderNo) {
+                    Common.ajaxCall("GET", "/PurchaseInvoice/GetPurchaseOrderNoDetails_ByVendorPlant", { VendorId: parseInt(data[1][0].VendorId), PlantId: parseInt(data[1][0].ShipToPlantId), PurchaseOrderId: parseInt(data[1][0].PurchaseOrderId) }, function (responseOrderNo) {
                         if (responseOrderNo !== null) {
                             Common.bindDropDownSuccess(responseOrderNo.data, "PurchaseOrderNo");
 
@@ -805,13 +1167,25 @@ async function PurchaseBillGetNotNull(response) {
         $('#InvoiceNoOriginal').val(data[1][0].OriginalInvoiceNo);
         $('#InvoiceNo').val(data[1][0].PurchaseBillNo);
 
-
         var EditDataId = { ModuleName: 'PurchaseBill', ModuleId: parseInt(EditPurchaseBillId) }
         Common.ajaxCall("GET", "/Common/GetInventoryStatusDetails", EditDataId, function (response) {
             if (response.status);
             Common.bindDropDownSuccess(response.data, "PurchaseInvoiceStatusId");
             $('#PurchaseInvoiceStatusId').val(data[1][0].PurchaseBillStatusId);
         }, null);
+
+        Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
+        Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
+        Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
+
+        Inventory.bindAttachments(data[3]);
+    } else {
+
+        Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
+        Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
+        Inventory.toggleFieldForAttachment(data[2][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
+
+        Inventory.bindAttachments(data[2]);
     }
 
     bindProductRowsInNotNull(data[0], data[1][0].VendorStateName, data[1][0].PlantStateName);
@@ -819,12 +1193,6 @@ async function PurchaseBillGetNotNull(response) {
     if (PurchaseOrderNOData) {
         OtherChangesNotNull(data[2]);
     }
-
-    Inventory.toggleField(data[1][0].Notes, "#AddNotesText", "#AddNotes", "#AddNotesLable");
-    Inventory.toggleField(data[1][0].TermsAndCondition, "#TermsAndCondition", "#AddTerms", "#AddTermsLable");
-    Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment");
-
-    Inventory.bindAttachments(data[3]);
 }
 
 function ajaxAsync(method, url, data) {
@@ -876,7 +1244,7 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
 
         ProductIdArray.push(ProductId);
 
-        var unitDropdownHtml = `<select class="form-control ForBindtableProductUnit" data-productid="${ProductId}">`;
+        var unitDropdownHtml = `<select class="form-control ForBindtableProductUnit" disabled data-productid="${ProductId}" style="width: 90px;">`;
         unitDropdownHtml += `<option value="${productInfo.PrimaryUnitId}" ${productInfo.UnitId == productInfo.PrimaryUnitId ? 'selected' : ''}>${productInfo.PrimaryUnitName}</option>`;
         unitDropdownHtml += `<option value="${productInfo.SecondaryUnitId}" ${productInfo.UnitId == productInfo.SecondaryUnitId ? 'selected' : ''}>${productInfo.SecondaryUnitName}</option>`;
         unitDropdownHtml += `</select>`;
@@ -894,40 +1262,40 @@ function bindProductRowsInNotNull(productArray, StateName1, StateName2) {
                     <textarea class="form-control mt-2 descriptiontdtext" placeholder="Description">${defaultDescription}</textarea>
                 </td>
                 <td data-label="Price">
-                    <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" />
+                    <input type="text" class="form-control SellingPrice" value="${SecondaryPrice}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 6)"/>
                 </td>
                 <td data-label="Quantity">
-                    <div class="input-group" style="width: 124px;">
-                        <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" />
+                    <div class="input-group" style="width: 158px;">
+                        <input type="text" class="form-control TableRowQty" value="${QtyProductAdd}" min="1" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" />
                         <div class="input-group-append">
                             <span class="unit-dropdown">${unitDropdownHtml}</span>
                         </div>
                     </div>
-                    <div style="justify-content:center;display:flex;margin-top:5px;">
+                    <div style="justify-content:center;display:flex;margin-top:0px;">
                         <span class="remaining-stock ml-2 d-none" style="color:green;">(${productInfo.SecondaryUnitStockInHand || 0})</span>
                     </div>
                 </td> 
                 <td data-label="SubTotal" class="SubTotal">
-                    <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${SubTotal}" />
+                    <input type="text" class="form-control SubTotalQty DisabledTextBox" value="${formatRupee(SubTotal)}" />
                 </td>
                 <td data-label="CGST" class="CGST">
                     <input type="text" class="form-control CGST DisabledTextBox" value="${CGST} %" />
-                    <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${cgstAmt}</small>
+                    <small class="CGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cgstAmt)}</small>
                 </td>
                 <td data-label="SGST" class="SGST">
                     <input type="text" class="form-control SGST DisabledTextBox" value="${SGST} %" />
-                    <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${sgstAmt}</small>
+                    <small class="SGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(sgstAmt)}</small>
                 </td>
                 <td data-label="IGST" class="IGST">
                     <input type="text" class="form-control IGST DisabledTextBox" value="${IGST} %" />
-                    <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${igstAmt}</small>
+                    <small class="IGSTAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(igstAmt)}</small>
                 </td>
                 <td data-label="CESS" class="CESS">
                     <input type="text" class="form-control CESS DisabledTextBox" value="${CESS} %" />
-                    <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${cessAmt}</small>
+                    <small class="CESSAmount d-flex justify-content-center" style="color: #5de95d;">${formatRupee(cessAmt)}</small>
                 </td>
                 <td data-label="Total" class="Total">
-                    <input type="text" class="form-control Total DisabledTextBox" value="${totalAmount}" />
+                    <input type="text" class="form-control Total DisabledTextBox" value="${formatRupee(totalAmount)}" />
                 </td>
                 <td data-label="Action" style="text-align:center;">
                     <button class="btn DynremoveBtn DynrowRemove" type="button">
@@ -994,11 +1362,10 @@ function OtherChangesNotNull(OtherChargesArray) {
                         </div>
 
                         <!-- ENTERED VALUE -->
-                        <input type="text" class="form-control discount-input OtherValueInsert" id="Value${uniqueId}" name="Value${uniqueId}" value="${value.OtherChargeValue ?? ""}" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,8)"
-                        >
+                        <input type="text" class="form-control discount-input OtherValueInsert" id="Value${uniqueId}" name="Value${uniqueId}" value="${value.Value.toFixed(2) ?? ""}" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,8)">
 
                         <!-- CALCULATED VALUE -->
-                        <input type="text" class="form-control discount-input otherChargeValue" name="OtherChargeValue${uniqueId}" value="${value.Value ?? ""}" style="background-color:#dee2e647" readonly disabled>
+                        <input type="text" class="form-control discount-input otherChargeValue" name="OtherChargeValue${uniqueId}" value="${value.OtherChargeValue ?? ""}" style="background-color:#dee2e647" readonly disabled>
 
                         <!-- DELETE BUTTON -->
                         <button class="btn OtherDynamicRemove DynrowRemove" type="button">
@@ -1053,15 +1420,15 @@ function GetProductPopSuccess(response) {
                     </td>
                     <td><label class="ProductSubCategoryName">${product.ProductSubCategoryName}</label></td>
                     <td><label class="ProductCategoryName">${product.ProductCategoryName}</label></td>
-                    <td><label class="SellingPrice">${product.SecondaryPrice}</label></td>
-                    <td><label class="SecondaryUnitStockInHand">${product.SecondaryUnitStockInHand}</label></td>
+                    <td><label class="SellingPrice">${product.PrimaryPrice.toFixed(2)}</label></td>
+                    <td><label class="SecondaryUnitStockInHand">${product.SecondaryUnitStockInHand.toFixed(3)}</label></td> 
                     <td style="width:16%">
                         <button type="button" class="btn btn-custom addQtyBtn">+ Add</button>
                         <div class="align-items-center OtyColumn d-none">
                             <div class="d-flex align-items-center qty-wrapper justify-content-center">
                                 <div class="qty-group">
                                     <button type="button" class="btn btn-primary RowMinus qty-btn qty-decrease">-</button>
-                                    <input type="text" class="form-control text-center qty-input QtyProductAdd" value="1" min="1" step="0.0001" oninput="Common.allowOnlyNumbersAndDecimalInventory(this,4)">
+                                    <input type="text" class="form-control text-center qty-input QtyProductAdd" value="1" min="1" step="0.0001" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this,4)">
                                     <button type="button" class="btn btn-primary RowPlus qty-btn qty-increase">+</button>
                                 </div>
                                 <div class="input-group-append">
@@ -1081,7 +1448,7 @@ function GetProductPopSuccess(response) {
                 const $lastRow = $('#product-table-body tr').last();
                 const $unitDropdownContainer = $lastRow.find('.unit-dropdown');
 
-                const $select = $(`<select class="additemdrop unit-select form-control unit-dropdown-select" data-productid="${product.ProductId}"></select>`);
+                const $select = $(`<select class="additemdrop unit-select form-control unit-dropdown-select" data-productid="${product.ProductId}" disabled></select>`);
 
                 if (product.PrimaryUnitId && product.PrimaryUnitName) {
                     const $primaryOption = $('<option></option>').val(product.PrimaryUnitId).text(product.PrimaryUnitName).attr('data-unitid', product.PrimaryUnitId)
@@ -1133,6 +1500,8 @@ function GetProductPopSuccess(response) {
 
 function GetPurchaseInvoiceSuccess(response) {
     if (response.status) {
+        $('#loader-pms').show();
+
         var data = JSON.parse(response.data);
         var CounterBox = Object.keys(data[0][0]);
 
@@ -1157,6 +1526,7 @@ function GetPurchaseInvoiceSuccess(response) {
 
         var columns = Common.bindColumn(data[1], ['PurchaseBillId', 'Status_Color']);
         Common.bindTable('PurchaseBillTable', data[1], columns, -1, 'PurchaseBillId', '365px', true, access);
+        $('#loader-pms').hide();
     }
 }
 
@@ -1228,78 +1598,69 @@ function updateGSTVisibility(firstStateId, secondStateId) {
     }
 }
 
-// ========== Row Calculation Function ==========
 function calculateRow($row) {
-    var SecondaryPrice = parseFloat($row.find(".SellingPrice").val()) || 0;
-    var QtyProductAdd = parseFloat($row.find(".TableRowQty").val()) || 0;
 
-    // Get % values (remove % sign)
-    var CGST = parseFloat(($row.find(".CGST input").val() || "0").replace('%', '').trim()) || 0;
-    var SGST = parseFloat(($row.find(".SGST input").val() || "0").replace('%', '').trim()) || 0;
-    var IGST = parseFloat(($row.find(".IGST input").val() || "0").replace('%', '').trim()) || 0;
-    var CESS = parseFloat(($row.find(".CESS input").val() || "0").replace('%', '').trim()) || 0;
+    var SecondaryPrice = getNumber($row.find(".SellingPrice").val());
+    var QtyProductAdd = getNumber($row.find(".TableRowQty").val());
+
+    var CGST = getNumber(($row.find(".CGST input").val() || "0").replace('%', ''));
+    var SGST = getNumber(($row.find(".SGST input").val() || "0").replace('%', ''));
+    var IGST = getNumber(($row.find(".IGST input").val() || "0").replace('%', ''));
+    var CESS = getNumber(($row.find(".CESS input").val() || "0").replace('%', ''));
 
     var vendorState = ($("#VendorStateName").text() || '').trim().toLowerCase();
     var buyerState = ($("#StateName").text() || '').trim().toLowerCase();
 
     var SubTotal = SecondaryPrice * QtyProductAdd;
+
     var cgstAmt = 0, sgstAmt = 0, igstAmt = 0, cessAmt = 0;
 
-    // GST logic based on state
     if (vendorState && buyerState && vendorState !== buyerState) {
-        igstAmt = (SubTotal * IGST / 100).toFixed(2);
-        cessAmt = (SubTotal * CESS / 100).toFixed(2);
-        cgstAmt = sgstAmt = (0).toFixed(2);
+        igstAmt = SubTotal * IGST / 100;
+        cessAmt = SubTotal * CESS / 100;
     } else {
-        cgstAmt = (SubTotal * CGST / 100).toFixed(2);
-        sgstAmt = (SubTotal * SGST / 100).toFixed(2);
-        cessAmt = (SubTotal * CESS / 100).toFixed(2);
-        igstAmt = (0).toFixed(2);
+        cgstAmt = SubTotal * CGST / 100;
+        sgstAmt = SubTotal * SGST / 100;
+        cessAmt = SubTotal * CESS / 100;
     }
 
-    var totalAmount = (
-        parseFloat(SubTotal) +
-        parseFloat(cgstAmt) +
-        parseFloat(sgstAmt) +
-        parseFloat(igstAmt) +
-        parseFloat(cessAmt)
-    ).toFixed(2);
+    var totalAmount = SubTotal + cgstAmt + sgstAmt + igstAmt + cessAmt;
 
-    // Update row values
-    $row.find(".SubTotal input").val(SubTotal.toFixed(2));
-    $row.find(".CGSTAmount").text(cgstAmt);
-    $row.find(".SGSTAmount").text(sgstAmt);
-    $row.find(".IGSTAmount").text(igstAmt);
-    $row.find(".CESSAmount").text(cessAmt);
-    $row.find(".Total input").val(totalAmount);
+    // ✅ Display with ₹
+    $row.find(".SubTotal input").val(formatRupee(SubTotal));
+    $row.find(".CGSTAmount").text(formatRupee(cgstAmt));
+    $row.find(".SGSTAmount").text(formatRupee(sgstAmt));
+    $row.find(".IGSTAmount").text(formatRupee(igstAmt));
+    $row.find(".CESSAmount").text(formatRupee(cessAmt));
+    $row.find(".Total input").val(formatRupee(totalAmount));
 
-    // Store numeric values for total calculation
+    // ✅ Store raw values (no ₹)
     $row.find('.subtotal').val(SubTotal.toFixed(2));
-    $row.find('.cgst-amt').val(cgstAmt);
-    $row.find('.sgst-amt').val(sgstAmt);
-    $row.find('.igst-amt').val(igstAmt);
-    $row.find('.cess-amt').val(cessAmt);
-    $row.find('.totalValue').val(totalAmount);
+    $row.find('.cgst-amt').val(cgstAmt.toFixed(2));
+    $row.find('.sgst-amt').val(sgstAmt.toFixed(2));
+    $row.find('.igst-amt').val(igstAmt.toFixed(2));
+    $row.find('.cess-amt').val(cessAmt.toFixed(2));
+    $row.find('.totalValue').val(totalAmount.toFixed(2));
 }
 
-// ========== Table Total Calculation ==========
 function calculateGrandTotal() {
+
     let subtotalTotal = 0,
         cgstTotal = 0,
         sgstTotal = 0,
         igstTotal = 0,
         cessTotal = 0,
-        grandTotal = 0;
+        grandTotal = 0; 
 
     $('#PIProductTablebody .ProductTableRow').each(function () {
         let $row = $(this);
 
-        let subtotal = parseFloat($row.find('.SubTotal input').val()) || 0;
-        let cgst = parseFloat($row.find('.CGSTAmount').text()) || 0;
-        let sgst = parseFloat($row.find('.SGSTAmount').text()) || 0;
-        let igst = parseFloat($row.find('.IGSTAmount').text()) || 0;
-        let cess = parseFloat($row.find('.CESSAmount').text()) || 0;
-        let total = parseFloat($row.find('.Total input').val()) || 0;
+        let subtotal = getNumber($row.find('.SubTotal input').val()) || 0;
+        let cgst = getNumber($row.find('.CGSTAmount').text()) || 0;
+        let sgst = getNumber($row.find('.SGSTAmount').text()) || 0;
+        let igst = getNumber($row.find('.IGSTAmount').text()) || 0;
+        let cess = getNumber($row.find('.CESSAmount').text()) || 0;
+        let total = getNumber($row.find('.Total input').val()) || 0;
 
         subtotalTotal += subtotal;
         cgstTotal += cgst;
@@ -1308,32 +1669,55 @@ function calculateGrandTotal() {
         cessTotal += cess;
         grandTotal += total;
     });
+     
+    $('#SubtotalRow #SubTotalTotal').val(formatRupee(subtotalTotal));
+    $('#SubtotalRow #CGSTTotal').val(formatRupee(cgstTotal));
+    $('#SubtotalRow #SGSTTotal').val(formatRupee(sgstTotal));
+    $('#SubtotalRow #IGSTTotal').val(formatRupee(igstTotal));
+    $('#SubtotalRow #CESSTotal').val(formatRupee(cessTotal));
+    $('#SubtotalRow #Subtotal').val(formatRupee(grandTotal));
 
-    $('#SubtotalRow #SubTotalTotal').val(subtotalTotal.toFixed(2));
-    $('#SubtotalRow #CGSTTotal').val(cgstTotal.toFixed(2));
-    $('#SubtotalRow #SGSTTotal').val(sgstTotal.toFixed(2));
-    $('#SubtotalRow #IGSTTotal').val(igstTotal.toFixed(2));
-    $('#SubtotalRow #CESSTotal').val(cessTotal.toFixed(2));
-    $('#SubtotalRow #Subtotal').val(grandTotal.toFixed(2));
-
-    // Round-off logic
+    // ✅ Round-off logic (kept same, but safe)
     var decimalPart = grandTotal.toFixed(2).split('.')[0];
     var roundedDecimal = Math.ceil(decimalPart);
     var AddOrSub = roundedDecimal;
 
     var RoundOffValu = grandTotal.toFixed(2).split('.')[1];
+
     if (RoundOffValu >= 50) {
         $('#roundOff').css('color', 'green');
         AddOrSub++;
-    } else if (RoundOffValu == '00') {
+    } else if (RoundOffValu === '00') {
         $('#roundOff').css('color', 'blue');
-    } else if (RoundOffValu <= 50) {
+    } else {
         $('#roundOff').css('color', 'orange');
     }
 
-    $('#roundOff').val('0.' + RoundOffValu);
-    $('#GrantTotal').val(AddOrSub.toFixed(2));
+    $('#roundOff').val(formatRupee('0.' + RoundOffValu));
+    $('#GrantTotal').val(formatRupee(AddOrSub.toFixed(2)));
 }
+
+function getNumber(value) {
+    if (value == null) return 0;
+
+    return parseFloat(
+        value
+            .toString()
+            .replace(/₹/g, '')
+            .replace(/,/g, '')
+            .trim()
+    ) || 0;
+}
+
+function formatRupee(value) {
+    let num = getNumber(value);
+
+    return '₹' + num.toLocaleString('en-IN', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
 
 // ========== Trigger Calculation on Input ==========
 $(document).on("input", ".SellingPrice, .TableRowQty", function () {
@@ -1382,6 +1766,10 @@ function VendorAlignmentOpen() {
     $('#BillFromColumn').show();
     $('#VendorColumn').show();
     $('#ShippingColumn').show();
+    $('#OriginalInvoiceNoDiv').show();
+    $('#PurchaseOrderNoDiv').show();
+    //$('#OriginalInvoiceNoDiv').hide();
+    //$('#PurchaseOrderNoDiv').hide();
     $('#AddVendorlableColumn').removeClass('d-flex justify-content-center');
 
     $('#PurchaseInvoiceNumberDiv').removeClass('col-lg-4 col-md-6 col-sm-6 col-6').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
@@ -1391,18 +1779,24 @@ function VendorAlignmentOpen() {
     $('#POColumn').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-4 col-md-12 col-sm-12 col-12');
 
     $('#PurchaseOrderDateDiv').removeClass('col-lg-6 col-md-6 col-sm-6 col-12').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
+    $('#VendorColumn .row.mt-3, #ShippingColumn .row.mt-3, #OriginalInvoiceNoDiv, #PurchaseOrderNoDiv').stop(true, true).slideToggle(300);
+    $('#toggleIconShipTo').toggleClass('fa-chevron-up fa-chevron-down');
+
     //if (!TriggerValues) {
     //    Common.bindDropDownParent('BillFrom', 'FormBillFrom', 'BillFrom');
     //    Common.bindDropDownParent('Vendor', 'FormVendor', 'Vendor');
     //    Common.bindDropDownParent('AlternativeCompanyAddress', 'FormShipping', 'PlantBillFrom');
     //} 
 }
+
 function VendorAlignmentClose() {
     $('#AddVendorlableColumn').show();
     $('#BillFromColumn').hide();
     $('#VendorColumn').hide();
     $('#ShippingColumn').hide();
     $('#AddVendorlableColumn').removeClass('d-flex justify-content-center');
+    $('#OriginalInvoiceNoDiv').show();
+    $('#PurchaseOrderNoDiv').show();
 
     $('#PurchaseInvoiceNumberDiv').removeClass('col-lg-6 col-md-6 col-sm-6 col-6').addClass('col-lg-4 col-md-6 col-sm-6 col-6');
     $('#PurchaseInvoiceDateDiv').removeClass('col-lg-6 col-md-6 col-sm-6 col-6').addClass('col-lg-4 col-md-6 col-sm-6 col-6');
@@ -1448,11 +1842,6 @@ function bindHeaderNormal() {
                     </div>
                     <div class="info-row" style="margin-right:15px; width:unset;">
                         <div class="info-value">
-                            <a id="BillFromName" name="BillFromName"></a>
-                        </div>
-                    </div>
-                    <div class="info-row" style="margin-right:15px; width:unset;">
-                        <div class="info-value">
                             <a id="BillFromAddress" name="BillFromAddress"></a>
                         </div>
                     </div>
@@ -1464,7 +1853,7 @@ function bindHeaderNormal() {
         <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="VendorColumn" style="position: relative; display: none;">
             <form id="FormVendor" novalidate="novalidate">
                 <div class="row BilAddHead px-1">
-                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 mt-3 px-1">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 px-1" style="margin-top: 12px;">
                         <div class="d-flex">
                             <h2 class="mb-0">Bill To<span id="Asterisk">*</span></h2>
                         </div>
@@ -1475,8 +1864,7 @@ function bindHeaderNormal() {
                             </select>
                         </div>
                     </div>
-                </div>
-
+                </div> 
             </form>
             <div class="row mt-3">
                 <div class="col-12">
@@ -1551,16 +1939,20 @@ function bindHeaderNormal() {
         <div class="col-lg-4 col-md-6 col-sm-6 col-12" id="ShippingColumn" style="position: relative; display: none;">
             <form id="FormShipping" novalidate="novalidate">
                 <div class="row BilAddHead">
-                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 mt-3 px-1">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 px-1" style="margin-top: 12px;">
                         <div class="d-flex">
                             <h2 class="mb-0">Ship To<span id="Asterisk">*</span></h2>
                         </div>
                     </div>
-                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1" id="">
+                    <div class="col-xl-8 col-lg-6 col-md-6 col-sm-6 col-6 my-2 px-1">
                         <div class="form-group mb-0 AlternativeCompanyError">
                             <select class="form-control" id="AlternativeCompanyAddress" name="AlternativeCompanyAddress" required>
                             </select>
                         </div>
+                    </div>
+                    <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-6 my-2 px-1" id="">
+                        <input type="button" id="toggleShipTo" class="btn btn-link p-0" value="" />
+                        <i class="fas fa-chevron-down" id="toggleIconShipTo" style="cursor: pointer;font-size: large;color: blue;margin-top: 4px;"></i>
                     </div>
                 </div>
             </form>
@@ -1646,8 +2038,8 @@ function bindHeaderNormal() {
 
                     <div class="col-lg-4 col-md-6 col-6" id="OriginalInvoiceNoDiv">
                         <div class="form-group">
-                            <label>Original Invoice No<span id="Asterisk">*</span></label>
-                            <input type="text" class="form-control" id="InvoiceNoOriginal" maxlength="16" name="InvoiceNoOriginal" placeholder="Original Invoice No" autocomplete="off" fdprocessedid="eb1wt7" required>
+                            <label>Vendor Invoice No<span id="Asterisk">*</span></label>
+                            <input type="text" class="form-control" id="InvoiceNoOriginal" maxlength="16" name="InvoiceNoOriginal" placeholder="Vendor Invoice No" autocomplete="off" fdprocessedid="eb1wt7" required>
                         </div>
                     </div> 
                 </div>
@@ -1674,7 +2066,7 @@ $(document).on('click', '#deletefile', function () {
     var moduleRefId = $(this).attr('ModuleRefId');
     deletedFiles.push({
         AttachmentId: attachmentid,
-        ModuleName: "Client",
+        ModuleName: "PurchaseBill",
         ModuleRefId: parseInt(moduleRefId),
         AttachmentFileName: fileText,
         AttachmentFilePath: src
@@ -1693,7 +2085,7 @@ function getExistFiles() {
         var moduleRefId = $(value).find('.delete-buttonattach').attr('ModuleRefId');
         existFiles.push({
             AttachmentId: attachmentid,
-            ModuleName: "Client",
+            ModuleName: "PurchaseBill",
             ModuleRefId: parseInt(moduleRefId),
             AttachmentFileName: fileText,
             AttachmentFilePath: src
@@ -1778,25 +2170,25 @@ $(document).keydown(function (event) {
     // Handling alt + v
     if (event.altKey && event.key === 'v') {
         event.preventDefault();
-        $('#btnPreviewPorder').click();
+        $('#btnPreviewPInvoicebtn').click();
     }
 
     // Handling Ctrl + s
     if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
-        $('#PurchaseOrderSaveBtn').click();
+        $('#PurchaseInvoiceSaveBtn').click();
     }
 
     // Handling alt + h
     if (event.altKey && event.key === 'h') {
         event.preventDefault();
-        $('#btnsharePorder').click();
+        $('#btnsharePInvoice').click();
     }
 
     // Handling alt + c
     if (event.altKey && event.key === 'c') {
         event.preventDefault();
-        $('#PurchaseOrderCancelBtn').click();
+        $('#PurchaseInvoiceCancelBtn').click();
     }
 });
 
@@ -1946,14 +2338,16 @@ $(document).on("input change", ".calculateinventory, .OtherValueInsert", functio
 });
 
 function calculateOtherCharges() {
-    let grandTotal = parseFloat($("#Subtotal").val()) || 0;
+
+    // ✅ Read grand total WITHOUT ₹
+    let grandTotal = getNumber($("#Subtotal").val());
     let finalTotal = grandTotal;
 
     $("#dynamicBindRow .OtherChargesRow").each(function () {
         let row = $(this);
         let type = row.attr("data-id");
 
-        let value = parseFloat(row.find(".OtherValueInsert").val()) || 0;
+        let value = getNumber(row.find(".OtherValueInsert").val());
         let isPercentage = row.find("input[value='1']").is(":checked");
 
         let calcValue = 0;
@@ -1964,7 +2358,9 @@ function calculateOtherCharges() {
             calcValue = value;
         }
 
-        row.find(".otherChargeValue").val(calcValue.toFixed(2));
+        // ✅ Show ₹, store numeric
+        row.find(".otherChargeValue").val(formatRupee(calcValue));
+        row.find(".otherChargeValueRaw").val(calcValue.toFixed(2)); // hidden raw field (optional)
 
         if (type === "Discount") {
             finalTotal -= calcValue;
@@ -1976,9 +2372,10 @@ function calculateOtherCharges() {
     // =========================
     // CUSTOM ROUNDING RULE
     // =========================
+
     let beforeRound = finalTotal.toFixed(2);
     let split = beforeRound.split('.');
-    let whole = parseInt(split[0]);
+    let whole = parseInt(split[0], 10);
     let decimal = parseFloat("0." + split[1]);
 
     let roundedTotal = 0;
@@ -1988,23 +2385,43 @@ function calculateOtherCharges() {
     if (decimal === 0) {
         roundedTotal = whole;
         roundOffValue = 0;
+        $('#roundOff').css('color', 'blue');
     }
-
     // CASE 2 — Decimal < 0.50 → ROUND DOWN
     else if (decimal < 0.50) {
-        roundedTotal = whole;                 // go down
-        roundOffValue = decimal.toFixed(2);   // show positive decimal
+        roundedTotal = whole;
+        roundOffValue = decimal;
         $('#roundOff').css('color', 'orange');
     }
-
     // CASE 3 — Decimal ≥ 0.50 → ROUND UP
     else {
-        roundedTotal = whole + 1;                     // go up
-        roundOffValue = (1 - decimal).toFixed(2);     // positive difference
+        roundedTotal = whole + 1;
+        roundOffValue = 1 - decimal;
         $('#roundOff').css('color', 'green');
     }
 
-    // SET OUTPUTS
-    $('#roundOff').val(roundOffValue);
-    $("#GrantTotal").val(roundedTotal.toFixed(2));
-} 
+    // ✅ Bind with ₹
+    $('#roundOff').val(formatRupee(roundOffValue));
+    $("#GrantTotal").val(formatRupee(roundedTotal.toFixed(2)));
+}
+
+
+//// ========== Row Insert Parsing Function ==========
+function parseFloatValueInsert(value) {
+    if (value == null) return 0;
+
+    return parseFloat(
+        value
+            .toString()
+            .replace(/₹/g, '')   // remove rupee symbol
+            .replace(/,/g, '')   // remove commas
+            .replace('%', '')    // remove percentage if present
+            .trim()
+    ) || 0;
+};
+
+function ajaxPromise(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, resolve, reject);
+    });
+}

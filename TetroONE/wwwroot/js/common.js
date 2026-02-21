@@ -704,7 +704,7 @@
             }),
             "columnDefs": !isTetroONEnocount
                 ? renderColumn : [],
-        });
+        }); 
         $('#tableFilter').on('keyup', function () {
             table.search($(this).val()).draw();
         });
@@ -1236,6 +1236,28 @@
         inputElement.value = resultValue;
     },
 
+    allowOnlyNumbersAndAfterDecimalThreeVal: function (inputElement, maxLength) {
+        // Remove everything except numbers and dot
+        let cleanedValue = inputElement.value.replace(/[^\d.]/g, '');
+
+        // Allow only ONE decimal point
+        let parts = cleanedValue.split('.');
+        let integerPart = parts[0];
+        let decimalPart = '';
+
+        if (parts.length > 1) {
+            decimalPart = '.' + parts[1].slice(0, 3); // 👈 allow .999
+        }
+
+        // Limit integer length
+        if (integerPart.length > maxLength) {
+            integerPart = integerPart.slice(0, maxLength);
+        }
+
+        // Final value
+        inputElement.value = integerPart + decimalPart;
+    },
+ 
     allowTextNumberAndWithoutSpace: function (inputElement, maxLength) {
         let value = inputElement.value;
         // Allow letters, numbers, and special characters, disallowing spaces
@@ -2695,8 +2717,54 @@
             });
         });
     },
-}
+     
+    bindDropDownSuccessProcessType: function (response, controlid) { 
+        if (response != null) {
+            var dataValue = response;
+            $('#' + controlid).empty();
+            if (dataValue.length > 0) {
+                var valueproperty = Object.keys(dataValue[0])[0];
+                var textproperty = Object.keys(dataValue[0])[1];
+                $('#' + controlid).append($('<option>', {
+                    value: '',
+                    text: '--Select--',
+                }));
+                $.each(dataValue, function (index, item) {
+                    $('#' + controlid).append($('<option>', {
+                        value: item[valueproperty],
+                        text: item[textproperty],
+                    }));
+                });
+            } else {
+                $('#' + controlid).append($('<option>', {
+                    value: '',
+                    text: '--Select--',
+                }));
+            }
+        }
+    },
+    // Client, Vendor, JobWorker to bind the *****************
+    renderRatingStars: function (ratingStr, targetDivId) {
+        var ratingValue = parseFloat(ratingStr.split("/")[0]);
 
+        var fullStars = Math.floor(ratingValue);
+        var halfStar = ratingValue % 1 >= 0.5 ? 1 : 0;
+        var emptyStars = 5 - fullStars - halfStar;
 
+        var starsHtml = '<div style="display:flex; gap:2px;">' +
+            '<span style="margin-top: -4px;font-size: 14px;color: black;">Ratings : </span>';
 
+        for (var i = 0; i < fullStars; i++) {
+            starsHtml += '<i class="fas fa-star" style="color:#f1c40f;"></i>';
+        }
+        if (halfStar) {
+            starsHtml += '<i class="fas fa-star-half-alt" style="color:#f1c40f;"></i>';
+        }
+        for (var i = 0; i < emptyStars; i++) {
+            starsHtml += '<i class="far fa-star" style="color:#f1c40f;"></i>';
+        }
+        starsHtml += '</div>';
 
+        $('#' + targetDivId).html(starsHtml);
+    },
+} 

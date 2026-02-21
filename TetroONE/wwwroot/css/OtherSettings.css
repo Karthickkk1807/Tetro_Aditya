@@ -1,4 +1,4 @@
-﻿#ProductionStagesTable, #UnitTable, #ProductCategoryTable, #QualityParameterTable, #CriteriaTable, #ModulePrefixTable, #DocumentTable {
+﻿#ProductionStagesTable, #UnitTable, #ProductCategoryTable, #QualityParameterTable, #CriteriaTable, #ModulePrefixTable, #DocumentTable, #ColorTable, #MachineTable, #ProductCategoryTable, #ProductSubCategoryTable, #AutoGeneratePrefixTable, #ExpenseType {
     width: 100% !important;
 }
 
@@ -209,3 +209,35 @@ input[switch="warning"]:checked + label {
 #AttendanceMachineMappingTable_wrapper > div.dataTables_scroll > div.dataTables_scrollBody {
     max-height: 159px !important;
 }
+
+/*@media screen and (max-width : 450px) {
+    .masterpage-box .card-title {
+        font-size: 15px !important;
+        padding-right: 10px;
+    }
+}*/
+
+@media (max-width: 1200px) {
+    .masterpage-box .card-title {
+        font-size: 15px !important;
+        padding-right: 10px;
+    }
+    .searchbar {
+        width: 100%;
+        max-width: 110px;
+    }
+
+}
+
+
+    @media (max-width: 576px) {
+        .masterpage-box .card-title {
+            font-size: 15px !important;
+            padding-right: 10px;
+        }
+
+        .searchbar {
+            width: 100%;
+            max-width: 100px;
+        }
+    }

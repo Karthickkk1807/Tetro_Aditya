@@ -39,7 +39,7 @@ namespace TetroONE.Models
         //    return new DeviceRgb(r, g, b);
         //}	
 
-        public byte[] PurchaseOrderPrintNew(int numberOfCopies)
+        public byte[] PurchaseOrderPrint(int numberOfCopies, PurchaseOrderPrint data)
         {
             List<byte[]> pdfCopies = new List<byte[]>();
 
@@ -127,13 +127,13 @@ namespace TetroONE.Models
 
                             Table CompanyName = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
 
-                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Adhithiya Textiles Process").SetFont(kabrioBoldFont).SetFontColor(new DeviceRgb(255, 0, 0)).SetFontSize(20).SetFixedLeading(30).SetTextAlignment(TextAlignment.LEFT)));
-                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("SF.No.456/1,453/2, AVARAPALAYAM,").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
-                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("KARAI PUDUR VILLAGE, PALLADAM TK, VEERAPANDI, TIRUPUR-641605.").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
-                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Phone : 9489880088, 9943308018,9443959088").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
-                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("PF Code No. 1: CB/CBE/0033761/000").SetFont(kabrioFont)).Add(new Text("            ")).Add(new Text("ESI Code No : 56/62609-19").SetFont(kabrioFont)).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
-                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Email : adhithiyatextiles@gmail.com").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
-                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("GSTin : 33AAAFF3819NIZE").SetFont(kabrioBoldFont)).Add(new Text("            ")).Add(new Text("MSME Registration No : Udyam-TN-28-0022932").SetFont(kabrioBoldFont)).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.CompanyName).SetFont(kabrioBoldFont).SetFontColor(new DeviceRgb(255, 0, 0)).SetFontSize(20).SetFixedLeading(30).SetTextAlignment(TextAlignment.LEFT)));
+                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Address1).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Address2).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Phone : " + data.Phone).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("PF Code No. 1: " + data.PFCodeNo).SetFont(kabrioFont)).Add(new Text("            ")).Add(new Text("ESI Code No : " + data.ESICodeNo).SetFont(kabrioFont)).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Email : " + data.Email).SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            CompanyName.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("GSTin : " + data.GSTin).SetFont(kabrioBoldFont)).Add(new Text("            ")).Add(new Text("MSME Registration No : " + data.MSMERegistrationNo).SetFont(kabrioBoldFont)).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(CompanyLogo));
                             HeaderMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(CompanyName));
@@ -153,10 +153,10 @@ namespace TetroONE.Models
                             DetailsTable1.SetBorderTop(Border.NO_BORDER);
 
                             DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("To : ").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.LEFT)));
-                            DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("M/s. SK PROCESS").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
-                            DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("D.NO.7/142/8A, SAMBAVAYAL THOTTAM,").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
-                            DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("VETTUVAPALAYAM, MANGALAM-641663, TIRUPUR").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
-                            DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("GST 33AFQFS4949K1Z8").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ToName).SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ToAddress1).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ToAddress2).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
+                            DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("GST" + data.GST).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
 
                             Table DetailsTable2 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             DetailsTable2.SetBorderBottom(Border.NO_BORDER);
@@ -165,179 +165,68 @@ namespace TetroONE.Models
                             DetailsTable2.SetBorderTop(Border.NO_BORDER);
 
                             DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Purchase Order").SetFont(kabrioBoldFont).SetFontSize(14).SetFixedLeading(19).SetTextAlignment(TextAlignment.CENTER)));
-                            DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("PO No                     : PO/NO/2025-01").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
-                            DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("PO Date                  : 15-11-2025").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
-                            DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Exp Delivery Date : 21-11-2025").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
+                            DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("PO No                     : " + data.PONo).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
+                            DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("PO Date                  : " + data.PODate).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
+                            DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Exp Delivery Date : " + data.ExpDeliveryDate).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             DetailsMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DetailsTable1));
                             DetailsMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DetailsTable2));
 
                             document.Add(DetailsMainTable);
 
-                            Table MainTableBinding = new Table(UnitValue.CreatePercentArray(new float[] { 5, 30, 15, 10, 15, 10, 10, 15 })).UseAllAvailableWidth();
-                            MainTableBinding.SetBorderRight(new SolidBorder(1));
-                            MainTableBinding.SetBorderLeft(new SolidBorder(1));
-                            MainTableBinding.SetBorderTop(new SolidBorder(1));
-                            MainTableBinding.SetBorder(Border.NO_BORDER);
+                            float[] columnWidths = null;
 
-                            Table MainTableBinding1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("SNo").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("3").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("4").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("5").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("7").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("8").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("9").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("10").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("11").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("12").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            
-                            Table MainTableBinding2 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            MainTableBinding2.SetBorderBottom(Border.NO_BORDER);
-                            MainTableBinding2.SetBorderLeft(new SolidBorder(1));
-                            MainTableBinding2.SetBorderRight(Border.NO_BORDER);
-                            MainTableBinding2.SetBorderTop(Border.NO_BORDER);
-                            MainTableBinding2.SetBorder(Border.NO_BORDER);
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Product").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Hydrogen Peroxide").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Remazol Brilliant Blue").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Sulphur Dye").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Reactive Dye").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Procion MX Yellow").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Caustic Soda (NaOH)").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Soda Ash Light").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Wetting Agent").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Leveling Agent").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Sequestering Agent").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Glacial Acetic Acid").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
+                            if (data.ProductItemData.Columns.Count == 8)
+                            {
+                                //for This Width will 8 Column
+                                columnWidths = new float[] { 5, 30, 15, 10, 15, 10, 10, 15 };
+                            }
+                            else if (data.ProductItemData.Columns.Count == 7)
+                            {
+                                //for This Width will 7 Column
+                                columnWidths = new float[] { 5, 40, 15, 10, 15, 10, 15 };
+                            }
+                             
+                            Table ProductItemTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
 
-                            Table MainTableBinding3 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            MainTableBinding3.SetBorderBottom(Border.NO_BORDER);
-                            MainTableBinding3.SetBorderLeft(new SolidBorder(1));
-                            MainTableBinding3.SetBorderRight(Border.NO_BORDER);
-                            MainTableBinding3.SetBorderTop(Border.NO_BORDER);
-                            MainTableBinding3.SetBorder(Border.NO_BORDER);
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Qty").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("69.000 - LTR").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("4.00 - KG").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("56.00 - KG").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14.00 - KG").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("16.67 - KG").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("15.00 - KG").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("40.00 - KG").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("25.00 - LTR").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("15.00 - LTR").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("30.00 - KG").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding3.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("20.00 - LTR").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
+                            foreach (DataColumn col in data.ProductItemData.Columns)
+                            {
+                                Paragraph p = new Paragraph(col.ColumnName).SetFont(kabrioBoldFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER);
+                                Cell cell = new Cell().Add(p).SetBorderTop(new SolidBorder(1)).SetBorderBottom(new SolidBorder(1)).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetHeight(18);
 
-                            Table MainTableBinding4 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            MainTableBinding4.SetBorderBottom(Border.NO_BORDER);
-                            MainTableBinding4.SetBorderLeft(new SolidBorder(1));
-                            MainTableBinding4.SetBorderRight(Border.NO_BORDER);
-                            MainTableBinding4.SetBorderTop(Border.NO_BORDER);
-                            MainTableBinding4.SetBorder(Border.NO_BORDER);
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Rate").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("370.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("334.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("45.33").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("50.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("166.67").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("150.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("180.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("550.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("750.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("220.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding4.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("480.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            
-                            Table MainTableBinding5 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            MainTableBinding5.SetBorderBottom(Border.NO_BORDER);
-                            MainTableBinding5.SetBorderLeft(new SolidBorder(1));
-                            MainTableBinding5.SetBorderRight(Border.NO_BORDER);
-                            MainTableBinding5.SetBorderTop(Border.NO_BORDER);
-                            MainTableBinding5.SetBorder(Border.NO_BORDER);
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("SubTotal").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("25530.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1336.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2538.48").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("700.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2778.39").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2250.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("7200.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("13750.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("11250.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("6600.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding5.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("9600.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
+                                ProductItemTable.AddHeaderCell(cell);
+                            }
+                            foreach (DataRow row in data.ProductItemData.Rows)
+                            {
+                                for (int i = 0; i < data.ProductItemData.Columns.Count; i++)
+                                {
+                                    string cellValue = row[i]?.ToString() ?? "";
 
-                            Table MainTableBinding6 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            MainTableBinding6.SetBorderBottom(Border.NO_BORDER);
-                            MainTableBinding6.SetBorderLeft(new SolidBorder(1));
-                            MainTableBinding6.SetBorderRight(Border.NO_BORDER);
-                            MainTableBinding6.SetBorderTop(Border.NO_BORDER);
-                            MainTableBinding6.SetBorder(Border.NO_BORDER);
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("IGST").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("255.30").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("20.04").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("50.77").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("7.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("27.78").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("33.75").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("72.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("206.25").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("225.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("66.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding6.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("96.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
+                                    TextAlignment align = (i == 1) ? TextAlignment.LEFT : TextAlignment.CENTER;
+                                    Paragraph p = new Paragraph(cellValue).SetFont(kabrioFont).SetFontSize(9).SetTextAlignment(align);
+                                    Cell cell = new Cell().Add(p).SetBorderTop(Border.NO_BORDER).SetBorderBottom(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetHeight(18).SetPaddingLeft(i == 1 ? 6 : 0);
 
-                            Table MainTableBinding7 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            MainTableBinding7.SetBorderBottom(Border.NO_BORDER);
-                            MainTableBinding7.SetBorderLeft(new SolidBorder(1));
-                            MainTableBinding7.SetBorderRight(Border.NO_BORDER);
-                            MainTableBinding7.SetBorderTop(Border.NO_BORDER);
-                            MainTableBinding7.SetBorder(Border.NO_BORDER);
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("CESS").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("127.65").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("6.68").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("50.77").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("7.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("13.89").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("45.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("36.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("68.75").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("112.50").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("66.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding7.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("48.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
+                                    ProductItemTable.AddCell(cell);
+                                }
+                            }
+                            int minRowCount = 15;
+                            int currentRows = data.ProductItemData.Rows.Count;
 
-                            Table MainTableBinding8 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
-                            MainTableBinding8.SetBorderBottom(Border.NO_BORDER);
-                            MainTableBinding8.SetBorderLeft(new SolidBorder(1));
-                            MainTableBinding8.SetBorderRight(Border.NO_BORDER);
-                            MainTableBinding8.SetBorderTop(Border.NO_BORDER);
-                            MainTableBinding8.SetBorder(Border.NO_BORDER);
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph("Total").SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("25912.95").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("1362.72").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2640.02").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("714.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2820.06").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("2328.75").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("7308.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14025.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("14025.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("6732.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            MainTableBinding8.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("9744.00").SetFont(kabrioFont).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER)));
-                            
-                            MainTableBinding.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(MainTableBinding1));
-                            MainTableBinding.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(MainTableBinding2));
-                            MainTableBinding.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(MainTableBinding3));
-                            MainTableBinding.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(MainTableBinding4));
-                            MainTableBinding.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(MainTableBinding5));
-                            MainTableBinding.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(MainTableBinding6));
-                            MainTableBinding.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(MainTableBinding7));
-                            MainTableBinding.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(MainTableBinding8));
+                            if (currentRows < minRowCount)
+                            {
+                                int emptyRows = minRowCount - currentRows;
 
-                            document.Add(MainTableBinding);
+                                for (int r = 0; r < emptyRows; r++)
+                                {
+                                    for (int c = 0; c < data.ProductItemData.Columns.Count; c++)
+                                    {
+                                        Cell emptyCell = new Cell().Add(new Paragraph("")).SetBorderTop(Border.NO_BORDER).SetBorderBottom(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetHeight(18);
+                                        ProductItemTable.AddCell(emptyCell);
+                                    }
+                                }
+                            }
 
+                            document.Add(ProductItemTable);
 
                             Table BankAmountTable = new Table(UnitValue.CreatePercentArray(new float[] { 70, 30 })).UseAllAvailableWidth();
                             BankAmountTable.SetBorderBottom(new SolidBorder(1));
@@ -347,49 +236,60 @@ namespace TetroONE.Models
 
                             Table BankAmountSubTable1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             BankAmountSubTable1.SetBorder(Border.NO_BORDER);
-                             
+
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Terms & Conditions  :-").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT).SetUnderline()));
-                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("All items ordered are subject to inspection upon receipt, and the supplier must ensure that goods conform to the specifications mentioned in this purchase order. Delivery must be made within the agreed timeframe, and any delays or discrepancies should be promptly communicated. Payment will be made as per the agreed terms, and the buyer reserves the right to reject or return goods that are damaged, defective, or do not meet the specified quality standards.").SetFont(kabrioFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.TermsConditions).SetFont(kabrioFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             Table BankAmountSubTable2 = new Table(UnitValue.CreatePercentArray(new float[] { 70, 12, 15, 3 })).UseAllAvailableWidth();
                             BankAmountSubTable2.SetBorder(Border.NO_BORDER);
-                             
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("IGST @ 2.50%").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("2,190.31").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("CESS @ 2.50%").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("2,190.31").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            if (data.IGSTPer != null)
+                            {
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("IGST @ " + data.IGSTPer + "%").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.IGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            }
+                            if (data.CGSTPer != null)
+                            {
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("CGST @ " + data.CGSTPer + " % ").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.CGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            }
+                            if (data.SGSTPer != null)
+                            {
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("SGST @ " + data.SGSTPer + " % ").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.SGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            }
 
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Round Off").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("0.12").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.RoundOff).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("NET AMOUNT").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderTop(new SolidBorder(1)).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph().Add(new Text("91,993.00").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderTop(new SolidBorder(1)).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph().Add(new Text(data.NetAmount).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             BankAmountTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(BankAmountSubTable1));
                             BankAmountTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(BankAmountSubTable2));
 
                             document.Add(BankAmountTable);
-
-
+                             
                             Table AmountTextTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             AmountTextTable.SetBorderBottom(new SolidBorder(1));
                             AmountTextTable.SetBorderLeft(new SolidBorder(1));
                             AmountTextTable.SetBorderRight(new SolidBorder(1));
                             AmountTextTable.SetBorderTop(Border.NO_BORDER);
 
-                            AmountTextTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("Rupees Two Thousand Nine Hundred Seventy Four Only").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            AmountTextTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.RupeesInWords).SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             document.Add(AmountTextTable);
-                             
+
                             Table FooterTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             FooterTable.SetBorderBottom(new SolidBorder(1));
                             FooterTable.SetBorderLeft(new SolidBorder(1));
@@ -397,8 +297,8 @@ namespace TetroONE.Models
                             FooterTable.SetBorderTop(Border.NO_BORDER);
 
                             Table FooterTable1 = new Table(UnitValue.CreatePercentArray(new float[] { 33, 33, 33 })).UseAllAvailableWidth();
-                            FooterTable1.AddCell(new Cell(1,3).SetBorder(Border.NO_BORDER).Add(new Paragraph("For").Add(new Text(" Adhithiya Textiles Process").SetFontColor(new DeviceRgb(255, 0, 0))).SetFixedLeading(10).SetFont(kabrioBoldFont).SetFontSize(12).SetTextAlignment(TextAlignment.RIGHT)));
-                             
+                            FooterTable1.AddCell(new Cell(1, 3).SetBorder(Border.NO_BORDER).Add(new Paragraph("For ").Add(new Text(data.CompanyName).SetFontColor(new DeviceRgb(255, 0, 0))).SetFixedLeading(10).SetFont(kabrioBoldFont).SetFontSize(12).SetTextAlignment(TextAlignment.RIGHT)));
+
                             Table FooterTable2 = new Table(UnitValue.CreatePercentArray(new float[] { 70, 30 })).UseAllAvailableWidth();
                             FooterTable2.SetMarginTop(40);
 
@@ -406,7 +306,7 @@ namespace TetroONE.Models
                             FooterTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Authorised Signatory").SetFont(kabrioBoldFont).SetFontSize(9).SetFixedLeading(10).SetTextAlignment(TextAlignment.CENTER)));
 
                             FooterTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(FooterTable1));
-                            FooterTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(FooterTable2)); 
+                            FooterTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(FooterTable2));
 
                             document.Add(FooterTable);
 

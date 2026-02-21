@@ -2020,14 +2020,14 @@ legend {
 /* counter box */
 
 @media (max-width:992px) {
-    body > div.wrapper > div.main-panel > div > div > div.row.quick-db.m-b-5 > div > div > div:nth-child(3) {
+/*    body > div.wrapper > div.main-panel > div > div > div.row.quick-db.m-b-5 > div > div > div:nth-child(3) {
         margin-top: 25px !important;
     }
 
     body > div.wrapper > div.main-panel > div > div > div.row.quick-db.m-b-5 > div > div > div:nth-child(4) {
         margin-top: 25px !important;
     }
-
+*/
     .card-stats .icon-big {
         width: 85%;
         height: 85%;

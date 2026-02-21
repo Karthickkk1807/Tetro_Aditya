@@ -205,4 +205,35 @@ namespace TetroONE.Models
         public DataTable TVP_ContactBranchMappingDetails { get; set; }
     }
 
+
+    public class GetContractor
+    {
+        public int LoginUserId { get; set; }
+        public int? ContractorId { get; set; }
+    }
+
+    public class InsertUpdateContractorDetails
+    {
+        public int LoginUserId { get; set; }
+        public int? ContractorId { get; set; } 
+        public string ContractorName { get; set; } 
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public int State { get; set; }
+        public string? Country { get; set; }
+        public string? ZipCode { get; set; }
+        public string ContactNumber { get; set; }
+        public string? Email { get; set; }
+        public string? GSTNumber { get; set; }
+        public string? Remark { get; set; }
+        public string? IFSCCode { get; set; }
+        public string? BankName { get; set; }
+        public string? BranchName { get; set; }
+        public string? AccountType { get; set; }
+        public string? AccountName { get; set; }
+        public string? AccountNumber { get; set; }
+        public bool? IsActive { get; set; }
+        public List<ContactPersonDetails> contactPersonDetails { get; set; }
+        public DataTable TVP_ContactPersonDetails { get; set; }
+    }
 }

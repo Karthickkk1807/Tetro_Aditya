@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
-using System.Data;
-using System.Security.Claims;
-using TetroONE.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using DocumentFormat.OpenXml.Presentation;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Crypto.Operators;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Reflection.PortableExecutable;
+using System.Security.Claims;
+using TetroONE.Models;
 
 namespace TetroONE.Controllers
 {
@@ -381,6 +384,299 @@ namespace TetroONE.Controllers
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteMasterInfoDetails]", Delete);
             return Json(response);
-        } 
+        }
+         
+        /*=================================================================Color=====================================================================*/
+
+        [HttpGet]
+        [Route("GetColor")]
+        public IActionResult GetColor(int ColorId)
+        {
+            GetColor Get = new GetColor()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ColorId = ColorId == 0 ? null : ColorId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetColorDetails]", Get);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertUpdateColorInfo")]
+        public IActionResult InsertUpdateColorInfo([FromBody] InsertUpdateColorInfo request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string[] Exculuted = (request.ColorId != null)
+                ? new string[] { "" }
+                : new string[] { "ColorId" };
+
+            string storedProcedure = (request.ColorId != null)
+                ? "[dbo].[USP_UpdateColorDetails]"
+                : "[dbo].[USP_InsertColorDetails]";
+
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteColorDetails")]
+        public IActionResult DeleteColorDetails(int ColorId)
+        {
+            GetColor Get = new GetColor()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ColorId = ColorId == 0 ? null : ColorId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteColorDetails]", Get);
+            return Json(response);
+        }
+
+        /*=================================================================Machine=====================================================================*/
+
+        [HttpGet]
+        [Route("GetMachine")]
+        public IActionResult GetMachine(int MachineId)
+        {
+            GetMachine Get = new GetMachine()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                MachineId = MachineId == 0 ? null : MachineId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetMachineDetails]", Get);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertUpdateMachineInfo")]
+        public IActionResult InsertUpdateMachineInfo([FromBody] InsertUpdateMachineInfo request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string[] Exculuted = (request.MachineId != null)
+                ? new string[] { "" }
+                : new string[] { "MachineId" };
+
+            string storedProcedure = (request.MachineId != null)
+                ? "[dbo].[USP_UpdateMachineDetails]"
+                : "[dbo].[USP_InsertMachineDetails]";
+
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteMachineDetails")]
+        public IActionResult DeleteMachineDetails(int MachineId)
+        {
+            GetMachine Get = new GetMachine()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                MachineId = MachineId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteMachineDetails]", Get);
+            return Json(response);
+        }
+
+        /*=================================================================ProductCategory=====================================================================*/
+
+        [HttpGet]
+        [Route("GetProductCategory")]
+        public IActionResult GetProductCategory(int ProductCategoryId)
+        {
+            GetProductCategory Get = new GetProductCategory()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductCategoryId = ProductCategoryId == 0 ? null : ProductCategoryId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductCategoryDetails]", Get);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertUpdateProductCategoryInfo")]
+        public IActionResult InsertUpdateProductCategoryInfo([FromBody] InsertUpdateProductCategoryInfo request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string[] Exculuted = (request.ProductCategoryId != null)
+                ? new string[] { "" }
+                : new string[] { "ProductCategoryId" };
+
+            string storedProcedure = (request.ProductCategoryId != null)
+                ? "[dbo].[USP_UpdateProductCategoryDetails]"
+                : "[dbo].[USP_InsertProductCategoryDetails]";
+
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteProductCategoryDetails")]
+        public IActionResult DeleteProductCategoryDetails(int ProductCategoryId)
+        {
+            GetProductCategory Get = new GetProductCategory()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductCategoryId = ProductCategoryId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteProductCategoryDetails]", Get);
+            return Json(response);
+        }
+
+        /*=================================================================ProductSubCategory=====================================================================*/
+
+        [HttpGet]
+        [Route("GetProductSubCategory")]
+        public IActionResult GetProductSubCategory(int ProductSubCategoryId)
+        {
+            GetProductSubCategory Get = new GetProductSubCategory()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductSubCategoryId = ProductSubCategoryId == 0 ? null : ProductSubCategoryId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductSubCategoryDetails]", Get);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertUpdateProductSubCategoryInfo")]
+        public IActionResult InsertUpdateProductSubCategoryInfo([FromBody] InsertUpdateProductSubCategoryInfo request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string[] Exculuted = (request.ProductSubCategoryId != null)
+                ? new string[] { "" }
+                : new string[] { "ProductSubCategoryId" };
+
+            string storedProcedure = (request.ProductSubCategoryId != null)
+                ? "[dbo].[USP_UpdateProductSubCategoryDetails]"
+                : "[dbo].[USP_InsertProductSubCategoryDetails]";
+
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteProductSubCategoryDetails")]
+        public IActionResult DeleteProductSubCategoryDetails(int ProductSubCategoryId)
+        {
+            GetProductSubCategory Get = new GetProductSubCategory()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductSubCategoryId = ProductSubCategoryId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteProductSubCategoryDetails]", Get);
+            return Json(response);
+        }
+
+        /*=================================================================AutoGeneratePrefix=====================================================================*/
+
+        [HttpGet]
+        [Route("GetAutoGeneratePrefixDetails")]
+        public IActionResult GetAutoGeneratePrefixDetails(int PlantId, int AutoGeneratePrefixId)
+        {
+            GetAutoGeneratePrefix Get = new GetAutoGeneratePrefix()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                AutoGeneratePrefixId = AutoGeneratePrefixId == 0 ? null : AutoGeneratePrefixId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAutoGeneratePrefixDetails]", Get);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertUpdateAutoGeneratePrefixInfo")]
+        public IActionResult InsertUpdateAutoGeneratePrefixInfo([FromBody] InsertUpdateAutoGeneratePrefixInfo request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string[] Exculuted = (request.AutoGeneratePrefixId != null)
+                ? new string[] { "" }
+                : new string[] { "AutoGeneratePrefixId" };
+
+            string storedProcedure = (request.AutoGeneratePrefixId != null)
+                ? "[dbo].[USP_UpdateAutoGeneratePrefixDetails]"
+                : "[dbo].[USP_InsertAutoGeneratePrefixDetails]";
+
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteAutoGeneratePrefixDetails")]
+        public IActionResult DeleteAutoGeneratePrefixDetails(int AutoGeneratePrefixId)
+        {
+            DeleteAutoGeneratePrefixDetails Get = new DeleteAutoGeneratePrefixDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                AutoGeneratePrefixId = AutoGeneratePrefixId
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteAutoGeneratePrefixDetails]", Get);
+            return Json(response);
+        }
+
+
+        /*=================================================================DefaultProduct=====================================================================*/
+
+        //[HttpGet]
+        //[Route("GetDefaultProduct")]
+        //public IActionResult GetDefaultProduct(int DefaultProductId)
+        //{
+        //    GetDefaultProduct Get = new GetDefaultProduct()
+        //    {
+        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+        //        DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId
+        //    };
+
+        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetColorDetails]", Get);
+        //    return Json(response);
+        //}
+
+        [HttpPost]
+        [Route("InsertDefaultProductDetails")]
+        public IActionResult InsertDefaultProductDetails([FromBody] InsertDefaultProductDetails request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string[] Exculuted = (request.DefaultProductId != null)
+                ? new string[] { "" }
+                : new string[] { "DefaultProductId" };
+
+            string storedProcedure = (request.DefaultProductId != null)
+                ? "[dbo].[USP_UpdateDefaultProductDetails]"
+                : "[dbo].[USP_InsertDefaultProductDetails]";
+
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteDefaultProduct")]
+        public IActionResult DeleteDefaultProduct(int DefaultProductId, int ProcessId)
+        {
+            DeleteDefaultProduct Get = new DeleteDefaultProduct()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProcessId = ProcessId,
+                DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteDefaultProductDetails]", Get);
+            return Json(response);
+        }
+
+        /*=================================================================End DefaultProduct=====================================================================*/
+
     }
 }

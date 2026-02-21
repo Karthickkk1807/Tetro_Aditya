@@ -21,6 +21,7 @@ $(document).ready(function () {
     Common.bindDropDownParent('DepartmentId', 'FormEmployee', 'Department');
     Common.bindDropDownParent('UserGroupId', 'FormEmployee', 'EmployeeUserGroup');
     Common.bindDropDownParent('UserTypeId', 'FormEmployee', 'EmployeeUserType');
+    Common.bindDropDownParent('ContractorId', 'FormEmployee', 'Contractor');
     Common.bindDropDownMulti('AttendanceMachineId', 'AttendanceMachine');
 
     Common.inputMaxDateNotAllow('DateOfBirth');
@@ -58,6 +59,17 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('change', '#EmployeeTypeId', function () {
+        var $thisVal = $(this).val();
+        if ($thisVal == 2) {
+            $('#DivContractorId').show();
+            $('#ContractorId').prop('required', true);
+        }
+        else {
+            $('#DivContractorId').hide();
+            $('#ContractorId').prop('required', false);
+        }
+    });
 
     var aadhaarAttached = false;
     $(document).on('click', '#SaveEmployee', function (e) {
@@ -142,7 +154,6 @@ $(document).ready(function () {
                 });
             });
 
-
             objvalue.EmployeeId = employeeId == 0 ? null : employeeId;
             objvalue.EmployeeCompanyId = $('#EmployeeCompanyId').val();
             objvalue.EmployeeImage = $('#imageUploadlabel-manageuser2').get(0)?.files[0]?.name;
@@ -152,6 +163,12 @@ $(document).ready(function () {
             objvalue.EmployeeStatusId = Common.parseInputValue('EmployeeStatusId') || null;
             objvalue.ShiftId = Common.parseInputValue('ShiftId');
             objvalue.DepartmentId = Common.parseInputValue('DepartmentId');
+
+            if (objvalue.EmployeeTypeId != 2) {
+                $('#ContractorId').val('').trigger('change');
+            } 
+
+            objvalue.ContractorId = Common.parseInputValue('ContractorId');
 
             objvalue.IsInsuranceApplicable = $('#IsInsuranceApplicable').is(':checked');
             objvalue.InsuranceNumber = Common.parseStringValue('InsuranceNumber');
@@ -174,7 +191,7 @@ $(document).ready(function () {
             objvalue.IsESIApplicable = $('#IsESIApplicable').is(':checked');
             objvalue.UANNumber = $('#UANNumber').val();
             objvalue.PFNumber = $('#PFNumber').val();
-            objvalue.FranchiseId = parseInt(localStorage.getItem('FranchiseId'));
+            objvalue.PlantId = parseInt(localStorage.getItem('FranchiseId'));
 
             objvalue.UserTypeId = Common.parseInputValue('UserTypeId');
             objvalue.UserGroupId = Common.parseInputValue('UserGroupId');
@@ -183,7 +200,6 @@ $(document).ready(function () {
             if (objvalue.EmployeeImage == undefined) {
                 objvalue.EmployeeImage = null;
             }
-
 
             let fileDetails = [];
             let existFile = [];
@@ -297,11 +313,14 @@ $(document).ready(function () {
         LabelTextForRequired.forEach(item => {
             $(`${item.ClassName}`).html(`${item.Text}`);
         });
+         
+        $('#DivContractorId').hide();
 
         employeeId = $(this).data('id');
         nonEditable = false;
         var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
         Common.ajaxCall("GET", "/HumanResource/Get", { EmployeeTypeId: null, EmployeeId: employeeId, FranchiseId: FranchiseMappingId }, editSuccess, null);
+
         $('#employeeCanvas .collapse').removeClass('show');
         $('#collapse1').addClass('show');
         $('.attachcolumn ul').empty("")
@@ -355,6 +374,9 @@ $(document).ready(function () {
             width: '100%',
             placeholder: '--Select Reporting Person--'
         }).trigger('change');
+
+        $('#DivContractorId').hide();
+        $('#ContractorId').prop('required', false);
 
         const LabelTextForRequired = [{ ClassName: '.InsuNoLable', Text: 'Insurance Number' }, { ClassName: '.ValidFromLable', Text: 'Valid From' }, { ClassName: '.ExpiredOnLable', Text: 'Expired On' }];
         LabelTextForRequired.forEach(item => {
@@ -520,9 +542,9 @@ $(document).ready(function () {
     $('#EmployeeTypeId').on('change', function () {
         var employeeType = $(this).val();
         //$('.employee-avatar-upload .avatar-edit input + label').css('top', '-5px');
-        var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
+        var PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
         if (employeeType != "" && nonEditable) {
-            Common.ajaxCall("GET", "/HumanResource/GetAutoGenerateId", { FranchiseId: FranchiseMappingId, EmployeeTypeId: parseInt(employeeType) }, function (response) {
+            Common.ajaxCall("GET", "/HumanResource/GetAutoGenerateId", { PlantId: PlantMappingId, EmployeeTypeId: parseInt(employeeType) }, function (response) {
                 if (response.status) {
                     var data = JSON.parse(response.data);
                     $('#EmployeeCompanyId').val(data[0][0].EmployeeCompanyId);
@@ -548,14 +570,14 @@ $(document).ready(function () {
         if ($('#EmployeeTypeId option:selected').text() == "Permanent") {
             $('#IsLoginUser').prop({ checked: true, disabled: true });
             $('#IsInsuranceApplicableDiv,#InsuranceNumberDiv,#InsuranceDateDiv,#ExpiryDateDiv,#ESIDetailsDiv,#PFDetailsDiv').show();
-            $('#AccPayment').prop('disabled', false).val('');
+            $('#AccAmount').prop('disabled', false).val('');
             $('#IsLoginUserdiv').hide();
 
         } else {
 
             $('#IsLoginUser').prop({ checked: false, disabled: true });
             $('#IsInsuranceApplicableDiv,#InsuranceNumberDiv,#InsuranceDateDiv,#ExpiryDateDiv,#ESIDetailsDiv,#PFDetailsDiv').hide();
-            $('#AccPayment').prop('disabled', true).val(0);
+            $('#AccAmount').prop('disabled', true).val(0);
             $('#IsLoginUserdiv').hide();
         }
     });
@@ -598,9 +620,9 @@ $(document).ready(function () {
         let employeeType = $('#EmployeeTypeId').val();
 
         if (employeeType === '1') {
-            $('#CashPayment').prop('disabled', false);
+            $('#CashAmount').prop('disabled', false);
         } else {
-            $('#CashPayment').prop('disabled', true).val($(this).val());
+            $('#CashAmount').prop('disabled', true).val($(this).val());
         }
     });
 
@@ -611,16 +633,16 @@ $(document).ready(function () {
         //$('#ExpiryDate').val(insuranceDate);
     });
 
-    $('#CashPayment, #AccPayment').on('input', function () {
-        var cashPaymentValue = parseFloat($('#CashPayment').val()) || 0;
-        var accPaymentValue = parseFloat($('#AccPayment').val()) || 0;
+    $('#CashAmount, #AccAmount').on('input', function () {
+        var cashPaymentValue = parseFloat($('#CashAmount').val()) || 0;
+        var accPaymentValue = parseFloat($('#AccAmount').val()) || 0;
         var ctcValue = parseFloat($('#CTC').val()) || 0;
 
         var totalPayment = cashPaymentValue + accPaymentValue;
 
         if (totalPayment > ctcValue) {
-            $('#CashPayment').val(ctcValue / 2);
-            $('#AccPayment').val(ctcValue / 2);
+            $('#CashAmount').val(ctcValue / 2);
+            $('#AccAmount').val(ctcValue / 2);
         }
     });
 
@@ -711,7 +733,6 @@ function togglePassword(passwordField, icon) {
     }
 }
 
-
 function editSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
@@ -736,6 +757,7 @@ function editSuccess(response) {
                         Common.bindParentData(data[2], 'FormEmployee');
                         Common.bindParentData(data[3], 'FormEmployee');
                         Common.bindParentData(data[4], 'FormEmployee');
+
                         nonEditable = true;
 
                         Common.bindDropDownSuccess(response.data, "PayGroupId");

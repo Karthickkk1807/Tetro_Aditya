@@ -9,12 +9,13 @@ namespace TetroONE.Models
     public class GetPayment
     {
         public int LoginUserId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
         public int? PaymentId { get; set; }
+        public int? PaymentTypeId { get; set; }
     }
-
+     
     public class PaymentGetContactNameDetails
     {
         public int LoginUserId { get; set; }
@@ -26,7 +27,7 @@ namespace TetroONE.Models
     public class GetPaymentBillNo
     {
         public int LoginUserId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public int? PaymentTypeId { get; set; }
         public int? ContactId { get; set; }
     }
@@ -42,7 +43,7 @@ namespace TetroONE.Models
     public class GetAutoGenerateNo
     {
         public int LoginUserId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public string? ModuleName { get; set; }
     }
 
@@ -51,8 +52,8 @@ namespace TetroONE.Models
         public int LoginUserId { get; set; }
         public int? PaymentId { get; set; }
         public DateTime PaymentDate { get; set; }
-        public int FranchiseId { get; set; }
-        public int BillingFranchiseId { get; set; }
+        public int PlantId { get; set; }
+        public int BillingPlantId { get; set; }
         public string PaymentTypeId { get; set; }
         public string PaymentCategory { get; set; }
         public int ContactId { get; set; }

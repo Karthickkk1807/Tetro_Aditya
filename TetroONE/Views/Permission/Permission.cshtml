@@ -100,9 +100,7 @@
 		</div>
 	</div>
 </div>
-
-
-
+ 
 <div class="row justify-content-end mr-2 mt-2">
 	<div class="searchbar">
 		<input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
@@ -132,9 +130,7 @@
 <div class="table-responsive">
 	<table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PermissionTable"></table>
 </div>
-
-
-
+ 
 <div id="PermissionCanvas" class="offcanvas-container">
 	<div class="offcanvas-header d-flex align-items-center justify-content-between">
 		<h2 id="PermissionHeader">Add Permission</h2>
@@ -209,7 +205,7 @@
 
 					<div class="col-md-12 col-lg-12 col-sm-12 col-12" id="PermissionComments">
 						<div class="form-group">
-							<label>Comments</label>
+							<label>Comments <span id="Asterisk">*</span></label>
 							<textarea class="form-control" id="Comments" autocomplete="off" name="Comments" rows="1" oninput="Common.allowAllCharacters(this,250)" required placeholder="Comments"></textarea>
 						</div>
 					</div>

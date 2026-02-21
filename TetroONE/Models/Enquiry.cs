@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using TetroONE.Models;
 
 namespace TetroPos.Models
 {
@@ -6,7 +7,7 @@ namespace TetroPos.Models
     {
         public int LoginUserId { get; set; }
         public int? EnquiryId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
     }
@@ -15,7 +16,7 @@ namespace TetroPos.Models
     {
         public int LoginUserId { get; set; }
         public int? EnquiryId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
 
     }
 
@@ -37,7 +38,7 @@ namespace TetroPos.Models
         public DateTime? EnquiryLookUpDate { get; set; }
         public bool EnquiryIsForwardOption { get; set; }
         public int? ForwardEmpId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
     }
 
 
@@ -59,7 +60,7 @@ namespace TetroPos.Models
         public DateTime? EnquiryLookUpDate { get; set; }
         public bool EnquiryIsForwardOption { get; set; }
         public int? ForwardEmpId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public DataTable TVP_AttachmentDetails { get; set; }
     }
 
@@ -118,7 +119,7 @@ namespace TetroPos.Models
         public DateTime? EnquiryLookUpDate { get; set; }
         public bool EnquiryIsForwardOption { get; set; }
         public int? ForwardEmpId { get; set; }
-        public int? FranchiseId { get; set; }
+        public int? PlantId { get; set; }
         public DataTable TVP_EnquiryFollowUpDetails { get; set; }
         public DataTable TVP_AttachmentDetails { get; set; }
         public DataTable TVP_EnquiryAttachmentDetails { get; set; }
@@ -140,4 +141,38 @@ namespace TetroPos.Models
         public string? AttachmentExactFileName { get; set; }
         public int RoWNumber { get; set; }
     }
+     
+    public class GetVisitor
+    {
+        public int LoginUserId { get; set; }
+        public int? PlantId { get; set; }
+        public int? VisitorId { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+    }
+       
+    public class InsertVistorsDetails
+    {
+        public int LoginUserId { get; set; }
+        public int? VisitorId { get; set; }
+        public string? VisitorNo { get; set; }
+        public int? VisitorTypeId { get; set; }
+        public DateTime? VisitorDate { get; set; }
+        public string? VisitorPersonName { get; set; }
+        public string? ContactNumber { get; set; }
+        public string? VisitorEmail { get; set; }
+        public string? Query { get; set; }
+        public string? Comments { get; set; }
+        public int? AttendantId { get; set; }
+        public string? CheckIn { get; set; }
+        public string? CheckOut { get; set; }  
+        public int? VisitorStatusId { get; set; }  
+        public int? PlantId { get; set; }
+    }
+
+    public class GetVisitorDelete
+    {
+        public int LoginUserId { get; set; }
+        public int? VisitorId { get; set; }
+    } 
 }

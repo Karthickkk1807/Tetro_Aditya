@@ -268,12 +268,12 @@ $(document).ready(function () {
             var data = JSON.parse(response.data);
             if (data[0][0].CheckListDate == null) {
                 $('#CheckListMessage').removeClass('d-none');
-                //$('#toggleButton').attr('disabled', true);
+                $('#toggleButton').attr('disabled', true);
                 $('#toggleButton').css('background-color', 'rgb(172, 219, 172)');
                 $('#Comments,#CheckListDate').val("");
             } else {
                 $('#CheckListMessage').addClass('d-none');
-                //$('#toggleButton').attr('disabled', false);
+                $('#toggleButton').attr('disabled', false);
                 $('#toggleButton').css('background-color', 'rgb(73, 180, 73)');
                 $('#Comments,#CheckListDate').val("");
                 var data = JSON.parse(response.data);
@@ -292,6 +292,7 @@ $(document).ready(function () {
         var nextDay = today.toISOString().split('T')[0];
         $('#CheckListDate').attr('max', nextDay);
         $('#CheckListDate').val(nextDay);
+        attendanceCheckListId = 0;
 
         Common.ajaxCall("GET", "/HumanResource/GetAttendanceCheckList", { CheckListDate: today.toISOString() }, function (response) {
             if (response.status) {
@@ -350,7 +351,6 @@ $(document).ready(function () {
         }
     });
 
-
     $('#SaveCheckList').click(function () {
         if ($('#FormCheckList').valid()) {
 
@@ -374,6 +374,7 @@ $(document).ready(function () {
                 if (response.status) {
                     Common.successMsg(response.message);
                     $('#CheckListModal').hide();
+                    EmployeeDataTaleBinding();
                     var date = new Date();
                     date.setDate(date.getDate() - 1);
                     Common.ajaxCall("GET", "/HumanResource/GetAttendanceCheckList", { CheckListDate: date.toISOString() }, function (response) {
@@ -381,11 +382,11 @@ $(document).ready(function () {
                             var data = JSON.parse(response.data);
                             if (data[0][0].CheckListDate == null) {
                                 $('#CheckListMessage').removeClass('d-none');
-                                //$('#toggleButton').attr('disabled', true);
+                                $('#toggleButton').attr('disabled', true);
                                 $('#toggleButton').css('background-color', 'rgb(172, 219, 172)');
                             } else {
                                 $('#CheckListMessage').addClass('d-none');
-                                //$('#toggleButton').attr('disabled', false);
+                                $('#toggleButton').attr('disabled', false);
                                 $('#toggleButton').css('background-color', 'rgb(73, 180, 73)');
                             }
                         }
@@ -547,6 +548,45 @@ $(document).ready(function () {
             }, null);
         }
     });
+
+
+
+    var windowWidth = $(window).width();
+    if (windowWidth < 576) {
+        $('.month-text').text("");
+        //$('.month-text').text("");
+    }
+
+    $(document).on('click', '.dropdown-item', function () {
+        var selectedText = $(this).text();
+        if (windowWidth > 576) {
+            $('.month-text').text(selectedText);
+        } else {
+            $('.month-text').text("");
+        }
+        $('.dropdown-menu .dropdown-item').removeClass('active');
+        $(this).addClass('active');
+        $('.dropdown-menu').removeClass('show');
+
+        if (selectedText == "Custom") {
+            $('#monthPickerCol').hide();
+            $('#fromtodateCol').show();
+
+            if (windowWidth <= 600) {
+                $("#filter-Column").removeClass("Date-SearchColumn");
+                $("#Human-Filter-Column").removeClass("date-column");
+            } else {
+                $("#Human-Filter-Column").addClass("Date-SearchColumn");
+                $("#Human-Filter-Column").addClass("date-column");
+            }
+        } else {
+            $('#monthPickerCol').show();
+            $('#fromtodateCol').hide();
+            $("#filter-Column").addClass("Date-SearchColumn");
+            $("#Human-Filter-Column").addClass("date-column");
+        }
+    });
+
 });
 
 function getManualSuccess(response) {
@@ -554,7 +594,7 @@ function getManualSuccess(response) {
         $('#loader-pms').show();
         var data = JSON.parse(response.data);
         var columns = Common.bindColumn(data[0], ['EmployeeId', 'EmployeeImage', 'Status_Colour', 'Date', 'TetroONEnocount']);
-        bindTableManual('AttendanceManualTable', data[0], columns, '260px');
+        bindTableManual('AttendanceManualTable', data[0], columns, '300px');
         $('.mydatetimepickerpunchIn,.mydatetimepickerpunchOut').mdtimepicker();
         $('#add_manualattend').modal('show');
         $('#loader-pms').hide();
@@ -613,7 +653,8 @@ function getAttendanceMyTeam() {
 
     Common.ajaxCall("GET", "/HumanResource/GetAttendanceMyTeam", { EmployeeId: null, FromDate: fromDate, ToDate: toDate, PunchDate: null }, attendanceTeamSuccess, null);
 }
- 
+
+
 function EmployeeDataTaleBinding() {
 
     var text = $('#EmployeeDatePicker #dropdownMenuButton2').text();
@@ -805,7 +846,8 @@ function AttendanceLog(key, employeeId) {
         }
     }, null);
 }
- 
+
+
 function attendanceAdminSuccess(response) {
     if (response.status) {
         if (response.status) {
@@ -849,7 +891,7 @@ function attendanceAdminSuccess(response) {
             if (endMonth == cMonth) {
                 scrollType = true;
             }
-            bindTableAttendanceImage('AdminTable', data[1], columns, scrollType, 'EmployeeId', '389px', false);
+            bindTableAttendanceImage('AdminTable', data[1], columns, scrollType, 'EmployeeId', '384px', false);
         }
 
     }
@@ -861,28 +903,18 @@ function attendanceTeamSuccess(response) {
         var data = JSON.parse(response.data);
         var AttendanceCounterBox = Object.keys(data[0][0]);
 
-        //$("#TeamCounterTextBox1").text(AttendanceCounterBox[0]);
-        //$("#TeamCounterTextBox2").text(AttendanceCounterBox[1]);
-        //$("#TeamCounterTextBox3").text(AttendanceCounterBox[2]);
-        //$("#TeamCounterTextBox4").text(AttendanceCounterBox[3]);
+        $("#TeamCounterTextBox1").text(AttendanceCounterBox[0]);
+        $("#TeamCounterTextBox2").text(AttendanceCounterBox[1]);
+        $("#TeamCounterTextBox3").text(AttendanceCounterBox[2]);
+        $("#TeamCounterTextBox4").text(AttendanceCounterBox[3]);
 
-        //$('#TeamCounterValBox1').text(data[0][0][AttendanceCounterBox[0]]);
-        //$('#TeamCounterValBox2').text(data[0][0][AttendanceCounterBox[1]]);
-        //$('#TeamCounterValBox3').text(data[0][0][AttendanceCounterBox[2]]);
-        //$('#TeamCounterValBox4').text(data[0][0][AttendanceCounterBox[3]]);
-
-        $("#TeamCounterTextBox1").text('Total');
-        $("#TeamCounterTextBox2").text('Present');
-        $("#TeamCounterTextBox3").text('Absent');
-        $("#TeamCounterTextBox4").text('OverTime');
-
-        $('#TeamCounterValBox1').text('60');
-        $('#TeamCounterValBox2').text('52');
-        $('#TeamCounterValBox3').text('8');
-        $('#TeamCounterValBox4').text('0');
+        $('#TeamCounterValBox1').text(data[0][0][AttendanceCounterBox[0]]);
+        $('#TeamCounterValBox2').text(data[0][0][AttendanceCounterBox[1]]);
+        $('#TeamCounterValBox3').text(data[0][0][AttendanceCounterBox[2]]);
+        $('#TeamCounterValBox4').text(data[0][0][AttendanceCounterBox[3]]);
 
         $('#loader-pms').hide();
-        var columns = Common.bindColumn(data[1], ['EmployeeId', 'Status_Colour', 'EmployeeTypeId','EODStatus_Colour']);
+        var columns = Common.bindColumn(data[1], ['EmployeeId', 'Status_Colour', 'EmployeeTypeId', 'EODStatus_Colour']);
         bindTable('TeamTable', data[1], columns, -1, '380px', true);
 
     }
@@ -905,8 +937,8 @@ function attendanceEmployeeSuccess(response) {
         $('#EmployeeCounterValBox4').text(data[0][0][AttendanceCounterBox[3]]);
 
         $('#loader-pms').hide();
-        var columns = Common.bindColumn(data[1], ['EmployeeId', 'Status_Colour', 'EmployeeTypeId','EODStatus_Colour']);
-        bindTable('EmployeeTable', data[1], columns, -1, '386px', true);
+        var columns = Common.bindColumn(data[1], ['EmployeeId', 'Status_Colour', 'EmployeeTypeId', 'EODStatus_Colour']);
+        bindTable('EmployeeTable', data[1], columns, -1, '380px', true);
     }
 }
 
@@ -1503,9 +1535,9 @@ function bindTableAvailability(tableid, data, columns, actionTarget, editcolumn,
     $('#' + tableid).empty();
 
     columns = columns.filter(x => x.name != "TetroONEnocount");
-    var isTetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
+    var isbuyernocount = data[0].hasOwnProperty('TetroONEnocount');
     var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
-    if (isAction == true && data != null && data.length > 0 && !isTetroONEnocount) {
+    if (isAction == true && data != null && data.length > 0 && !isbuyernocount) {
         columns.push({
             "data": "Action", "name": "Action", "title": "Action", orderable: false
         });
@@ -1538,7 +1570,7 @@ function bindTableAvailability(tableid, data, columns, actionTarget, editcolumn,
         "dom": "Bfrtip",
         "bDestroy": true,
         "responsive": true,
-        "data": !isTetroONEnocount ? data : [],
+        "data": !isbuyernocount ? data : [],
         "columns": columns,
         "destroy": true,
         "scrollY": scrollpx,
@@ -1553,7 +1585,7 @@ function bindTableAvailability(tableid, data, columns, actionTarget, editcolumn,
         "language": $.extend({}, lang, {
             "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
         }),
-        "columnDefs": !isTetroONEnocount
+        "columnDefs": !isbuyernocount
             ? renderColumn : [],
     });
     $('#tableFilter' + tableid).on('keyup', function () {
@@ -1566,7 +1598,6 @@ function bindTableAvailability(tableid, data, columns, actionTarget, editcolumn,
 }
 
 function bindTable(tableid, data, columns, actionTarget, scrollpx, isAction) {
-    // Clear existing table if any
     if ($.fn.DataTable.isDataTable('#' + tableid)) {
         if ($('#' + tableid).DataTable().rows().data().toArray().length > 0) {
             $('#' + tableid).DataTable().clear().destroy();
@@ -1576,11 +1607,8 @@ function bindTable(tableid, data, columns, actionTarget, scrollpx, isAction) {
         dt.destroy();
     }
     $('#' + tableid).empty();
-
-    // Remove unwanted column
     columns = columns.filter(x => x.name != "TetroONEnocount");
-
-    var TetroONEnocount = data[0]?.hasOwnProperty('TetroONEnocount');
+    var TetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
     var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
 
     var StatusColumnIndex = columns.findIndex(column => column.data === "Status");
@@ -1592,35 +1620,21 @@ function bindTable(tableid, data, columns, actionTarget, scrollpx, isAction) {
         });
     }
 
-    // ✅ Create new data array: show only Sunday badge, not Sunday records
-    let newData = [];
-    (data || []).forEach(row => {
-        if (row.Day === "Sunday") {
-            newData.push({ isSundayBadgeRow: true });
-        } else {
-            newData.push(row);
-        }
-    });
-
     var lang = {};
     var screenWidth = $(window).width();
     if (screenWidth <= 575) {
-        lang = {
-            "paginate": { "next": ">", "previous": "<" }
-        };
+        var lang = {
+            "paginate": {
+                "next": ">",
+                "previous": "<"
+            }
+        }
     }
-
-    // ✅ Add safe fallback for missing data fields
-    columns = columns.map(col => ({
-        ...col,
-        defaultContent: "" // Prevents "unknown parameter" error
-    }));
-
     var table = $('#' + tableid).DataTable({
         "dom": "Bfrtip",
         "bDestroy": true,
         "responsive": true,
-        "data": !TetroONEnocount ? newData : [],
+        "data": !TetroONEnocount ? data : [],
         "columns": columns,
         "destroy": true,
         "aaSorting": [],
@@ -1632,44 +1646,39 @@ function bindTable(tableid, data, columns, actionTarget, scrollpx, isAction) {
         "columnDefs": [
             {
                 targets: actionTarget,
-                render: function (data, type, row) {
-                    if (row.isSundayBadgeRow) return "";
+                render: function (data, type, row, meta) {
                     var stringifydata = JSON.stringify(row);
-                    return `<i class="btneye actionEllipsis" data-row='${stringifydata}' title="View">
-                                <img src="/assets/commonimages/attendanceeye.svg" />
-                            </i>`;
+                    return `<i class="btneye actionEllipsis" data-row="${stringifydata}" title="View"><img src="/assets/commonimages/attendanceeye.svg" /></i>`;
                 }
             },
             {
-                targets: StatusColumnIndex,
-                render: function (data, type, row) {
-                    if (row.isSundayBadgeRow) return "";
-                    if (type === 'display' && row.Status_Colour) {
-                        var dataText = row.Status ?? '';
+                "targets": StatusColumnIndex,
+                render: function (data, type, row, meta) {
+                    if (type === 'display' && row.Status_Colour != null && row.Status_Colour.length > 0) {
+                        var dataText = row.Status;
                         var statusColor = row.Status_Colour.toLowerCase();
-                        return `<div>
-                                    <span class="ana-span badge text-white" 
-                                          style="background:${statusColor};width:99px;font-size:12px;height:20px;">
-                                          ${dataText}
-                                    </span>
-                                </div>`;
+
+                        var htmlContent = '<div>';
+                        htmlContent += '<span class="ana-span badge text-white" style="background:' + statusColor + ';width: 99px;font-size: 12px;height: 20px;">' + dataText + '</span>';
+                        htmlContent += '</div>';
+
+                        return htmlContent;
                     }
                     return data ?? '';
                 }
             },
             {
-                targets: EODStatusColumnIndex,
-                render: function (data, type, row) {
-                    if (row.isSundayBadgeRow) return "";
-                    if (type === 'display' && row.EODStatus_Colour) {
-                        var dataText = row.EODStatus ?? '';
+                "targets": EODStatusColumnIndex,
+                render: function (data, type, row, meta) {
+                    if (type === 'display' && row.EODStatus_Colour != null && row.EODStatus_Colour.length > 0) {
+                        var dataText = row.EODStatus;
                         var statusColor = row.EODStatus_Colour.toLowerCase();
-                        return `<div>
-                                    <span class="ana-span badge text-white" 
-                                          style="background:${statusColor};width:99px;font-size:12px;height:20px;">
-                                          ${dataText}
-                                    </span>
-                                </div>`;
+
+                        var htmlContent = '<div>';
+                        htmlContent += '<span class="ana-span badge text-white" style="background:' + statusColor + ';width: 99px;font-size: 12px;height: 20px;">' + dataText + '</span>';
+                        htmlContent += '</div>';
+
+                        return htmlContent;
                     }
                     return data ?? '';
                 }
@@ -1679,149 +1688,18 @@ function bindTable(tableid, data, columns, actionTarget, scrollpx, isAction) {
         "sScrollX": "100%",
         "scrollCollapse": true,
         "language": $.extend({}, lang, {
-            "emptyTable": '<div><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
+            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
         }),
 
-        // ✅ Create custom Sunday badge row
-        "createdRow": function (row, data) {
-            if (data.isSundayBadgeRow) {
-                $(row).empty().css({
-                    padding: 0,
-                    verticalAlign: "middle",
-                    textAlign: "center"
-                }).append(`
-                    <td colspan="${columns.length}" style="padding:0;vertical-align:middle;text-align:center;">
-                        <div style="align-items:center;height:50px;">
-                            <span class="ana-span badge text-white" 
-                                  style="background:orange;width:105px;font-size:17px;height:24px;margin-top:12px;">
-                                Sunday
-                            </span>
-                        </div>
-                    </td>
-                `);
-            }
-        }
     });
-
-    // Search functionality
     $('#tableFilterEmployee' + tableid).on('keyup', function () {
         table.search($(this).val()).draw();
     });
-
-    // Adjust columns after rendering
-    setTimeout(() => {
-        autoAdjustColumns($('#' + tableid).DataTable());
+    setTimeout(function () {
+        var table1 = $('#' + tableid).DataTable();
+        autoAdjustColumns(table1);
     }, 100);
 }
-
-
-
-
-
-//function bindTable(tableid, data, columns, actionTarget, scrollpx, isAction) {
-//    if ($.fn.DataTable.isDataTable('#' + tableid)) {
-//        if ($('#' + tableid).DataTable().rows().data().toArray().length > 0) {
-//            $('#' + tableid).DataTable().clear().destroy();
-//        }
-//        const dt = $('#' + tableid).DataTable();
-//        dt.clear().draw();
-//        dt.destroy();
-//    }
-//    $('#' + tableid).empty();
-//    columns = columns.filter(x => x.name != "TetroONEnocount");
-//    var TetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
-//    var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
-
-//    var StatusColumnIndex = columns.findIndex(column => column.data === "Status");
-//    var EODStatusColumnIndex = columns.findIndex(column => column.data === "EODStatus");
-
-//    if (isAction == true && data != null && data.length > 0 && !TetroONEnocount) {
-//        columns.push({
-//            "data": "Action", "name": "Action", "title": "Action", orderable: false
-//        });
-//    }
-
-//    var lang = {};
-//    var screenWidth = $(window).width();
-//    if (screenWidth <= 575) {
-//        var lang = {
-//            "paginate": {
-//                "next": ">",
-//                "previous": "<"
-//            }
-//        }
-//    }
-//    var table = $('#' + tableid).DataTable({
-//        "dom": "Bfrtip",
-//        "bDestroy": true,
-//        "responsive": true,
-//        "data": !TetroONEnocount ? data : [],
-//        "columns": columns,
-//        "destroy": true,
-//        "aaSorting": [],
-//        "info": hasValidData,
-//        "paging": hasValidData,
-//        "pageLength": 8,
-//        "oSearch": { "bSmart": false, "bRegex": true },
-//        "lengthMenu": [5, 10, 25, 50],
-//        "columnDefs": [
-//            {
-//                targets: actionTarget,
-//                render: function (data, type, row, meta) {
-//                    var stringifydata = JSON.stringify(row);
-//                    return `<i class="btneye actionEllipsis" data-row="${stringifydata}" title="View"><img src="/assets/commonimages/attendanceeye.svg" /></i>`;
-//                }
-//            },
-//            {
-//                "targets": StatusColumnIndex,
-//                render: function (data, type, row, meta) {
-//                    if (type === 'display' && row.Status_Colour != null && row.Status_Colour.length > 0) {
-//                        var dataText = row.Status;
-//                        var statusColor = row.Status_Colour.toLowerCase();
-
-//                        var htmlContent = '<div>';
-//                        htmlContent += '<span class="ana-span badge text-white" style="background:' + statusColor + ';width: 99px;font-size: 12px;height: 20px;">' + dataText + '</span>';
-//                        htmlContent += '</div>';
-
-//                        return htmlContent;
-//                    }
-//                    return data ?? '';
-//                }
-//            },
-//            {
-//                "targets": EODStatusColumnIndex,
-//                render: function (data, type, row, meta) {
-//                    if (type === 'display' && row.EODStatus_Colour != null && row.EODStatus_Colour.length > 0) {
-//                        var dataText = row.EODStatus;
-//                        var statusColor = row.EODStatus_Colour.toLowerCase();
-
-//                        var htmlContent = '<div>';
-//                        htmlContent += '<span class="ana-span badge text-white" style="background:' + statusColor + ';width: 99px;font-size: 12px;height: 20px;">' + dataText + '</span>';
-//                        htmlContent += '</div>';
-
-//                        return htmlContent;
-//                    }
-//                    return data ?? '';
-//                }
-//            }
-//        ],
-//        "scrollY": scrollpx,
-//        "sScrollX": "100%",
-//        "scrollCollapse": true,
-//        "language": $.extend({}, lang, {
-//            "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
-//        }),
-
-//    });
-//    $('#tableFilterEmployee' + tableid).on('keyup', function () {
-//        table.search($(this).val()).draw();
-//    });
-//    setTimeout(function () {
-//        var table1 = $('#' + tableid).DataTable();
-//        autoAdjustColumns(table1);
-//    }, 100);
-//}
-
 
 function updateMonthDisplayEmployee(date) {
     let monthNames = [
@@ -1881,98 +1759,46 @@ function EyeButtonView(button, tableName) {
             $('#WorkingHours').text(data[0][0].WorkingHours)
 
             $('#Todayactivity').empty('');
-         //   if (data[1][0].PunchIn != null && data[1][0].PunchIn != "") {
-         //       data[1].forEach(function (attendData) {
-         //           if (attendData.PunchIn !== null && attendData.PunchIn !== "") {
-         //               var Inhtml = `<li class="list1">
-									//	<div class="row">
-									//		<div class="col-6">
-									//			<p class="text-dark">Punch In</p>
-									//			<p class="res-activity-time">
-									//				<i class="fa fa-clock-o"></i> <label>${attendData.PunchIn}</label>
-									//			</p>
-									//		</div>
-									//		<div class="col-6">
-         //                                   ${attendData.InLocation != null ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.InLocation}</p>` : ''}
-         //                                   </div>
-									//	</div>
-									//</li>`;
-         //               $('#Todayactivity').append(Inhtml);
-         //           }
-         //           if (attendData.PunchOut !== null && attendData.PunchOut !== "") {
-         //               var Outhtml = `<li class="list2">
-									//	<div class="row">
-									//		<div class="col-6">
-									//			<p class="text-dark">Punch Out</p>
-									//			<p class="res-activity-time">
-									//				<i class="fa fa-clock-o"></i> <label>${attendData.PunchOut}</label>
-									//			</p>
-									//		</div>
-									//		<div class="col-6">
-         //                                      ${attendData.OutLocation != null ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.OutLocation}</p>` : ''}
-         //                                   </div>
-									//	</div>
-									//</li>`;
+            if (data[1][0].PunchIn != null && data[1][0].PunchIn != "") {
+                data[1].forEach(function (attendData) {
+                    if (attendData.PunchIn !== null && attendData.PunchIn !== "") {
+                        var Inhtml = `<li class="list1">
+										<div class="row">
+											<div class="col-6">
+												<p class="text-dark">Punch In</p>
+												<p class="res-activity-time">
+													<i class="fa fa-clock-o"></i> <label>${attendData.PunchIn}</label>
+												</p>
+											</div>
+											<div class="col-6">
+                                            ${attendData.InLocation != null ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.InLocation}</p>` : ''}
+                                            </div>
+										</div>
+									</li>`;
+                        $('#Todayactivity').append(Inhtml);
+                    }
+                    if (attendData.PunchOut !== null && attendData.PunchOut !== "") {
+                        var Outhtml = `<li class="list2">
+										<div class="row">
+											<div class="col-6">
+												<p class="text-dark">Punch Out</p>
+												<p class="res-activity-time">
+													<i class="fa fa-clock-o"></i> <label>${attendData.PunchOut}</label>
+												</p>
+											</div>
+											<div class="col-6">
+                                               ${attendData.OutLocation != null ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.OutLocation}</p>` : ''}
+                                            </div>
+										</div>
+									</li>`;
 
-         //               $('#Todayactivity').append(Outhtml);
-         //           }
-         //       });
+                        $('#Todayactivity').append(Outhtml);
+                    }
+                });
 
-         //   } else {
-         //       $('#Todayactivity').append(`<div><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;"> No Data</div>`);
-            //   }
-
-
-            // Hardcoded attendance data
-            var attendDataList = [
-                { PunchIn: "09:30 AM", PunchOut: "01:28 PM", InLocation: "Office Entrance", OutLocation: "Main Gate" },
-                { PunchIn: "02:55 PM", PunchOut: "06:31 PM", InLocation: "Office Entrance", OutLocation: "Main Gate" }
-            ];
-
-            // Loop through each hardcoded entry
-            attendDataList.forEach(function (attendData) {
-                if (attendData.PunchIn !== null && attendData.PunchIn !== "") {
-                    var Inhtml = `
-            <li class="list1">
-                <div class="row">
-                    <div class="col-6">
-                        <p class="text-dark">Punch In</p>
-                        <p class="res-activity-time">
-                            <i class="fa fa-clock-o"></i> <label>${attendData.PunchIn}</label>
-                        </p>
-                    </div>
-                    <div class="col-6">
-                        ${attendData.InLocation ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.InLocation}</p>` : ''}
-                    </div>
-                </div>
-            </li>`;
-                    $('#Todayactivity').append(Inhtml);
-                }
-
-                if (attendData.PunchOut !== null && attendData.PunchOut !== "") {
-                    var Outhtml = `
-            <li class="list2">
-                <div class="row">
-                    <div class="col-6">
-                        <p class="text-dark">Punch Out</p>
-                        <p class="res-activity-time">
-                            <i class="fa fa-clock-o"></i> <label>${attendData.PunchOut}</label>
-                        </p>
-                    </div>
-                    <div class="col-6">
-                        ${attendData.OutLocation ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.OutLocation}</p>` : ''}
-                    </div>
-                </div>
-            </li>`;
-                    $('#Todayactivity').append(Outhtml);
-                }
-            });
-
-            $('#PunchDate').text('09-10-2025');
-            $('#EmployeeName').text('Kavinesh Rajasekar');
-            $('#EmployeeCompanyId').text('SFB_001');
-            $('#TotalHours').text('09:01 Hrs');
-            $('#WorkingHours').text('07:34 Hrs');
+            } else {
+                $('#Todayactivity').append(`<div><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;"> No Data</div>`);
+            }
 
             var windowWidth = $(window).width();
             if (windowWidth <= 600) {
@@ -2041,7 +1867,7 @@ function bindTableAttendanceImage(tableid, data, columns, scrollType, editcolumn
                 //{
                 //    "targets": Employee,
                 //    render: function (data, type, row, meta) {
-                //        if (type === 'display' && !isTetroONEnocount) {
+                //        if (type === 'display' && !istetropaynocount) {
                 //            const imageSrc = (row.EmployeeImage?.trim() == null || row.EmployeeImage?.trim() == undefined || row.EmployeeImage?.trim() == " " || row.EmployeeImage?.trim().length == 0)
                 //                ? "../tetropay/assets/img/humanemployee.png" : row.EmployeeImage;
                 //            return `<h2 class="table-avatar">
@@ -2142,6 +1968,9 @@ function bindTableManual(tableid, data, columns, scrollpx) {
         "responsive": true,
         "data": !TetroONEnocount ? data : [],
         "columns": columns,
+        "pageLength": 5,
+        "oSearch": { "bSmart": false, "bRegex": true },
+        "lengthMenu": [5, 10, 25, 50],
         "destroy": true,
         "language": $.extend({}, lang, {
             "emptyTable": '<div><img  src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>'
@@ -2215,3 +2044,98 @@ function bindTableManual(tableid, data, columns, scrollpx) {
     var tableId = $('#' + tableid).DataTable();
     Common.autoAdjustColumns(tableId);
 }
+
+
+
+
+//document.addEventListener("DOMContentLoaded", function () {
+//    const searchBtn = document.querySelector("#searchColEmployee .searchbar__button");
+//    const searchInput = document.querySelector("#searchColEmployee .searchbar__input");
+//    const searchGroup = document.querySelector("#searchColEmployee .searchInput-group");
+
+//    searchBtn.addEventListener("click", () => {
+//        if (window.innerWidth <= 576) {
+//            if (searchInput.style.display === "block") {
+//                searchInput.style.display = "none";
+//                searchInput.style.zIndex = "2";
+//                searchBtn.style.borderRadius = "5px";
+//                //searchGroup.classList.remove("active");
+//            }
+//            else {
+//                searchInput.style.display = "block";
+//                //searchGroup.classList.add("active");
+//                searchBtn.style.borderRadius = "0 5px 5px 0";
+//            }
+//        }
+//    });
+//});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBtn = document.querySelector("#searchColTeamTable .searchbar__button");
+    const searchInput = document.querySelector("#searchColTeamTable .searchbar__input");
+    const searchGroup = document.querySelector("#searchColTeamTable .searchInput-group");
+
+    searchBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 576) {
+            if (searchInput.style.display === "block") {
+                searchInput.style.display = "none";
+                searchInput.style.zIndex = "2";
+                searchBtn.style.borderRadius = "5px";
+                //searchGroup.classList.remove("active");
+            }
+            else {
+                searchInput.style.display = "block";
+                //searchGroup.classList.add("active");
+                searchBtn.style.borderRadius = "0 5px 5px 0";
+            }
+        }
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBtn = document.querySelector("#searchColAdmin .searchbar__button");
+    const searchInput = document.querySelector("#searchColAdmin .searchbar__input");
+    const searchGroup = document.querySelector("#searchColAdmin .searchInput-group");
+
+    searchBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 576) {
+            if (searchInput.style.display === "block") {
+                searchInput.style.display = "none";
+                searchInput.style.zIndex = "2";
+                searchBtn.style.borderRadius = "5px";
+                //searchGroup.classList.remove("active");
+            }
+            else {
+                searchInput.style.display = "block";
+                //searchGroup.classList.add("active");
+                searchBtn.style.borderRadius = "0 5px 5px 0";
+            }
+        }
+    });
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchBtn = document.querySelector("#add_manualattend .searchbar__button");
+    const searchInput = document.querySelector("#add_manualattend .searchbar__input");
+    const searchGroup = document.querySelector("#add_manualattend .searchInput-group");
+
+    searchBtn.addEventListener("click", () => {
+        if (window.innerWidth <= 576) {
+            if (searchInput.style.display === "block") {
+                searchInput.style.display = "none";
+                searchInput.style.zIndex = "2";
+                searchBtn.style.borderRadius = "5px";
+                //searchGroup.classList.remove("active");
+            }
+            else {
+                searchInput.style.display = "block";
+                //searchGroup.classList.add("active");
+                searchBtn.style.borderRadius = "0 5px 5px 0";
+            }
+        }
+    });
+});

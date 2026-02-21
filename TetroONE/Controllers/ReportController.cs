@@ -111,7 +111,7 @@ namespace TetroONE.Controllers
             }
             return Json(response);
         }
-
+           
         [HttpPost]
         [Route("ReportValueDropdown")]
         public IActionResult ReportValueDropdown([FromBody] ReportValueRequest request)
@@ -145,8 +145,7 @@ namespace TetroONE.Controllers
                         response.Data = GenericTetroONE.dataSetToJSON(ds);
                     }
                 }
-            }
-
+            } 
             return Json(response);
         }
 
@@ -699,12 +698,12 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetReportName")]
-        public IActionResult GetReportName(int ReportId)
+        public IActionResult GetReportName(string ModuleName)
         {
             GetReportName Get = new GetReportName()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                ReportId = ReportId
+                ModuleName = ModuleName
             };
 
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_Rpt_GetReportNameDetails]", Get);

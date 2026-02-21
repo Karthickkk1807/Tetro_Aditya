@@ -1,12 +1,14 @@
 ﻿
 Inventory = {
-    toggleFieldForAttachment: function (fieldValue, fieldId, addFieldId) {
+    toggleFieldForAttachment: function (fieldValue, fieldId, addFieldId, addFieldLabelId) {
         if (fieldValue != null) {
             $(fieldId).hide();
             $(addFieldId).show();
+            $(addFieldLabelId).hide();
         } else {
             $(fieldId).show();
             $(addFieldId).hide();
+            $(addFieldLabelId).show();
         }
     },
 

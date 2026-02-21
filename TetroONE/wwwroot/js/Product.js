@@ -1,5 +1,5 @@
 ﻿var productId = 0;
-var PlantId = 0;
+var PlantMappingId = 0;
 var PlantDropdown = [];
 var ProducTab = 0;
 var titleForHeaderProductTab = "";
@@ -9,20 +9,23 @@ var UnitDropDown = [];
 var ProductDropDown = [];
 var ProductDropDownManPower = [];
 var TranistProductDropDown = [];
+var IsTrigger = true;
 
 $(document).ready(async function () {
 
     titleForHeaderProductTab = "Raw Material";
 
-    var PlantMappingId = parseInt(localStorage.getItem('PlantId'));
-    var productTypeId = 1;
-    Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId) }, ProductSuccess, null);
+    PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
+    Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ProductSuccess, null);
     Common.bindDropDownParent('PrimaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('SecondaryUnitId', 'ProductInfoForm', 'Unit');
     Common.bindDropDownParent('ProductTypeId', 'ProductInfoForm', 'ProductType');
     Common.bindDropDownParent('ProductCategoryId', 'ProductInfoForm', 'ProductCategory');
-    Common.bindDropDownParent('ProductFlavourId', 'ProductInfoForm', 'ProductFlavour');
+    Common.bindDropDownParent('TaxInfoId', 'ProductInfoForm', 'TaxInfo');
+
     $('#ProcessBtnhide').show();
+    $('#ManPowerInfoBtn').hide();
+    $('#RawMaterialInfoBtn').hide();
 
     var UnitDropDownData = await Common.bindDropDownSync('Unit');
     UnitDropDown = JSON.parse(UnitDropDownData);
@@ -63,7 +66,7 @@ $(document).ready(async function () {
             "employeeName[]": {
                 required: "This field is required."
             }
-        } 
+        }
     });
 
     var PlantData = await Common.bindDropDownSync('Plant');
@@ -91,6 +94,7 @@ $(document).ready(async function () {
         Common.removevalidation('ProductInfoForm');
         $('#SecondaryUnitSymbol').text('Unit')
         $('#PrimaryUnitSymbol').text('1 Unit =');
+        $("#ReorderLevelSymbol").text('Unit');
         $('#ProductTypeId').val('1');
         $('.ProductFlavors').hide();
         $('#ProductProcessHide').hide();
@@ -98,7 +102,8 @@ $(document).ready(async function () {
         $('.ProductDescription').removeClass('col-lg-12 col-md-12 col-sm-12 col-12').addClass('col-lg-6 col-md-6 col-sm-6 col-6');
         Common.bindDropDown('PlantName', 'Franchise');
         $('#BindPlantDyanimcData .PlantDetailsMappingInfo').remove();
-         
+        IsTrigger = true;
+
         dyanmicRow();
         $('#loader-pms').hide();
         $('#ProductInfoForm #ProductSubCategoryId').empty().append('<option value="">-- Select --</option>');
@@ -107,18 +112,20 @@ $(document).ready(async function () {
     });
 
     $(document).on('change', '#ProductCategoryId', function () {
-        var $thisval = $(this).val();
-        if ($thisval != "") {
+        if (IsTrigger) {
+            var $thisval = $(this).val();
+            if ($thisval != "") {
 
-            Common.ajaxCall("Post", "/Common/GetDropDownNotNull", JSON.stringify({ MasterInfoId: parseInt($thisval), ModuleName: "ProductSubCategory" }), function (response) {
-                if (response.status) {
-                    $('#ProductInfoForm #ProductSubCategoryId').empty();
-                    Common.bindParentDropDownSuccessForChosen(response.data, "ProductSubCategoryId", "ProductInfoForm");
-                }
-            }, null);
-        }
-        else {
-            $('#ProductInfoForm #ProductSubCategoryId').empty().append('<option value="">-- Select --</option>');
+                Common.ajaxCall("Post", "/Common/GetDropDownNotNull", JSON.stringify({ MasterInfoId: parseInt($thisval), ModuleName: "ProductSubCategory" }), function (response) {
+                    if (response.status) {
+                        $('#ProductInfoForm #ProductSubCategoryId').empty();
+                        Common.bindParentDropDownSuccessForChosen(response.data, "ProductSubCategoryId", "ProductInfoForm");
+                    }
+                }, null);
+            }
+            else {
+                $('#ProductInfoForm #ProductSubCategoryId').empty().append('<option value="">-- Select --</option>');
+            }
         }
     });
 
@@ -145,24 +152,25 @@ $(document).ready(async function () {
         objvalue.ProductId = parseInt(productId) || null;
         objvalue.ProductTypeId = Common.parseInputValue('ProductTypeId') || null;
         objvalue.ProductCategoryId = Common.parseInputValue('ProductCategoryId') || null;
-        objvalue.ProductSubCategoryId = Common.parseInputValue('ProductSubCategoryId') || null; 
+        objvalue.ProductSubCategoryId = Common.parseInputValue('ProductSubCategoryId') || null;
         objvalue.PrimaryUnitId = Common.parseInputValue('PrimaryUnitId') || null;
-        objvalue.SecondaryUnitId = Common.parseInputValue('SecondaryUnitId') || null;
-        objvalue.ConvertionValue = Common.parseFloatInputValue('ConvertionValue') || null;
+        objvalue.TaxInfoId = Common.parseInputValue('TaxInfoId') || null;
         objvalue.PrimaryPrice = Common.parseFloatInputValue('PrimaryPrice') || null;
-        objvalue.SecondaryPrice = Common.parseFloatInputValue('SecondaryPrice') || null;
         objvalue.ReOrderLevel = Common.parseFloatInputValue('ReOrderLevel') || null;
-        objvalue.CGST = Common.parseFloatInputValue('CGST') || null;
-        objvalue.SGST = Common.parseFloatInputValue('SGST') || null;
-        objvalue.IGST = Common.parseFloatInputValue('IGST') || null;
-        objvalue.CESS = Common.parseFloatInputValue('CESS') || null;
+
+        //objvalue.IsDefault = $('#ProductInfoForm #IsDefault').is(':checked');
+
+        //objvalue.CGST = Common.parseFloatInputValue('CGST') || null;
+        //objvalue.SGST = Common.parseFloatInputValue('SGST') || null;
+        //objvalue.IGST = Common.parseFloatInputValue('IGST') || null;
+        //objvalue.CESS = Common.parseFloatInputValue('CESS') || null;
 
         var PlantData = [];
         var ClosestDiv = $('#BindPlantDyanimcData .PlantDetailsMappingInfo');
         $.each(ClosestDiv, function (index, values) {
             var ProductPlantMappingId = $(values).find('.productPlantMappingId').val();
             var ProductId = parseInt(productId) || null;
-            var PlantId = $(values).find('.PlantName').val(); 
+            var PlantId = $(values).find('.PlantName').val();
             var OpeningStock = $(values).find('.OpeningStock').val();
             var StockInHand = $(values).find('.StockInHand').val();
             PlantData.push({
@@ -216,19 +224,34 @@ $(document).ready(async function () {
                         </div>
                      </div>`;
             $('#ProductDynamic').append(html);
-            var PlantMappingId = parseInt(localStorage.getItem('PlantId'));
             //$('.QcMappingHide').show();
             $('#ProcessBtnhide').show();
             $('#AddProduct').show();
-            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId) }, ProductSuccess, null);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ProductSuccess, null);
         }
         else if (titleForHeaderProductTab == "Un-Processed") {
             $('#ProcessBtnhide').hide();
             $('#AddProduct').hide();
+            $('#ProductDynamic').empty('');
+            var html = `<div class="col-sm-12 p-0">
+                        <div class="table-responsive">
+                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductTable"></table>
+                        </div>
+                     </div>`;
+            $('#ProductDynamic').append(html);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(2) }, ProductSuccess, null);
         }
         else if (titleForHeaderProductTab == "Processed") {
             $('#ProcessBtnhide').hide();
             $('#AddProduct').hide();
+            $('#ProductDynamic').empty('');
+            var html = `<div class="col-sm-12 p-0">
+                        <div class="table-responsive">
+                           <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductTable"></table>
+                        </div>
+                     </div>`;
+            $('#ProductDynamic').append(html);
+            Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(3) }, ProductSuccess, null);
         }
     });
 
@@ -246,6 +269,8 @@ $(document).ready(async function () {
         $('#ProductHeader').text('Edit Product Details');
         $('#SaveProduct').text('Update').addClass('btn-update').removeClass('btn-success');
         $('#BindPlantDyanimcData .PlantDetailsMappingInfo').remove();
+
+        IsTrigger = false;
         productId = $(this).data('id');
         var plantId = parseInt($('#UserFranchiseMappingId').val());
         Common.ajaxCall("GET", "/Product/GetProductId", { ProductId: productId, PlantId: plantId }, EditProductSuccess, null);
@@ -268,11 +293,19 @@ $(document).ready(async function () {
 
     $(document).on('click', '#PrimaryUnitId', function () {
         var thisval = $(this).val();
-        if (thisval == '')
+        if (thisval == '') {
             $('#PrimaryUnitSymbol').text(`1 Unit =`);
-        else {
+            $('#ReorderLevelSymbol').text(`Unit`);
+            $('.ReorderLevelSymbol').each(function () {
+                $(this).text('Unit');
+            });
+        } else {
             var selectedText = $('#PrimaryUnitId option:selected').text();
             $('#PrimaryUnitSymbol').text(`1 (${selectedText}) =`);
+            $('#ReorderLevelSymbol').text(`${selectedText}`);
+            $('.ReorderLevelSymbol').each(function () {
+                $(this).text(`${selectedText}`);
+            });
         }
     });
 
@@ -300,16 +333,12 @@ $(document).ready(async function () {
 
     $(document).on('change', '#ProductTypeId', function () {
         var ProductTypeIdVal = $(this).val();
-        if (ProductTypeIdVal == 2) {
-            $('.ProductFlavors').show();
-            $('#ProductFlavourId').attr('required', true);
+        if (ProductTypeIdVal == 2) { 
             $('#ProductProcessHide').show();
             $('#RawMaterialInfoHide').show();
             $('.ProductDescription').addClass('col-lg-12 col-md-12 col-sm-12 col-12').removeClass('col-lg-6 col-md-6 col-sm-6 col-6');
         }
-        else {
-            $('.ProductFlavors').hide();
-            $('#ProductFlavourId').attr('required', false);
+        else { 
             $('#ProductProcessHide').hide();
             $('#RawMaterialInfoHide').hide();
             $('.ProductDescription').addClass('col-lg-6 col-md-6 col-sm-6 col-6').removeClass('col-lg-12 col-md-12 col-sm-12 col-12');
@@ -904,11 +933,17 @@ function ProductSuccess(response) {
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
+            var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
+            var access1 = { create: false, delete: false, update: false, view: false }
+            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', false, access1);
         } else if (activeTabText.includes("Processed")) {
             $('#CounterImage1').prop('src', '/assets/moduleimages/inventory/fgproducticon_1.svg');
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/fgproducticon_4.svg');
+            var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
+            var access1 = { create: false, delete: false, update: false, view: false }
+            bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', false, access1);
         }
 
         $('#loader-pms').hide();
@@ -934,7 +969,7 @@ function ProductInsertUpdateSuccess(response) {
 
         var PassingData = {};
         if (titleForHeaderProductTab == "Raw Material") {
-            PassingData = { PlantId: parseInt(PlantMappingId) }
+            PassingData = { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }
             $('#ProcessBtnhide').show();
             Common.ajaxCall("GET", "/Product/GetProduct", PassingData, ProductSuccess, null);
         } else if (titleForHeaderProductTab == "Un-Processed") {
@@ -963,86 +998,85 @@ function EditProductSuccess(response) {
 
         $('#PrimaryUnitSymbol').text(`1 (${PrimaryText}) =`);
         $('#SecondaryUnitSymbol').text(`(${SecondaryText})`);
-
-        $('#BindPlantDyanimcData .PlantDetailsMappingInfo').empty('');
-
-        $.each(data[1], function (index, value) {
-
-            let numberIncr = Math.random().toString(36).substring(2);
-            var rowadd = $('.PlantDetailsMappingInfo').length
-            var DynamicLableNo = rowadd + 1;
-
-            var PlantSelectOptions = "";
-
-            var defaultOption = '<option value="">--Select--</option>';
-
-            var PlantSelectOptions = PlantDropdown[0].map(function (PlantId) {
-                var isSelected = PlantId.PlantId == value.PlantId ? 'selected' : '';
-                return `<option value="${PlantId.PlantId}" ${isSelected}>${PlantId.PlantName}</option>`;
-            }).join('');
-
-            var dynamicHTML = `
-
-                <div class="row PlantDetailsMappingInfo">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
-                            <label class="DynamicLable">Plant Info ${DynamicLableNo}</label>
-                            <label class="productPlantMappingId d-none">${value.ProductPlantMappingId}</label>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-6 ProductCategory">
-	        			<div class="form-group">
-	        				<label>Plant Name<span id="Asterisk">*</span></label>
-	        				<select class="select PlantName" id="PlantName${numberIncr}" name="PlantName${numberIncr}" required>
-                                 ${defaultOption}${PlantSelectOptions}
-	        				</select>
-	        			</div>
-	        		</div>
-	               
-	                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	                	<div class="form-group">
-	                		<label>Opening Stock<span id="Asterisk">*</span></label>
-	                		<input type="text" class="form-control OpeningStock" id="OpeningStock${numberIncr}" name="OpeningStock${numberIncr}" placeholder="Opening Stock" value="${value.OpeningStock}" autocomplete="off" onclick="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required disabled>
-	                	</div>
-	                </div>
-	                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	                	<div class="form-group">
-	                		<label>Stock In Hand</label>
-	                		<input type="text" class="form-control StockInHand" id="StockInHand${numberIncr}" name="StockInHand${numberIncr}" placeholder="Stock In Hand" value="${value.StockInHand}" autocomplete="off" disabled>
-	                	</div>
-	                </div>
-	                
-                     <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-2 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
-                        <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
-                            <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
-                 </div>
-            `;
-
-            $('#FormProductPlantData #BindPlantDyanimcData').append(dynamicHTML);
-            $('.PlantName').each(function () {
-                $(this).select2({
-                    dropdownParent: $(this).parent()
-                });
-            });
-        });
+        $('#ReorderLevelSymbol').text(`${PrimaryText}`);
 
         if (data[0][0].productSubCategoryId) {
-
             Common.ajaxCall("Post", "/Common/GetDropDownNotNull", JSON.stringify({ MasterInfoId: data[0][0].ProductCategoryId, ModuleName: "ProductSubCategory" }), function (response) {
                 if (response.status) {
                     $('#ProductSubCategoryId').empty();
                     Common.bindParentDropDownSuccessForChosen(response.data, "ProductSubCategoryId", "ProductInfoForm");
-                    $('#ProductSubCategoryId').val(data[0][0].productSubCategoryId).trigger('change')
+                    $('#ProductSubCategoryId').val(data[0][0].productSubCategoryId);
+
+                    $('#BindPlantDyanimcData .PlantDetailsMappingInfo').empty('');
+                    $.each(data[1], function (index, value) {
+
+                        let numberIncr = Math.random().toString(36).substring(2);
+                        var rowadd = $('.PlantDetailsMappingInfo').length
+                        var DynamicLableNo = rowadd + 1;
+
+                        var PlantSelectOptions = "";
+
+                        var defaultOption = '<option value="">--Select--</option>';
+
+                        var PlantSelectOptions = PlantDropdown[0].map(function (PlantId) {
+                            var isSelected = PlantId.PlantId == value.PlantId ? 'selected' : '';
+                            return `<option value="${PlantId.PlantId}" ${isSelected}>${PlantId.PlantName}</option>`;
+                        }).join('');
+
+                        var dynamicHTML = `
+
+                            <div class="row PlantDetailsMappingInfo">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12 mt-2 d-flex flex-column mb-2">
+                                        <label class="DynamicLable">Plant Info ${DynamicLableNo}</label>
+                                        <label class="productPlantMappingId d-none">${value.ProductPlantMappingId}</label>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-6 ProductCategory">
+	        			            <div class="form-group">
+	        				            <label>Plant Name<span id="Asterisk">*</span></label>
+	        				            <select class="select PlantName" id="PlantName${numberIncr}" name="PlantName${numberIncr}" required>
+                                             ${defaultOption}${PlantSelectOptions}
+	        				            </select>
+	        			            </div>
+	        		            </div>
+	                             <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                    <div class="form-group">
+                                        <label>Opening Stock<span id="Asterisk">*</span></label>
+                                        <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                            <input type="text" class="form-control OpeningStock" id="OpeningStock${numberIncr}" name="OpeningStock${numberIncr}" placeholder="Ex: 1250" value="${value.OpeningStock}" autocomplete="off" onclick="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required disabled>
+                                            <button class="btn btn-secondary p-0 ReorderLevelSymbol" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:12px; width: 48px;"> ${value.PrimaryUnitName} </button>
+                                        </div>
+                                    </div>
+                                </div> 
+	                             <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                                    <div class="form-group">
+                                       <label>Stock In Hand</label>
+                                        <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                            <input type="text" class="form-control StockInHand" id="StockInHand${numberIncr}" name="StockInHand${numberIncr}" placeholder="Ex: 1250" value="${value.StockInHand}" autocomplete="off" disabled>
+                                            <button class="btn btn-secondary p-0 ReorderLevelSymbol" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:12px; width: 48px;"> ${value.PrimaryUnitName} </button>
+                                        </div>
+                                    </div>
+                                </div>  
+                                 <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-2 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
+                                    <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
+                                        <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                             </div>
+                        `;
+
+                        $('#FormProductPlantData #BindPlantDyanimcData').append(dynamicHTML);
+                        $('.PlantName').each(function () {
+                            $(this).select2({
+                                dropdownParent: $(this).parent()
+                            });
+                        });
+                    });
+                    IsTrigger = true;
                 }
             }, null);
         }
-        else {
-            $('#ProductInfoForm #ProductSubCategoryId').empty().append('<option value="">-- Select --</option>');
-        }
-
     }
     updateRemoveButtons();
-
     $('#loader-pms').hide();
 }
 
@@ -1072,27 +1106,31 @@ function dyanmicRow() {
                         <label class="productPlantMappingId d-none"></label>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-6 ProductCategory">
-	    			<div class="form-group">
-	    				<label class="FranchiseLable">Plant Name<span id="Asterisk">*</span></label>
-	    				<select class="select PlantName" id="PlantName${numberIncr}" name="PlantName${numberIncr}" required>
-                             ${defaultOption}${PlantSelectOptions}
-	    				</select>
-	    			</div>
-	    		</div>
-	            
-	           <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	            	<div class="form-group">
-	            		<label>Opening Stock<span id="Asterisk">*</span></label>
-	            		<input type="text" class="form-control OpeningStock" id="OpeningStock${numberIncr}" name="OpeningStock${numberIncr}" placeholder="Opening Stock" autocomplete="off" onclick="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required>
-	            	</div>
-	            </div>
-	             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-6">
-	            	<div class="form-group">
-	            		<label>Stock In Hand</label>
-	            		<input type="text" class="form-control StockInHand" id="StockInHand${numberIncr}" name="StockInHand${numberIncr}" placeholder="Stock In Hand" autocomplete="off" disabled>
-	            	</div>
-	            </div>
-	            
+	    		    <div class="form-group">
+	    			    <label class="FranchiseLable">Plant Name<span id="Asterisk">*</span></label>
+	    			    <select class="select PlantName" id="PlantName${numberIncr}" name="PlantName${numberIncr}" required>
+                                ${defaultOption}${PlantSelectOptions}
+	    			    </select>
+	    		    </div>
+	    	    </div>
+	             <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Opening Stock<span id="Asterisk">*</span></label>
+                        <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                            <input type="text" class="form-control OpeningStock" id="OpeningStock${numberIncr}" name="OpeningStock${numberIncr}" placeholder="Ex: 1250" autocomplete="off" onclick="Common.allowOnlyNumbersAndDecimalInventory(this,5)" required>
+                            <button class="btn btn-secondary p-0 ReorderLevelSymbol" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:12px; width: 48px;"> Unit </button>
+                        </div>
+                    </div>
+                </div>  
+	             <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                    <div class="form-group">
+                        <label>Stock In Hand</label>
+                        <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                            <input type="text" class="form-control StockInHand" id="StockInHand${numberIncr}" name="StockInHand${numberIncr}" placeholder="Ex: 1250" autocomplete="off" onclick="Common.allowOnlyNumbersAndDecimalInventory(this,5)" disabled required>
+                            <button class="btn btn-secondary p-0 ReorderLevelSymbol" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:12px; width: 48px;"> Unit </button>
+                        </div>
+                    </div>
+                </div>    
                 <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-2 thiswillshow" style="display: ${rowadd == 0 ? 'none' : 'block'};">
                     <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
                         <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
@@ -1107,6 +1145,7 @@ function dyanmicRow() {
             dropdownParent: $(this).parent()
         });
     });
+    $('.PlantName').val(PlantMappingId).trigger('change');
 
     updateRemoveButtons();
 }
@@ -1235,7 +1274,7 @@ function validateFormAccordions(accordionSelector, errorMessageDefault = 'This f
                 $input.next('.invalid-feedback').remove();
             }
         });
-         
+
         if (isCurrentValid) {
             $accordion.find('.collapse').collapse('hide');
         }
@@ -1263,8 +1302,8 @@ function bindTableProduct(tableid, data, columns, actionTarget, editcolumn, scro
     var isTetroONEnocount = data[0].hasOwnProperty('TetroONEnocount');
     var hasValidData = data && data.length > 0 && Object.values(data[0]).some(value => value !== null);
 
-    var primaryStockIndex = columns.findIndex(column => column.data === "PrimaryStock");
-    var secondaryStockIndex = columns.findIndex(column => column.data === "SecondaryStock");
+    //var secondaryStockIndex = columns.findIndex(column => column.data === "SecondaryStock");
+    var CurrentStockIndex = columns.findIndex(column => column.data === "CurrentStock");
 
     if (isAction == true && data != null && data.length > 0 && !isTetroONEnocount && (access.update || access.delete)) {
         columns.push({
@@ -1274,24 +1313,11 @@ function bindTableProduct(tableid, data, columns, actionTarget, editcolumn, scro
 
     var renderColumn = [
         {
-            "targets": primaryStockIndex,
+            "targets": CurrentStockIndex,
             render: function (data, type, row, meta) {
                 if (type === 'display' && row.StockInHand_Colour != null && row.StockInHand_Colour.length > 0) {
-                    var dataText = row.PrimaryStock;
-                    let data = dataText.split(/ (.+)/);
-
-                    var statusColor = row.StockInHand_Colour.toLowerCase();
-
-                    return '<div>' + '<span style="color:' + statusColor + ';width: 99px;font-size: 12px;height: 20px;">' + data[0] + '</span>' + '<span>' + ' ' + data[1] + '</span>' + '</div>'
-                }
-                return data;
-            }
-        },
-        {
-            "targets": secondaryStockIndex,
-            render: function (data, type, row, meta) {
-                if (type === 'display' && row.StockInHand_Colour != null && row.StockInHand_Colour.length > 0) {
-                    var dataText = row.SecondaryStock;
+                    //var dataText = row.SecondaryStock;
+                    var dataText = row.CurrentStock;
                     let data = dataText.split(/ (.+)/);
 
                     var statusColor = row.StockInHand_Colour.toLowerCase();

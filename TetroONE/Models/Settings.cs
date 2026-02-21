@@ -129,5 +129,128 @@ namespace TetroONE.Models
         public string MasterInfoName { get; set; }
         public string? MasterInfoDescription { get; set; }
     }
-      
+
+    /*=================================================================Color=====================================================================*/
+
+    public class GetColor
+    {
+        public int LoginUserId { get; set; }
+        public int? ColorId { get; set; } 
+    }
+     
+    public class InsertUpdateColorInfo
+    {
+        public int LoginUserId { get; set; }
+        public int? ColorId { get; set; }
+        public string ColorName { get; set; }
+        public string ColorCode { get; set; }
+        public string? PantoneCode { get; set; }
+        public string? ColorDescription { get; set; } 
+    }
+
+    /*=================================================================Machine=====================================================================*/
+
+    public class GetMachine
+    {
+        public int LoginUserId { get; set; }
+        public int? MachineId { get; set; } 
+    }
+     
+    public class InsertUpdateMachineInfo
+    {
+        public int LoginUserId { get; set; }
+        public int? MachineId { get; set; }
+        public string MachineName { get; set; }
+        public string MachineDescription { get; set; }
+        public decimal? MinCapacity { get; set; }
+        public decimal? MaxCapacity { get; set; }  
+    }
+
+    /*=================================================================ProductCategory=====================================================================*/
+
+    public class GetProductCategory
+    {
+        public int LoginUserId { get; set; }
+        public int? ProductCategoryId { get; set; } 
+    }
+     
+    public class InsertUpdateProductCategoryInfo
+    {
+        public int LoginUserId { get; set; }
+        public int? ProductCategoryId { get; set; }
+        public int? ProductTypeId { get; set; }
+        public string ProductCategoryName { get; set; }
+        public string? ProductCategoryDescription { get; set; } 
+    }
+
+    /*=================================================================ProductSubCategory=====================================================================*/
+
+    public class GetProductSubCategory
+    {
+        public int LoginUserId { get; set; }
+        public int? ProductSubCategoryId { get; set; } 
+    }
+     
+    public class InsertUpdateProductSubCategoryInfo
+    {
+        public int LoginUserId { get; set; }
+        public int? ProductSubCategoryId { get; set; }
+        public int? ProductCategoryId { get; set; }
+        public string ProductSubCategoryName { get; set; }
+        public string? ProductSubCategoryDescription { get; set; } 
+        public decimal? Productioncost { get; set; } 
+    }
+
+
+    /*=================================================================AutoGeneratePrefix=====================================================================*/
+    public class GetAutoGeneratePrefix
+    {
+        public int LoginUserId { get; set; }
+        public int? PlantId { get; set; }
+        public int? AutoGeneratePrefixId { get; set; } 
+    }
+
+    public class InsertUpdateAutoGeneratePrefixInfo
+    {
+        public int LoginUserId { get; set; }
+        public int? AutoGeneratePrefixId { get; set; }
+        public int? ModuleTypeId { get; set; } 
+        public string? Prefix { get; set; }
+        public string? StartingFrom { get; set; }
+        public int? PlantId { get; set; }
+    }
+
+    public class DeleteAutoGeneratePrefixDetails
+    {
+        public int LoginUserId { get; set; } 
+        public int? AutoGeneratePrefixId { get; set; }
+    }
+
+    /*=================================================================DefaultProduct=====================================================================*/
+    public class GetDefaultProduct
+    {
+        public int LoginUserId { get; set; }
+        public int? DefaultProductId { get; set; } 
+    }
+
+    public class InsertDefaultProductDetails 
+    {
+        public int LoginUserId { get; set; }
+        public int? DefaultProductId { get; set; }
+        public int? ProcessId { get; set; }
+        public int? ProductId { get; set; } 
+        public int? Unit { get; set; }
+        public decimal? UnitValue { get; set; }
+        public string? Description { get; set; }
+        public int? IsBelowGSM { get; set; }
+        public int? ColourType { get; set; }
+    }
+     
+    public class DeleteDefaultProduct
+    {
+        public int LoginUserId { get; set; } 
+        public int? ProcessId { get; set; } 
+        public int? DefaultProductId { get; set; }
+    }
+
 }

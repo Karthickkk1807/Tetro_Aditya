@@ -37,7 +37,9 @@ $(document).ready(function () {
 
         JobWorkerId = 0;
         $('#selectedFiles').empty();
-        $('#ExistselectedFiles').empty(); 
+        $('#ExistselectedFiles').empty();
+        $('#RemarksDiv').removeClass('col-md-7 col-lg-7 col-sm-7 col-7').addClass('col-md-12 col-lg-12 col-sm-12 col-12'); 
+        $('#CurrentlimitHide').hide();
         $('#IsActiveHide').hide();
         $('#SaveJobWorker').text('Save').addClass('btn-success').removeClass('btn-update');  
     });
@@ -170,10 +172,12 @@ $(document).ready(function () {
         $("#JobWorkerHeader").text('Edit JobWorkers Details');
         $('#fadeinpage').addClass('fadeoverlay');
         $('#SaveJobWorker').text('Update').addClass('btn-update').removeClass('btn-success');
+        $('#CurrentlimitHide').show();
         $('#loader-pms').hide();
 
         $('#selectedFiles').empty('');
-        $('#ExistselectedFiles').empty(''); 
+        $('#ExistselectedFiles').empty('');
+        $('#RemarksDiv').removeClass('col-md-12 col-lg-12 col-sm-12 col-12').addClass('col-md-7 col-lg-7 col-sm-7 col-12'); 
 
         existFiles = [];
         jobWorkerId = $(this).data('id');
@@ -243,6 +247,8 @@ function editSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
         Common.bindData(data[0]);
+
+        Common.renderRatingStars(data[0][0].Ratings, "RatingStars");
 
         if (data[0][0].IsActive == true)
             $('#FormJobWorker #IsActive').prop('checked', true);
@@ -353,8 +359,8 @@ function editSuccess(response) {
          `;
         $('#TransactionsInfo').append(html);
 
-        var columns = Common.bindColumn(data[3], ['PurchaseRequestId', 'Status_Color']);
-        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'PurchaseRequestId', '151px', true);
+        var columns = Common.bindColumn(data[3], ['TransactionId', 'Status_Color']);
+        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'TransactionId', '151px', true);
 
         updateRemoveButtons();
     }

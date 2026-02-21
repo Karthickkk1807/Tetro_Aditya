@@ -417,3 +417,14 @@ textarea.form-controltext {
     width: 100% !important;
     margin-top: -16px !important;
 }
+
+.horizontal-timeline {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    gap: 0px !important;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin-top: 8px;
+    white-space: nowrap;
+}

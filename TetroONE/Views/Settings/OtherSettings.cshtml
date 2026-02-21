@@ -1,44 +1,468 @@
 ﻿
 <link href="~/css/othersettings.css" rel="stylesheet" />
 
-<div class="row masterpage-box">  
-	
+<div class="row masterpage-box">
+
+    @* ------------------------------ProductCategory---------------------------------------------- *@
+    <div class="col-md-6">
+        <div class="card m-b-30">
+            <div class="card-header">
+                <h4 class="card-title float-left vv">ProductCategory Info</h4>
+                <div class="Date-SearchColumn justify-content-end">
+                    <div class="d-flex">
+                        <div class="searchbar mt-1">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterProductCategoryTable" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+                            <div class="add-imp-exp-btn">
+                                <div class="exportsiconpop">
+                                    <span class="pop">
+                                        <a id="AddProductCategory" title="Add ProductCategory" class="AddBtnProductCategory">
+                                            <img src="/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductCategoryTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ------------------------------ProductSubCategory---------------------------------------------- *@
+    <div class="col-md-6">
+        <div class="card m-b-30">
+            <div class="card-header">
+                <h4 class="card-title float-left">ProductSubCategory Info</h4>
+                <div class="Date-SearchColumn justify-content-end">
+                    <div class="d-flex">
+                        <div class="searchbar mt-1">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterProductSubCategoryTable" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+                            <div class="add-imp-exp-btn">
+                                <div class="exportsiconpop">
+                                    <span class="pop">
+                                        <a id="AddProductSubCategory" title="Add ProductSubCategory" class="AddBtnProductSubCategory">
+                                            <img src="/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ProductSubCategoryTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ------------------------------Color---------------------------------------------- *@
+    <div class="col-md-6">
+        <div class="card m-b-30">
+            <div class="card-header">
+                <h4 class="card-title float-left">Color Info</h4>
+                <div class="Date-SearchColumn justify-content-end">
+                    <div class="d-flex">
+                        <div class="searchbar mt-1">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterColorTable" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+                            <div class="add-imp-exp-btn">
+                                <div class="exportsiconpop">
+                                    <span class="pop">
+                                        <a id="AddColor" title="Add Color" class="AddBtnColor">
+                                            <img src="/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="ColorTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ------------------------------Machine---------------------------------------------- *@
+    <div class="col-md-6">
+        <div class="card m-b-30">
+            <div class="card-header">
+                <h4 class="card-title float-left">Machine Info</h4>
+                <div class="Date-SearchColumn justify-content-end">
+                    <div class="d-flex">
+                        <div class="searchbar mt-1">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterMachineTable" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+                            <div class="add-imp-exp-btn">
+                                <div class="exportsiconpop">
+                                    <span class="pop">
+                                        <a id="AddMachine" title="Add Machine" class="AddBtnMachine">
+                                            <img src="/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="MachineTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ------------------------------AutoGeneratePrefix---------------------------------------------- *@
+    <div class="col-md-6">
+        <div class="card m-b-30">
+            <div class="card-header">
+                <h4 class="card-title float-left">AutoGeneratePrefix Info</h4>
+                <div class="Date-SearchColumn justify-content-end">
+                    <div class="d-flex">
+                        <div class="searchbar mt-1">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterAutoGeneratePrefixTable" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+                            <div class="add-imp-exp-btn">
+                                <div class="exportsiconpop">
+                                    <span class="pop">
+                                        <a id="AddAutoGeneratePrefix" title="Add AutoGeneratePrefix" class="AddBtnAutoGeneratePrefix">
+                                            <img src="/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="AutoGeneratePrefixTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="MasterDataTwoParaModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
-	<div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
-		<div class="modal-content">
-			<div class="modal-header d-flex align-items-center justify-content-between">
-				<h2 id="HeaderTextInfo"></h2>
-				<span id="MasterDataTwoParaModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
-			</div>
-			<div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
-				<form id="FormMasterDataTwoPara">
-					<div class="row">
-						<div class="col-md-6 col-lg-6 col-sm-6 col-6">
-							<div class="form-group">
-								<label id="MasterInfoNameLabel"></label>
-								<input type="text" id="MasterInfoName" name="MasterInfoName" class="form-control" placeholder="Name" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
-							</div>
-						</div>
-						<div class="col-md-6 col-lg-6 col-sm-6 col-6">
-							<div class="form-group">
-								<label id="MasterInfoDescriptionLabel"></label>
-								<textarea type="text" id="MasterInfoDescription" name="MasterInfoDescription" rows="1" class="form-control" placeholder="Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
-							</div>
-						</div>
-					</div> 
-				</form>
-			</div>
-			<div class="modal-footer d-flex justify-content-center align-items-center w-100">
-				<div class="row">
-					<div class="col-12">
-						<input type="button" class="btn btn-primary" id="MasterInfoSave" nmae="MasterInfoSave">
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+
+@* ------------------------------ProductCategory---------------------------------------------- *@
+<div id="ProductCategoryModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ProductCategoryTextInfo">ProductCategory Details</h2>
+                <span id="ProductCategoryClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormProductCategory">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Product Type<span class="Asterisk"> *</span></label>
+                                <select class="form-control" id="ProductTypeId" name="ProductTypeId" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>ProductCategory Name<span class="Asterisk"> *</span></label>
+                                <input type="text" id="ProductCategoryName" name="ProductCategoryName" class="form-control" placeholder="ProductCategory Name" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                            <div class="form-group">
+                                <label>ProductCategory Description</label>
+                                <textarea type="text" id="ProductCategoryDescription" name="ProductCategoryDescription" rows="1" class="form-control" placeholder="Ex: Any Querys" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="ProductCategorySave" nmae="ProductCategorySave">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------ProductSubCategory---------------------------------------------- *@
+<div id="ProductSubCategoryModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ProductSubCategoryTextInfo">ProductSubCategory Details</h2>
+                <span id="ProductSubCategoryClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormProductSubCategory">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>ProductCategory<span class="Asterisk"> *</span></label>
+                                <select class="form-control" id="ProductCategoryId" name="ProductCategoryId" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>ProductSubCategory<span class="Asterisk"> *</span></label>
+                                <input type="text" id="ProductSubCategoryName" name="ProductSubCategoryName" class="form-control" placeholder="Ex: Elastic" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Production Cost<span class="Asterisk"> *</span></label>
+                                <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                    <input type="text" class="form-control" id="Productioncost" name="Productioncost" placeholder="Ex: ₹ 900.90" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this,3)" required>
+                                    <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:16px; width: 33px;"> ₹ </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea type="text" id="ProductSubCategoryDescription" name="ProductSubCategoryDescription" rows="1" class="form-control" placeholder="Ex: Any Querys" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="ProductSubCategorySave" nmae="ProductSubCategorySave">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------Color---------------------------------------------- *@
+<div id="ColorModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ColorTextInfo">Color Details</h2>
+                <span id="ColorClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormColor">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Color Name<span class="Asterisk"> *</span></label>
+                                <input type="text" id="ColorName" name="ColorName" class="form-control" placeholder="Color Name" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Color Code<span class="Asterisk"> *</span></label>
+                                <input type="text" id="ColorCode" name="ColorCode" class="form-control" placeholder="Ex: C001" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Color<span class="Asterisk"> *</span></label>
+                                <input type="text" id="PantoneCode" name="PantoneCode" class="form-control" placeholder="Ex: 14-0002 TCX" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                            <div class="form-group">
+                                <label>Color Description</label>
+                                <textarea type="text" id="ColorDescription" name="ColorDescription" rows="1" class="form-control" placeholder="Color Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="ColorSave" nmae="ColorSave">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------Machine---------------------------------------------- *@
+<div id="MachineModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="MachineTextInfo">Machine Details</h2>
+                <span id="MachineClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormMachine">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Machine Name<span class="Asterisk"> *</span></label>
+                                <input type="text" id="MachineName" name="MachineName" class="form-control" placeholder="Color Name" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Min Capacity<span class="Asterisk"> *</span></label>
+                                <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                    <input type="text" class="form-control" id="MinCapacity" name="MinCapacity" placeholder="Ex: 1200 KG" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                                    <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:16px; width: 33px;"> KG </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Max Capacity<span class="Asterisk"> *</span></label>
+                                <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
+                                    <input type="text" class="form-control" id="MaxCapacity" name="MaxCapacity" placeholder="Ex: 3500 KG" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                                    <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size:16px; width: 33px;"> KG </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                            <div class="form-group">
+                                <label>Machine Description</label>
+                                <textarea type="text" id="MachineDescription" name="MachineDescription" rows="1" class="form-control" placeholder="Ex: Any Querys" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="MachineSave" nmae="MachineSave">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------AutoGeneratePrefix---------------------------------------------- *@
+<div id="AutoGeneratePrefixModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="AutoGeneratePrefixTextInfo">AutoGeneratePrefix Details</h2>
+                <span id="AutoGeneratePrefixClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormAutoGeneratePrefix">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Module Type<span class="Asterisk"> *</span></label>
+                                <select class="form-control" id="ModuleTypeId" name="ModuleTypeId" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Prefix<span class="Asterisk"> *</span></label>
+                                <input type="text" class="form-control" id="Prefix" name="Prefix" placeholder="Ex: PO/NO/" oninput="Common.allowAllCharacters(this, 25)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Starting From<span class="Asterisk"> *</span></label>
+                                <input type="text" class="form-control" id="StartingFrom" name="StartingFrom" placeholder="Ex: 101" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="AutoGeneratePrefixSave" nmae="AutoGeneratePrefixSave">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* ------------------------------Common Two Para---------------------------------------------- *@
+<div id="MasterDataTwoParaModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="HeaderTextInfo"></h2>
+                <span id="MasterDataTwoParaModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormMasterDataTwoPara">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="MasterInfoNameLabel"></label>
+                                <input type="text" id="MasterInfoName" name="MasterInfoName" class="form-control" placeholder="Name" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="MasterInfoDescriptionLabel"></label>
+                                <textarea type="text" id="MasterInfoDescription" name="MasterInfoDescription" rows="1" class="form-control" placeholder="Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="MasterInfoSave" nmae="MasterInfoSave">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="~/js/othersettings.js"></script>

@@ -197,8 +197,7 @@ $(document).on('click', '#AddVendor', function () {
     } else {
         $("#VendorCanvas").css("width", "39%");
     }
-    CanvasOpenFirstShowingVendor();
-    vendorId = 0;
+    CanvasOpenFirstShowingVendor(); 
     $("#VendorHeader").text('Add Vendor Details');
     $('#fadeinpage').addClass('fadeoverlay');
     $("#FormVendor")[0].reset();
@@ -219,8 +218,17 @@ $(document).on('click', '#AddVendor', function () {
     $('#IsActiveHide').hide();
     $('#SaveVendor').text('Save').addClass('btn-success').removeClass('btn-update');
     $("input[name='products']").prop("checked", false);
+    $('#CurrentlimitHide').hide(); 
+    $('#RemarksDiv').removeClass('col-md-7 col-lg-7 col-sm-7 col-12').addClass('col-md-12 col-lg-12 col-sm-12 col-12'); 
     $('#loader-pms').hide(); 
 
+    deletedFiles = [];
+    existFiles = [];
+    formDataMultiple = new FormData();
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
+
+    vendorId = 0;
     $('#TransactionsHide').hide();
 
     Common.ajaxCall("GET", "/Contact/GetProductListVendor", { ModuleName: "Vendor" }, ProductListSuccess, null);
@@ -247,6 +255,15 @@ $(document).on('click', '.btn-edit', function () {
     $("#VendorHeader").text('Edit Vendor Details');
     $('#SaveVendor').text('Update').addClass('btn-update').removeClass('btn-success'); 
     $('#IsActiveHide').show();
+    $('#CurrentlimitHide').show();
+    $('#RemarksDiv').removeClass('col-md-12 col-lg-12 col-sm-12 col-12').addClass('col-md-7 col-lg-7 col-sm-7 col-12'); 
+
+    deletedFiles = [];
+    existFiles = [];
+    formDataMultiple = new FormData();
+    $('#selectedFiles').empty();
+    $('#ExistselectedFiles').empty();
+
     vendorId = $(this).data('id');
     var franchiseId = parseInt($('#UserFranchiseMappingId').val());
     Common.ajaxCall("GET", "/Contact/GetVendorID", { VendorId: vendorId }, editSuccess, null);
@@ -270,9 +287,10 @@ function editSuccess(response) {
         Common.bindData(data[0]);
         Common.bindData(data[1]);
         $('#Email').val(data[0][0].Email);
-        $('#ContactNumber').val(data[0][0].ContactNumber);
-
+        $('#ContactNumber').val(data[0][0].ContactNumber); 
         $('#State').val(data[0][0].StateId);
+
+        Common.renderRatingStars(data[0][0].Ratings, "RatingStars");
 
         var htmlDynamicProduct = '';
 
@@ -405,10 +423,9 @@ function editSuccess(response) {
          `;
         $('#TransactionsInfo').append(html);
 
-        var columns = Common.bindColumn(data[3], ['PurchaseRequestId', 'Status_Color']);
-        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'PurchaseRequestId', '151px', true);
-
-
+        var columns = Common.bindColumn(data[3], ['TransactionId', 'Status_Color']);
+        bindTableTransactionsInfo('Managetable', data[3], columns, -1, 'TransactionId', '151px', true);
+         
         updateRemoveButtons();
     }
 }

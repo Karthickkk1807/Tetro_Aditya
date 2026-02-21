@@ -271,7 +271,7 @@ body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdow
     border-radius: 50%;
     height: 30px;
     padding: 4px;
-    margin-top: 21px;
+    margin-top: 26px;
 }
 
     .DynrowRemove i {
@@ -439,7 +439,7 @@ body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdow
     }
 
 .qty-input {
-    width: 66px;
+    width: 89px;
     text-align: center;
     font-size: 16px;
     border: none;
@@ -447,7 +447,7 @@ body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdow
 
 .unit-select {
     height: 35px;
-    width: 133px;
+    width: 96px;
     font-size: 12px;
     border-radius: 5px;
     border: 1px solid #ccc;
@@ -583,6 +583,7 @@ body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdow
     }
     body > div.wrapper.show > div.main-header > nav > div > ul > li.nav-item.dropdown.hidden-caret.submenu.show > ul, #notificationDropdown {
         left: unset !important;
+        margin-top: 11px;
     }
     #NavCompanyName {
         width: 100%;
@@ -669,4 +670,29 @@ table {
 
 #Subtotal {
     text-align: start !important;
+}
+
+@media (max-width: 480px) {
+    .dataTables_info {
+        display: none;
+    }
+}
+
+@media (max-width:576px) {
+    .searchbar__input {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) and (min-width: 497px) {
+    .topbar-nav{
+        width: 245px;
+    }
+}
+
+@media (max-width: 576px) {
+    .topheader {
+        display:flex !important;
+        justify-content: center !important;
+    }
 }

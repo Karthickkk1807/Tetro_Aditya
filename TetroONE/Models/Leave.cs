@@ -15,6 +15,7 @@
 		public DateTime ToDate { get; set; }
 		public int IsHalfDay { get; set; }
 		public decimal NoOfDays { get; set; }
+		public int LeaveTypeId { get; set; }
 		public string? LeaveDescription { get; set; }
 		public int? LeaveStatusId { get; set; }
 		public string? Comments { get; set; }
@@ -24,7 +25,7 @@
 	{
 		public int LoginUserId { get; set; }
 		public string ModuleName { get; set; }
-		public int ModuleId { get; set; }
+		public int? ModuleId { get; set; }
 
 	}
 

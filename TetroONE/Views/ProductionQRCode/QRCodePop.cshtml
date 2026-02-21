@@ -68,21 +68,14 @@
                             <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                 <div class="form-group">
                                     <label>Process<span id="Asterisk">*</span></label>
-                                    <select class="form-control ProcessStage" id="Process" name="Process">
-                                        <option value="">--Select--</option>
-                                        <option value="1">Reversing</option>
-                                        <option value="2">Stitching</option>
-                                        <option value="3">Softflow</option>
-                                        <option value="4">Stentering</option>
-                                        <option value="5">Dryer</option>
-                                        <option value="6">Compacting</option>
+                                    <select class="form-control ProcessStage" id="Process" name="Process" required>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                 <div class="form-group">
                                     <label>Quantity<span id="Asterisk">*</span></label>
-                                    <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="Quantity" name="Quantity" required />
+                                    <input type="text" class="form-control" placeholder="Ex: 2900 KG" id="Quantity" name="Quantity" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" />
                                 </div>
                             </div>
                             <div class="col-md-12 col-lg-12 col-sm-12 col-12">
@@ -97,8 +90,8 @@
                 <div class="modal-footer d-flex justify-content-center align-items-center w-100">
                     <div class="row">
                         <div class="col-12">
-                            <a class="btn m-r-20 text-white" id="SaveProductionQRCode" style="background: #35d8dd;"><span style="color: black;">🖫</span> Started</a>
-                            <a class="btn m-r-20 text-white" id="SaveProductionQRCode" style="background: #254ae6;"><span style="color: black;">✓</span> Completed</a>
+                            <a class="btn m-r-20 text-white processBtn" id="SaveProductionQRCode" data-status="Started" style="background: #35d8dd;"><span style="color: black;">🖫</span> Started</a>
+                            <a class="btn m-r-20 text-white processBtn" id="SaveProductionQRCode" data-status="Finished" style="background: #254ae6;"><span style="color: black;">✓</span> Completed</a>
                         </div>
                     </div>
                 </div>
@@ -107,10 +100,10 @@
     </div>
 
     <div class="ThankYouContant" style=" height: 100vh; align-items: center; display: none; ">
-        <div class="card" style="width: 28%;margin: auto;">
+        <div class="card" style="margin: 0px 78px;">
             <div class="card-body">
                 <h5 class="card-title d-flex justify-content-center" style="font-size: 28px;font-weight: 700;">Thank you!</h5>
-                <p class="card-text" style="white-space: nowrap;font-size: 17px;">Your response has been saved successfully.</p>
+                <p class="card-text" style="font-size: 17px;text-align: center;">Your response has been saved successfully.</p>
             </div>
         </div>
     </div>

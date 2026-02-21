@@ -32,11 +32,12 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetProduct")]
-        public IActionResult GetProduct(int PlantId)
+        public IActionResult GetProduct(int PlantId, int ProductTypeId)
         {
             GetProduct GetProduct = new GetProduct()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductTypeId = ProductTypeId,
                 ProductId = null,
                 PlantId = PlantId,
             };
@@ -46,18 +47,19 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetProductId")]
-        public IActionResult GetProductId(int ProductId, int PlantId)
+        public IActionResult GetProductId(int ProductId, int PlantId, int ProductTypeId)
         {
             GetProduct GetProduct = new GetProduct()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                ProductTypeId = ProductTypeId,
                 ProductId = ProductId,
                 PlantId = PlantId
             };
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProductDetails]", GetProduct);
             return Json(response);
         }
-         
+        
         public partial class GetProductProcess_1
         {
             public int LoginUserId	 { get; set; }
@@ -91,13 +93,13 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteProductDetails]", GetProduct);
             return Json(response);
         }
-
+         
         [HttpPost]
         [Route("InsertUpdateProductDetails")]
-        public async Task<IActionResult> SaveLoan([FromBody] InsertUpdateDetails request)
+        public async Task<IActionResult> InsertUpdateProductDetails([FromBody] InsertUpdateDetails request)
         {
             _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-             
+            
             DataTable ProductPlantMappingDetails = new DataTable();
             ProductPlantMappingDetails = GenericTetroONE.ToDataTable(request.ProductPlantMappingDetails);
 

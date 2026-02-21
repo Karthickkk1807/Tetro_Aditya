@@ -1,0 +1,38 @@
+﻿.mrselect {
+    height: 32px;
+    border-color: #e6e6e6;
+}
+
+.AddStockBtn:hover {
+    background-color: #1A2A;
+    color: white;
+    box-shadow: 0 3px 11px rgb(58 169 0 / 93%);
+}
+ 
+input[type="checkbox"]:hover + .checkbox-label,
+input[type="checkbox"]:checked + .checkbox-label {
+    filter: blur(0); /* Remove blur on hover or when checked */
+}
+
+#ContractTable, #Managetable {
+    width: 100% !important;
+}
+
+.dataTables_scrollBody {
+    height: 350px !important;
+    margin-top: -18px !important;
+    border-bottom: 1px solid #111;
+    margin-bottom: 10px;
+} 
+
+#Managetable_wrapper > div > div.dataTables_scrollBody {
+    height: 250px !important;
+}
+
+.checkbox-label {
+    filter: blur(0px) !important;
+    transition: filter 0.3s ease-in-out;
+    position: absolute;
+    left: 33px;
+    bottom: -5px;
+}

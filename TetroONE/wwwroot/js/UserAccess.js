@@ -11,7 +11,7 @@ $(document).ready(function () {
 
     var editData = {
         PlantId: PlantMappingId,
-        Value: 0,
+        Value: 1,
         Category: category,
         Search: search
     };
@@ -69,14 +69,12 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('change', '#Value', function () {
-
-        $('#tableFilter_User').val("").trigger('input').trigger('keyup');
-
+    $(document).on('change', '#Value', function () { 
+        $('#tableFilter_User').val("").trigger('input').trigger('keyup'); 
         if (IsFirst) {
             $('#loader-pms').show();
             var thisVal = parseInt($(this).val()); 
-            var category = $('#Category').val();
+            var category = ($('#Category').val() || '').replace(/\s+/g, '');
             var search = $('#tableFilter_User').val() || null;
             var editData = { PlantId: parseInt(PlantMappingId), Value: thisVal, Category: category, Search: search };
             Common.ajaxCall("GET", "/UserAccess/GetUserAcces", editData, function (response) {
@@ -90,8 +88,7 @@ $(document).ready(function () {
         } else {
             IsFirst = true;
             $('#loader-pms').hide();
-        }
-        
+        } 
     });
 
     $(document).on('click', '#UpdateUserAccess', function () {
@@ -159,8 +156,7 @@ $(document).ready(function () {
                 }
             }
         });
-    });
-
+    }); 
 });
 
 function UpdateUseraccessUpdateSuccess(response) {
@@ -171,7 +167,7 @@ function UpdateUseraccessUpdateSuccess(response) {
         CheckedValue = [];
         var thisVal = parseInt($("#Value").val());
         var FranchiseMappingId = parseInt(localStorage.getItem('PlantId'));
-        var category = $('#Category').val();
+        var category = ($('#Category').val() || '').replace(/\s+/g, '');
         var search = $('#tableFilter_User').val() || null;
         var editData = { PlantId: FranchiseMappingId, Value: thisVal, Category: category, Search: search };
         Common.ajaxCall("GET", "/UserAccess/GetUserAcces", editData, function (response) {

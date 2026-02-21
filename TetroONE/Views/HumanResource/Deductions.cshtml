@@ -33,7 +33,7 @@
         width: 100%;
         max-height: 355px !important;
     }
-     
+
     table.dataTable {
         clear: both;
         margin-top: 6px !important;
@@ -41,6 +41,7 @@
         max-width: none !important;
         /* border-collapse: separate !important; */
     }
+
 </style>
 
 
@@ -134,14 +135,14 @@
     <li b-kt7ppxredz="" class="nav-item submenu" role="presentation">
         <a b-kt7ppxredz="" class="nav-link navbar-tab" id="Loan-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Loan</a>
     </li>
-    <li b-kt7ppxredz="" class="nav-item submenu" role="presentation">
+    <li b-kt7ppxredz="" class="nav-item submenu d-none" role="presentation">
         <a b-kt7ppxredz="" class="nav-link navbar-tab" id="Claim-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Claim</a>
     </li>
     <li style="margin-left: auto;">
         <div class="tab-pane" id="Claim-Tab" role="tabpanel" aria-labelledby="InWard-TabBtn">
             <div id="filter-Column" class="Date-SearchColumn justify-content-end">
                 <div class="d-flex justify-content-end">
-                    <div class="searchbar">
+                    <div class="searchbar claimsearch">
                         <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
                         <button type="submit" class="searchbar__button">
                             <img src="~/assets/commonimages/search.svg" />
@@ -257,6 +258,7 @@
                     <div class="form-group">
                         <label>Approved Amount <span id="Asterisk">*</span></label>
                         <input type="text" class="form-control" placeholder="Approved Amount" id="ApprovedAmount" name="ApprovedAmount" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this,8)" />
+
                     </div>
                 </div>
 
@@ -328,6 +330,7 @@
                     <div class="form-group">
                         <label>Advance Amount <span id="Asterisk">*</span></label>
                         <input type="text" class="form-control" placeholder="Advance Amount" id="AdvanceAmount" name="AdvanceAmount" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" required />
+                        <input type="text" class="form-control" placeholder="Approved Amount" id="LimitAmount" name="LimitAmount" style="display:none" />
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2" id="AdvanceDueCol">
@@ -401,6 +404,7 @@
                     <div class="form-group">
                         <label>Loan Amount <span id="Asterisk">*</span></label>
                         <input type="text" class="form-control" placeholder="Loan Amount" id="LoanAmount" name="LoanAmount" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 7)" required />
+                        <input type="text" class="form-control" placeholder="Approved Amount" id="LoanMaxAmount" name="LoanMaxAmount" style="display:none" />
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 col-sm-6 col-6 mt-2">

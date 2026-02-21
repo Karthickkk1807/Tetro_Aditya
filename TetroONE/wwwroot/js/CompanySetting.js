@@ -778,21 +778,21 @@ function duplicateRow() {
                     <input type="email" class="form-control Email" placeholder="Ex: example@gmail.com" id="Email${numberIncr}" name="Email${numberIncr}" />
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 col-sm-6 col-6 ">
+            <div class="col-md-3 col-lg-3 col-sm-3 col-3 ">
                 <div class="d-flex position-absolute justify-content-start isprimaryerror" style="top:10px;left:12%;">
                     <div id="IsPrimaryError" class="d-none">
                         <span class="text-danger">Primary is required.</span>
                     </div>
                 </div>
                 <div>
-                    <div class="d-flex align-items-center mt-4 ml-4">
+                    <div class="d-flex align-items-center mt-4 ml-4" style="margin-top: 36px !important;">
                         <input type="checkbox" name="IsPrimary${numberIncr}" class="form-check-input IsPrimary" id="IsPrimary${numberIncr}">
-                        <label for="IsPrimary" class="text-black ml-2 mt-1">IsPrimary</label>
+                        <label for="IsPrimary" class="text-black ml-2">IsPrimary</label>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-3 col-sm-6 col-6 thiswillshow_1" style="display: ${rowadd == 0 ? 'none' : 'block'};">
+            <div class="col-md-3 col-lg-3 col-sm-3 col-3 thiswillshow_1" style="display: ${rowadd == 0 ? 'none' : 'block'};">
                 <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
                     <button id="RemoveButton" class="btn DynrowRemove" type="button" onclick="removeRow(this)" fdprocessedid="8h3d7"><i class="fas fa-trash-alt"></i></button>
                 </div>

@@ -3189,7 +3189,7 @@ body {
     }
 
 .avatar-lg {
-    width: 3.75rem;
+    width: 4.75rem;
     height: 3.75rem;
 }
 
@@ -13016,7 +13016,7 @@ div.table-responsive > div.dataTables_wrapper > div.row {
     }
 
     .navbar-header .navbar-nav {
-        width: 100%;
+        width: 245px;
         flex-direction: row;
         justify-content: center;
         margin-left: 0px !important;
@@ -13073,6 +13073,13 @@ div.table-responsive > div.dataTables_wrapper > div.row {
         }
 }
 
+}
+/*@media screen and (min-width : 640px) and (max-width : 991px) {
+    #UserFranchiseMappingId {
+        width: 10em !important;
+        
+    }
+}*/
 @media screen and (min-width: 856px) {
     .mail-wrapper .aside-nav {
         display: block !important;
@@ -14849,6 +14856,7 @@ td.vcenter {
     width: 100%;
     max-width: 200px;
     display: inline-flex;
+    justify-content: end;
 }
 
 .searchbar--max-width {
@@ -15198,4 +15206,54 @@ body > div.wrapper > div.main-header > nav > div > ul > li.nav-item.dropdown.hid
 
 .Recruitmentcollapse {
     margin-left: 20px !important;
+}
+
+
+/* Counder Box */
+
+@media (max-width:576px) {
+    .card-stats .col-stats {
+        justify-content: unset;
+        display: unset;
+        padding: 0 0 0 5px;
+    }
+
+    .quick-db-box .col-icon {
+        top: unset !important;
+        left: unset !important;
+    }
+
+    .quick-db-box .card-category {
+        margin: 0px !important;
+    }
+
+    .card-stats .col-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .quick-db-box .col-icon img {
+        width: 20px !important;
+    }
+
+    .card-stats .icon-big {
+        min-height: unset !important;
+    }
+
+    body > div.wrapper > div.main-panel > div > div > div.row.quick-db.m-b-5 > div > div > div:nth-child(3) {
+        margin-top: 0px !important;
+    }
+
+    body > div.wrapper > div.main-panel > div > div > div.row.quick-db.m-b-5 > div > div > div:nth-child(4) {
+        margin-top: 0px !important;
+    }
+
+    .quick-db-box .card-title {
+        font-size: 13px !important;
+    }
+
+    .row.m-t-25 {
+        margin-left: 0px;
+        margin-top: 0px !important;
+    }
 }

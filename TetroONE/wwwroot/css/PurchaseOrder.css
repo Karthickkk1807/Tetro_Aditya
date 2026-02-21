@@ -437,8 +437,32 @@ textarea.form-controltext {
 }
 
 .dataTables_scrollBody {
-    height: 330px !important;
+    height: 332px !important;
     border-bottom: 1px solid #111;
     margin-bottom: 10px;
 }
 
+@media screen and (min-width: 350px) and (max-width: 500px) {
+    .btn-text {
+        display: none;
+    }
+}
+
+/*@media screen and (max-width:524px) {
+
+    #filter-Column {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        #filter-Column .month-piker {
+            width: 100%;
+        }
+
+        #filter-Column > .d-flex.justify-content-end {
+            width: 100%;
+            justify-content: flex-end !important;
+            margin-top: 8px;
+        }
+}
+*/

@@ -173,3 +173,28 @@ table.dataTable {
     max-width: none !important;
     /* border-collapse: separate !important; */
 }
+
+@media (max-width: 576px) {
+    .searchbar__input {
+        display: block !important;
+    }
+}
+
+@media (max-width : 436px) {
+    .searchbar {
+        margin-top: 7px;
+    }
+}
+
+/*@media screen and (max-width: 576px){
+.searchbar{
+width: auto;
+margin-top: 7px;
+}
+}
+
+@media screen and (min-width: 437px) and (max-width: 576px){
+.searchbar{
+margin-top: auto;
+}
+}*/

@@ -127,7 +127,7 @@
     public class GetReportName
 	{
         public int LoginUserId { get; set; }
-        public int ReportId { get; set; }
+        public string? ModuleName { get; set; }
     }
 
 

@@ -117,7 +117,7 @@
             <a b-kt7ppxredz="" class="nav-link navbar-tab" id="Permission-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Permission</a>
         </li>
     }
-    <li b-kt7ppxredz="" class="nav-item submenu" role="presentation">
+    <li b-kt7ppxredz="" class="nav-item submenu d-none" role="presentation">
         <a b-kt7ppxredz="" class="nav-link navbar-tab" id="CompOff-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Comp Off</a>
     </li>
     <li style="margin-left: auto;">
@@ -159,6 +159,9 @@
 <div class="table-responsive" id="permissionTblCol" style="display:none;">
 </div>
 
+<div class="table-responsive" id="CompOffTblCol" style="display:none;">
+</div>
+
 <div id="LeaveCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
         <h2 id="LeaveHeader">Add Leave</h2>
@@ -179,11 +182,17 @@
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
                         <div class="form-group">
+                            <label>Leave Type </label>
+                            <select class="form-control" id="LeaveTypeId" name="LeaveTypeId" required disabled>
+                            </select> 
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6 ">
+                        <div class="form-group">
                             <label>No Of Days </label>
                             <input type="text" class="form-control" placeholder="No Of Days" id="NoOfDays" name="NoOfDays" disabled />
                         </div>
-                    </div>
-
+                    </div> 
                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                         <div class="form-group">
                             <label>From Date  <span id="Asterisk">*</span></label>
@@ -246,9 +255,7 @@
         </div>
     </div>
 </div>
-
-
-
+ 
 <div id="PermissionCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
         <h2 id="PermissionHeader">Add Permission</h2>
@@ -263,10 +270,9 @@
                     <div class="col-md-6 col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Type	 <span id="Asterisk">*</span></label>
-                            <select class="form-control" id="Type" name="Type" required>
+                            <select class="form-control" id="Type" name="Type" disabled>
                                 <option value="">--Select--</option>
-                                <option value="1">Permission</option>
-                                <option value="2">Comp Off</option>
+                                <option value="1" selected>Permission</option>
                             </select>
                         </div>
                     </div>
@@ -330,7 +336,7 @@
 
                     <div class="col-md-12 col-lg-12 col-sm-12 col-12" id="PermissionComments">
                         <div class="form-group">
-                            <label>Comments</label>
+                            <label>Comments <span id="Asterisk">*</span></label>
                             <textarea class="form-control" id="Comments" autocomplete="off" name="Comments" rows="1" oninput="Common.allowAllCharacters(this,250)" required placeholder="Comments"></textarea>
                         </div>
                     </div>
@@ -350,8 +356,6 @@
     </div>
 </div>
 
-
-
 <div id="CompOffCanvas" class="offcanvas-container">
     <div class="offcanvas-header d-flex align-items-center justify-content-between">
         <h2 id="CompOffHeader">Add Compensatory Off</h2>
@@ -366,7 +370,7 @@
                     <div class="col-md-6 col-lg-6 col-sm-12 col-12">
                         <div class="form-group">
                             <label>Employee Name<span id="Asterisk">*</span></label>
-                            <select class="form-control" id="PerEmployeeId" name="PerEmployeeId" required>
+                            <select class="form-control" id="ComEmployeeId" name="ComEmployeeId" required>
                             </select>
                         </div>
                     </div>
@@ -378,14 +382,14 @@
                     </div>
                     <div class="col-md-6 col-lg-4 col-sm-6 col-6" style="text-align: center; align-content: center;">
                         <div class="form-group">
-                            <input type="checkbox" id="halfDay">
+                            <input type="checkbox" id="ComhalfDay" name="ComhalfDay">
                             <label for="halfDay">Is Half Day</label>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4 col-sm-6 col-6">
                         <div class="form-group">
                             <label>No Of Days<span id="Asterisk">*</span></label>
-                            <input type="text" class="form-control" placeholder="No Of Days" id="NoOfDays" name="NoOfDays" disabled />
+                            <input type="text" class="form-control" placeholder="No Of Days" id="ComNoOfDays" name="ComNoOfDays" disabled />
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4 col-sm-6 col-6">
@@ -394,13 +398,26 @@
                             <input type="text" class="form-control" placeholder="Avl CompOff" id="AvlCompOff" name="AvlCompOff" disabled />
                         </div>
                     </div>
-                    <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-12" id="CompOffDescriptionCol">
                         <div class="form-group">
                             <label>CompOff Description</label>
                             <textarea class="form-control" id="CompOffDescription" autocomplete="off" name="CompOffDescription" rows="1" oninput="Common.allowAllCharacters(this,250)" placeholder="Leave Description"></textarea>
                         </div>
+                    </div> 
+                    <div class="col-md-6 col-lg-6 col-sm-12 col-12" id="CompStatusIdCol">
+                        <div class="form-group">
+                            <label>Status <span id="Asterisk">*</span></label>
+                            <select class="form-control" id="CompStatusId" name="CompStatusId" required>
+                            </select>
+                        </div>
                     </div>
 
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-12" id="CompCommentsCol">
+                        <div class="form-group">
+                            <label>Comments</label>
+                            <textarea class="form-control" id="CompComments" autocomplete="off" name="CompComments" rows="1" oninput="Common.allowAllCharacters(this,250)" required placeholder="Comments"></textarea>
+                        </div>
+                    </div> 
                 </div>
 
             </div>
@@ -449,9 +466,9 @@
         });
     });
 </script>
-
-
+ 
 <script src="~/js/leave.js"></script>
 <script src="~/assets/js/mdtimepicker.js"></script>
+<script src="~/js/CompensatoryOff.js"></script>
 <script src="~/js/permission.js"></script>
 
