@@ -180,7 +180,8 @@ namespace TetroONE.Models
         public decimal? Dia { get; set; }
         public decimal? GSM { get; set; }
         public decimal? ProductionPlanQty { get; set; }
-        public int? NoOfRolls { get; set; }
+        public decimal? PartQty { get; set; }
+        public int? NoOfRolls { get; set; } 
         public int? Width { get; set; }
         public int? RowNo { get; set; }
         public decimal? OutWardQty { get; set; }
