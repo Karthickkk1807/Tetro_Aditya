@@ -663,6 +663,8 @@ namespace TetroONE.Controllers
             {
                 connection.Open();
 
+                DataSet ds = new DataSet();
+
                 using (SqlCommand command = new SqlCommand(spName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -694,10 +696,12 @@ namespace TetroONE.Controllers
 
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-
+                    
                     try
-                    {
-                        await command.ExecuteNonQueryAsync();
+                    { 
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        adapter.Fill(ds);
+
                     }
                     catch (Exception ex)
                     {
@@ -706,6 +710,7 @@ namespace TetroONE.Controllers
 
                     response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
                     response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                    response.Data = GenericTetroONE.dataSetToJSON(ds);
                 }
                 connection.Close();
             }

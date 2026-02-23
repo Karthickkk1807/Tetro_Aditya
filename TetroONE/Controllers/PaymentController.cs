@@ -207,8 +207,14 @@ namespace TetroONE.Controllers
 
 					command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
 					command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+					try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+					catch
+					{
 
-					await command.ExecuteNonQueryAsync();
+					}
 
 					response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
 					response.Message = Convert.ToString(command.Parameters["@Message"].Value);
