@@ -567,6 +567,7 @@ namespace TetroONE.Controllers
                             DataTable dt6 = ds.Tables[5];
                             DataTable dt7 = ds.Tables[6];
                             DataTable dt8 = ds.Tables[7];
+                            DataTable dt9 = ds.Tables[8];
 
                             // Check if dt1 has rows
                             if (dt1.Rows.Count > 0)
@@ -615,6 +616,7 @@ namespace TetroONE.Controllers
                                     Weight = dt8.Rows[0]["Weight"] != DBNull.Value ? Convert.ToString(dt8.Rows[0]["Weight"]) : null,
 
                                     SaleDetailsTable = dt4,
+                                    OtherChargesData = dt9,
                                 };
 
                                 string SaleNo = dt3.Rows[0]["SaleNo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["SaleNo"]) : null;

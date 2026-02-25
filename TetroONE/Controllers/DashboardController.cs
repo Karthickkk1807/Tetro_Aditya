@@ -83,39 +83,33 @@ namespace TetroONE.Controllers
         }
 
         [HttpGet]
-        [Route("GetDashBoard1")]
-        public IActionResult GetDashBoard1(DateTime FromDate, DateTime ToDate, int FranchiseId, int ReportCategoryId)
+        [Route("GetDashBoardDetails")]
+        public IActionResult GetDashBoardDetails(DateTime FromDate, DateTime ToDate)
         {
-            GetDashBoard1 request = new GetDashBoard1()
+            GetDashBoardDetails request = new GetDashBoardDetails()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                FranchiseId = FranchiseId,
                 FromDate = FromDate,
                 ToDate = ToDate,
-                ReportCategoryId = ReportCategoryId
-
             };
 
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetDashBoardDetails_1]", request);
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetDashBoardDetails_Tetro]", request);
             return Json(response);
-
         }
 
         [HttpGet]
-        [Route("GetDashBoard2")]
-        public IActionResult GetDashBoard2(DateTime FromDate, DateTime ToDate, int FranchiseId, int ReportCategoryId, int ContactId)
+        [Route("GetDashBoardDetailsTetro1")]
+        public IActionResult GetDashBoardDetailsTetro1(int ModuleId, int Type, int Value)
         {
-            GetDashBoard2 request = new GetDashBoard2()
+            GetDashBoardDetailsTetro1 request = new GetDashBoardDetailsTetro1()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                FranchiseId = FranchiseId,
-                FromDate = FromDate,
-                ToDate = ToDate,
-                ReportCategoryId = ReportCategoryId,
-                ContactId = ContactId 
+                ModuleId = ModuleId,
+                Type = Type,
+                Value = Value,
             };
 
-            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetDashBoardDetails_2]", request);
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetDashBoardDetails_Tetro1]", request);
             return Json(response); 
         }
 

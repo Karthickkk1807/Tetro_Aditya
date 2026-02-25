@@ -142,7 +142,7 @@ function ClientSuccess(response) {
         $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
 
         var columns = Common.bindColumn(data[1], ['ClientId', 'Status_Color']);
-        Common.bindTableStarRating('ClientTable', data[1], columns, -1, 'ClientId', '330px', true, access);
+        Common.bindTableStarRating('ClientTable', data[1], columns, -1, 'ClientId', '350px', true, access);
     }
 }
 

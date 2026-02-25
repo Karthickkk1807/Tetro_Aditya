@@ -9,16 +9,23 @@ var formDataMultiple = new FormData();
 
 $(document).ready(async function () {
 
-    bindDropDownAddItem('ClientId', 'Client');
+    bindDropDownClientAddItem('ClientId', 'Client');
     Common.bindDropDown('TransactionId', 'TransactionType');
     //Common.bindDropDown('ReceivedFrom', 'JobWorker');
     Common.bindDropDown('ReceivedFrom', 'Client');
     Common.bindDropDown('ReceivedBy', 'SampleReceivedBy');
-    Common.bindDropDown('ColorId', 'Color');
+    bindDropDownColorAddItem('ColorId', 'Color');
     Common.bindDropDown('PaymentTypeId', 'PaymentType');
     Common.bindDropDown('InWardStatusId', 'InWardStatus');
     Common.bindDropDown('StorageLocationId', 'StorageLocation');
     Common.bindDropDown('InwardTypeId', 'InWardType');
+    Common.bindDropDownParent('State', 'FromAddItem', 'State');
+
+    $('#ClientId,#ReceivedFrom, #ColorId').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        });
+    });
 
     var fabricTypeDropdown = await Common.bindDropDownSync('FabricType');
     FabricTypeDropdown = JSON.parse(fabricTypeDropdown);
@@ -140,7 +147,7 @@ $(document).ready(async function () {
         $("#BtnSave span:first").text("Save");
 
         $('#AlterReceivedFrom').hide();
-        $('#AlterClientId').hide();
+        //$('#AlterClientId').hide();
 
         $('.Status-Div').hide();
         var currentDate = new Date();
@@ -175,7 +182,7 @@ $(document).ready(async function () {
         $('#InWardStatusIdDiv').show();
 
         $('#AlterReceivedFrom').hide();
-        $('#AlterClientId').hide();
+        //$('#AlterClientId').hide();
 
         $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
         $('#AddAttachLable, #AddNotesLable').show();
@@ -346,35 +353,39 @@ $(document).ready(async function () {
         $('#ReceivedFrom').val($thisVal).trigger('change');
         $('#CommonId').val('');
         if ($thisVal == "AddItem") {
-            $('#AddItemModal').show();
             $('#AlterReceivedFrom').show();
-            $('#AlterClientId').show();
+            //$('#AlterClientId').show();
             $('#ReceivedFrom').hide();
-            $('#ClientId').hide();
+            //$('#ClientId').hide();
+            Common.removevalidation('FromAddItem');
+            $('#FromAddItem #State').val('32').trigger('change');
+            $('#AddItemModal').show();
         } else {
             $('#AddItemModal').hide();
             $('#AlterReceivedFrom').hide();
-            $('#AlterClientId').hide();
+            //$('#AlterClientId').hide();
             $('#ReceivedFrom').show();
-            $('#ClientId').show();
+            //$('#ClientId').show();
             $('#AlterClientId').val('');
             $('#AlterReceivedFrom').val('');
+            Common.removevalidation('FromAddItem');
         }
     });
 
     $(document).on('click', '#AddItemClose, #AddItemBtnClose', function () {
         $('#AddItemModal').hide();
+        $('#ClientId').val('').trigger('change');
+        Common.removevalidation('FromAddItem');
     });
 
     $(document).on('input', '#AlterClientId', function () {
         var $thisVal = $(this).val();
-
         if ($thisVal == '') {
             $('#AddItemModal').hide();
             $('#AlterReceivedFrom').hide();
             $('#AlterClientId').hide();
             $('#ReceivedFrom').show();
-            $('#ClientId').show();
+            //$('#ClientId').show();
             $('#AlterClientId').val('');
             $('#AlterReceivedFrom').val('');
             $('#ClientId').val('').trigger('change');
@@ -386,12 +397,389 @@ $(document).ready(async function () {
 
     $(document).on('click', '#AddItemSave', function () {
         if ($("#FromAddItem").valid()) {
-            $('#AddItemModal').hide();
-            var $thisval = $('#CommonId').val();
-            $('#AlterClientId').val($thisval);
-            $('#AlterReceivedFrom').val($thisval);
-            Common.successMsg("Client Saved Successfully.");
+            var formDataMultiple = new FormData();
+            var existFiles = [];
+            var deletedFiles = [];
+
+            var DataClientStatic = JSON.parse(JSON.stringify(jQuery('#FromAddItem').serializeArray()));
+            var objvalue = {};
+            $.each(DataClientStatic, function (index, item) {
+                objvalue[item.name] = item.value;
+            });
+
+            objvalue.ClientId = null;
+            objvalue.ClientName = $('#CommonId').val() || null;
+            objvalue.Email = null;
+            objvalue.State = Common.parseInputValue('State') || null;
+            objvalue.CreditLimit = 25000.00;
+
+            objvalue.IsActive = true;
+
+            var ContactPerson = [];
+            ContactPerson.push({
+                ContactPersonId: null,
+                Salutation: null,
+                ContactPersonName: null,
+                ContactNumber: null,
+                Email: null,
+                IsPrimary: null,
+                ContactId: null
+            });
+
+            formDataMultiple.append("ClientData", JSON.stringify(objvalue));
+            formDataMultiple.append("ClientContactPersonDetails", JSON.stringify(ContactPerson));
+            formDataMultiple.append("Exist", JSON.stringify(existFiles));
+            formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
+            $.ajax({
+                type: "POST",
+                url: "/Contact/InsertUpdateClientDetails",
+                data: formDataMultiple,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status) {
+
+                        var data = JSON.parse(response.data);
+                        let ClientId = data[0][0].ClientId;
+                        let ResponseMessage = response.message;
+
+                        formDataMultiple = new FormData();
+
+                        var request = {
+                            moduleName: 'Client'
+                        };
+                        $.ajax({
+                            type: 'POST',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            url: '/Common/GetDropDown',
+                            data: JSON.stringify(request),
+                            success: function (response) {
+                                if (response.status == true) {
+                                    bindDropDownSuccessClientAddItem(response.data, 'ClientId');
+                                    var request = {
+                                        moduleName: 'Client'
+                                    };
+                                    $.ajax({
+                                        type: 'POST',
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        url: '/Common/GetDropDown',
+                                        data: JSON.stringify(request),
+                                        success: function (response) {
+                                            if (response.status == true) {
+                                                bindDropDownSuccessNormal(response.data, 'ReceivedFrom');
+                                                $('#ClientId').val(ClientId).trigger('change');
+                                                $('#ReceivedFrom').val(ClientId).trigger('change');
+
+                                                $('#AddItemModal').hide();
+                                                Common.successMsg(ResponseMessage);
+                                            }
+                                        },
+                                        error: function (response) {
+                                            Common.errorMsg(response.message);
+                                        },
+                                    });
+                                }
+                            },
+                            error: function (response) {
+                                Common.errorMsg(response.message);
+                            },
+                        });
+                    }
+                    else {
+                        formDataMultiple = new FormData();
+                        Common.errorMsg(response.message);
+                    }
+                },
+                error: function (response) {
+                    Common.errorMsg(response.message);
+                }
+            });
         }
+    });
+
+    $(document).on('change', '#ColorId', function () {
+        let ColorId = $(this).val();
+        if (ColorId == 'AddItemColor') {
+            $('#FormColor')[0].reset();
+            Common.removevalidation('FormColor');
+            Common.removeMessage('FormColor');
+            $('#ColorModal').show();
+        }
+    });
+
+    $(document).on('click', '#ColorClose', function () {
+        $('#ColorModal').hide();
+        $('#ColorId').val('').trigger('change');
+        Common.removevalidation('FormColor');
+        Common.removeMessage('FormColor');
+    });
+
+    $("#ColorSave").click(function (e) {
+        if ($("#FormColor").valid()) {
+            var DataColorStatic = JSON.parse(JSON.stringify(jQuery('#FormColor').serializeArray()));
+
+            var objvalue = {};
+            $.each(DataColorStatic, function (index, item) {
+                objvalue[item.name] = item.value;
+            });
+
+            objvalue.ColorId = null;
+
+            Common.ajaxCall("POST", "/Settings/InsertUpdateColorInfo", JSON.stringify(objvalue), function (response) {
+                if (response.status) {
+                    var data = JSON.parse(response.data);
+                    var ColorId = data[0][0].ColorId;
+                    var ResponseMessage = response.message;
+
+                    var request = {
+                        moduleName: 'Color'
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        url: '/Common/GetDropDown',
+                        data: JSON.stringify(request),
+                        success: function (response) {
+                            if (response.status == true) {
+                                bindDropDownSuccessColorAddItem(response.data, 'ColorId');
+
+                                $('#ColorId').val(ColorId).trigger('change');
+
+                                $('#FormColor')[0].reset();
+                                Common.removevalidation('FormColor');
+                                Common.removeMessage('FormColor');
+                                $('#ColorModal').hide();
+
+                                Common.successMsg(ResponseMessage);
+                            } else {
+                                Common.errorMsg(response.message);
+                            }
+                        },
+                        error: function (response) {
+                            Common.errorMsg(response.message);
+                        },
+                    });
+                }
+                else {
+                    Common.errorMsg(response.message);
+                }
+            }, null);
+        }
+    });
+
+    $(document).on('change', '.FabricSelect', function () {
+
+        var $select = $(this);
+        var selectedValue = $select.val();
+
+        if (selectedValue === "AddItemFabric") {
+            var $currentRow = $select.closest('tr');
+            $('#FabricInfoModal').data('currentRow', $currentRow);
+            $select.val('');
+
+            Common.removevalidation('FormFabricInfo');
+            Common.removeMessage('FormFabricInfo');
+
+            $('#FabricInfoModal').modal('show');
+        }
+        else {
+            refreshProductDropdowns(".FabricSelect");
+        }
+    });
+
+    $(document).on('click', '#FabricClose', function () {
+        Common.removevalidation('FormFabricInfo');
+        Common.removeMessage('FormFabricInfo');
+        $('#FabricInfoModal').modal('hide');
+    });
+
+    $("#FabricSave").click(async function () {
+
+        if ($("#FormFabricInfo").valid()) {
+
+            var objvalue = {
+                MasterInfoId: null,
+                ModuleName: 'Fabric',
+                MasterInfoName: $('#FabricName').val(),
+                MasterInfoDescription: $('#FabricDescription').val()
+            };
+
+            await Common.ajaxCall(
+                "POST",
+                "/Settings/InsertUpdateMasterInfo",
+                JSON.stringify(objvalue),
+                async function (response) {
+
+                    if (response.status) {
+
+                        var data = JSON.parse(response.data);
+                        var returnId = data[1][0].ModuleId;
+                        var ResponseMessage = response.message;
+
+                        var fabricTypeDropdown = await Common.bindDropDownSync('FabricType');
+                        FabricTypeDropdown = JSON.parse(fabricTypeDropdown);
+
+                        if (FabricTypeDropdown && FabricTypeDropdown.length > 0) {
+
+                            var selectedMap = {};
+
+                            $('.FabricSelect').each(function () {
+                                selectedMap[$(this).attr('id')] = $(this).val();
+                            });
+
+                            var options = '<option value="">--Select--</option>';
+
+                            if (FabricTypeDropdown[0] && FabricTypeDropdown[0].length > 0) {
+                                options += FabricTypeDropdown[0].map(function (item) {
+                                    return `<option value="${item.FabricTypeId}">${item.FabricTypeName}</option>`;
+                                }).join('');
+                                options += `<option value="AddItemFabric" class="add-item-option">+ Add Item</option>`;
+                            }
+
+                            $('.FabricSelect').each(function () {
+                                var currentId = $(this).attr('id');
+                                var oldValue = selectedMap[currentId];
+
+                                $(this).html(options);
+
+                                if (oldValue && oldValue !== "AddItemFabric") {
+                                    $(this).val(oldValue);
+                                }
+                            });
+
+                            var $row = $('#FabricInfoModal').data('currentRow');
+
+                            if ($row && returnId) {
+                                $row.find('.FabricSelect').val(returnId);
+                            }
+
+                            refreshProductDropdowns(".FabricSelect");
+                            $('.FabricSelect').trigger('change');
+                        }
+
+                        Common.removevalidation('FormFabricInfo');
+                        Common.removeMessage('FormFabricInfo');
+                        $('#FabricInfoModal').modal('hide');
+
+                        Common.successMsg(ResponseMessage);
+                    }
+                },
+                null
+            );
+        }
+    });
+
+    $(document).on('change', '.Process', function () {
+
+        let $select = $(this);
+        let selectedValues = $select.val() || [];
+
+        if (selectedValues.includes("AddItemProcess")) {
+
+            $select.select2('close');
+
+            selectedValues = selectedValues.filter(v => v !== "AddItemProcess");
+            $select.val(selectedValues).trigger('change.select2');
+
+            let $currentRow = $select.closest('tr');
+            $('#ProcessInfoModal').data('currentRow', $currentRow);
+
+            Common.removevalidation('FormProcessInfo');
+            Common.removeMessage('FormProcessInfo');
+
+            $('#ProcessInfoModal').modal('show');
+        }
+    });
+
+    $(document).on('click', '#ProcessClose', function () {
+        Common.removevalidation('FormProcessInfo');
+        Common.removeMessage('FormProcessInfo');
+        $('#ProcessInfoModal').modal('hide');
+    });
+
+    $("#ProcessSave").click(function () {
+
+        if (!$("#FormProcessInfo").valid())
+            return;
+
+        let processName = $('#ProcessName').val().trim();
+        let processDescription = $('#ProcessDescription').val();
+
+        let objvalue = {
+            MasterInfoId: null,
+            ModuleName: 'Process',
+            MasterInfoName: processName,
+            MasterInfoDescription: processDescription
+        };
+
+        Common.ajaxCall("POST",
+            "/Settings/InsertUpdateMasterInfo",
+            JSON.stringify(objvalue),
+            function (response) {
+
+                if (!response.status)
+                    return;
+
+                let data = JSON.parse(response.data);
+                let returnId = data[1][0].ModuleId.toString();
+                let responseMessage = response.message;
+
+                // 🔥 Add new option to ALL .Process dropdowns
+                $('.Process').each(function () {
+
+                    let $select = $(this);
+
+                    // Add option only if not exists
+                    if ($select.find("option[value='" + returnId + "']").length === 0) {
+
+                        // Insert before "+ Add Item"
+                        let $addOption = $select.find("option[value='AddItemProcess']");
+
+                        let newOption = new Option(processName, returnId, false, false);
+
+                        if ($addOption.length > 0) {
+                            $(newOption).insertBefore($addOption);
+                        } else {
+                            $select.append(newOption);
+                        }
+                    }
+                });
+
+                // 🔥 Select new Process in ONLY current row
+                let $row = $('#ProcessInfoModal').data('currentRow');
+
+                if ($row) {
+
+                    let $processSelect = $row.find('.Process');
+                    let currentVals = $processSelect.val() || [];
+
+                    if (!currentVals.includes(returnId)) {
+                        currentVals.push(returnId);
+                    }
+
+                    // This line makes Select2 generate:
+                    // <li class="select2-selection__choice">...</li>
+                    $processSelect.val(currentVals).trigger('change.select2');
+                }
+
+                $('.Process').select2({
+                    theme: 'bootstrap4',
+                    width: '100%',
+                    placeholder: 'Select Process'
+                });
+
+                // Close modal
+                Common.removevalidation('FormProcessInfo');
+                Common.removeMessage('FormProcessInfo');
+                $('#ProcessInfoModal').modal('hide');
+
+                Common.successMsg(responseMessage);
+            },
+            null
+        );
     });
 });
 
@@ -463,11 +851,14 @@ function GetInwardNotNullSuccess(response) {
 
         let isParentRow = currentRowNo === 1;
 
-        let FabricHTML = FabricTypeDropdown[0].map(f => `
-            <option value="${f.FabricTypeId}" ${f.FabricTypeId == item.FabricTypeId ? 'selected' : ''}>
-                ${f.FabricTypeName}
-            </option>
-        `).join('');
+        let FabricHTML = FabricTypeDropdown[0].map(f =>
+            `    <option value="${f.FabricTypeId}" ${f.FabricTypeId == item.FabricTypeId ? 'selected' : ''}>${f.FabricTypeName}</option>
+            `).join('')
+            + `
+                <option value="AddItemFabric" class="add-item-option">
+                    + Add Item
+                </option>
+            `;
 
         let WidthHTML = WidthDropdown[0].map(w => `
             <option value="${w.WidthId}" ${item.Width == w.WidthId ? 'selected' : ''}>${w.Width}</option>
@@ -478,17 +869,17 @@ function GetInwardNotNullSuccess(response) {
             data-id="${uid}" data-rowno="${currentRowNo}"> 
             <td class="sno"></td> 
             <td>
-                ${isParentRow ? `<select class="form-control FabricSelect">${FabricHTML}</select>` : ""}
+                ${isParentRow ? `<select class="form-control FabricSelect"><option value="">--Select--</option>${FabricHTML}</select>` : ""}
                 <label class="InwardFabricId d-none">${item.InwardFabricId || ''}</label>
             </td> 
             <td>
                 <label class="InwardFabricProcessMappingId d-none">${processMappingId || ''}</label> 
-                <select multiple class="select2 Process" data-coreui-search="true" required>
-                    ${ProcessTypeDropdown[0].map(p =>
-            `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
-                                            ${p.ProcessTypeName}
-                                        </option>`
-        ).join('')}
+                <select multiple class="select2 Process" data-coreui-search="true" required>${ProcessTypeDropdown[0].map(p =>
+                    `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
+                                    ${p.ProcessTypeName}
+                             </option>`
+                ).join('')}
+                 <option value="AddItemProcess">+ Add Item</option>
                 </select>
             </td> 
             <td><input class="form-control DiaInput" value="${item.Dia || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"></td>
@@ -532,10 +923,17 @@ function duplicateFabric() {
 
     var defaultOption = '<option value="">--Select--</option>';
     var FabricTypeSelectOptions = "";
+    //if (FabricTypeDropdown != null && FabricTypeDropdown.length > 0 && FabricTypeDropdown[0].length > 0) {
+    //    FabricTypeSelectOptions = FabricTypeDropdown[0].map(function (FabricTypeId) {
+    //        return `<option value="${FabricTypeId.FabricTypeId}">${FabricTypeId.FabricTypeName}</option>`;
+    //    }).join(''); +
+    //        `<option value="AddItemFabric" class="add-item-option">+ Add Item</option>`;
+    //}
+
     if (FabricTypeDropdown != null && FabricTypeDropdown.length > 0 && FabricTypeDropdown[0].length > 0) {
         FabricTypeSelectOptions = FabricTypeDropdown[0].map(function (FabricTypeId) {
             return `<option value="${FabricTypeId.FabricTypeId}">${FabricTypeId.FabricTypeName}</option>`;
-        }).join('');
+        }).join('') + `<option value="AddItemFabric" class="add-item-option" data-select2-id="135">+ Add Item</option>`;
     }
 
     let html = `
@@ -576,7 +974,7 @@ function duplicateFabric() {
         $("#Width_" + uid).val(2).trigger("change");
     });
 
-    Common.bindDropDownMulti("Process_" + uid, 'ProcessType');
+    bindDropDownMultiAddItem("Process_" + uid, 'ProcessType');
 
     $("#AddItemButtonRow").before(html);
 
@@ -587,6 +985,10 @@ function duplicateFabric() {
         closeOnSelect: false,
         width: 'style',
     });
+
+    //$('.FabricSelect').each(function () {
+    //    $(this).select2({ dropdownParent: $(this).parent() });
+    //});
 
     updateSerialNumbers();
     refreshProductDropdowns(".FabricSelect");
@@ -639,7 +1041,7 @@ function addNewFabricRow(afterRow) {
         $("#Width_" + uid).val(2).trigger("change");
     });
 
-    Common.bindDropDownMulti("Process_" + uid, 'ProcessType');
+    bindDropDownMultiAddItem("Process_" + uid, 'ProcessType');
 
     $(afterRow).after(newRow);
 
@@ -656,7 +1058,7 @@ function addNewFabricRow(afterRow) {
 
 function updateSerialNumbers() {
     let count = 0;
-    $("#InwardTableBody .dynamic-item-row").each(function (i) { 
+    $("#InwardTableBody .dynamic-item-row").each(function (i) {
         $(this).find(".sno").text(i + 1);
         if ($(this).find("select.FabricSelect").length > 0) {
             count++;
@@ -1000,10 +1402,12 @@ function refreshProductDropdowns(selector) {
 
     let selectedValues = $(selector).map(function () {
         return $(this).val();
-    }).get().filter(v => v !== "");
+    }).get().filter(v => v !== "" && v !== "AddItemFabric");
 
     $(selector).each(function () {
+
         let currentVal = $(this).val();
+
         $(this).find("option").prop("disabled", false).removeClass("d-none");
 
         selectedValues.forEach(val => {
@@ -1135,7 +1539,7 @@ function ajaxPromise(method, url, data) {
 
 /*========================================================DropDown + Add Item=================================================================*/
 
-function bindDropDownAddItem(id, moduleName) {
+function bindDropDownClientAddItem(id, moduleName) {
 
     var request = {
         moduleName: moduleName
@@ -1148,7 +1552,7 @@ function bindDropDownAddItem(id, moduleName) {
         data: JSON.stringify(request),
         success: function (response) {
             if (response.status == true) {
-                bindDropDownSuccessAddItem(response.data, id);
+                bindDropDownSuccessClientAddItem(response.data, id);
             }
         },
         error: function (response) {
@@ -1157,7 +1561,7 @@ function bindDropDownAddItem(id, moduleName) {
     });
 }
 
-function bindDropDownSuccessAddItem(response, controlid) {
+function bindDropDownSuccessClientAddItem(response, controlid) {
     if (response != null) {
         var data = JSON.parse(response);
         $('#' + controlid).empty();
@@ -1185,6 +1589,137 @@ function bindDropDownSuccessAddItem(response, controlid) {
                 value: '',
                 text: '--Select--',
             }));
+        }
+    }
+}
+
+function bindDropDownColorAddItem(id, moduleName) {
+
+    var request = {
+        moduleName: moduleName
+    };
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status == true) {
+                bindDropDownSuccessColorAddItem(response.data, id);
+            }
+        },
+        error: function (response) {
+
+        },
+    });
+}
+
+function bindDropDownSuccessColorAddItem(response, controlid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        $('#' + controlid).empty();
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+            $('#' + controlid).append($('<option>', {
+                value: 'AddItemColor',
+                text: '+ Add Item',
+                class: 'add-item-option'
+            }));
+        } else {
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+        }
+    }
+}
+
+function bindDropDownSuccessNormal(response, controlid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        $('#' + controlid).empty();
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+        } else {
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+        }
+    }
+}
+
+
+function bindDropDownMultiAddItem(id, moduleName) {
+    var request = {
+        moduleName: moduleName
+    };
+
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status === true) {
+                bindDropDownMultiAddItemSuccess(response.data, id);
+            } else {
+                console.error("Error: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Ajax error:", error);
+        },
+    });
+}
+
+function bindDropDownMultiAddItemSuccess(response, controlid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0 && !dataValue[0].hasOwnProperty('TetroONEnocount')) {
+            $('#' + controlid).empty();
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+            $('#' + controlid).append($('<option>', {
+                value: 'AddItemProcess',
+                text: '+ Add Item',
+                //class: 'add-item-option'
+            }));
+        } else {
+            $('#' + controlid).empty();
         }
     }
 }

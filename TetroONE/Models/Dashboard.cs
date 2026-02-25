@@ -14,27 +14,21 @@
         public int LoginUserId { get; set; }
         public string? ModuleName { get; set; }
         public int ModuleId { get; set; }
-
-    }
-    public class GetDashBoard1
-    {
-        public int LoginUserId { get; set; }
-        public int FranchiseId { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
-        public int ReportCategoryId { get; set; }
-
     }
 
-    public class GetDashBoard2
+    public class GetDashBoardDetails
     {
         public int LoginUserId { get; set; }
-        public int FranchiseId { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
-        public int ReportCategoryId { get; set; }
-        public int ContactId { get; set; }
+    }
 
+    public class GetDashBoardDetailsTetro1
+    {
+        public int LoginUserId { get; set; }
+        public int ModuleId { get; set; }
+        public int Type { get; set; }
+        public int Value { get; set; }
     }
 
     public class GetDashBoard3
