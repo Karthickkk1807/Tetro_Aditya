@@ -44,7 +44,7 @@ namespace TetroONE.Models
         public string? ContactPersonName { get; set; }
         public string? ContactNumber { get; set; }
         public string? Email { get; set; }
-        public bool IsPrimary { get; set; }
+        public bool? IsPrimary { get; set; }
         public int? ContactId { get; set; }
     }
 

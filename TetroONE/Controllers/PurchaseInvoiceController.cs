@@ -287,13 +287,13 @@ namespace TetroONE.Controllers
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
                     DataSet ds = new DataSet();
-
+                    
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
                         adapter.Fill(ds);
                     }
 
-                    if (ds.Tables.Count >= 7)
+                    if (ds.Tables.Count >= 8)
                     {
                         DataTable dt1 = ds.Tables[0];
                         DataTable dt2 = ds.Tables[1];
@@ -302,6 +302,7 @@ namespace TetroONE.Controllers
                         DataTable dt5 = ds.Tables[4];
                         DataTable dt6 = ds.Tables[5];
                         DataTable dt7 = ds.Tables[6];
+                        DataTable dt8 = ds.Tables[7];
 
                         // Check if dt1 has rows
                         if (dt1.Rows.Count > 0)
@@ -342,6 +343,7 @@ namespace TetroONE.Controllers
                                 RupeesInWords = dt7.Rows[0]["RupeesInWords"] != DBNull.Value ? Convert.ToString(dt7.Rows[0]["RupeesInWords"]) : null,
 
                                 ProductItemData = dt4,
+                                OtherChargesData = dt8, 
                             };
 
                             PDFPurchaseBill pdfService = new PDFPurchaseBill();

@@ -41,7 +41,7 @@ namespace TetroPos.Models
 
         //    return new DeviceRgb(r, g, b);
         //}
-          
+
         public byte[] PurchaseBillPrint(int numberOfCopies, PurchaseBillPrint data)
         {
             List<byte[]> pdfCopies = new List<byte[]>();
@@ -232,7 +232,7 @@ namespace TetroPos.Models
 
                             document.Add(ProductItemTable);
 
-                            Table BankAmountTable = new Table(UnitValue.CreatePercentArray(new float[] { 70, 30 })).UseAllAvailableWidth();
+                            Table BankAmountTable = new Table(UnitValue.CreatePercentArray(new float[] { 60, 40 })).UseAllAvailableWidth();
                             BankAmountTable.SetBorderBottom(new SolidBorder(1));
                             BankAmountTable.SetBorderLeft(new SolidBorder(1));
                             BankAmountTable.SetBorderRight(new SolidBorder(1));
@@ -247,36 +247,53 @@ namespace TetroPos.Models
                             Table BankAmountSubTable2 = new Table(UnitValue.CreatePercentArray(new float[] { 70, 12, 15, 3 })).UseAllAvailableWidth();
                             BankAmountSubTable2.SetBorder(Border.NO_BORDER);
 
+                            // Add dynamic "Other Charges" rows from data.OtherChargesData
+                            if (data.OtherChargesData != null && data.OtherChargesData.Rows.Count > 0)
+                            {
+                                foreach (DataRow row in data.OtherChargesData.Rows)
+                                {
+                                    string chargeName = row["OtherChargesName"].ToString();
+                                    string chargeType = row["ChargeType"].ToString();
+                                    string Symbol = row["Symbol"].ToString();
+                                    string chargeValue = row["OtherChargeValue"].ToString();
+
+                                    BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(chargeName + " ( " + chargeType + " -" + Symbol + " )").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
+                                    BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
+                                    BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(chargeValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
+                                    BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                                }
+                            }
+
                             if (data.IGSTPer != null)
                             {
-                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("IGST @ " + data.IGSTPer + "%").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("IGST ( " + data.IGSTPer + "%" + " )").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                                 BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.IGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.IGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                                 BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             }
                             if (data.CGSTPer != null)
                             {
-                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("CGST @ " + data.CGSTPer + " % ").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("CGST ( " + data.CGSTPer + " % " + " )").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                                 BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.CGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.CGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                                 BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             }
                             if (data.SGSTPer != null)
                             {
-                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("SGST @ " + data.SGSTPer + " % ").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("SGST ( " + data.SGSTPer + " % " + " )").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                                 BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.SGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                                BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.SGSTValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                                 BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             }
 
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Round Off").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.RoundOff).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.RoundOff).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("NET AMOUNT").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.RIGHT)));
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER)));
-                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderTop(new SolidBorder(1)).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph().Add(new Text(data.NetAmount).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderTop(new SolidBorder(1)).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph().Add(new Text(data.NetAmount).SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             BankAmountTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(BankAmountSubTable1));
@@ -377,3 +394,45 @@ namespace TetroPos.Models
 
     }
 }
+
+
+//string chargeName = row["OtherChargesName"].ToString();
+//string chargeType = row["ChargeType"].ToString();
+//string Symbol = row["Symbol"].ToString();
+//string chargeValue = row["OtherChargeValue"].ToString();
+
+//// Create Text objects for different fonts
+//Text chargeNameText = new Text(chargeName + " @ " + chargeType).SetFont(kabrioBoldFont).SetFontSize(9);
+//Text chargeTypeText = new Text(" -" + Symbol).SetFont(notoSansBoldFont).SetFontSize(11).SetTextRise(3);
+
+//// Create Paragraph combining both
+//Paragraph paragraph = new Paragraph()
+//    .Add(chargeNameText)
+//    .Add(chargeTypeText)
+//    .SetTextAlignment(TextAlignment.RIGHT);
+
+//// Add to table cell
+//BankAmountSubTable2.AddCell(
+//    new Cell()
+//        .SetBorder(Border.NO_BORDER)
+//        .Add(paragraph)
+//);
+
+//// Other cells remain the same
+//BankAmountSubTable2.AddCell(
+//    new Cell()
+//        .SetBorder(Border.NO_BORDER)
+//        .Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER))
+//);
+
+//BankAmountSubTable2.AddCell(
+//    new Cell()
+//        .SetBorder(Border.NO_BORDER)
+//        .Add(new Paragraph().Add(new Text(chargeValue).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT))
+//);
+
+//BankAmountSubTable2.AddCell(
+//    new Cell()
+//        .SetBorder(Border.NO_BORDER)
+//        .Add(new Paragraph().Add(new Text("").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT))
+//);

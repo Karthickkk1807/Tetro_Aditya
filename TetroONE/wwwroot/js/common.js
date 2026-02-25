@@ -2604,8 +2604,6 @@
         });
     },
 
-
-
     bindDropDownMultiSuccess: function (response, controlid) {
         if (response != null) {
             var data = JSON.parse(response);

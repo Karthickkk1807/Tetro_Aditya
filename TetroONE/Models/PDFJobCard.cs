@@ -25,6 +25,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TetroONE.Models
 {
@@ -150,7 +151,7 @@ namespace TetroONE.Models
 
                             document.Add(HeaderMainTable);
 
-                            Table HeaderInfoTable = new Table(UnitValue.CreatePercentArray(new float[] { 55, 45 })).UseAllAvailableWidth();
+                            Table HeaderInfoTable = new Table(UnitValue.CreatePercentArray(new float[] { 52, 48 })).UseAllAvailableWidth();
                             HeaderInfoTable.SetBorderRight(new SolidBorder(1));
                             HeaderInfoTable.SetBorderLeft(new SolidBorder(1));
                             HeaderInfoTable.SetBorderTop(Border.NO_BORDER);
@@ -164,39 +165,39 @@ namespace TetroONE.Models
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("SF.NO").SetFont(kabrioBoldFont).SetMarginTop(10).SetMarginLeft(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetVerticalAlignment(VerticalAlignment.MIDDLE).SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.SFNo).SetFont(kabrioFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.SFNo ?? "").SetFont(kabrioFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Company").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ClientName).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ClientName ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Colour").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Colour).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Colour ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Fabric").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Fabric).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Fabric ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Qty").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Weight).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Weight ?? "" + " KG").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Rolls").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Rolls).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Rolls ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Machine").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Machine).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Machine ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Weight").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Cham Weight").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ChamberQty).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ChamberQty + " KG").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("NoOfChamber").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.NoOfChamber).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.NoOfChamber ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             Table HeaderInfoRightTable = new Table(UnitValue.CreatePercentArray(new float[] { 34, 4, 62 })).UseAllAvailableWidth();
                             HeaderInfoRightTable.SetBorderRight(Border.NO_BORDER);
@@ -206,27 +207,27 @@ namespace TetroONE.Models
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Date").SetFont(kabrioBoldFont).SetMarginTop(10).SetMarginLeft(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetVerticalAlignment(VerticalAlignment.MIDDLE).SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Date).SetFont(kabrioFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Date ?? "").SetFont(kabrioFont).SetMarginTop(10).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("GSM").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.GSM).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.GSM ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Width").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Width).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Width ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Lot No").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.LotNo).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.LotNo ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("DC No").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.DCNo).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.DCNo ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Order No").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.OrderNo).SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.OrderNo ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Water").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
@@ -285,6 +286,7 @@ namespace TetroONE.Models
 
                                 document.Add(PreTreatmentMainTable);
                             }
+
 
                             Table DyeHeadingTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             DyeHeadingTable.SetBorderRight(new SolidBorder(1));
@@ -652,6 +654,51 @@ namespace TetroONE.Models
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             return textInfo.ToTitleCase(input);
         }
-
     }
 }
+
+
+
+//if (data.DyeProductItemData != null && data.DyeProductItemData.Columns.Count > 0)
+//{
+//    float[] columnWidths = Enumerable.Repeat(100f / data.DyeProductItemData.Columns.Count, data.DyeProductItemData.Columns.Count).ToArray();
+
+//    Table DyeMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
+//    DyeMainTable.SetBorder(new SolidBorder(1));
+
+//    // ---------------------------
+//    // HEADER ROW (Dynamic)
+//    // ---------------------------
+//    foreach (DataColumn column in data.DyeProductItemData.Columns)
+//    {
+//        Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName ?? "--"));
+//        DyeMainTable.AddHeaderCell(headerCell);
+//    }
+
+//    // ---------------------------
+//    // DATA ROWS (Dynamic)
+//    // ---------------------------
+//    foreach (DataRow row in data.DyeProductItemData.Rows)
+//    {
+//        foreach (var item in row.ItemArray)
+//        {
+//            string cellValue = "--";
+
+//            if (item != null && item != DBNull.Value)
+//            {
+//                string tempValue = item.ToString();
+
+//                if (!string.IsNullOrWhiteSpace(tempValue))
+//                {
+//                    cellValue = tempValue;
+//                }
+//            }
+
+//            Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(cellValue));
+
+//            DyeMainTable.AddCell(cell);
+//        }
+//    }
+
+//    document.Add(DyeMainTable);
+//}

@@ -8,8 +8,6 @@ var AfterTreatmentChemicalProduct = [];
 var DyeBathChemicalProduct = [];
 var DyeChemicalProduct = [];
 var FinishingChemicalProduct = [];
-var ItemListAdd = [];
-var AlreadyAddedIds = [];
 var ProcessTypeDropdown = [];
 var deletedFiles = [];
 var existFiles = [];
@@ -32,7 +30,7 @@ $(document).ready(async function () {
 
     $('.datapiker').show();
 
-    Common.bindDropDownParent('PreparedBy', 'FormStatus', 'ProductionUser');
+    Common.bindDropDownParent('PreparedBy', 'FormStatus', 'SampleReceivedBy');
     Common.bindDropDownParent('ProductionPlanStatusId', 'FormStatus', 'ProductionPlanStatus');
     Common.bindDropDownParent('ColorId', 'TopStatic', 'Color');
     Common.bindDropDownParent('MachineId', 'TopStatic', 'Machine');
@@ -154,8 +152,8 @@ $(document).ready(async function () {
 
         $("#ProductionPlanSaveBtn span:first").text("Save");
 
-        //$('#emptyDiv').removeClass('col-lg-3 col-md-3 col-6').addClass('col-lg-5 col-md-5 col-6');
-        //$('#ProductionPlanStatusIdDiv').hide();
+        $('#emptyDiv').removeClass('col-lg-3 col-md-3 col-6').addClass('col-lg-5 col-md-5 col-6');
+        $('#ProductionPlanStatusIdDiv').hide();
 
         $('#LoadingDateTimeDiv').hide();
         $('#UnLoadingDateTimeDiv').hide();
@@ -257,8 +255,8 @@ $(document).ready(async function () {
 
         $('#ProductionPlanPreviewbtn').show();
 
-        //$('#emptyDiv').removeClass('col-lg-5 col-md-5 col-6').addClass('col-lg-3 col-md-3 col-6');
-        //$('#ProductionPlanStatusIdDiv').show();
+        $('#emptyDiv').removeClass('col-lg-5 col-md-5 col-6').addClass('col-lg-3 col-md-3 col-6');
+        $('#ProductionPlanStatusIdDiv').show();
 
         $('#LoadingDateTimeDiv').show();
         $('#UnLoadingDateTimeDiv').show();
@@ -415,197 +413,29 @@ $(document).ready(async function () {
     });
 
     $(document).on('click', '#ProductionPlanSaveBtn', function () {
-        $('#loader-pms').show();
 
-        var TableLenthDynamicRow = $('.AddedRow').length;
-        if (TableLenthDynamicRow == 0) {
-            Common.warningMsg('Choose Atleast One Product');
-            $('#loader-pms').hide();
-            return false;
-        }
+        saveProductionPlan(function (ProductionPlanId) {
 
-        //var ProductionPlanStatusId = $('#ProductionPlanStatusId').val();
+            $('#ProductionPlanModal').hide();
 
-        //if (ProductionPlanStatusId == 3) {
-        //    if (!validateUpdateAllChemicalTabs()) {
-        //        Common.warningMsg('Please Fill the all Chemical Details');
-        //        $('#loader-pms').hide();
-        //        return false;
-        //    }
-        //}
+            var fnData = Common.getDateFilter('dateDisplay2');
 
-        if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
-            getExistFiles();
-
-            var objvalue = {
-                ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null,
-                PlantId: parseInt(PlantMappingId),
-                ProductionNo: $('#BatchNo').val() || null,
-                ProductionDate: $('#BatchDate').val() || null,
-                TotalWeight: parseFloat($('#TotalWeight').val()) || null,
-                ColorId: parseInt($('#ColorId').val()) || null,
-                MachineId: parseInt($('#MachineId').val()) || null,
-                MLR: parseFloat($('#MLR').val()) || null,
-                WaterLevel: parseInt($('#WaterLevel').val()) || null,
-                //LoadingDateTime: $('#LoadingDateTime').val() || null,
-                //UnLoadingDateTime: $('#UnLoadingDateTime').val() || null,
-                ProductionPlanStatusId: parseInt($('#ProductionPlanStatusId').val()) || null,
-                Comments: $('#AddNotesText').val() || null,
-                PreparedBy: parseInt($('#PreparedBy').val()) || null
-            };
-
-            var ProductionPlanFabricDetails = [];
-            var ProductionPlanFabricProcessMappingDetails = [];
-
-            $('#ProductionPlanProductTablebody .AddedRow').each(function (rowIndex) {
-
-                var $rowTable = $(this);
-                var productionplanfabricid = $rowTable.data('productionplanfabricid-id');
-                var inwardFabricId = $rowTable.data('inwardfabricid-id');
-
-                var FabricDetails = {
-                    ProductionPlanFabricId: productionplanfabricid ? parseInt(productionplanfabricid) : null,
-                    InwardId: parseInt($rowTable.find('.lotNo').parent().data('id')) || null,
-                    InwardFabricId: inwardFabricId ? parseInt(inwardFabricId) : null,
-                    FabricTypeId: parseInt($rowTable.find('.fabricType').parent().data('id')) || null,
-                    ColorId: parseInt($rowTable.find('.colour').parent().data('id')) || null,
-                    Dia: parseFloat($rowTable.find('.Dia').val()) || null,
-                    GSM: parseFloat($rowTable.find('.GSM').val()) || null,
-                    NoOfRolls: parseInt($rowTable.find('.NoOfRolls').val()) || null,
-                    Width: ($rowTable.find('.Width').val() || '').toLowerCase() === 'tubler' ? 2 : 1,
-                    Quantity: Common.parseFloatValue($rowTable.find('.qty').val()) || null,
-                    ProcessCount: Common.parseFloatValue($rowTable.find('.processRoute').val()) || null,
-                    Comments: $rowTable.find('.Remarks').val() || null,
-                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
-                };
-
-                ProductionPlanFabricDetails.push(FabricDetails);
-
-                var selectedProcessIds = $rowTable.find('.Process').val() || [];
-                selectedProcessIds.forEach(pid => {
-                    var FabricProcessMappingDetails = {
-                        ProductionPlanFabricProcessMappingId: $rowTable.data('productionplanfabricprocessmappingid-id') ? parseInt($rowTable.data('productionplanfabricprocessmappingid-id')) : null,
-                        ProductionPlanFabricId: productionplanfabricid ? parseInt(productionplanfabricid) : null,
-                        RowNo: rowIndex + 1,
-                        ProcessTypeId: parseInt(pid)
-                    };
-                    ProductionPlanFabricProcessMappingDetails.push(FabricProcessMappingDetails);
-                });
-            });
-
-            var ProductionPlanChemicalRequirementDetails = [];
-
-            // ---------- PRE-TREATMENT (ProcessType = 1) ----------
-            $('#ChemicalDynamic-Pre .RowOfChemical-Pre').each(function () {
-                var $row = $(this);
-
-                ProductionPlanChemicalRequirementDetails.push({
-                    ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
-                    ProcessType: 1,
-                    ChemicalId: parseInt($row.find('.ProductIdPre').val()) || null,
-                    ChemicalType: parseInt($row.find('.DysType').val()) || null,
-                    GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
-                    TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
-                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
-                });
-            });
-
-            // ---------- DYE (ProcessType = 2) ----------
-            $('#ChemicalDynamic-Dye .RowOfChemical-Dye').each(function () {
-                var $row = $(this);
-
-                ProductionPlanChemicalRequirementDetails.push({
-                    ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
-                    ProcessType: 2,
-                    ChemicalId: parseInt($row.find('.ProductIdDye').val()) || null,
-                    ChemicalType: parseInt($row.find('.DysType').val()) || null,
-                    GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
-                    TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
-                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
-                });
-            });
-
-            // ---------- DYEBATH (ProcessType = 3) ----------
-            $('#ChemicalDynamic-DyeBath .RowOfChemical-DyeBath').each(function () {
-                var $row = $(this);
-
-                ProductionPlanChemicalRequirementDetails.push({
-                    ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
-                    ProcessType: 3,
-                    ChemicalId: parseInt($row.find('.ProductIdDyeBath').val()) || null,
-                    ChemicalType: parseInt($row.find('.DysType').val()) || null,
-                    GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
-                    TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
-                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
-                });
-            });
-
-            // ---------- AFTER-TREATMENT (ProcessType = 4) ----------
-            $('#ChemicalDynamic-After .RowOfChemical-After').each(function () {
-                var $row = $(this);
-
-                ProductionPlanChemicalRequirementDetails.push({
-                    ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
-                    ProcessType: 4,
-                    ChemicalId: parseInt($row.find('.ProductIdAfter').val()) || null,
-                    ChemicalType: parseInt($row.find('.DysType').val()) || null,
-                    GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
-                    TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
-                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
-                });
-            });
-
-            // ---------- FINISHING (ProcessType = 5) ----------
-            $('#ChemicalDynamic-Finishing .RowOfChemical-Finishing').each(function () {
-                var $row = $(this);
-
-                ProductionPlanChemicalRequirementDetails.push({
-                    ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
-                    ProcessType: 5,
-                    ChemicalId: parseInt($row.find('.ProductIdFinishing').val()) || null,
-                    ChemicalType: parseInt($row.find('.DysType').val()) || null,
-                    GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
-                    TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
-                    ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
-                });
-            });
-
-            formDataMultiple.append("ProductionPlanStaticData", JSON.stringify(objvalue));
-            formDataMultiple.append("ProductionPlanFabricDetails", JSON.stringify(ProductionPlanFabricDetails));
-            formDataMultiple.append("ProductionPlanFabricProcessMappingDetails", JSON.stringify(ProductionPlanFabricProcessMappingDetails));
-            formDataMultiple.append("ProductionPlanChemicalRequirementDetails", JSON.stringify(ProductionPlanChemicalRequirementDetails));
-            formDataMultiple.append("Exist", JSON.stringify(existFiles));
-            formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
-
-            $.ajax({
-                type: "POST",
-                url: "/Productions/InsertUpdateProductionPlanDetails",
-                data: formDataMultiple,
-                contentType: false,
-                processData: false,
-
-                success: function (response) {
-                    if (response.status) {
-                        formDataMultiple = new FormData();
-                        $('#loader-pms').hide();
-                        Common.successMsg(response.message);
-                        $('#ProductionPlanModal').hide();
-                        var fnData = Common.getDateFilter('dateDisplay2');
-                        Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
-                    }
-                    else {
-                        $('#loader-pms').hide();
-                        formDataMultiple = new FormData();
-                        Common.errorMsg(response.message);
-                    }
+            Common.ajaxCall(
+                "GET",
+                "/Productions/GetProductionPlan",
+                {
+                    PlantId: parseInt(PlantMappingId),
+                    TypeId: 1,
+                    ProductionPlanId: null,
+                    FromDate: fnData.startDate.toISOString(),
+                    ToDate: fnData.endDate.toISOString()
                 },
+                GetProductionPlanSuccess,
+                null
+            );
 
-                error: function (response) {
-                    $('#loader-pms').hide();
-                    Common.errorMsg(response.message);
-                }
-            });
-        }
+        });
+
     });
 
     $(document).on('click', '.btn-delete', async function () {
@@ -630,6 +460,169 @@ $(document).ready(async function () {
         $("#UnLoadingDateTime").val('');
     });
 });
+
+function saveProductionPlan(callback, options = {}) {
+
+    const showSuccessMsg = options.showSuccessMsg !== false; // default true
+
+    $('#loader-pms').show();
+
+    var TableLenthDynamicRow = $('.AddedRow').length;
+    if (TableLenthDynamicRow == 0) {
+        Common.warningMsg('Choose Atleast One Product');
+        $('#loader-pms').hide();
+        return false;
+    }
+
+    if (!$("#TopStatic").valid() || !$("#TableInputs").valid() || !$("#FormStatus").valid()) {
+        $('#loader-pms').hide();
+        return false;
+    }
+
+    getExistFiles();
+
+    let weightStr = $('#TotalWeight').val();
+    let cleaned = weightStr.replace(/,/g, '').replace(/[^\d.]/g, '');
+    let TotalWeight = parseFloat(cleaned) || null;
+
+    // ===============================
+    // STATIC DATA
+    // ===============================
+    var ProductionPlanStaticData = {
+        ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null,
+        PlantId: parseInt(PlantMappingId),
+        ProductionNo: $('#BatchNo').val() || null,
+        ProductionDate: $('#BatchDate').val() || null,
+        TotalWeight: TotalWeight || null,
+        ColorId: parseInt($('#ColorId').val()) || null,
+        MachineId: parseInt($('#MachineId').val()) || null,
+        MLR: parseFloat($('#MLR').val()) || null,
+        WaterLevel: parseInt($('#WaterLevel').val()) || null,
+        ProductionPlanStatusId: ProductionPlanId > 0 ? parseInt($('#ProductionPlanStatusId').val()) || null : 1,
+        Comments: $('#AddNotesText').val() || null,
+        PreparedBy: parseInt($('#PreparedBy').val()) || null
+    };
+
+    // ===============================
+    // FABRIC DETAILS
+    // ===============================
+    var ProductionPlanFabricDetails = [];
+    var ProductionPlanFabricProcessMappingDetails = [];
+
+    $('#ProductionPlanProductTablebody .AddedRow').each(function (rowIndex) {
+
+        var $rowTable = $(this);
+
+        var productionPlanFabricId = $rowTable.data('productionplanfabricid-id') || null;
+        var inwardFabricId = $rowTable.data('inwardfabricid') || null;
+        var productionPlanFabricProcessMappingId = $rowTable.data('productionplanfabricprocessmappingid-id') || null;
+
+        ProductionPlanFabricDetails.push({
+            ProductionPlanFabricId: productionPlanFabricId ? parseInt(productionPlanFabricId) : null,
+            InwardId: parseInt($rowTable.find('.lotNo').parent().data('id')) || null,
+            InwardFabricId: inwardFabricId ? parseInt(inwardFabricId) : null,
+            FabricTypeId: parseInt($rowTable.find('.fabricType').parent().data('id')) || null,
+            ColorId: parseInt($rowTable.find('.colour').parent().data('id')) || null,
+            Dia: parseFloat($rowTable.find('.Dia').val()) || null,
+            GSM: parseFloat($rowTable.find('.GSM').val()) || null,
+            NoOfRolls: parseInt($rowTable.find('.NoOfRolls').val()) || null,
+            Width: ($rowTable.find('.Width').val() || '').toLowerCase() === 'tubler' ? 2 : 1,
+            Quantity: Common.parseFloatValue($rowTable.find('.qty').val()) || null,
+            ProcessCount: Common.parseFloatValue($rowTable.find('.processRoute').val()) || null,
+            Comments: $rowTable.find('.Remarks').val() || null,
+            ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
+        });
+
+        var selectedProcessIds = $rowTable.find('.Process').val() || [];
+
+        selectedProcessIds.forEach(function (pid) {
+            ProductionPlanFabricProcessMappingDetails.push({
+                ProductionPlanFabricProcessMappingId: productionPlanFabricProcessMappingId ? parseInt(productionPlanFabricProcessMappingId) : null,
+                ProductionPlanFabricId: productionPlanFabricId ? parseInt(productionPlanFabricId) : null,
+                RowNo: rowIndex + 1,
+                ProcessTypeId: parseInt(pid)
+            });
+        });
+    });
+
+    // ===============================
+    // CHEMICAL DETAILS
+    // ===============================
+    var ProductionPlanChemicalRequirementDetails = [];
+
+    function pushChemical(container, rowClass, processType, productClass) {
+        $(container + ' .' + rowClass).each(function () {
+            var $row = $(this);
+
+            ProductionPlanChemicalRequirementDetails.push({
+                ProductionPlanChemicalRequirementId: parseInt($row.find('.ProductionPlanChemicalRequirementId').text()) || null,
+                ProcessType: processType,
+                ChemicalId: parseInt($row.find(productClass).val()) || null,
+                ChemicalType: parseInt($row.find('.DysType').val()) || null,
+                GPL: parseFloat($row.find('input[id^="GPL"]').val()) || null,
+                TotalQty: parseFloat($row.find('input[id^="Qty"]').val()) || null,
+                ProductionPlanId: ProductionPlanId > 0 ? parseInt(ProductionPlanId) : null
+            });
+        });
+    }
+
+    pushChemical('#ChemicalDynamic-Pre', 'RowOfChemical-Pre', 1, '.ProductIdPre');
+    pushChemical('#ChemicalDynamic-Dye', 'RowOfChemical-Dye', 2, '.ProductIdDye');
+    pushChemical('#ChemicalDynamic-DyeBath', 'RowOfChemical-DyeBath', 3, '.ProductIdDyeBath');
+    pushChemical('#ChemicalDynamic-After', 'RowOfChemical-After', 4, '.ProductIdAfter');
+    pushChemical('#ChemicalDynamic-Finishing', 'RowOfChemical-Finishing', 5, '.ProductIdFinishing');
+
+    // ===============================
+    // APPEND FORM DATA
+    // ===============================
+    formDataMultiple.append("ProductionPlanStaticData", JSON.stringify(ProductionPlanStaticData));
+    formDataMultiple.append("ProductionPlanFabricDetails", JSON.stringify(ProductionPlanFabricDetails));
+    formDataMultiple.append("ProductionPlanFabricProcessMappingDetails", JSON.stringify(ProductionPlanFabricProcessMappingDetails));
+    formDataMultiple.append("ProductionPlanChemicalRequirementDetails", JSON.stringify(ProductionPlanChemicalRequirementDetails));
+    formDataMultiple.append("Exist", JSON.stringify(existFiles));
+    formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
+
+    // ===============================
+    // AJAX
+    // ===============================
+    $.ajax({
+        type: "POST",
+        url: "/Productions/InsertUpdateProductionPlanDetails",
+        data: formDataMultiple,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+
+            $('#loader-pms').hide();
+
+            if (response.status) {
+
+                formDataMultiple = new FormData();
+
+                // ✅ Show success only if allowed
+                if (showSuccessMsg) {
+                    Common.successMsg(response.message);
+                }
+
+                // 🔑 Return ProductionPlanId
+                if (callback) {
+                    var dataId = JSON.parse(response.data);
+                    ProductionPlanId = dataId[0][0].ProductionPlanId;
+                    callback(dataId[0][0].ProductionPlanId);
+                }
+
+            } else {
+                formDataMultiple = new FormData();
+                Common.errorMsg(response.message);
+            }
+        },
+        error: function (response) {
+            $('#loader-pms').hide();
+            formDataMultiple = new FormData();
+            Common.errorMsg(response?.message || "Something went wrong");
+        }
+    });
+}
 
 function activateChemicalTab(tabText) {
     $('#tableFilter').val('');
@@ -819,7 +812,7 @@ function GetProductionPlanSuccess(response) {
             $(".dataTables_scrollBody").css("max-height", "356px");
         } else {
             bindTable('ProductionPlanTable', data[1], columns, -1, 'ProductionPlanId', '356px', false, access);
-            $(".dataTables_scrollBody").css("max-height", "315px");
+            $(".dataTables_scrollBody").css("max-height", "320px");
         }
     }
 }
@@ -885,7 +878,7 @@ async function GetProductionPlanNotNullSuccess(response) {
                 ).join('');
 
                 const newRow = `
-                <tr class="AddedRow" data-productionplanfabricid-id="${item.ProductionPlanFabricId}" data-inwardfabricid-id="${item.InwardFabricId}"> 
+                <tr class="AddedRow" data-productionplanfabricid-id="${item.ProductionPlanFabricId}" data-inwardfabricid="${item.InwardFabricId}" data-originalqty="${item.Quantity.toFixed(3)}"> 
                     <td></td> 
                     <td data-id="${item.InwardId}">
                         <input type="text" class="form-control lotNo" value="${item.InwardNo}" disabled>
@@ -1154,126 +1147,81 @@ function createChemicalRow(rowType, chemicalData) {
     }
 }
 
+var storedNonGroupedItems = [];
+var storedNonGroupedInWardIds = [];
+var ItemListAdd = [];
+var AddedItems = [];
+var AlreadyAddedIds = [];
+
 function LoadPopupItems(allItems) {
+
     $("#ProductionPlanAddItem-table-body").empty();
 
-    allItems.forEach((item, index) => {
+    allItems.forEach((item) => {
+
         let uniqueId = `ItemId-${item.InwardFabricId}`;
 
-        let fabricQty = item.FabricQty;
-        let matches = fabricQty.match(/^([\d,]+\.?\d*)\s*(\w+)$/);
-        let qtyValue = "0";
-
-        if (matches) {
-            qtyValue = matches[1].replace(/,/g, "");  // removes commas
-        }
-
         const row = `
-            <tr class="AddItemRow" data-id="${item.ProcessList}">
+            <tr class="AddItemRow"
+                data-inwardfabricid="${item.InwardFabricId}"
+                data-inwardid="${item.InWardId}">
                 <td>
                     <div class="d-flex align-items-center">
                         <input type="checkbox" class="mr-2 ItemCheckbox" id="${uniqueId}">
-                        <label for="${uniqueId}" class="MachineName mb-0" style="color : ${item.StatusColor}!important; white-space: pre-line;">${item.MachineName}</label>
-                    </div>
-                </td> 
-                <td><label class="Customer mb-0" style="white-space: pre-line;">${item.Customer}</label></td>
-                <td><label class="d-none InWardNo">${item.InWardId}</label><label class="LotNo mb-0">${item.InWardNo}</label></td>
-                <td><label class="d-none InWardTypeNo"></label><label class="InWardType mb-0">${item.InWardType}</label></td>
-                <td><label class="d-none ColorId">${item.ColorId}</label><label class="Colour mb-0">${item.ColorName}</label></td>
-                <td><label class="d-none FabricId">${item.FabricId}</label><label class="FabricType mb-0">${item.Fabric}</label></td>
-                <td><label class="Dia mb-0">${item.Dia}</label></td>
-                <td><label class="GSM mb-0">${item.GSM}</label></td>
-                <td><label class="NoOfRolls mb-0">${item.NoOfRolls}</label></td>
-                <td><label class="Width mb-0">${item.Width}</label></td>
-                <td><label class="FabricQty mb-0">${item.FabricQty}</label></td>
-                <td><label class="FabricQty mb-0">${item.InWardQty}</label></td> 
-                <td> 
-                    <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;width: 100px;">
-                        <input type="text" class="form-control AvailableQuantity" value="${qtyValue}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)">
-                        <button id="PrimaryUnitSymbol" class="btn btn-secondary p-0" type="button" style="padding: 4px !important;border-top-left-radius: 0;border-bottom-left-radius: 0;font-size: 12px;width: 29px;height: 26px;"> KG </button>
+                        <label for="${uniqueId}" class="MachineName mb-0" style="color:${item.StatusColor || '#000'}!important"> ${item.MachineName || ''} </label>
                     </div>
                 </td>
+                <td><label class="Customer">${item.Customer || ''}</label></td> 
+                <td>
+                    <label class="d-none InWardNo">${item.InWardId}</label>
+                    <label class="LotNo">${item.InWardNo || ''}</label>
+                </td>
+                <td>
+                    <label class="d-none InWardTypeNo"></label>
+                    <label class="InWardType mb-0">${item.InWardType || ''}</label>
+                </td>
+                <td><label class="Colour">${item.ColorName || ''}</label></td>
+                <td><label class="FabricType">${item.Fabric || ''}</label></td>
+                <td><label class="Dia">${item.Dia || ''}</label></td>
+                <td><label class="GSM">${item.GSM || ''}</label></td>
+                <td><label class="NoOfRolls">${item.NoOfRolls || ''}</label></td>
+                <td><label class="Width">${item.Width || ''}</label></td>
+                <td><label class="FabricQty">${item.FabricQty || ''}</label></td>
+                <td><label class="InWardQty">${item.InWardQty || ''}</label></td>
             </tr>
         `;
+
         $("#ProductionPlanAddItem-table-body").append(row);
     });
 
     $("#ProductionPlanAddItemModal").show();
 }
 
-$(document).on('input', '.AvailableQuantity', function () {
-
-    var $row = $(this).closest('tr');
-
-    var fabricQtyText = $row.find('.FabricQty').first().text();
-    var fabricQty = parseFloat(
-        fabricQtyText.replace(/,/g, '').replace(/[^0-9.]/g, '')
-    ) || 0;
-
-    var val = $(this).val();
-
-    if (val === '') return;
-
-    var enteredQty = parseFloat(val);
-    if (isNaN(enteredQty)) return;
-
-    if (enteredQty > fabricQty) {
-        $(this).val(parseFloat(fabricQty).toFixed(3));
-    }
-});
-
 $(document).on('change', '.ItemCheckbox', function () {
-    const itemId = $(this).attr('id').replace("ItemId-", "");
+
     const $row = $(this).closest("tr");
-    const $tbody = $("#ProductionPlanAddItem-table-body");
 
-    if (this.checked) {
-        let $lastChecked = $tbody.find('.ItemCheckbox:checked').not(this).last().closest('tr');
+    let fabricQtyText = $row.find(".FabricQty").text() || "0";
 
-        $row.fadeOut(200, function () {
-            $row.detach();
-            if ($lastChecked.length) {
-                $lastChecked.after($row);
-            } else {
-                $tbody.prepend($row);
-            }
-            $row.fadeIn(300);
-        });
-    } else {
-        let $lastChecked = $tbody.find('.ItemCheckbox:checked').last().closest('tr');
+    let numbers = fabricQtyText.match(/[\d,.]+/g) || [];
 
-        $row.fadeOut(200, function () {
-            $row.detach();
-            if ($lastChecked.length) {
-                $lastChecked.after($row);
-            } else {
-                $tbody.prepend($row);
-            }
-            $row.fadeIn(300);
-        });
-    }
+    let totalQty = 0;
+
+    numbers.forEach(val => {
+        totalQty += parseFloat(val.replace(/,/g, "")) || 0;
+    });
 
     const itemObj = {
-        ItemId: itemId,
-        InwardFabricId: $(this).attr("id").split("-")[1],
-        InWardId: $row.find('.InWardNo').text(),
-        ColorId: $row.find('.ColorId').text(),
-        FabricId: $row.find('.FabricId').text(),
-        LotNo: $row.find(".LotNo").text() || '',
-        Customer: $row.find(".Customer").text() || '',
-        FabricType: $row.find(".FabricType").text() || '',
-        Colour: $row.find(".Colour").text() || '',
-        GSM: $row.find(".GSM").text() || '',
-        Dia: $row.find(".Dia").text() || '',
-        NoOfRolls: $row.find(".NoOfRolls").text() || '',
-        Width: $row.find(".Width").text() || '',
-        Quantity: parseFloat($row.find(".Quantity").text()) || 0,
-        AvailableQuantity: parseFloat(($row.find(".AvailableQuantity").val() || "0").replace(/,/g, "")) || 0,
-        ProcessList: $row.data('id'),
-        IsChecked: $(this).prop("checked"),
+        ItemId: $row.data("inwardfabricid").toString(),
+        InwardFabricId: $row.data("inwardfabricid"),
+        InWardId: $row.data("inwardid"),
+        LotNo: $row.find(".LotNo").text(),
+        Colour: $row.find(".Colour").text(),
+        FabricType: $row.find(".FabricType").text(),
+        FabricQty: totalQty
     };
 
-    if (itemObj.IsChecked) {
+    if ($(this).prop("checked")) {
         if (!ItemListAdd.some(x => x.ItemId == itemObj.ItemId)) {
             ItemListAdd.push(itemObj);
         }
@@ -1290,17 +1238,19 @@ $(document).on('input', '.AvailableQuantity', function () {
 });
 
 function UpdateTotalQuantity() {
+
     let totalQty = 0;
 
     ItemListAdd.forEach(item => {
-        let $row = $("#ProductionPlanAddItem-table-body").find(`#ItemId-${item.ItemId}`).closest("tr");
-        if ($row.length) {
-            item.AvailableQuantity = parseFloat($row.find(".AvailableQuantity").val()) || 0;
-            totalQty += item.AvailableQuantity;
-        }
+        totalQty += parseFloat(item.FabricQty) || 0;
     });
 
-    $("#NoOfQty").text(totalQty);
+    $("#NoOfQty").text(
+        totalQty.toLocaleString(undefined, {
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 3
+        })
+    );
 }
 
 function UpdateSelectedItemCount() {
@@ -1308,242 +1258,318 @@ function UpdateSelectedItemCount() {
     $("#TotalItemSelect").text(count);
 }
 
-var AddedItems = [];
-
 $(document).on("click", "#BtnAdd", function () {
 
-    // -----------------------------------------
-    // 1️⃣ CHECK: Is any checkbox selected?
-    // -----------------------------------------
-
-    let checkedRows = [];
-    $('.AddItemRow').each(function () {
-        const checkbox = $(this).find('input[type="checkbox"]');
-
-        if (checkbox.prop('checked')) {
-            checkedRows.push($(this));
-        }
-    });
-
-    if (checkedRows.length === 0) {
-        Common.warningMsg('Select at least one Customer to add.');
+    if (ItemListAdd.length === 0) {
+        Common.warningMsg('Select at least one item.');
         return;
     }
 
-    // -----------------------------------------
-    // 2️⃣ CHECK: Are all selected colours same?
-    // -----------------------------------------
-
-    let commonColour = checkedRows[0].find('.Colour').text().trim();  // Note uppercase 'C' 
-
-    let firstColor = commonColour;
-    let allSameColor = checkedRows.every(row => row.find('.Colour').text().trim() === commonColour);
-
-    if (!allSameColor) {
-        Common.warningMsg('Selected rows must have the same Colour.');
-        return;
-    }
-
-    // -----------------------------------------
-    // CHECK: Are all selected Customers same?
-    // -----------------------------------------
-
-    let commonCustomer = checkedRows[0].find('.Customer').text().trim();
-
-    let allSameCustomer = checkedRows.every(row =>
-        row.find('.Customer').text().trim() === commonCustomer
-    );
-
-    if (!allSameCustomer) {
-        Common.warningMsg('Selected rows must have the same Customer.');
-        return;
-    }
-
-    // -----------------------------------------
-    // 3️⃣ CALCULATE BEFORE AJAX
-    // -----------------------------------------
-
+    // 🔹 Calculate total KG
     let FinalValues = 0;
 
-    if ($('#TotalWeight').val() === '' || $('#TotalWeight').val() === null) {
-        FinalValues = $("#NoOfQty").text() || 0;
-    } else {
-        let value1 = $('#TotalWeight').val() || 0;
-        let value2 = $("#NoOfQty").text() || 0;
-        FinalValues = parseFloat(value1) + parseFloat(value2);
-    }
+    ItemListAdd.forEach(item => {
+        FinalValues += parseFloat(item.FabricQty) || 0;
+    });
 
-    // -----------------------------------------
-    // 4️⃣ AJAX CALL (ONLY IF VALIDATION PASSED)
-    // ----------------------------------------- 
+    let firstColor = ItemListAdd.length > 0 ? ItemListAdd[0].Colour : "";
+
+    // 🔹 AJAX FIRST
     Common.ajaxCall("GET", "/Productions/GetFabricDetailsProductionPlan", { PlantId: parseInt(PlantMappingId), IsUpdate: 1, KG: parseFloat(FinalValues), Color: firstColor }, function (response) {
-        if (response.status) {
 
-            var data = JSON.parse(response.data);
+        if (!response.status) {
+            Common.warningMsg(response.message);
+            return;
+        }
 
-            $('#TotalWeight').val(FinalValues);
-            $('#MachineId').val(data[0][0].MachineId);
-            $('#ColorId').val(data[0][0].SelectedColorId);
+        var data = JSON.parse(response.data);
 
-            // -----------------------------------------
-            // 5️⃣ PERFORM ADD OPERATIONS AFTER AJAX
-            // -----------------------------------------
+        // 🔹 Set Header Values
+        $('#TotalWeight').val(FinalValues);
 
-            $('#ProductionPlanAddItem-table-body tr.AddItemRow').each(function () {
-                const rowData = {
-                    InWardId: $(this).find('.InWardNo').text(),
-                    ColorId: $(this).find('.ColorId').text(),
-                    FabricId: $(this).find('.FabricId').text(),
-                    CustomerName: $(this).find('.Customer').first().text(), // first td label
-                    LotNo: $(this).find('.LotNo').text(),
-                    Colour: $(this).find('.Colour').text(),
-                    FabricType: $(this).find('.FabricType').text(),
-                    GSM: $(this).find('.GSM').text(),
-                    Dia: $(this).find('.Dia').text(),
-                    NoOfRolls: $(this).find('.NoOfRolls').text(),
-                    Width: $(this).find('.Width').text(),
-                    AvailableQuantity: $(this).find('.AvailableQuantity').val().replace(/,/g, ''),
-                    ProcessList: $(this).data('id')
-                };
+        if (data[0] && data[0][0]) {
+            $('#MachineId').val(data[0][0].MachineId).trigger("change");
+            $('#ColorId').val(data[0][0].SelectedColorId).trigger("change");
+        }
 
-                if (!AddedItems.find(item => item.LotNo === rowData.LotNo)) {
-                    AddedItems.push(rowData);
+        // =====================================================
+        // 🔥 APPEND ROWS INSIDE SUCCESS
+        // =====================================================
+
+        ItemListAdd.forEach(item => {
+
+            if (AlreadyAddedIds.includes(item.ItemId.toString())) return;
+
+            AlreadyAddedIds.push(item.ItemId.toString());
+
+            let inwardDetails = storedNonGroupedItems.filter(x =>
+                x.InWardId == item.InWardId
+            );
+
+            if (inwardDetails.length === 0) {
+                inwardDetails = [item];
+            }
+
+            inwardDetails.forEach(detail => {
+
+                // 1️⃣ Parse Quantity
+                let qtyValue = 0;
+
+                if (detail.FabricQty) {
+                    let matches = detail.FabricQty.match(/[\d,.]+/g);
+                    if (matches) {
+                        matches.forEach(val => {
+                            qtyValue += parseFloat(val.replace(/,/g, "")) || 0;
+                        });
+                    }
                 }
-            });
 
-            ItemListAdd.forEach(item => {
+                // 2️⃣ Convert ProcessList to array
+                let mappedProcesses = [];
 
-                let uid = Math.random().toString(36).substring(2);
+                if (detail.ProcessList) {
+                    mappedProcesses = detail.ProcessList
+                        .split(',')
+                        .map(x => x.trim())
+                        .filter(x => x !== "");
 
-                if (AlreadyAddedIds.includes(item.ItemId.toString())) return;
-                AlreadyAddedIds.push(item.ItemId.toString());
+                    mappedProcesses = [...new Set(mappedProcesses)];
+                }
 
-                let numberIncr = Math.random().toString(36).substring(2);
+                // 3️⃣ Unique Select ID
+                let uid = "Process_" + detail.InWardId + "_" +
+                    Math.random().toString(36).substr(2, 5);
 
                 const newRow = `
-                    <tr class="AddedRow" data-productionplanfabricid-id="" data-inwardfabricid-id="${item.InwardFabricId}" data-productionplanfabricprocessmappingId-id="">
-                        <td></td>
-                        <td data-id="${item.InWardId}"><input type="text" class="form-control lotNo" value="${item.LotNo}" disabled></td>
-                        <td data-id="${item.ColorId}"><input type="text" class="form-control colour" value="${item.Colour}" disabled></td>
-                        <td data-id="${item.FabricId}"><input type="text" class="form-control fabricType" value="${item.FabricType}" disabled></td>
-                        <td><input type="text" class="form-control Dia" value="${item.Dia}" disabled></td>
-                        <td><input type="text" class="form-control GSM" value="${item.GSM}" disabled></td>
-                        <td><input type="text" class="form-control NoOfRolls" value="${item.NoOfRolls}" disabled></td>
-                        <td><input type="text" class="form-control Width" value="${item.Width}" disabled></td>
-                        <td><input type="text" class="form-control qty" value="${item.AvailableQuantity.toFixed(3)}" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
-                        <td>
-                            <select multiple class="select2 Process" data-coreui-search="true" id="Process_${uid}" name="Process_${uid}" required>
-                            </select>
-                        </td>
-                        <td>
-                            <button class="btn DynremoveBtn DynrowRemove" type="button" data-id="${item.ItemId}">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
+                       <tr class="AddedRow" data-inwardid="${detail.InWardId}" data-inwardfabricid="${detail.InwardFabricId || item.InwardFabricId}" data-productionplanfabricid="${detail.ProductionPlanFabricId || ''}" data-productionplanfabricprocessmappingid="${detail.ProductionPlanFabricProcessMappingId || ''}" data-originalqty="${qtyValue.toFixed(3)}">
+
+                            <td class="rowNo"></td>
+
+                            <td data-id="${detail.InWardId}">
+                                <input type="text" class="form-control lotNo" value="${detail.InWardNo}" disabled>
+                            </td>
+                            <td data-id="${detail.ColorId}">
+                                <input type="text" class="form-control colour" value="${detail.ColorName}" disabled>
+                            </td>
+                            <td data-id="${detail.FabricId}">
+                                <input type="text" class="form-control fabricType" value="${detail.Fabric}" disabled>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control Dia" value="${detail.Dia || ''}" disabled>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control GSM" value="${detail.GSM || ''}" disabled>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control NoOfRolls" value="${detail.NoOfRolls || ''}" disabled>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control Width" value="${detail.Width || ''}" disabled>
+                            </td>
+                            <td>
+                                <input type="text"
+                                       class="form-control qty"
+                                       value="${qtyValue.toFixed(3)}"
+                                       required>
+                            </td>
+                            <td>
+                                <select multiple
+                                        id="${uid}"
+                                        class="select2 Process"
+                                        name="Process_${detail.InWardId}">
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn DynremoveBtn DynrowRemove"
+                                        type="button"
+                                        data-id="${detail.InWardId}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
 
                 $("#AddItemButtonRow").before(newRow);
 
-                let mappedProcesses = [];
+                // 🔹 Bind Process Dropdown
+                bindDropDownMultiProcess(uid, 'ProcessType', mappedProcesses);
 
-                if (item.ProcessList !== null && item.ProcessList !== undefined) {
-                    const processStr = String(item.ProcessList);
-
-                    mappedProcesses = processStr.includes(',')
-                        ? processStr.split(',').map(p => p.trim())
-                        : [processStr.trim()];
-                }
-
-                bindDropDownMultiProcess("Process_" + uid, 'ProcessType', mappedProcesses);
+                // 🔹 Initialize Select2 for this dropdown only
+                $("#" + uid).select2();
             });
 
-            $("#QRCode").html("");
+        });
 
-            let qrData = {
-                BatchNo: $("#BatchNo").val(),
-                BatchDate: $("#BatchDate").val(),
-                TotalWeight: $("#TotalWeight").val(),
-                ColorId: $("#ColorId").val(),
-                MachineId: $("#MachineId").val(),
-                LoadingDateTime: ProductionPlanId === 0 ? '' : $("#LoadingDateTime").val(),
-                UnLoadingDateTime: ProductionPlanId === 0 ? '' : $("#UnLoadingDateTime").val()
-            };
+        // 🔹 After Append Calculations
+        RenumberRows();
+        UpdateMainTableQuantity();
+        CalcuWetreLevel();
 
-            new QRCode(document.getElementById("QRCode"), {
-                text: JSON.stringify(qrData),
-                width: 120,
-                height: 120
-            });
+        // 🔹 QR Code
+        $("#QRCode").html("");
 
-            RenumberRows();
-            UpdateMainTableQuantity();
-            CalcuWetreLevel();
+        let qrData = {
+            BatchNo: $("#BatchNo").val(),
+            BatchDate: $("#BatchDate").val(),
+            TotalWeight: $("#TotalWeight").val(),
+            ColorId: $("#ColorId").val(),
+            MachineId: $("#MachineId").val(),
+            LoadingDateTime: ProductionPlanId === 0 ? '' : $("#LoadingDateTime").val(),
+            UnLoadingDateTime: ProductionPlanId === 0 ? '' : $("#UnLoadingDateTime").val()
+        };
 
-            ItemListAdd = [];
+        new QRCode(document.getElementById("QRCode"), {
+            text: JSON.stringify(qrData),
+            width: 120,
+            height: 120
+        });
 
-            if (AlreadyAddedIds.length > 0 && ProductionPlanId != 0) {
-                $('#MLRWaterLevelDiv').show();
-            } else {
-                $('#MLRWaterLevelDiv').hide();
-            }
-
-            if (AlreadyAddedIds.length > 0) {
-                $('#TotalWeightDiv').show();
-                $('#ColourDiv').show();
-                $('#MachineDiv').show();
-            } else {
-                $('#TotalWeightDiv').hide();
-                $('#ColourDiv').hide();
-                $('#MachineDiv').hide();
-            }
-
-            $("#ProductionPlanAddItemModal").hide();
+        // 🔹 UI Visibility
+        if (AlreadyAddedIds.length > 0 && ProductionPlanId != 0) {
+            $('#MLRWaterLevelDiv').show();
+        } else {
+            $('#MLRWaterLevelDiv').hide();
         }
-        else {
-            Common.warningMsg(response.message);
+
+        if (AlreadyAddedIds.length > 0) {
+            $('#TotalWeightDiv').show();
+            $('#ColourDiv').show();
+            $('#MachineDiv').show();
+        } else {
+            $('#TotalWeightDiv').hide();
+            $('#ColourDiv').hide();
+            $('#MachineDiv').hide();
         }
-    }, null);
+
+        ItemListAdd = [];
+        $("#ProductionPlanAddItemModal").hide();
+    }
+    );
 });
 
+$(document).on('click', '#AddItemBtn', function () {
+
+    $("#TotalItemSelect").text('');
+    $("#NoOfQty").text('');
+
+    Common.ajaxCall("GET",
+        "/Productions/GetFabricDetailsProductionPlan",
+        {
+            PlantId: parseInt(PlantMappingId),
+            IsUpdate: null,
+            KG: 1,
+            Color: ""
+        },
+        function (response) {
+
+            if (!response.status) return;
+
+            var data = JSON.parse(response.data);
+
+            if (!data || !data[0] || data[0].length === 0) {
+                Common.warningMsg('No grey fabric stock is available.');
+                return;
+            }
+
+            var items = data[0];
+
+            // Store detail rows
+            storedNonGroupedItems = items.filter(x => x.IsGrouped === 0);
+            storedNonGroupedInWardIds = storedNonGroupedItems.map(x => x.InWardId);
+
+            // Only grouped rows for popup
+            const groupedItems = items.filter(x => x.IsGrouped === 1);
+
+            const filteredData = groupedItems.filter(item =>
+                !AlreadyAddedIds.includes(item.InwardFabricId?.toString())
+            );
+
+            if (filteredData.length === 0) {
+                $("#ProductionPlanAddItem-table-body").html(`
+                    <tr>
+                        <td colspan="13" class="text-center text-danger fw-bold py-2">
+                            No records found
+                        </td>
+                    </tr>
+                `);
+                $("#ProductionPlanAddItemModal").show();
+                return;
+            }
+
+            LoadPopupItems(filteredData);
+
+        }, null);
+});
 
 $(document).on('click', '.DynremoveBtn', function () {
-    const id = $(this).data("id").toString();
-    const row = $(this).closest("tr");
 
-    const qtyVal = parseFloat(row.find(".qty").val()) || 0;
-    let totalWeight = parseFloat($("#TotalWeight").val()) || 0;
+    const row = $(this).closest("tr");   // 🔹 Only this row
+    const inwardFabricId = row.data("inwardfabricid")?.toString();
+    const inwardId = row.data("inwardid")?.toString();
 
-    let newTotal = totalWeight - qtyVal;
-    if (newTotal < 0) newTotal = 0;
-    $("#TotalWeight").val(newTotal);
+    // 🔹 Remove row from main table
+    row.remove();
+
+    // 🔹 Remove only this item from arrays
+    if (inwardFabricId) {
+        AlreadyAddedIds = AlreadyAddedIds.filter(x => x !== inwardFabricId);
+        ItemListAdd = ItemListAdd.filter(x => x.InwardFabricId?.toString() !== inwardFabricId);
+    }
+
+    // =====================================================
+    // 🔥 Restore ONLY this item in popup
+    // =====================================================
+
+    if (inwardFabricId) {
+
+        const popupCheckbox = $("#ProductionPlanAddItem-table-body")
+            .find(`#ItemId-${inwardFabricId}`);
+
+        if (popupCheckbox.length) {
+
+            popupCheckbox.prop("checked", false);
+
+            const popupRow = popupCheckbox.closest("tr");
+
+            // Optional: move to bottom
+            popupRow.detach().appendTo("#ProductionPlanAddItem-table-body");
+        }
+    }
+
+    // =====================================================
+    // 🔹 Recalculate totals
+    // =====================================================
+
+    UpdateMainTableQuantity();
     CalcuWetreLevel();
 
-    row.remove();
-    AlreadyAddedIds = AlreadyAddedIds.filter(x => x !== id);
-    ItemListAdd = ItemListAdd.filter(x => x.ItemId.toString() !== id);
+    // =====================================================
+    // 🔹 UI Visibility
+    // =====================================================
 
-    if (AlreadyAddedIds.length !== 0) {
-        $('#MLRWaterLevelDiv').show();
+    if (AlreadyAddedIds.length > 0) {
+
         $('#TotalWeightDiv').show();
         $('#ColourDiv').show();
         $('#MachineDiv').show();
+
+        if (ProductionPlanId != 0) {
+            $('#MLRWaterLevelDiv').show();
+        } else {
+            $('#MLRWaterLevelDiv').hide();
+        }
+
     } else {
+
         $('#MLRWaterLevelDiv').hide();
         $('#MLR').val('');
         $('#TotalWeightDiv').hide();
         $('#ColourDiv').hide();
         $('#MachineDiv').hide();
-    }
-
-    if (AlreadyAddedIds.length > 0 && ProductionPlanId != 0) {
-        $('#MLRWaterLevelDiv').show();
-    } else {
-        $('#MLRWaterLevelDiv').hide();
+        $('#TotalWeight').val('0.000');
     }
 
     RenumberRows();
-    UpdateMainTableQuantity();
 });
 
 function RenumberRows() {
@@ -1553,7 +1579,45 @@ function RenumberRows() {
 }
 
 $(document).on('input', '.qty', function () {
+
+    const row = $(this).closest("tr");
+    const originalQty = parseFloat(row.data("originalqty")) || 0;
+
+    let value = $(this).val();
+
+    // 🔹 Allow only digits and dot
+    value = value.replace(/[^0-9.]/g, '');
+
+    // 🔹 Prevent multiple dots
+    const parts = value.split('.');
+    if (parts.length > 2) {
+        value = parts[0] + '.' + parts[1];
+    }
+
+    // 🔹 Limit to 3 decimal places
+    if (parts.length === 2) {
+        parts[1] = parts[1].substring(0, 3);
+        value = parts[0] + '.' + parts[1];
+    }
+
+    let numericValue = parseFloat(value);
+
+    if (!isNaN(numericValue)) {
+
+        if (numericValue < 0) {
+            numericValue = 0;
+        }
+
+        if (numericValue > originalQty) {
+            numericValue = originalQty;
+            value = numericValue.toString();
+        }
+    }
+
+    $(this).val(value);
+
     UpdateMainTableQuantity();
+    CalcuWetreLevel();
 });
 
 function UpdateMainTableQuantity() {
@@ -1561,51 +1625,13 @@ function UpdateMainTableQuantity() {
     let total = 0;
 
     $("#ProductionPlanProductTablebody tr.AddedRow").each(function () {
-        let qty = parseFloat($(this).find("input.qty").val()) || 0;
+
+        let qty = parseFloat($(this).find(".qty").val()) || 0;
         total += qty;
     });
 
-    $("#Subtotal").val(total.toFixed(2));
+    $("#TotalWeight").val(total.toFixed(3));
 }
-
-$(document).on('click', '#AddItemBtn', function () {
-
-    $("#TotalItemSelect").text('');
-    $("#NoOfQty").text('');
-
-    Common.ajaxCall("GET", "/Productions/GetFabricDetailsProductionPlan", { PlantId: parseInt(PlantMappingId), IsUpdate: null, KG: 1, Color: "" }, function (response) {
-
-        if (!response.status) return;
-
-        var data = JSON.parse(response.data);
-
-        if (data[0][0].InwardFabricId == null) {
-            Common.warningMsg('No grey fabric stock is available.');
-        }
-
-        var items = data[0];
-
-        const filteredData = items.filter(item =>
-            !AlreadyAddedIds.includes(item.InwardFabricId.toString())
-        );
-
-        // 🚨 If NO records available, show a 'no record found' row
-        if (filteredData.length === 0) {
-            $("#ProductionPlanAddItem-table-body").html(`
-                    <tr>
-                        <td colspan="10" class="text-center text-danger fw-bold py-2">
-                            No records found
-                        </td>
-                    </tr>
-                `);
-            $("#ProductionPlanAddItemModal").show();
-            return;
-        }
-
-        // Otherwise load normally
-        LoadPopupItems(filteredData);
-    }, null);
-});
 
 /*------------------------------------------------------------------------------Dynamic Pop-------------------------------------------------------------------*/
 let selectedProcessInput = null;
@@ -3327,36 +3353,46 @@ $(document).on('click', '#ProductionPlanPreviewbtn', function () {
 $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 
     $('#loader-pms').show();
-    var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
 
-    var EditData = {
-        ModuleId: parseInt(ProductionPlanId),
-        NoOfCopies: 1,
-        printType: "Preview",
-        Url: scanUrl
-    };
+    // Step 1: Save Production Plan
+    saveProductionPlan(function (productionPlanId) {
 
-    $.ajax({
-        type: 'GET',
-        url: '/Productions/JobCardPrint',
-        data: EditData,
-        xhrFields: {
-            responseType: 'blob'
-        },
-        success: function (response) {
+        // Safety check
+        if (!productionPlanId) {
+            $('#loader-pms').hide();
+            Common.errorMsg("Production Plan ID not returned");
+            return;
+        }
 
-            $('#ShareDropdownitems').hide();
+        var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
 
-            var blob = new Blob([response], { type: 'application/pdf' });
-            var blobUrl = URL.createObjectURL(blob);
+        // Step 2: Prepare JobCard Print Data
+        var EditData = {
+            ModuleId: parseInt(productionPlanId),
+            NoOfCopies: 1,
+            printType: "Preview", // Options: "Print", "Download", "Print"
+            Url: scanUrl
+        };
 
-            var printType = EditData.printType;
+        $.ajax({
+            type: 'GET',
+            url: '/Productions/JobCardPrint',
+            data: EditData,
+            xhrFields: { responseType: 'blob' },
 
-            if (printType === "Preview") {
+            success: function (response) {
 
-                var newTab = window.open();
-                if (newTab) {
-                    newTab.document.write(`
+                $('#ShareDropdownitems').hide();
+
+                var blob = new Blob([response], { type: 'application/pdf' });
+                var blobUrl = URL.createObjectURL(blob);
+
+                // 🔹 PRINT TYPE HANDLER
+                if (EditData.printType === "Preview") {
+
+                    var newTab = window.open();
+                    if (newTab) {
+                        newTab.document.write(`
                             <html>
                             <head>
                                 <title>Production Plan Preview</title>
@@ -3366,38 +3402,44 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
                             </body>
                             </html>
                         `);
-                    newTab.document.close();
-                } else {
-                    Common.warningMsg("Popup blocked. Please allow popups.");
+                        newTab.document.close();
+                    } else {
+                        Common.warningMsg("Popup blocked. Please allow popups.");
+                    }
+
+                } else if (EditData.printType === "Download") {
+
+                    var link = document.createElement('a');
+                    link.href = blobUrl;
+                    link.download = 'Production Plan.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                } else if (EditData.printType === "Print") {
+
+                    var iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = blobUrl;
+                    document.body.appendChild(iframe);
+                    iframe.onload = function () {
+                        iframe.contentWindow.print();
+                    };
                 }
 
-            } else if (printType === "Download") {
+                $('#loader-pms').hide();
+            },
 
-                var link = document.createElement('a');
-                link.href = blobUrl;
-                link.download = 'Production Plan.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-            } else if (printType === "Print") {
-
-                var iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = blobUrl;
-                document.body.appendChild(iframe);
-                iframe.onload = function () {
-                    iframe.contentWindow.print();
-                };
+            error: function () {
+                $('#loader-pms').hide();
+                Common.errorMsg("JobCard print failed");
             }
+        });
 
-            $('#loader-pms').hide();
-        },
-        error: function () {
-            $('#loader-pms').hide();
-            Common.errorMsg("Print failed");
-        }
+    }, {
+        showSuccessMsg: false // ❌ Disable success message
     });
+
 });
 
 /*GenerateQrContectPdf*/
@@ -3449,3 +3491,12 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 //        }
 //    });
 //});
+
+
+/*AvailableQuantity*/
+//<td>
+//    <div class="input-group" style="flex-wrap:nowrap;width:100px;">
+//        <input type="text" class="form-control AvailableQuantity" value="${qtyValue}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)">
+//            <button class="btn btn-secondary p-0" type="button" style="padding:4px!important; border-top-left-radius:0; border-bottom-left-radius:0; font-size:12px; width:29px; height:26px;">KG</button>
+//    </div>
+//</td>

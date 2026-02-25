@@ -242,8 +242,9 @@ namespace TetroONE.Models
         public string? Weight { get; set; }
 
         public DataTable? SaleDetailsTable { get; set; }
+        public DataTable? OtherChargesData { get; set; }
     }
-     
+    
     public class GetOutwardDetails_ByInWardId
     {
         public int LoginUserId { get; set; }

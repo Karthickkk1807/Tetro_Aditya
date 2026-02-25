@@ -6,7 +6,7 @@
 
 <style>
 
-    .Purchasetable-scroll{
+    .Purchasetable-scroll {
         /* max-height: 229px; */
         overflow-y: auto;
         display: block;
@@ -18,7 +18,7 @@
     }
 
     .dataTables_scrollBody {
-        height: 350px !important;
+        height: 355px !important;
         margin-top: -18px !important;
         border-bottom: 1px solid #111;
         margin-bottom: 10px;
@@ -119,7 +119,7 @@
         padding: 4px;
         margin-top: 1px;
     }
-     
+
     .select2-selection__choice {
         /* background: #baffff !important; */
         background: aliceblue !important;
@@ -133,6 +133,29 @@
         text-align: center;
         font-weight: 600;
         color: blue
+    }
+
+    .select2-container .select2-selection--single {
+        box-sizing: border-box;
+        cursor: pointer;
+        display: block;
+        height: 34px;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        line-height: 33px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        margin-top: 2px;
+    }
+
+    .select2-container--default .select2-results > .select2-results__options {
+        max-height: 141px !important;
+        overflow-y: auto;
     }
 
 </style>
@@ -314,7 +337,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="px-3" id="ProductionPlanTopHeadbind">  
+                <div class="px-3" id="ProductionPlanTopHeadbind">
                     <div class="row DynPageRow-Div">
                         <div class="col-lg-12 col-md-12 col-sm-6 col-12" id="ShippingColumn" style="position: relative;">
                             <form id="TopStatic">
@@ -342,14 +365,14 @@
                                         <div class="form-group">
                                             <label>Payment<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="PaymentTypeId" name="PaymentTypeId" required>
-                                             </select>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Client<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="ClientId" name="ClientId" required></select>
-                                            <input type="text" class="form-control" id="AlterClientId" name="AlterClientId" required />
+                                            @*<input type="text" class="form-control" id="AlterClientId" name="AlterClientId" required />*@
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
@@ -362,7 +385,7 @@
                                         <div class="form-group">
                                             <label>Received From</label>
                                             <select class="form-control" id="ReceivedFrom" name="ReceivedFrom"></select>
-                                            <input type="text" class="form-control" id="AlterReceivedFrom" name="AlterReceivedFrom" required disabled/>
+                                            <input type="text" class="form-control" id="AlterReceivedFrom" name="AlterReceivedFrom" required disabled />
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
@@ -385,15 +408,15 @@
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Color<span id="Asterisk">*</span></label>
-                                            <select class="form-control Color" id="ColorId" name="ColorId" required>
+                                            <label>Storage Location<span id="Asterisk">*</span></label>
+                                            <select class="form-control" id="StorageLocationId" name="StorageLocationId" required="">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Storage Location<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="StorageLocationId" name="StorageLocationId" required=""> 
+                                            <label>Color<span id="Asterisk">*</span></label>
+                                            <select class="form-control Color" id="ColorId" name="ColorId" required>
                                             </select>
                                         </div>
                                     </div>
@@ -470,7 +493,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="px-3"> 
+                <div class="px-3">
                     <div class="row DynmicTableRow">
                         <!--Notes & Terms Column-->
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pt-3 pb-3" style="border-right: 1px solid #c7c7c7;">
@@ -589,8 +612,9 @@
     </div>
 </div>
 
+@* ------------------------------AddItemModal---------------------------------------------- *@
 <div id="AddItemModal" class="modal" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
                 <h2 id="">Add Client</h2>
@@ -599,10 +623,52 @@
             <div class="modal-body" style="max-height: 73vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
                 <form id="FromAddItem">
                     <div class="row">
-                        <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                             <div class="form-group">
                                 <label>Client Name<span id="Asterisk">*</span></label>
                                 <input type="text" class="form-control" id="CommonId" name="CommonId" placeholder="Ex: Ramesh R" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Address<span id="Asterisk">*</span></label>
+                                <input type="text" class="form-control valid" placeholder="Ex: 101, Ashoka Nagar" id="Address" name="Address" maxlength="500" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>City<span id="Asterisk">*</span></label>
+                                <input type="text" class="form-control valid" placeholder="Ex: Chennai" id="City" name="City" value="TIRUPUR" required oninput="Common.allowOnlyTextLength(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3 col-6">
+                            <div class="form-group">
+                                <label>State<span id="Asterisk">*</span></label>
+                                <select class="form-control" id="State" name="State" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3 col-6">
+                            <div class="form-group">
+                                <label>Country<span id="Asterisk">*</span></label>
+                                <input type="text" class="form-control valid" placeholder="Ex: India" id="Country" name="Country" value="India" oninput="Common.allowOnlyTextLength(this,20)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3 col-6">
+                            <div class="form-group">
+                                <label>Zipcode<span id="Asterisk">*</span></label>
+                                <input type="text" class="form-control valid" placeholder="Ex: 600028" id="ZipCode" name="ZipCode" oninput="Common.allowOnlyNumberLength(this,6)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3 col-6">
+                            <div class="form-group">
+                                <label>Contact No<span id="Asterisk">*</span></label>
+                                <input type="text" class="form-control valid" placeholder="Ex:9876543210" id="ContactNumber" minlength="10" maxlength="10" name="ContactNumber" oninput="Common.allowOnlyNumberLength(this,10)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>GST Number<span id="Asterisk">*</span></label>
+                                <input type="text" class="form-control valid" placeholder="Ex: 27AAACB1234C1Z5" id="GSTNumber" name="GSTNumber" required oninput="Common.allowGSTNumber(this, 15)">
                             </div>
                         </div>
                     </div>
@@ -610,8 +676,132 @@
             </div>
             <div class="modal-footer w-100" style="text-align: center;align-items: center !important;align-content: center;display: block;">
                 <div>
-                    <button type="button" id="AddItemSave" class="btn mr-2" style="background-color: green; color:white">Save</button>
+                    <button type="button" id="AddItemSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
                     <button type="button" id="AddItemBtnClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------Color---------------------------------------------- *@
+<div id="ColorModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="ColorTextInfo">Color Details</h2>
+                @* <span id="ColorClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span> *@
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormColor">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Color Name<span class="Asterisk"> *</span></label>
+                                <input type="text" id="ColorName" name="ColorName" class="form-control" placeholder="Color Name" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Color Code<span class="Asterisk"> *</span></label>
+                                <input type="text" id="ColorCode" name="ColorCode" class="form-control" placeholder="Ex: C001" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-4 col-6">
+                            <div class="form-group">
+                                <label>Color<span class="Asterisk"> *</span></label>
+                                <input type="text" id="PantoneCode" name="PantoneCode" class="form-control" placeholder="Ex: 14-0002 TCX" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                            <div class="form-group">
+                                <label>Color Description</label>
+                                <textarea type="text" id="ColorDescription" name="ColorDescription" rows="1" class="form-control" placeholder="Color Description" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" id="ColorSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
+                        <button type="button" id="ColorClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------Fabric Info---------------------------------------------- *@
+<div id="FabricInfoModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="HeaderTextInfo">Fabric Info</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormFabricInfo">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="">Fabric Name<span id="Asterisk">*</span></label>
+                                <input type="text" id="FabricName" name="FabricName" class="form-control" placeholder="Ex: Single Jersey" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="">Fabric Description</label>
+                                <textarea type="text" id="FabricDescription" name="FabricDescription" rows="1" class="form-control" placeholder="Ex: About Single Jersey" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" id="FabricSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
+                        <button type="button" id="FabricClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------Process Info---------------------------------------------- *@
+<div id="ProcessInfoModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="HeaderTextInfo">Process Info</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormProcessInfo">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="">Process Name<span id="Asterisk">*</span></label>
+                                <input type="text" id="ProcessName" name="ProcessName" class="form-control" placeholder="Ex: Dryer" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="">Dryer Description</label>
+                                <textarea type="text" id="ProcessDescription" name="ProcessDescription" rows="1" class="form-control" placeholder="Ex: About Dryer" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" id="ProcessSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
+                        <button type="button" id="ProcessClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>

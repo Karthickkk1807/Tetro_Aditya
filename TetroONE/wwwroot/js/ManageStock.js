@@ -228,8 +228,6 @@ $(document).ready(function () {
         var fnData = Common.getDateFilter('dateDisplay2');
         var ProductTypeId;
 
-        // Update UI text (if dateDisplay2 is similar to reportrange)
-        // First day of current month → Today
         var start = moment().startOf('month');
         var end = moment();
 
@@ -288,57 +286,63 @@ $(document).ready(function () {
         }, null);
     });
 
-
-    //$('#reportrange').on('apply.daterangepicker', function (ev, picker) { 
-    //    var ProductTypeId;
-    //    ProductTypeId =
-    //        titleForHeaderProductTab === "Raw Material" ? 1 :
-    //            titleForHeaderProductTab === "Un-Processed" ? 2 :
-    //                titleForHeaderProductTab === "Processed" ? 3 :
-    //                    0;
-
-    //    // Build request from picker values
-    //    var EditDataId = {
-    //        ProductId: parseInt(manageStockId),
-    //        ProductTypeId: parseInt(ProductTypeId),
-    //        PlantId: parseInt(PlantMappingId),
-
-    //        FromDate: picker.startDate.clone().startOf('day')
-    //            .format('DD-MM-YYYY hh.mm.ss A'),
-
-    //        ToDate: picker.endDate.clone().endOf('day')
-    //            .format('DD-MM-YYYY hh.mm.ss A')
-    //    };
-
-    //    // 🔥 CALL AJAX HERE
-    //    Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, function (response) {
-    //        if (response.status) {
-    //            var data = JSON.parse(response.data);
-
-    //            $('#ProductName').text(data[0][0].ProductName);
-    //            $('#OpeningStock').text(data[0][0].OpeningStock);
-    //            $('#ClosingStock').text(data[0][0].ClosingStock);
-    //            $('#TotalInward').text(data[0][0].InwardQty);
-    //            $('#TotalOutward').text(data[0][0].OutwardQty);
-
-    //            $('#EditManageStockDynamic').empty('');
-    //            var html = ` 
-    //            <div class="table-responsive">
-    //                <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="EditManageStockTable">
-    //                </table>
-    //            </div>
-    //            `;
-    //            $('#EditManageStockDynamic').append(html);
-
-    //            var columns = Common.bindColumn(data[1], ['MappingManageStockId', '']);
-    //            bindTableEditManageStock('EditManageStockTable', data[1], columns, '330px');
-    //        }
-    //    }, null);
-    //});
-
     $(document).on('click', '#ManageStockClose', function () {
         $('#ManageStockModal').hide();
     });
+});
+
+$('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+
+    var fromDate = picker.startDate.toISOString();
+    var toDate = picker.endDate.toISOString();
+    var ProductTypeId;
+
+    ProductTypeId =
+        titleForHeaderProductTab === "Raw Material" ? 1 :
+            titleForHeaderProductTab === "Un-Processed" ? 2 :
+                titleForHeaderProductTab === "Processed" ? 3 :
+                    0;
+    var dia = null, gsm = null, width = null;
+
+    var EditDataId = {
+        ProductId: parseInt(manageStockId),
+        ProductTypeId: parseInt(ProductTypeId),
+        PlantId: parseInt(PlantMappingId),
+        Dia: parseFloat(dia),
+        GSM: parseFloat(gsm),
+        Width: parseInt(width),
+        FromDate: fromDate,
+        ToDate: toDate
+    };
+
+    Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, function (response) {
+        if (response.status) {
+            var data = JSON.parse(response.data);
+
+            $('#ProductName').text(data[1][0].ProductName);
+            $('#OpeningStock').text(data[1][0].OpeningStock);
+            $('#ClosingStock').text(data[1][0].ClosingStock);
+            $('#TotalInward').text(data[1][0].InwardQty);
+            $('#TotalOutward').text(data[1][0].OutwardQty);
+
+            $('#EditManageStockDynamic').empty();
+
+            var html = `
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive"
+                           id="EditManageStockTable">
+                    </table>
+                </div>
+            `;
+
+            $('#EditManageStockDynamic').append(html);
+
+            var columns = Common.bindColumn(data[0], ['MappingManageStockId', '']);
+            bindTableEditManageStock('EditManageStockTable', data[0], columns, '330px');
+        }
+         
+    }, null);
+
 });
 
 function ManageStockSuccess(response) {
@@ -346,33 +350,16 @@ function ManageStockSuccess(response) {
         var data = JSON.parse(response.data);
         var CounterBox = Object.keys(data[0][0]);
 
-        //$("#CounterTextBox1").text(CounterBox[0]);
-        //$("#CounterTextBox2").text(CounterBox[1]);
-        //$("#CounterTextBox3").text(CounterBox[2]);
-        //$("#CounterTextBox4").text(CounterBox[3]);
-        //
-        //$('#CounterValBox1').text(data[0][0][CounterBox[0]]);
-        //$('#CounterValBox2').text(data[0][0][CounterBox[1]]);
-        //$('#CounterValBox3').text(data[0][0][CounterBox[2]]);
-        //$('#CounterValBox4').text(data[0][0][CounterBox[3]]);
-
-        $("#CounterTextBox1").text('Raw Product');
-        $("#CounterTextBox2").text('InCrease Count / Qty');
-        $("#CounterTextBox3").text('DeCrease Count / Qty');
-        $("#CounterTextBox4").text('LessthanReOrderLevel');
-
-        if (titleForHeaderProductTab == 'Raw Material' || titleForHeaderProductTab == 'Processed') {
-            $('#CounterValBox1').text('4');
-            $('#CounterValBox2').text('3');
-            $('#CounterValBox3').text('2');
-            $('#CounterValBox4').text('1');
-        } else if (titleForHeaderProductTab == 'Un-Processed') {
-            $('#CounterValBox1').text('10');
-            $('#CounterValBox2').text('5');
-            $('#CounterValBox3').text('6');
-            $('#CounterValBox4').text('2');
-        }
-
+        $("#CounterTextBox1").text(CounterBox[0]);
+        $("#CounterTextBox2").text(CounterBox[1]);
+        $("#CounterTextBox3").text(CounterBox[2]);
+        $("#CounterTextBox4").text(CounterBox[3]);
+        
+        $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
+        $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
+        $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
+        $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
+        
         //var activeTabText = $('.nav-link.navbar-tab.active').text().trim();
         $('#ManageStockDynamic').empty('');
         var html = ` 
@@ -389,85 +376,6 @@ function ManageStockSuccess(response) {
         $('#loader-pms').hide();
     }
 }
-
-//function bindTableManageStock(tableid, data, columns, actionTarget, editcolumn, scrollpx) {
-
-//    // Destroy existing DataTable safely
-//    if ($.fn.DataTable.isDataTable('#' + tableid)) {
-//        $('#' + tableid).DataTable().clear().destroy();
-//    }
-
-//    $('#' + tableid).empty();
-
-//    // Remove unwanted column
-//    columns = columns.filter(x => x.name !== "TetroONEnocount");
-
-//    var hasValidData = data && data.length > 0;
-
-//    /* ---------------- ADD ACTION COLUMN ---------------- */
-//    columns.push({
-//        data: null,
-//        title: 'Action',
-//        orderable: false,
-//        searchable: false
-//    });
-
-//    /* ---------------- RENDER EYE ICON ---------------- */
-//    var renderColumn = [{
-//        targets: -1,
-//        render: function (data, type, row) {
-//            return `
-//                <i class="btneye actionEllipsis" 
-//                   data-id="${row[editcolumn]}" 
-//                   title="View" style="cursor:pointer">
-//                    <img src="/assets/commonimages/attendanceeye.svg" />
-//                </i>`;
-//        }
-//    }];
-
-//    /* ---------------- MOBILE PAGINATION ---------------- */
-//    var lang = {};
-//    if ($(window).width() <= 575) {
-//        lang = {
-//            paginate: {
-//                next: ">",
-//                previous: "<"
-//            }
-//        };
-//    }
-
-//    /* ---------------- INIT DATATABLE ---------------- */
-//    var table = $('#' + tableid).DataTable({
-//        dom: "Bfrtip",
-//        destroy: true,
-//        responsive: true,
-//        data: data,
-//        columns: columns,
-//        columnDefs: renderColumn,
-//        scrollY: scrollpx,
-//        scrollX: true,
-//        scrollCollapse: true,
-//        ordering: false,
-//        paging: hasValidData,
-//        info: hasValidData,
-//        pageLength: 7,
-//        lengthMenu: [7, 14, 50],
-//        language: $.extend({}, lang, {
-//            emptyTable:
-//                '<div><img src="/assets/commonimages/nodata.svg" style="margin-right:10px;">No records found</div>'
-//        })
-//    });
-
-//    /* ---------------- SEARCH ---------------- */
-//    $('#tableFilter').off('keyup').on('keyup', function () {
-//        table.search(this.value).draw();
-//    });
-
-//    /* ---------------- AUTO ADJUST ---------------- */
-//    setTimeout(function () {
-//        Common.autoAdjustColumns(table);
-//    }, 100);
-//}
 
 function bindTableManageStock(tableid, data, columns, actionTarget, editcolumn, scrollpx) {
 
@@ -559,7 +467,6 @@ function bindTableManageStock(tableid, data, columns, actionTarget, editcolumn, 
     }, 100);
 }
 
-
 function bindTableEditManageStock(tableid, data, columns, scrollpx) {
     if ($('#' + tableid).length && $.fn.DataTable.isDataTable('#' + tableid)) {
         try {
@@ -618,7 +525,6 @@ function bindTableEditManageStock(tableid, data, columns, scrollpx) {
         Common.autoAdjustColumns(table1);
     }, 100);
 }
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const searchBtn = document.querySelector("#ManageStockModal .searchbar__button");

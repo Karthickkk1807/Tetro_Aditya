@@ -1,6 +1,7 @@
 ﻿<link href="~/css/dashboard.css" rel="stylesheet" />
 
-<div class="container mt-2">
+@* <div class="container mt-2"> *@
+<div class="mt-2">
     <div class="row g-3">
 
         <div class="col-lg-3 col-md-4 col-sm-6 col-6">
@@ -11,13 +12,13 @@
                     <div class="d-flex align-items-center gap-2">
                         <img src="~/assets/moduleimages/dashboard/community (1).png" width="28" height="28" />
                         <div style="margin-left:7px">
-                            <h5>Employee Present</h5>
-                            <p class="mb-0">64 / 70</p>
+                            <h5 id="EmployeePresentText"></h5>
+                            <p class="mb-0" id="EmployeePresentVal"></p>
                         </div>
                     </div>
 
                     <!-- Right side -->
-                    <p class="mb-0 fw-bold text-success">+4</p>
+                    <p class="mb-0 fw-bold text-success" id="EmployeePresentPer"></p>
 
                 </div>
             </div>
@@ -31,13 +32,13 @@
                     <div class="d-flex align-items-center gap-2">
                         <img src="~/assets/moduleimages/dashboard/inarrows.png" width="28" height="28" />
                         <div style="margin-left:7px">
-                            <h5>Inward</h5>
-                            <p class="mb-0">12 / 12,000 kg</p>
+                            <h5 id="InwardText"></h5>
+                            <p class="mb-0" id="InwardVal"></p>
                         </div>
                     </div>
 
                     <!-- Right side -->
-                    <p class="mb-0 fw-bold text-success">80%</p>
+                    <p class="mb-0 fw-bold text-success" id="InwardPer"></p>
 
                 </div>
             </div>
@@ -51,13 +52,13 @@
                     <div class="d-flex align-items-center gap-2">
                         <img src="~/assets/moduleimages/dashboard/power-plant.png" width="28" height="28" />
                         <div style="margin-left:7px">
-                            <h5>Production</h5>
-                            <p class="mb-0">3000kg / 150kg</p>
+                            <h5 id="ProductionText"></h5>
+                            <p class="mb-0" id="ProductionVal"></p>
                         </div>
                     </div>
 
                     <!-- Right side -->
-                    <p class="mb-0 fw-bold text-danger">80%</p>
+                    <p class="mb-0 fw-bold text-danger" id="ProductionPer"></p>
 
                 </div>
             </div>
@@ -67,24 +68,23 @@
                 <div class="cunter-content">
                     <img src="~/assets/moduleimages/dashboard/outarrows (1).png" width="28" height="28" />
                     <div>
-                        <h5>Outward / Delivered </h5>
-                        <span>50/150kg  /  45/300kg</span>
+                        <h5 id="OutwardDeliveredText">OutWard / Delivered</h5>
+                        <span id="OutwardDeliveredVal"></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-lg-3 col-md-4 col-sm-6 col-6">
             <div class="counter-box">
                 <div class="cunter-content">
                     <img src="~/assets/moduleimages/dashboard/delivery-truck.png" width="28" height="28" />
                     <div>
-                        <h5>Pending Dispatch</h5>
-                        <span>200kg</span>
+                        <h5 id="PendingDispatchText"></h5>
+                        <span id="PendingDispatchVal"></span>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 col-6">
@@ -92,11 +92,10 @@
                 <div class="cunter-content">
                     <img src="~/assets/moduleimages/dashboard/approve.png" width="28" height="28" />
                     <div>
-                        <h5>Pending Approval</h5>
-                        <span>4</span>
+                        <h5 id="PendingApprovalText"></h5>
+                        <span id="PendingApprovalVal"></span>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -105,84 +104,27 @@
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 ">
             <div class="form-group">
                 <label class="form-label">From Date</label>
-                <input type="date" class="form-control">
+                <input type="date" id="FromDate" name="FromDate" class="form-control">
             </div>
         </div>
 
         <div class="col-lg-2 col-md-4 col-sm-6 col-6 ">
             <div class="form-group">
                 <label class="form-label">To Date</label>
-                <input type="date" class="form-control">
+                <input type="date" id="ToDate" name="ToDate" class="form-control">
             </div>
         </div>
-
     </div>
 
-
     <div class="row">
-
         <div class="col-12 col-lg-4 col-md-4 col-sm-12">
             <div class="box" style="height:230px">
                 <div class="box-header">
                     <h3>Ongoing Production Info</h3>
                 </div>
                 <div class="box-content" style="overflow-y:auto; height:166px">
-                    <div class="scroll-bar ui-draggable ui-draggable-handle" style="position: relative;">
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>PLN_ATP2526/0001</div>
-                                <div>Eastman Exports</div>
-                            </div>
-                            <div class="donut-wrapper">
-                                <canvas class="statusDonut" data-percent="75"></canvas>
-                                <span class="donut-text">75%</span>
-                            </div>
-                            <div>
-                                Reversing-Started
-                            </div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>PLN_ATP2526/0002</div>
-                                <div>SCM Garments Pvt Ltd</div>
-                            </div>
-                            <div class="donut-wrapper">
-                                <canvas class="statusDonut" data-percent="35"></canvas>
-                                <span class="donut-text">35%</span>
-                            </div>
-                            <div>
-                                Stitching-Started
-                            </div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>PLN_ATP2526/0003</div>
-                                <div>Best Corporation Pvt Ltd</div>
-                            </div>
-                            <div class="donut-wrapper">
-                                <canvas class="statusDonut" data-percent="89"></canvas>
-                                <span class="donut-text">89%</span>
-                            </div>
-                            <div>
-                                Dyeing-Started
-                            </div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>PLN_ATP2526/0004</div>
-                                <div>Poppys Knitwear</div>
-                            </div>
-                            <div class="donut-wrapper">
-                                <canvas class="statusDonut" data-percent="40"></canvas>
-                                <span class="donut-text">40%</span>
-                            </div>
-                            <div>
-                                Dyeing-Finished
-                            </div>
-                        </div>
+                    <div class="ui-draggable ui-draggable-handle" id="OngoingProduction">
+                        
                     </div>
 
                 </div>
@@ -192,33 +134,18 @@
             <div class="box" style="height:230px">
                 <div class="box-header d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">Prod Trend</h3>
-
                     <div class="form-group mb-0" style="width:100px;">
-                        <select class="form-control" id="EnquiryTypeId" required>
-                            <option value="1">Client</option>
-                            <option value="2">Color</option>
-                            <option value="3">Fabric</option>
-                            <option value="4">Dia</option>
-                            <option value="5">GSM</option>
-                            <option value="6">Width</option>
+                        <select class="form-control" id="ProdTrendOverAllId" required>
                         </select>
                     </div>
                     <div class="form-group mb-0" style="width:100px;">
-                        <select class="form-control" id="EnquiryTypeId" required>
-                            <option value="">-- Select --</option>
-                            <option value="1">Client</option>
-                            <option value="2">Color</option>
-                            <option value="3">Fabric</option>
-                            <option value="4">Dia</option>
-                            <option value="5">GSM</option>
-                            <option value="6">Width</option>
+                        <select class="form-control" id="ProdTrendValId" required>
                         </select>
                     </div>
                 </div>
                 <div class="box-content" style="overflow:auto; height:180px">
                     <canvas id="productionGaugChart" height="150" width="150"></canvas>
                 </div>
-
             </div>
         </div>
         <div class="col-12 col-lg-4 col-md-4 col-sm-12">
@@ -226,63 +153,9 @@
                 <div class="box-header">
                     <h3>Remainder</h3>
                 </div>
-                <div class="box-content" style="overflow:auto; height:166px">
-                    <div class="modal-body">
-                        <div class="reminder-row d-flex justify-content-between align-items-start">
-                            <!-- Left Content -->
-                            <div>
-                                <p class="mb-1 fw-bold" style="font-size: 13px;">#457623</p>
-                                <p class="mb-0" style="font-size: 13px;">Leave Approval</p>
-                            </div>
-
-                            <!-- Right Content -->
-                            <div class="text-end">
-                                <p class="mb-1 text-danger" style="font-size: 12px;">Due Time</p>
-                                <p class="mb-0" style="font-size: 12px;">Today 10:00 PM</p>
-                            </div>
-                        </div>
-                        <div class="reminder-row d-flex justify-content-between align-items-start">
-                            <!-- Left Content -->
-                            <div>
-                                <p class="mb-1 fw-bold" style="font-size: 13px;">#457321</p>
-                                <p class="mb-0" style="font-size: 13px;">Client 1 Delivery </p>
-                            </div>
-
-                            <!-- Right Content -->
-                            <div class="text-end">
-                                <p class="mb-1 text-danger" style="font-size: 12px;">Due Time</p>
-                                <p class="mb-0" style="font-size: 12px;">Toady 10:00 PM</p>
-                            </div>
-                        </div>
-                        <div class="reminder-row d-flex justify-content-between align-items-start">
-                            <!-- Left Content -->
-                            <div>
-                                <p class="mb-1 fw-bold" style="font-size: 13px;">#457823</p>
-                                <p class="mb-0" style="font-size: 13px;">Client Delivery</p>
-                            </div>
-
-                            <!-- Right Content -->
-                            <div class="text-end">
-                                <p class="mb-1 text-danger" style="font-size: 12px;">Due Time</p>
-                                <p class="mb-0" style="font-size: 12px;">Today 10:00 PM</p>
-                            </div>
-                        </div>
-                        <div class="reminder-row d-flex justify-content-between align-items-start">
-                            <!-- Left Content -->
-                            <div>
-                                <p class="mb-1 fw-bold" style="font-size: 13px;">#457823</p>
-                                <p class="mb-0" style="font-size: 13px;">Client Delivery</p>
-                            </div>
-
-                            <!-- Right Content -->
-                            <div class="text-end">
-                                <p class="mb-1 text-danger" style="font-size: 12px;">Due Time</p>
-                                <p class="mb-0" style="font-size: 12px;">Today 10:00 PM</p>
-                            </div>
-                        </div>
-
+                <div class="box-content" style="overflow:auto; height:166px; padding: 1px;">
+                    <div class="modal-body" id="RemainderDynamic">
                     </div>
-
                 </div>
             </div>
         </div>
@@ -292,14 +165,7 @@
                     <h3 class="mb-0">Grey Fabric Stock</h3>
 
                     <div class="form-group mb-0" style="width:100px;">
-                        <select class="form-control" id="EnquiryTypeId" required>
-
-                            <option value="1">Client</option>
-                            <option value="2">Color</option>
-                            <option value="3">Fabric</option>
-                            <option value="4">Dia</option>
-                            <option value="5">GSM</option>
-                            <option value="6">Width</option>
+                        <select class="form-control" id="GreyFabricAllId" required>
                         </select>
                     </div>
                 </div>
@@ -315,14 +181,7 @@
                     <h3 class="mb-0">Finish Fabric Stock</h3>
 
                     <div class="form-group mb-0" style="width:100px;">
-                        <select class="form-control" id="EnquiryTypeId" required>
-
-                            <option value="1">Client</option>
-                            <option value="2">Color</option>
-                            <option value="3">Fabric</option>
-                            <option value="4">Dia</option>
-                            <option value="5">GSM</option>
-                            <option value="6">Width</option>
+                        <select class="form-control" id="FinishFabricStockAllId" required>
                         </select>
                     </div>
                 </div>
@@ -337,40 +196,9 @@
                     <h3>Pending Payments</h3>
                 </div>
                 <div class="box-content" style="overflow-y:auto; height:166px">
-                    <div class="scroll-bar ui-draggable ui-draggable-handle" style="position: relative;">
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>PB_001</div>
-                                <div>Eastman Exports</div>
-                            </div>
-                            <div>₹ 12k</div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>PB_002</div>
-                                <div>SCM Garments Pvt Ltd</div>
-                            </div>
-                            <div>₹ 10k</div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>PB_003</div>
-                                <div>Best Corporation Pvt Ltd</div>
-                            </div>
-                            <div>₹ 24k</div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>PB_004</div>
-                                <div>Poppys Knitwear</div>
-                            </div>
-                            <div>₹ 45k</div>
-                        </div>
+                    <div class="ui-draggable ui-draggable-handle" id="PendingPaymentsDynamic">
+                        
                     </div>
-
                 </div>
             </div>
         </div>
@@ -390,37 +218,8 @@
                     <h3>Low Stock Alerts</h3>
                 </div>
                 <div class="box-content" style="overflow-y:auto; height:166px">
-                    <div class="scroll-bar ui-draggable ui-draggable-handle" style="position: relative;">
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>Acid Dye</div>
-                            </div>
-                            <div>20kg</div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div> Direct Dye</div>
-                            </div>
-                            <div>10kg</div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-                                <div>Disperse Dye</div>
-                            </div>
-                            <div>5kg</div>
-                        </div>
-
-                        <div class="expense-row d-flex justify-content-between align-items-center pr-2">
-                            <div>
-
-                                <div>Solvent Dye</div>
-                            </div>
-                            <div>25kg</div>
-                        </div>
+                    <div class="ui-draggable ui-draggable-handle" id="LowStockAlerts">
                     </div>
-
                 </div>
             </div>
         </div>
@@ -446,15 +245,8 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
     </div>
 </div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="~/js/dashboard.js"></script>

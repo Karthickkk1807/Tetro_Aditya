@@ -561,15 +561,18 @@ namespace TetroONE.Controllers
 
                     try
                     {
-                        await command.ExecuteNonQueryAsync();
+                        DataSet ds = new DataSet();
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        adapter.Fill(ds);
+
+                        response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
+                        response.Message = Convert.ToString(command.Parameters["@Message"].Value);
+                        response.Data = GenericTetroONE.dataSetToJSON(ds);
                     }
                     catch (Exception ex)
                     {
 
                     }
-
-                    response.Status = Convert.ToBoolean(command.Parameters["@Status"].Value);
-                    response.Message = Convert.ToString(command.Parameters["@Message"].Value);
                 }
                 connection.Close();
 
@@ -588,7 +591,7 @@ namespace TetroONE.Controllers
                 }
             }
 
-            return Json(response);
+             return Json(response);
         }
 
 
