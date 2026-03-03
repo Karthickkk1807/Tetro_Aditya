@@ -281,7 +281,7 @@ $(document).ready(async function () {
                 Common.ajaxCall("GET", "/Productions/GetDefaultChemicalDetails", { ProcessType: null, ProductionPlanId: parseInt(ProductionPlanId), ColourValue: null }, function (response) {
                     if (response.status) {
                         var data = JSON.parse(response.data);
-                         
+
                         EditPreTreatmentChemicalProduct = data[0];
                         EditDyeChemicalProduct = data[1];
                         EditDyeBathChemicalProduct = data[2];
@@ -332,7 +332,6 @@ $(document).ready(async function () {
             Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(2), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
         }
     });
-
 
     $(document).on('click', '#ChemicalModal .navbar-tab', function (e) {
 
@@ -425,15 +424,15 @@ $(document).ready(async function () {
             return false;
         }
 
-        var ProductionPlanStatusId = $('#ProductionPlanStatusId').val();
+        //var ProductionPlanStatusId = $('#ProductionPlanStatusId').val();
 
-        if (ProductionPlanStatusId == 3) {
-            if (!validateUpdateAllChemicalTabs()) {
-                Common.warningMsg('Please Fill the all Chemical Details');
-                $('#loader-pms').hide();
-                return false;
-            }
-        }
+        //if (ProductionPlanStatusId == 3) {
+        //    if (!validateUpdateAllChemicalTabs()) {
+        //        Common.warningMsg('Please Fill the all Chemical Details');
+        //        $('#loader-pms').hide();
+        //        return false;
+        //    }
+        //}
 
         if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
             getExistFiles();
@@ -816,10 +815,10 @@ function GetProductionPlanSuccess(response) {
 
         var columns = Common.bindColumn(data[1], ['ProductionPlanId', 'Status_Color', 'StatusColor']);
         if (titleForHeaderProductTab == "Production Plan") {
-            bindTable('ProductionPlanTable', data[1], columns, -1, 'ProductionPlanId', '350px', true, access);
-            $(".dataTables_scrollBody").css("max-height", "350px");
+            bindTable('ProductionPlanTable', data[1], columns, -1, 'ProductionPlanId', '356px', true, access);
+            $(".dataTables_scrollBody").css("max-height", "356px");
         } else {
-            bindTable('ProductionPlanTable', data[1], columns, -1, 'ProductionPlanId', '350px', false, access);
+            bindTable('ProductionPlanTable', data[1], columns, -1, 'ProductionPlanId', '356px', false, access);
             $(".dataTables_scrollBody").css("max-height", "315px");
         }
     }
@@ -996,6 +995,11 @@ async function GetProductionPlanNotNullSuccess(response) {
 
 function createChemicalRow(rowType, chemicalData) {
 
+    // 🔴 Skip appending if Dye and ChemicalId is null
+    if (rowType === 'Dye' && !chemicalData?.ChemicalId) {
+        return; // Stop execution completely
+    }
+
     let numberIncr = Math.random().toString(36).substring(2);
     let rowadd = $(`.RowOfChemical-${rowType}`).length;
 
@@ -1149,6 +1153,7 @@ function createChemicalRow(rowType, chemicalData) {
             break;
     }
 }
+
 function LoadPopupItems(allItems) {
     $("#ProductionPlanAddItem-table-body").empty();
 
@@ -1811,20 +1816,17 @@ $(document).on('keyup input change', '#ProductionPlanProductTablebody .qty, #MLR
 });
 
 // Dynamically handle input, change, or keyup on any chemical/dye input or type selector
-$(document).on('keyup input change',
-    '#ChemicalDynamic-Pre input, #ChemicalDynamic-After input, #ChemicalDynamic-Dye input, #ChemicalDynamic-DyeBath input, #ChemicalDynamic-Finishing input,' +
-    '#ChemicalDynamic-Pre .DysType, #ChemicalDynamic-After .DysType, #ChemicalDynamic-Dye .DysType, #ChemicalDynamic-DyeBath .DysType, #ChemicalDynamic-Finishing .DysType',
-    function () {
-        let $row = $(this).closest('.RowOfChemical-Pre, .RowOfChemical-After, .RowOfChemical-Dye, .RowOfChemical-DyeBath, .RowOfChemical-Finishing');
-        if (!$row.length) return;
+$(document).on('keyup input change', '#ChemicalDynamic-Pre input, #ChemicalDynamic-After input, #ChemicalDynamic-Dye input, #ChemicalDynamic-DyeBath input, #ChemicalDynamic-Finishing input,' + '#ChemicalDynamic-Pre .DysType, #ChemicalDynamic-After .DysType, #ChemicalDynamic-Dye .DysType, #ChemicalDynamic-DyeBath .DysType, #ChemicalDynamic-Finishing .DysType', function () {
+    let $row = $(this).closest('.RowOfChemical-Pre, .RowOfChemical-After, .RowOfChemical-Dye, .RowOfChemical-DyeBath, .RowOfChemical-Finishing');
+    if (!$row.length) return;
 
-        // Decide whether it's a chemical or dye row
-        if ($row.hasClass('RowOfChemical-Pre') || $row.hasClass('RowOfChemical-After') || $row.hasClass('RowOfChemical-Dye') || $row.hasClass('RowOfChemical-DyeBath') || $row.hasClass('RowOfChemical-Finishing')) {
-            calculateChemicalQty($row);
-        } else if ($row.hasClass('RowOfDye')) {
-            calculateDyeQty($row);
-        }
-    });
+    // Decide whether it's a chemical or dye row
+    if ($row.hasClass('RowOfChemical-Pre') || $row.hasClass('RowOfChemical-After') || $row.hasClass('RowOfChemical-Dye') || $row.hasClass('RowOfChemical-DyeBath') || $row.hasClass('RowOfChemical-Finishing')) {
+        calculateChemicalQty($row);
+    } else if ($row.hasClass('RowOfDye')) {
+        calculateDyeQty($row);
+    }
+});
 
 // Recalculate everything for all tabs
 function recalculateAll() {
@@ -2114,7 +2116,6 @@ function removeRowRowChemicalAfter(button) {
     updateRemoveChemicalAfter();
     refreshProductDropdowns(".ProductSelectAfter");
 }
-
 
 function duplicateRowChemicalDyeBath() {
 
@@ -2644,7 +2645,6 @@ function refreshProductDropdowns(selector) {
     });
 }
 
-
 //------------------------------Attachment------------------------
 
 $(document).on('click', '#deletefile', function () {
@@ -2744,6 +2744,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+//------------------------------END Attachment------------------------
 function SetDateFroLoadingAndUnLoading() {
     let loadingPicker = document.querySelector("#LoadingDateTime")._flatpickr;
     let unloadingPicker = document.querySelector("#UnLoadingDateTime")._flatpickr;
@@ -2757,7 +2758,6 @@ function SetDateFroLoadingAndUnLoading() {
     });
     $("#UnLoadingDateTime").val('');
 }
-
 
 //=============================================SHORTCUTS==============================================
 
@@ -2793,6 +2793,9 @@ $(document).keydown(function (event) {
     } ``
 });
 
+//=============================================END SHORTCUTS==============================================
+
+//=============================================MultiProcess DD==============================================
 function bindDropDownMultiProcess(id, moduleName, preSelectValues = []) {
     var request = { moduleName: moduleName };
 
@@ -2825,11 +2828,9 @@ function bindDropDownMultiProcess(id, moduleName, preSelectValues = []) {
         },
     });
 }
-
-
+//=============================================END MultiProcess DD==============================================
 
 /*================================Testing================================*/
-
 function duplicateRowChemicalAfterTesting() {
     let numberIncr = Math.random().toString(36).substring(2);
     var rowadd = $('.RowOfChemical-After').length;
@@ -2985,7 +2986,6 @@ function duplicateRowChemicalPreTesting() {
     $('#ChemicalDynamic-Pre').append(htmlRow);
     updateRemoveChemicalPre();
 }
-
 
 function duplicateRowChemicalDyeBathTesting() {
     let numberIncr = Math.random().toString(36).substring(2);
@@ -3197,7 +3197,6 @@ function duplicateRowChemicalFinishingTesting() {
 }
 
 /*========================================================Status Tracking=================================================================*/
-
 function StatusActivitySuccess(response) {
     var parsedData = JSON.parse(response.data);
     var timelineData = parsedData[0];
@@ -3360,7 +3359,7 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
                     newTab.document.write(`
                             <html>
                             <head>
-                                <title>Purchase Order Preview</title>
+                                <title>Production Plan Preview</title>
                             </head>
                             <body style="margin:0; padding:0;">
                                 <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
@@ -3376,7 +3375,7 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 
                 var link = document.createElement('a');
                 link.href = blobUrl;
-                link.download = 'Purchase Order.pdf';
+                link.download = 'Production Plan.pdf';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -3450,4 +3449,3 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 //        }
 //    });
 //});
-

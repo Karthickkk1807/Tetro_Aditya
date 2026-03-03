@@ -236,8 +236,14 @@ namespace TetroONE.Controllers
                             string employeeId = employee["EmployeeId"].ToString();
                             string cardNumber = employee["CardNumber"].ToString();
                             string serialNo = employee["SerialNo"].ToString();
+                            string EmployeeTypeId = employee["EmployeeTypeId"].ToString();
 
-                            Biometric.AddEmployeeToBiomatric(employeeId, employeeName, cardNumber, serialNo, userName, userPassword, webAddress);
+                            if (EmployeeTypeId == "1")
+                            {
+                                Biometric.AddEmployeeToBiomatric(employeeId, employeeName, cardNumber, serialNo, userName, userPassword, webAddress);
+                            }
+
+                            
 
                         }
                     }

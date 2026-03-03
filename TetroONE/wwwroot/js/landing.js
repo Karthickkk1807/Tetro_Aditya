@@ -163,8 +163,9 @@ function BindNotification(response) {
 
                 var imgElement = document.createElement("img");
                 imgElement.setAttribute("alt", "");
-                imgElement.setAttribute("src", values.CompanyLogoFilePath);
+                imgElement.setAttribute("src", "/assets/ModuleImages/PDFImages/AdhithiyaLogo.png");
                 imgElement.classList.add("container1");
+                imgElement.style.marginLeft = "-10px";
 
                 avatarElement.appendChild(imgElement);
 
