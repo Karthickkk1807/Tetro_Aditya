@@ -57,7 +57,7 @@ namespace TetroONE.Models
 
 
     public class GetClient
-    {
+    {   
         public int LoginUserId { get; set; }
         public int? ClientId { get; set; }
     }
@@ -84,12 +84,12 @@ namespace TetroONE.Models
         public string? GSTNumber { get; set; }
         public decimal CreditLimit { get; set; }
         public decimal? CurrentCreditLimit { get; set; }
-        public string? Remark { get; set; } 
+        public string? Remark { get; set; }
         public bool? IsActive { get; set; }
         public List<ContactPersonDetails> ClientContactPersonDetails { get; set; }
-        public DataTable TVP_ContactPersonDetails { get; set; } 
+        public DataTable TVP_ContactPersonDetails { get; set; }
         public DataTable TVP_AttachmentDetails { get; set; }
-    
+
     }
      
     public class AttachmentTableDyanamicClient

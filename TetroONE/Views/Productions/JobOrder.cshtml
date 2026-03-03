@@ -27,6 +27,8 @@
         margin-top: -18px !important;
         border-bottom: 1px solid #111;
         margin-bottom: 10px;
+    }.AddStockBtn {
+        background: aliceblue;
     }
 
 </style>
@@ -281,6 +283,30 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                                    <div class="form-group">
+                                        <label>Chemical Used<span id="Asterisk">*</span></label>
+                                        <select class="form-control" id="ChemicalUsed" name="ChemicalUsed" required>
+                                            <option value="">--Select--</option>
+                                            <option value="1">Sodium Sulphate</option>
+                                            <option value="2">CO2</option>
+                                            <option value="3">Sulphate</option>
+                                            <option value="4">H2O</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                                    <div class="form-group">
+                                        <label>GPL%<span id="Asterisk">*</span></label>
+                                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL" name="GPL" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-sm-6 col-6 pr-0">
+                                    <div class="form-group">
+                                        <label>Qty<span id="Asterisk">*</span></label>
+                                        <input type="text" class="form-control" placeholder="Ex: 0" id="Qty" name="Qty" />
+                                    </div>
+                                </div>
+                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Priority<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="PriorityId" name="PriorityId" required>
@@ -306,47 +332,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Machine Type<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="MachineTypeId" name="MachineTypeId" required>
-                                                <option value="">--Select--</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Machine No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: MACH/001" id="MachineNo" name="MachineNo" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Input Quantity<span id="Asterisk">*</span></label>
-                                            <div id="ember325" class="input-group ember-view" style="flex-wrap: nowrap;">
-                                                <input type="text" class="form-control" placeholder="Ex: 30 KG" id="InputQuantity" name="InputQuantity" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
-                                                <select class="form-control" id="WeightUnitId" name="WeightUnitId" required style="width: 38%;">
-                                                    <option value="">--Select--</option>
-                                                    <option value="1">Meter</option>
-                                                    <option value="2">Kg</option>
-                                                    <option value="3">Roll</option>
-                                                    <option value="4">MMeter</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Exp Output Qty<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 120" id="ExpOutputQty" name="ExpOutputQty" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Exp Wastage<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: 23.9" id="ExpWastage" name="ExpWastage" required />
-                                        </div>
-                                    </div>
+                                    
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>No Of Batches<span id="Asterisk">*</span></label>
@@ -436,12 +422,12 @@
                                     <div class="col-md-12 col-lg-12 col-sm-12 col-6">
                                         <fieldset class="expensefild1">
                                             <legend class="w-auto">
-                                                Chemical List
-                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowChemical(this)" style="position: absolute; top: 0px; right: 40px;">
+                                                Machine List
+                                                <button id="" class="btn AddStockBtn" type="button" onclick="duplicateRowMachine(this)" style="position: absolute; top: 0px; right: 40px;">
                                                     <i class="fas fa-plus" id="AddButton" style="color: #000000;"></i>
                                                 </button>
                                             </legend>
-                                            <div id="ChemicalListRow">
+                                            <div id="MachineListRow">
                                             </div>
                                         </fieldset>
                                     </div>

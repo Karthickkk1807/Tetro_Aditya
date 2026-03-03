@@ -62,9 +62,11 @@
         CanvasOpenFirstShowingJobOrder();
         //UnFilledData();
         $('#ChemicalListRow').empty();
+        $('#MachineListRow').empty();
         $('#DyeListRow').empty();
         $('#BatchListRow').empty();
-        duplicateRowChemical();
+
+        duplicateRowMachine();
         duplicateRowDye();
         duplicateRowBatch();
         $('#JobOrderHeader').text('JobOrder Details');
@@ -481,46 +483,95 @@ function UnFilledData() {
     $("#FormProcesingData")[0].reset();
 }
 
-function duplicateRowChemical() {
+function duplicateRowMachine() {
     let numberIncr = Math.random().toString(36).substring(2);
-    var rowadd = $('.RowOfChemical').length
-    if (rowadd < 3) {
+    var rowCount = $('.RowOfMachine').length;
+
+    // Limit to max 3 rows
+    if (rowCount < 3) {
+        var labelNo = rowCount + 1;
         var htmlRow = `
-            <div class="row RowOfChemical">
-                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>Chemical Used<span id="Asterisk">*</span></label>
-                        <select class="form-control" id="ChemicalUsed${numberIncr}" name="ChemicalUsed${numberIncr}" required>
+        <div class=" RowOfMachine mt-2 p-1">
+            
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                 <label class="DynamicMachineLabel fw-bold">Machine ${labelNo}</label>
+                    <button id="RemoveButton" class="btn DynrowRemove RowOfMachineRemove"  type="button" onclick="removeRowMachine(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+              </div> 
+
+            <div class="row">
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Machine Type<span id="Asterisk">*</span></label>
+                    <select class="form-control MachineTypeId" id="MachineTypeId${numberIncr}" name="MachineTypeId${numberIncr}" required>
+                        <option value="">--Select--</option>
+                        <option value="1">Dyeing</option>
+                        <option value="2">Printing</option>
+                        <option value="3">Finishing</option>
+                        <option value="4">Boiler</option>
+                        <option value="5">Chiller</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Machine No<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control MachineNo" placeholder="Ex: MACH/001" id="MachineNo${numberIncr}" name="MachineNo${numberIncr}" required />
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Input Quantity<span id="Asterisk">*</span></label>
+                    <div class="input-group" style="flex-wrap: nowrap;">
+                        <input type="text" class="form-control InputQuantity" placeholder="Ex: 30" id="InputQuantity${numberIncr}" name="InputQuantity${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                        <select class="form-control WeightUnitId" id="WeightUnitId${numberIncr}" name="WeightUnitId${numberIncr}" required style="width: 38%;">
                             <option value="">--Select--</option>
-                            <option value="1">Sodium Sulphate</option>
-                            <option value="2">CO2</option>
-                            <option value="3">Sulphate</option>
-                            <option value="4">H2O</option>
+                            <option value="1">Meter</option>
+                            <option value="2">Kg</option>
+                            <option value="3">Roll</option>
+                            <option value="4">MMeter</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4 col-lg-4 col-sm-6 col-6">
-                    <div class="form-group">
-                        <label>GPL%<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" />
-                    </div>
-                </div>
-                <div class="col-md-3 col-lg-2 col-sm-6 col-6 pr-0">
-                    <div class="form-group">
-                        <label>Qty<span id="Asterisk">*</span></label>
-                        <input type="text" class="form-control" placeholder="Ex: 0" id="Qty${numberIncr}" name="Qty${numberIncr}" />
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-1 col-sm-3 col-3 thiswillshow">
-                    <div class="p-1 d-flex justify-content-center align-items-center buttonsRow">
-                        <button id="RemoveButton" class="btn DynrowRemove RowOfChemicalRemove" type="button" onclick="removeRow(this)"><i class="fas fa-trash-alt"></i></button>
-                    </div>
+            </div>
+
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Expected Output Qty<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control ExpOutputQty" placeholder="Ex: 120" id="ExpOutputQty${numberIncr}" name="ExpOutputQty${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
                 </div>
             </div>
-           `;
+
+            <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                <div class="form-group">
+                    <label>Expected Wastage<span id="Asterisk">*</span></label>
+                    <input type="text" class="form-control ExpWastage" placeholder="Ex: 23.9" id="ExpWastage${numberIncr}" name="ExpWastage${numberIncr}" required oninput="Common.allowOnlyNumbersAndDecimalInventory(this)" />
+                </div>
+            </div>
+
+            
+            </div>
+        </div>`;
+
+        $('#MachineListRow').append(htmlRow);
+    } else {
+        
     }
-    $('#ChemicalListRow').append(htmlRow);
 }
+function removeRowMachine(button) {
+    var totalRows = $('.RowOfMachine').length;
+    if (totalRows > 1) {
+        $(button).closest('.RowOfMachine').remove();
+    } 
+}
+$(document).on('click', '.RowOfMachineRemove', function () {
+    removeRowMachine(this);
+});
+
+
 
 function duplicateRowDye() {
     let numberIncr = Math.random().toString(36).substring(2);
