@@ -208,6 +208,22 @@ $(document).ready(async function () {
 
     $(document).on('click', '#BtnSave', function () {
 
+        let isValid = true;
+
+        $(".QtyInput").each(function (index) {
+            let value = $(this).val().trim();
+            if (value === "" || parseFloat(value) === 0) {
+                $(this).focus();
+                isValid = false;
+                return false;
+            }
+        });
+
+        if (!isValid) {
+            Common.warningMsg("No empty or Zero values found in Qty.");
+            return false;
+        }
+
         if ($("#TopStatic").valid() && $("#TableInputs").valid() && $("#FormStatus").valid()) {
             var DataUpdate1 = JSON.parse(JSON.stringify(jQuery('#TopStatic').serializeArray()));
             var DataUpdate2 = JSON.parse(JSON.stringify(jQuery('#FormStatus').serializeArray()));
@@ -665,6 +681,8 @@ $(document).ready(async function () {
                         $('#FabricInfoModal').modal('hide');
 
                         Common.successMsg(ResponseMessage);
+                    } else {
+                        Common.errorMsg(response.message);
                     }
                 },
                 null
@@ -715,13 +733,8 @@ $(document).ready(async function () {
             MasterInfoDescription: processDescription
         };
 
-        Common.ajaxCall("POST",
-            "/Settings/InsertUpdateMasterInfo",
-            JSON.stringify(objvalue),
-            function (response) {
-
-                if (!response.status)
-                    return;
+        Common.ajaxCall("POST", "/Settings/InsertUpdateMasterInfo", JSON.stringify(objvalue), function (response) {
+            if (response.status) {
 
                 let data = JSON.parse(response.data);
                 let returnId = data[1][0].ModuleId.toString();
@@ -777,9 +790,10 @@ $(document).ready(async function () {
                 $('#ProcessInfoModal').modal('hide');
 
                 Common.successMsg(responseMessage);
-            },
-            null
-        );
+            } else {
+                Common.errorMsg(response.message);
+            }
+        }, null);
     });
 });
 
@@ -875,10 +889,10 @@ function GetInwardNotNullSuccess(response) {
             <td>
                 <label class="InwardFabricProcessMappingId d-none">${processMappingId || ''}</label> 
                 <select multiple class="select2 Process" data-coreui-search="true" required>${ProcessTypeDropdown[0].map(p =>
-                    `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
+            `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
                                     ${p.ProcessTypeName}
                              </option>`
-                ).join('')}
+        ).join('')}
                  <option value="AddItemProcess">+ Add Item</option>
                 </select>
             </td> 
@@ -1181,16 +1195,19 @@ $(document).on('click', '#AddNotesLable', function () {
     $('#AddNotesLable').hide();
     $('#HideNotesLable').show();
 });
+
 $(document).on('click', '#HideNotesLable', function () {
     $('#AddNotes').hide();
     $('#AddNotesLable').show();
     $('#HideNotesLable').hide();
 });
+
 $(document).on('click', '#AddAttachLable', function () {
     $('#AddAttachment').show();
     $('#AddAttachLable').hide();
     $('#HideAttachlable').show();
 });
+
 $(document).on('click', '#HideAttachlable', function () {
     $('#AddAttachment').hide();
     $('#AddAttachLable').show();
@@ -1673,7 +1690,6 @@ function bindDropDownSuccessNormal(response, controlid) {
         }
     }
 }
-
 
 function bindDropDownMultiAddItem(id, moduleName) {
     var request = {

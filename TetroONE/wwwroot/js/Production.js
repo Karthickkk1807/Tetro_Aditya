@@ -18,6 +18,9 @@ $(document).ready(async function () {
     updateMonthDisplay(displayedDate);
     $('#increment-month-btn2').hide();
 
+    var fnData = Common.getDateFilter('dateDisplay2');
+    Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+
     $('#decrement-month-btn2').click(function () {
         displayedDate.setMonth(displayedDate.getMonth() - 1);
         updateMonthDisplay(displayedDate);
@@ -88,9 +91,6 @@ $(document).ready(async function () {
         $('#ToDate').removeAttr('max');
         $('#tableFilter').val('');
     });
-
-    var fnData = Common.getDateFilter('dateDisplay2');
-    Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
 
     $(document).on('click', '.btn-edit', function () {
         productionPlanLogId = 0;

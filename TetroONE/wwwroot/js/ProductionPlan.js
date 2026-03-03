@@ -29,6 +29,81 @@ $(document).ready(async function () {
     titleForHeaderPopRawMatrialTab = "Pre-Treatment";
 
     $('.datapiker').show();
+    $('#PDFIcon').hide();
+
+    var start = moment().startOf('month');
+    var end = moment(); // today
+
+    $('#reportrange span').html(
+        start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY')
+    );
+
+    $('.daterangepicker').on('show.daterangepicker', function () {
+        $('.ranges li[data-range-key="No Date"]').hide();
+    });
+
+    $('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        autoUpdateInput: false,
+        alwaysShowCalendars: true,
+        showCustomRangeLabel: true,
+        locale: {
+            format: 'DD-MM-YYYY'
+        },
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment()],
+            'Last Month': [
+                moment().subtract(1, 'month').startOf('month'),
+                moment().subtract(1, 'month').endOf('month')
+            ],
+            'No Date': [moment(), moment()]
+        }
+    }, cb);
+
+    // default load
+    cb(start, end);
+
+
+    // Apply event
+    $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+
+        if (picker.chosenLabel === 'No Date') {
+            $(this).find('span').html('No Date');
+            StartDate = null;
+            EndDate = null;
+        } else {
+            $(this).find('span').html(
+                picker.startDate.format('DD-MM-YYYY') +
+                ' - ' +
+                picker.endDate.format('DD-MM-YYYY')
+            );
+
+            StartDate = picker.startDate.format('YYYY-MM-DD');
+            EndDate = picker.endDate.format('YYYY-MM-DD');
+        }
+
+        console.log("StartDate:", StartDate);
+        console.log("EndDate:", EndDate);
+    });
+
+
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    let displayedDate = new Date(currentYear, currentMonth);
+    updateMonthDisplay(displayedDate);
+    $('#increment-month-btn2').hide();
+
+    var fnData = Common.getDateFilter('dateDisplay2');
+    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+
+    bindDropDownPrint('ReportName', 'GreyFabricCategory', 1);
 
     Common.bindDropDownParent('PreparedBy', 'FormStatus', 'SampleReceivedBy');
     Common.bindDropDownParent('ProductionPlanStatusId', 'FormStatus', 'ProductionPlanStatus');
@@ -40,14 +115,6 @@ $(document).ready(async function () {
 
     var processTypeDropdown = await Common.bindDropDownSync('ProcessType');
     ProcessTypeDropdown = JSON.parse(processTypeDropdown);
-
-    let currentDate = new Date();
-    let currentMonth = currentDate.getMonth();
-    let currentYear = currentDate.getFullYear();
-
-    let displayedDate = new Date(currentYear, currentMonth);
-    updateMonthDisplay(displayedDate);
-    $('#increment-month-btn2').hide();
 
     $('#decrement-month-btn2').click(function () {
         displayedDate.setMonth(displayedDate.getMonth() - 1);
@@ -119,9 +186,6 @@ $(document).ready(async function () {
         $('#ToDate').removeAttr('max');
         $('#tableFilter').val('');
     });
-
-    var fnData = Common.getDateFilter('dateDisplay2');
-    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
 
     $(document).on('click', '#AddProductionPlan', function () {
         $('.Status-Div').hide();
@@ -312,6 +376,7 @@ $(document).ready(async function () {
 
     $(document).on('click', '#MainTab .navbar-tab', function () {
         $('#tableFilter').val('');
+        $('#loader-pms').show();
         titleForHeaderProductTab = $(this).text().trim();
         $('.navbar-tab').removeClass('active');
         $(this).each(function () {
@@ -321,14 +386,17 @@ $(document).ready(async function () {
         });
         if (titleForHeaderProductTab == "Production Plan") {
             $('.datapiker').show();
+            $('#PDFIcon').hide();
             var fnData = Common.getDateFilter('dateDisplay2');
             Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
         }
         else if (titleForHeaderProductTab == "Grey Fabric Stock Info") {
             $('.datapiker').hide();
+            $('#PDFIcon').show();
             var fnData = Common.getDateFilter('dateDisplay2');
             Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(2), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
         }
+        $('#loader-pms').hide();
     });
 
     $(document).on('click', '#ChemicalModal .navbar-tab', function (e) {
@@ -459,7 +527,149 @@ $(document).ready(async function () {
         unloadPicker.set("minDate", loadTime);
         $("#UnLoadingDateTime").val('');
     });
+
+    /* ================= GLOBAL VARIABLES ================= */
+
+    var GlobalStartDate = null;
+    var GlobalEndDate = null;
+
+
+    /* ================= DATE RANGE APPLY EVENT ================= */
+
+    $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+
+        if (picker.chosenLabel === 'No Date') {
+
+            $(this).find('span').html('No Date');
+            GlobalStartDate = null;
+            GlobalEndDate = null;
+
+        } else {
+
+            $(this).find('span').html(
+                picker.startDate.format('DD-MM-YYYY') +
+                ' - ' +
+                picker.endDate.format('DD-MM-YYYY')
+            );
+
+            // Store globally
+            GlobalStartDate = picker.startDate.toISOString();
+            GlobalEndDate = picker.endDate.toISOString();
+        }
+
+        console.log("GlobalStartDate:", GlobalStartDate);
+        console.log("GlobalEndDate:", GlobalEndDate);
+    });
+
+
+    /* ================= VIEW BUTTON ================= */
+
+    $(document).on('click', '#ViewToDownloadGF', function () {
+
+        var start = moment().startOf('month');
+        var end = moment();
+
+        var drp = $('#reportrange').data('daterangepicker');
+
+        if (drp) {
+            drp.setStartDate(start);
+            drp.setEndDate(end);
+
+            // Update global values manually
+            GlobalStartDate = start.toISOString();
+            GlobalEndDate = end.toISOString();
+        }
+
+        $('#reportrange span').html(
+            start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY')
+        );
+
+        $('#reportrange').css('color', '#000');
+
+        $('#DownloadPDFModal').show();
+    });
+
+
+    /* ================= SAVE BUTTON ================= */
+
+    $(document).on('click', '#DownloadPDFSave', function () {
+
+        if (!GlobalStartDate || !GlobalEndDate) {
+            Common.warningMsg("Please select date range");
+            return;
+        }
+
+        var ReportCategory = $('#ReportName').val();
+        var Reportvalue = $('#ReportValue').val();
+
+        if (!ReportCategory) {
+            Common.warningMsg("Please select report category");
+            return;
+        }
+
+        var EditDataId = {
+            ReportCategory: ReportCategory,
+            Reportvalue: Reportvalue,
+            FromDate: GlobalStartDate,
+            ToDate: GlobalEndDate
+        };
+
+        loadGreyFabricStockPrint(EditDataId);
+    });
+
+    /* ================= REPORT NAME CHANGE ================= */
+
+    $(document).on('change', '#ReportName', function () {
+
+        var $thisVal = $(this).val();
+
+        if ($thisVal != '') {
+            $('#loader-pms').show();
+            bindDropDownValuesPrint('ReportValue', 'GreyFabric', parseInt($thisVal), 0);
+        }
+    });
+
+    /* ================= CLOSE MODAL ================= */
+
+    $(document).on('click', '#DownloadPDFClose', function () {
+        $('#DownloadPDFModal').hide();
+    });
 });
+
+/* ================= AJAX FUNCTION ================= */
+
+function loadGreyFabricStockPrint(EditDataId) {
+
+    $('#loader-pms').show();
+
+    $.ajax({
+        type: 'GET',
+        url: '/Productions/GreyFabricStockPrint',
+        data: EditDataId,
+        xhrFields: { responseType: 'blob' },
+
+        success: function (response) {
+
+            $('#ShareDropdownitems').hide();
+
+            var blob = new Blob([response], { type: 'application/pdf' });
+            var blobUrl = URL.createObjectURL(blob);
+
+            var newTab = window.open(blobUrl);
+
+            if (!newTab) {
+                Common.warningMsg("Popup blocked. Please allow popups.");
+            }
+
+            $('#loader-pms').hide();
+        },
+
+        error: function () {
+            $('#loader-pms').hide();
+            Common.errorMsg("JobCard print failed");
+        }
+    });
+}
 
 function saveProductionPlan(callback, options = {}) {
 
@@ -3449,15 +3659,17 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 
 //    var ProductionPlanNo = $('#BatchNo').val();
 
-//    var scanUrl =
-//        "BEGIN:VCARD\n" +
-//        "VERSION:3.0\n" +
-//        "N:S;Vignesh;;;\n" +                       // Last Name; First Name
-//        "FN:Vignesh S\n" +                         // Full Name
-//        "TITLE:Regional Sales Manager - India\n" + // Job Title
-//        "TEL;TYPE=CELL:+918807966096\n" +         // Phone
-//        "EMAIL:vignesh.s@vahle.com\n" +           // Email
-//        "END:VCARD";
+//    //var scanUrl =
+//    //    "BEGIN:VCARD\n" +
+//    //    "VERSION:3.0\n" +
+//    //    "N:S;Vignesh;;;\n" +                       // Last Name; First Name
+//    //    "FN:Vignesh S\n" +                         // Full Name
+//    //    "TITLE:Regional Sales Manager - India\n" + // Job Title
+//    //    "TEL;TYPE=CELL:+918807966096\n" +         // Phone
+//    //    "EMAIL:vignesh.s@vahle.com\n" +           // Email
+//    //    "END:VCARD";
+
+//    var scanUrl = "https://tetrosoft.co.in/";
 
 //    $.ajax({
 //        url: '/Productions/GenerateQrContectPdf',
@@ -3500,3 +3712,107 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 //            <button class="btn btn-secondary p-0" type="button" style="padding:4px!important; border-top-left-radius:0; border-bottom-left-radius:0; font-size:12px; width:29px; height:26px;">KG</button>
 //    </div>
 //</td>
+
+
+function cb(start, end, label) {
+    if (label === 'No Date') {
+        $('#reportrange span').html('No Date');
+    } else {
+        $('#reportrange span').html(
+            start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY')
+        );
+        $('#reportrange').css('color', '#000'); // remove disabled look
+    }
+}
+
+function bindDropDownPrint(id, moduleName, ValuesOfid) {
+
+    var request = {
+        moduleName: moduleName
+    };
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status == true) {
+                bindDropDownSuccessPrint(response.data, id, ValuesOfid);
+            }
+        },
+        error: function (response) {
+
+        },
+    });
+}
+
+function bindDropDownSuccessPrint(response, controlid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        $('#' + controlid).empty();
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+        } else {
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+        }
+        bindDropDownValuesPrint('ReportValue', 'GreyFabric', 1, 0);
+    }
+}
+
+function bindDropDownValuesPrint(id, moduleName, MasterInfoId, ValuesOfid) {
+
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: '/Inventory/GetDDMasterInfoValue',
+        data: {
+            moduleName: moduleName,
+            MasterInfoId: parseInt(MasterInfoId)
+        },
+        success: function (response) {
+            if (response.status === true) {
+                bindDropDownSuccessValuesPrint(response.data, id, ValuesOfid);
+            }
+        },
+        error: function (response) {
+            console.log("Error:", response);
+        }
+    });
+}
+
+function bindDropDownSuccessValuesPrint(response, controlid, ValuesOfid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        $('#' + controlid).empty();
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+        } else {
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+        }
+        $('#' + controlid).val(ValuesOfid).trigger('change');
+        $('#loader-pms').hide();
+    }
+}

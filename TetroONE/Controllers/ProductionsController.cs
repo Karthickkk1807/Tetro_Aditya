@@ -1143,6 +1143,141 @@ namespace TetroONE.Controllers
         }
 
         [HttpGet]
+        [Route("GreyFabricStockPrint")]
+        public IActionResult GreyFabricStockPrint(int ReportCategory, int Reportvalue, DateTime FromDate, DateTime ToDate)
+        {
+            try
+            {
+                _employeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand("[dbo].[USP_GetGreyFabricDetails_PDF]", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@LoginUserId", _employeeId);
+                        command.Parameters.AddWithValue("@ReportCategory", ReportCategory);
+                        command.Parameters.AddWithValue("@Reportvalue", Reportvalue);
+                        command.Parameters.AddWithValue("@FromDate", FromDate);
+                        command.Parameters.AddWithValue("@ToDate", ToDate);
+
+                        command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                        command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+                        DataSet ds = new DataSet();
+
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            adapter.Fill(ds);
+                        }
+
+                        if (ds.Tables.Count >= 2)
+                        {
+                            DataTable dt1 = ds.Tables[0];
+                            DataTable dt2 = ds.Tables[1];
+
+                            // Check if dt1 has rows
+                            if (dt1.Rows.Count > 0)
+                            {
+                                var data = new GreyFabricPrint
+                                {
+                                    CompanyName = dt1.Rows[0]["CompanyName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyName"]) : null,
+                                    FromDate = dt1.Rows[0]["FromDate"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["FromDate"]) : null,
+                                    ToDate = dt1.Rows[0]["ToDate"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["ToDate"]) : null,
+
+                                    DynamicItemData = dt2
+                                };
+
+                                string CompanyName1 = dt1.Rows[0]["CompanyName"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["CompanyName"]) : null;
+                                string FromDate1 = dt1.Rows[0]["FromDate"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["FromDate"]) : null;
+                                string ToDate1 = dt1.Rows[0]["ToDate"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["ToDate"]) : null;
+
+                                string customFileName = $"FabricStock From {CompanyName1 + "" + FromDate1 + "-" + ToDate1}.pdf";
+
+                                GreyFabricStockPrint pdfService = new GreyFabricStockPrint();
+
+                                byte[] pdfContent = null;
+
+                                var printType = "preview";
+                                int NoOfCopies = 1;
+
+                                pdfContent = pdfService.GreyFabricPrint(NoOfCopies, data);
+
+                                switch (printType.ToLower())
+                                {
+                                    case "mail":
+                                        var base64PdfContent = Convert.ToBase64String(pdfContent);
+                                        return Json(new { success = true, fileContent = base64PdfContent, message = " generated successfully." });
+
+                                    case "download":
+                                        return File(pdfContent, "application/pdf", "JobCard.pdf");
+
+                                    case "preview":
+                                        Response.Headers.Add("Content-Disposition", $"inline; filename={customFileName}");
+                                        return File(pdfContent, "application/pdf");
+
+                                    case "print":
+                                        return File(pdfContent, "application/pdf");
+
+                                    case "whatsapp":
+                                        string wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+                                        string folderPath = Path.Combine(wwwrootPath, "WhatsApp_Sender_PDF");
+
+                                        if (!Directory.Exists(folderPath))
+                                        {
+                                            Directory.CreateDirectory(folderPath);
+                                        }
+
+                                        string fileName = "Job_" + Guid.NewGuid().ToString() + ".pdf";
+                                        string filePath = Path.Combine(folderPath, fileName);
+
+                                        //string fileName = "PurchaseOrder_" + PurchaseOrderNumber + ".pdf";
+                                        //string filePath = Path.Combine(folderPath, fileName);
+
+                                        //if (System.IO.File.Exists(filePath))
+                                        //{
+                                        //    System.IO.File.Delete(filePath);
+                                        //}
+                                        try
+                                        {
+                                            // Write the PDF file to the specified path
+                                            System.IO.File.WriteAllBytes(filePath, pdfContent);
+
+                                            // Return the response with status, message, and the file URL
+                                            string fileurlpath = $"https://www.tetropos.com/WhatsApp_Sender_PDF/{fileName}";
+                                            return Json(new { status = true, message = $"PDF saved successfully at {filePath}", data = fileurlpath });
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            return Json(new { success = false, message = "Error saving PDF: " + ex.Message });
+                                        }
+
+                                    default:
+                                        return Json(new { success = false, message = "Invalid print type selected." });
+                                }
+                            }
+                            else
+                            {
+                                return Json(new { success = false, message = "No data found for the given ModuleId." });
+                            }
+                        }
+                        else
+                        {
+                            // Handle case where expected number of tables is not returned
+                            return Json(new { success = false, message = "Expected number of tables not returned from stored procedure." });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                return Json(new { success = false, message = "An error occurred while generating Job Card print.", error = ex.Message });
+            }
+        }
+
+        [HttpGet]
         [Route("GenerateQrPdf")]
         public IActionResult GenerateQrPdf(string URL, string ProductionPlanNo)
         {

@@ -230,7 +230,7 @@ namespace TetroONE.Models
     public class GetDefaultProduct
     {
         public int LoginUserId { get; set; }
-        public int? DefaultProductId { get; set; } 
+        public int? DefaultProductId { get; set; }
     }
 
     public class InsertDefaultProductDetails 
@@ -238,19 +238,35 @@ namespace TetroONE.Models
         public int LoginUserId { get; set; }
         public int? DefaultProductId { get; set; }
         public int? ProcessId { get; set; }
-        public int? ProductId { get; set; } 
+        public int? ProductId { get; set; }     
         public int? Unit { get; set; }
-        public decimal? UnitValue { get; set; }
+        public decimal? BelowGSMValue { get; set; }
+        public decimal? AboveGSMValue { get; set; }
+        public decimal? LightColorValue { get; set; }
+        public decimal? MediumColorValue { get; set; }
+        public decimal? DarkColorValue { get; set; }
         public string? Description { get; set; }
-        public int? IsBelowGSM { get; set; }
-        public int? ColourType { get; set; }
     }
-     
+    
     public class DeleteDefaultProduct
     {
         public int LoginUserId { get; set; } 
-        public int? ProcessId { get; set; } 
         public int? DefaultProductId { get; set; }
     }
 
+    public class GetOtherCharges
+    {
+        public int LoginUserId { get; set; }
+        public int? OtherChargesId { get; set; }
+    }
+
+    public class InsertUpdateOtherCharges
+    {
+        public int LoginUserId { get; set; }
+        public int? OtherChargesId { get; set; }
+        public string OtherChargesType { get; set; }
+        public string OtherChargesName { get; set; }
+        public decimal Value { get; set; }
+        public bool IsPercentage { get; set; }
+    }
 }
