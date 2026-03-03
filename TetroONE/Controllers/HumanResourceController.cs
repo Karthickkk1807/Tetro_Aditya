@@ -1,20 +1,21 @@
-﻿using TetroONE.Models;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.VariantTypes;
 using log4net;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting.Internal;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Crypto.Operators;
 using System.Data;
 using System.Data.SqlClient;
-using System.Security.Claims;
-using System.Reflection.Metadata.Ecma335;
-using ClosedXML.Excel;
-using System.Text;
-using Org.BouncyCastle.Crypto.Operators;
 using System.Net.Mail;
-using DocumentFormat.OpenXml.VariantTypes;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
+using System.Text;
+using TetroONE.Models;
 
 namespace TetroONE.Controllers
 {
@@ -192,31 +193,88 @@ namespace TetroONE.Controllers
 			if (staticDetails.EmployeeId != null && staticDetails.EmployeeId != 0)
 			{
 				string[] exclude = { "attendanceMachineMappingDetails", "ExistingImage", "TVP_EmployeeDeviceMappingDetails", "EmployeeReportingPersonMappingDetails" };
-				response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateEmployeeDetails]", staticDetails, exclude);
-			}
+				response = GenericTetroONE.ExecuteReturnDataBioMetric(_connectionString, "[dbo].[USP_UpdateEmployeeDetails]", staticDetails, exclude);
+
+                response.Data = fileName;
+
+                if (response.Status)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot");
+
+                    foreach (var item in lstdeleteattachment)
+                    {
+                        string filepath = directoryPath + item.DocumentFilePath.Replace("..", "").Replace("/", "\\");
+                        if (System.IO.File.Exists(filepath))
+                        {
+                            System.IO.File.Delete(filepath);
+                        }
+                    }
+                }
+
+                return Json(response);
+            }
 			else
 			{
 				string[] exclude = { "attendanceMachineMappingDetails", "EmployeeId", "ExistingImage", "EmployeeStatusId", "EmployeeReportingPersonMappingDetails" };
-				response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertEmployeeDetails]", staticDetails, exclude);
-			}
+				response = GenericTetroONE.ExecuteReturnDataBioMetric(_connectionString, "[dbo].[USP_InsertEmployeeDetails]", staticDetails, exclude);
 
-			response.Data = fileName;
+                if (response.Status && response.Data != null)
+                {
+                    string jsonData = response.Data.ToString();
+                    JArray dataArray = JArray.Parse(jsonData);
 
-			if (response.Status)
-			{
-				var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot");
+                    if (dataArray.Count > 1)
+                    {
+                        var credentials = dataArray[1][0];
+                        string userName = credentials["ESSLUserName"].ToString();
+                        string userPassword = credentials["ESSLPassword"].ToString();
+                        string webAddress = credentials["WebAddress"].ToString();
 
-				foreach (var item in lstdeleteattachment)
-				{
-					string filepath = directoryPath + item.DocumentFilePath.Replace("..", "").Replace("/", "\\");
-					if (System.IO.File.Exists(filepath))
-					{
-						System.IO.File.Delete(filepath);
-					}
-				}
-			}
+                        foreach (var employee in dataArray[0])
+                        {
+                            string employeeName = employee["EmployeeName"].ToString();
+                            string employeeId = employee["EmployeeId"].ToString();
+                            string cardNumber = employee["CardNumber"].ToString();
+                            string serialNo = employee["SerialNo"].ToString();
+                            string EmployeeTypeId = employee["EmployeeTypeId"].ToString();
 
-			return Json(response);
+                            if (EmployeeTypeId == "1")
+                            {
+                                Biometric.AddEmployeeToBiomatric(employeeId, employeeName, cardNumber, serialNo, userName, userPassword, webAddress);
+                            }
+
+                            
+
+                        }
+                    }
+                }
+
+
+                response.Data = fileName;
+
+                if (response.Status)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot");
+
+                    foreach (var item in lstdeleteattachment)
+                    {
+                        string filepath = directoryPath + item.DocumentFilePath.Replace("..", "").Replace("/", "\\");
+                        if (System.IO.File.Exists(filepath))
+                        {
+                            System.IO.File.Delete(filepath);
+                        }
+                    }
+                }
+
+
+                return Json(response);
+
+
+            }
+
+			
+
+			
 		}
 
 		[HttpGet]
@@ -274,6 +332,18 @@ namespace TetroONE.Controllers
                             {
                                 System.IO.File.Delete(fullPath);
                             }
+                        }
+                    }
+                    if (ds != null && ds.Tables[2] != null && ds.Tables[2].Rows.Count > 0)
+                    {
+                        foreach (DataRow row in ds.Tables[2].Rows)
+                        {
+                            var employeeCode = row[0].ToString();
+                            var serialNumber = row[1].ToString();
+                            var userName = ds.Tables[3].Rows[0][0].ToString();
+                            var userPassword = ds.Tables[3].Rows[0][1].ToString();
+                            var webAddress = ds.Tables[3].Rows[0][2].ToString();
+                            Biometric.DeleteEmployeeToBiomatric(employeeCode, serialNumber, userName, userPassword, webAddress);
                         }
                     }
                 }

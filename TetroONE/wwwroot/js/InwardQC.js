@@ -43,20 +43,22 @@
         var $thisVal = $(this).val();
          
         var inwardMap = {
-            1: { TransactionId: '1', AutoGenertedNo: '1', PersonName: '1', InwardDate: '2025-10-24' },
-            2: { TransactionId: '2', AutoGenertedNo: '2', PersonName: '2', InwardDate: '2025-10-23' },
-            3: { TransactionId: '3', AutoGenertedNo: '4', PersonName: '3', InwardDate: '2025-10-15' },
-            4: { TransactionId: '4', AutoGenertedNo: '5', PersonName: '4', InwardDate: '2025-10-18' },
-            5: { TransactionId: '2', AutoGenertedNo: '5', PersonName: '6', InwardDate: '2025-10-12' },
-            6: { TransactionId: '2', AutoGenertedNo: '5', PersonName: '6', InwardDate: '2025-10-12' }
+            1: { TransactionId: '1', AutoGenertedNo: '1', PersonName: '1', InwardDate: '2025-10-24',Weight:'50',NoOfRoll:'6' },
+            2: { TransactionId: '2', AutoGenertedNo: '2', PersonName: '2', InwardDate: '2025-10-23',Weight:'40',NoOfRoll:'7' },
+            3: { TransactionId: '3', AutoGenertedNo: '4', PersonName: '3', InwardDate: '2025-10-15',Weight:'100',NoOfRoll:'7' },
+            4: { TransactionId: '4', AutoGenertedNo: '5', PersonName: '4', InwardDate: '2025-10-18',Weight:'200',NoOfRoll:'9' },
+            5: { TransactionId: '2', AutoGenertedNo: '5', PersonName: '6', InwardDate: '2025-10-12',Weight:'790',NoOfRoll:'2' },
+            6: { TransactionId: '2', AutoGenertedNo: '5', PersonName: '6', InwardDate: '2025-10-12',Weight:'120',NoOfRoll:'12' }
         };
          
-        var data = inwardMap[$thisVal] || { TransactionId: '', AutoGenertedNo: '', PersonName: '', InwardDate: '' };
+        var data = inwardMap[$thisVal] || { TransactionId: '', AutoGenertedNo: '', PersonName: '', InwardDate: '', Weight: '', NoOfRoll :''};
          
         $('#TransactionId').val(data.TransactionId).trigger('change');
         $('#AutoGenertedNo').val(data.AutoGenertedNo).trigger('change');
         $('#PersonName').val(data.PersonName).trigger('change');
         $('#InwardDate').val(data.InwardDate);
+        $('#Weight').val(data.Weight);
+        $('#RollCount').val(data.NoOfRoll);
     });
 
 
