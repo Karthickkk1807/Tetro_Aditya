@@ -219,6 +219,7 @@ namespace TetroONE.Models
         public string? SaleNo { get; set; }
         public string? SaleDate { get; set; }
         public string? HSNSAC { get; set; }
+        public string? DueDate { get; set; }
 
         public string? BankName { get; set; }
         public string? BranchName { get; set; }

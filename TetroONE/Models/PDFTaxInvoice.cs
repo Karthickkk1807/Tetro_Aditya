@@ -964,7 +964,7 @@ namespace TetroONE.Models
                             Table DetailsTable1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             DetailsTable1.SetBorderBottom(Border.NO_BORDER);
                             DetailsTable1.SetBorderLeft(Border.NO_BORDER);
-                            DetailsTable1.SetBorderRight(new SolidBorder(1));
+                            DetailsTable1.SetBorderRight(Border.NO_BORDER);
                             DetailsTable1.SetBorderTop(Border.NO_BORDER); 
 
                             DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("To : ").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.LEFT)));
@@ -975,7 +975,7 @@ namespace TetroONE.Models
 
                             Table DetailsTable2 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             DetailsTable2.SetBorderBottom(Border.NO_BORDER);
-                            DetailsTable2.SetBorderLeft(Border.NO_BORDER);
+                            DetailsTable2.SetBorderLeft(new SolidBorder(1));
                             DetailsTable2.SetBorderRight(Border.NO_BORDER);
                             DetailsTable2.SetBorderTop(Border.NO_BORDER);
 
@@ -983,6 +983,7 @@ namespace TetroONE.Models
                             DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Bill No      : " + data.SaleNo).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
                             DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Date         : " + data.SaleDate).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
                             DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("HSN/SAC : " + data.HSNSAC).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
+                            DetailsTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Due Date : " + data.DueDate).SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             DetailsMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DetailsTable1));
                             DetailsMainTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(DetailsTable2));
@@ -1053,7 +1054,7 @@ namespace TetroONE.Models
 
                                 // Add subtotal row at the end
                                 // Adjust the array length and values as per your column count and requirement
-                                string[] summaryRow = new string[] { "-", "-", "SUB-TOTAL", data.Roll, data.Weight, "-", data.SubTotal };
+                                string[] summaryRow = new string[] { "-", "-","-", "SUB TOTAL", data.Roll, data.Weight, "-", data.SubTotal };
 
                                 foreach (var cellValue in summaryRow)
                                 {

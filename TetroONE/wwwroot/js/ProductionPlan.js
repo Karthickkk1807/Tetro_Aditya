@@ -23,6 +23,8 @@ var EditFinishingChemicalProduct = [];
 
 $(document).ready(async function () {
 
+    $('#DownloadPDFModal').css('z-index', '1003');
+
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
     titleForHeaderProductTab = "Production Plan";

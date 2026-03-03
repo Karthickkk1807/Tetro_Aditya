@@ -42,7 +42,11 @@ $(document).ready(async function () {
         $('#tableFilter').val('');
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
+
+        const toDate = new Date(fnData.endDate);
+        toDate.setDate(toDate.getDate() + 1);
+
+        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: toDate.toISOString() }, GetOutwardSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
@@ -50,7 +54,11 @@ $(document).ready(async function () {
         updateMonthDisplay(displayedDate);
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetOutwardSuccess, null);
+
+        const toDate = new Date(fnData.endDate);
+        toDate.setDate(toDate.getDate() + 1);
+
+        Common.ajaxCall("GET", "/Productions/GetOutward", { PlantId: parseInt(PlantMappingId), OutWardId: null, FromDate: fnData.startDate.toISOString(), ToDate: toDate.toISOString() }, GetOutwardSuccess, null);
     });
 
     function updateMonthDisplay(date) {

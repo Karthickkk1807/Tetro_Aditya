@@ -593,6 +593,7 @@ namespace TetroONE.Controllers
                                     SaleNo = dt3.Rows[0]["SaleNo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["SaleNo"]) : null,
                                     SaleDate = dt3.Rows[0]["SaleDate"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["SaleDate"]) : null,
                                     HSNSAC = dt3.Rows[0]["HSNSAC"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["HSNSAC"]) : null,
+                                    DueDate = dt3.Rows[0]["DueDate"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["DueDate"]) : null,
 
                                     BankName = dt5.Rows[0]["BankName"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["BankName"]) : null,
                                     BranchName = dt5.Rows[0]["BranchName"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["BranchName"]) : null,
