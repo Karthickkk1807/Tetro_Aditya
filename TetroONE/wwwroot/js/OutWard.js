@@ -551,6 +551,26 @@ $(document).ready(async function () {
         });
     });
 
+    $(document).on('click', '#BtnSaveEPSONbtn', function () {
+        $.ajax({
+            type: 'GET',
+            url: '/EPSON/PrintDotMatrix',
+            data: { PrinterName: "EPSON FX-2175 ESC/P" },
+            //data: { PrinterName: "EPSON FX-2175 (Copy 1)" },
+            success: function (res) {
+
+                if (res.success) {
+                    Common.successMsg("EPSON Printed Successfully");
+                } else {
+                    Common.warningMsg(res.message);
+                }
+            },
+            error: function () {
+                Common.warningMsg("Print Failed");
+            }
+        });
+    });
+
     $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
         if (response == true) {
@@ -898,7 +918,7 @@ function GetOutwardNotNullSuccess(response) {
         // Width options
         let WidthHTML = WidthDropdown[0]
             .map(w =>
-                `<option value="${w.WidthId || ''}" ${item.Width === w.Width ? 'selected' : ''}>
+                `<option value="${w.WidthId || ''}" ${item.Width === w.WidthId ? 'selected' : ''}>
                 ${w.Width || ''}
             </option>`
             ).join('');
@@ -1574,6 +1594,11 @@ $(document).keydown(function (event) {
     if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
         $('#BtnSave').click();
+    }
+
+    if (event.altKey && event.key === 'e') {
+        event.preventDefault();
+        $('#BtnSaveEPSONbtn').click();
     }
 
     // Handling alt + c

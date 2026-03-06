@@ -56,7 +56,11 @@ $(document).ready(async function () {
         $('#tableFilter').val('');
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), InwardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardSuccess, null);
+
+        const toDate = new Date(fnData.endDate);
+        toDate.setDate(toDate.getDate() + 1);
+
+        Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), InwardId: null, FromDate: fnData.startDate.toISOString(), ToDate: toDate.toISOString() }, GetInwardSuccess, null);
     });
 
     $('#increment-month-btn2').click(function () {
@@ -64,7 +68,11 @@ $(document).ready(async function () {
         updateMonthDisplay(displayedDate);
 
         var fnData = Common.getDateFilter('dateDisplay2');
-        Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), InwardId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetInwardSuccess, null);
+
+        const toDate = new Date(fnData.endDate);
+        toDate.setDate(toDate.getDate() + 1);
+
+        Common.ajaxCall("GET", "/Productions/GetInward", { PlantId: parseInt(PlantMappingId), InwardId: null, FromDate: fnData.startDate.toISOString(), ToDate: toDate.toISOString() }, GetInwardSuccess, null);
     });
 
     function updateMonthDisplay(date) {
@@ -149,6 +157,10 @@ $(document).ready(async function () {
         $('#AlterReceivedFrom').hide();
         //$('#AlterClientId').hide();
 
+        $('#ReceivedFrom').val('').trigger('change');
+        $('#ColorId').val('').trigger('change');
+        $('#ClientId').val('').trigger('change');
+
         $('.Status-Div').hide();
         var currentDate = new Date();
         var formattedDate = currentDate.toISOString().slice(0, 10);
@@ -183,6 +195,10 @@ $(document).ready(async function () {
 
         $('#AlterReceivedFrom').hide();
         //$('#AlterClientId').hide();
+
+        $('#ReceivedFrom').val('').trigger('change');
+        $('#ColorId').val('').trigger('change');
+        $('#ClientId').val('').trigger('change');
 
         $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
         $('#AddAttachLable, #AddNotesLable').show();

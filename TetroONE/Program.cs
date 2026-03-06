@@ -48,6 +48,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddLog4net();
 
+builder.Services.AddScoped<DotMatrixPrinter>();
 
 var app = builder.Build();
 

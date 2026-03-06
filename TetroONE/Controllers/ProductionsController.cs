@@ -821,7 +821,6 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
-
         [HttpGet]
         [Route("OutwardPrint")]
         public IActionResult OutwardPrint(int ModuleId, int NoOfCopies, string printType)
