@@ -43,7 +43,7 @@ namespace TetroONE.Models
         //    return new DeviceRgb(r, g, b);
         //}	
 
-        public byte[] JobOrderPrint(int numberOfCopies, JobCardPrint data, string URL)
+        public byte[] JobOrderPrint(int numberOfCopies, JobCardPrint data, string URL, int IsRate)
         {
             List<byte[]> pdfCopies = new List<byte[]>();
 
@@ -157,7 +157,7 @@ namespace TetroONE.Models
                             HeaderInfoTable.SetBorderTop(Border.NO_BORDER);
                             HeaderInfoTable.SetBorderBottom(Border.NO_BORDER);
 
-                            Table HeaderInfoLeftTable = new Table(UnitValue.CreatePercentArray(new float[] { 20, 5, 75 })).UseAllAvailableWidth();
+                            Table HeaderInfoLeftTable = new Table(UnitValue.CreatePercentArray(new float[] { 35, 5, 60 })).UseAllAvailableWidth();
                             HeaderInfoLeftTable.SetBorderRight(Border.NO_BORDER);
                             HeaderInfoLeftTable.SetBorderLeft(Border.NO_BORDER);
                             HeaderInfoLeftTable.SetBorderTop(Border.NO_BORDER);
@@ -195,11 +195,23 @@ namespace TetroONE.Models
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ChamberQty + " KG").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("NoOfChamber").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.NoOfChamber ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("NoOfChamber").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.NoOfChamber ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
-                            Table HeaderInfoRightTable = new Table(UnitValue.CreatePercentArray(new float[] { 34, 4, 62 })).UseAllAvailableWidth();
+                            Table InwardDetailsTable = new Table(UnitValue.CreatePercentArray(new float[] { 18, 3, 79 })).UseAllAvailableWidth();
+                            InwardDetailsTable.SetBorder(Border.NO_BORDER);
+
+                            InwardDetailsTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Lot No").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            InwardDetailsTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            InwardDetailsTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.LotNo ?? "").SetFont(kabrioFont).SetMarginLeft(-2).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+
+                            //HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Lot No").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //HeaderInfoLeftTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //HeaderInfoLeftTable.AddCell(new Cell(1, 3).SetBorder(Border.NO_BORDER).Add(new Paragraph(data.LotNo ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+
+
+                            Table HeaderInfoRightTable = new Table(UnitValue.CreatePercentArray(new float[] { 34, 5, 61 })).UseAllAvailableWidth();
                             HeaderInfoRightTable.SetBorderRight(Border.NO_BORDER);
                             HeaderInfoRightTable.SetBorderLeft(Border.NO_BORDER);
                             HeaderInfoRightTable.SetBorderTop(Border.NO_BORDER);
@@ -217,9 +229,9 @@ namespace TetroONE.Models
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.Width ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Lot No").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
-                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.LotNo ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Lot No").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            //HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.LotNo ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("DC No").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
@@ -237,10 +249,21 @@ namespace TetroONE.Models
                             HeaderInfoRightTable.AddCell(new Cell().SetVerticalAlignment(VerticalAlignment.MIDDLE).SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
                             HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.WaterPPM ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
 
+
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("NoOfChamber").SetFont(kabrioBoldFont).SetFixedLeading(15).SetMarginLeft(10).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(":").SetFont(kabrioBoldFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+                            HeaderInfoRightTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.NoOfChamber ?? "").SetFont(kabrioFont).SetFixedLeading(15).SetFontSize(12).SetTextAlignment(TextAlignment.LEFT)));
+
+
                             HeaderInfoTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(HeaderInfoLeftTable));
                             HeaderInfoTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(HeaderInfoRightTable));
+                            HeaderInfoTable.AddCell(new Cell(1, 2)
+    .SetBorder(Border.NO_BORDER)
+    .Add(InwardDetailsTable));
 
                             document.Add(HeaderInfoTable);
+
+                             
 
                             Table PreTreatmentHeadingTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             PreTreatmentHeadingTable.SetBorderRight(new SolidBorder(1));
@@ -254,39 +277,63 @@ namespace TetroONE.Models
 
                             if (data.PreTreatmentProductItemData != null && data.PreTreatmentProductItemData.Columns.Count > 0)
                             {
-                                // Create dynamic column width array (equal width)
+                                int columnCount = data.PreTreatmentProductItemData.Columns.Count;
+
+                                // Remove last column if IsRate = 0
+                                if (IsRate == 0)
+                                {
+                                    columnCount = columnCount - 1;
+                                }
+
+                                // Dynamic column widths
                                 float[] columnWidths = Enumerable
-                                    .Repeat(100f / data.PreTreatmentProductItemData.Columns.Count, data.PreTreatmentProductItemData.Columns.Count)
+                                    .Repeat(100f / columnCount, columnCount)
                                     .ToArray();
 
                                 Table PreTreatmentMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
                                 PreTreatmentMainTable.SetBorder(new SolidBorder(1));
 
                                 // ---------------------------
-                                // HEADER ROW (Dynamic)
+                                // HEADER ROW
                                 // ---------------------------
-                                foreach (DataColumn column in data.PreTreatmentProductItemData.Columns)
+                                for (int i = 0; i < columnCount; i++)
                                 {
-                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
+                                    DataColumn column = data.PreTreatmentProductItemData.Columns[i];
+
+                                    Cell headerCell = new Cell()
+                                        .SetTextAlignment(TextAlignment.CENTER)
+                                        .SetFont(kabrioBoldFont)
+                                        .SetFontSize(12)
+                                        .SetBorderBottom(new SolidBorder(1))
+                                        .Add(new Paragraph(column.ColumnName));
 
                                     PreTreatmentMainTable.AddHeaderCell(headerCell);
                                 }
 
                                 // ---------------------------
-                                // DATA ROWS (Dynamic)
+                                // DATA ROWS
                                 // ---------------------------
                                 foreach (DataRow row in data.PreTreatmentProductItemData.Rows)
                                 {
-                                    foreach (var item in row.ItemArray)
+                                    for (int i = 0; i < columnCount; i++)
                                     {
-                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        string value = row[i]?.ToString() ?? "";
+
+                                        Cell cell = new Cell()
+                                            .SetBorder(Border.NO_BORDER)
+                                            .SetBorderLeft(new SolidBorder(1))
+                                            .SetBorderRight(new SolidBorder(1))
+                                            .SetTextAlignment(TextAlignment.CENTER)
+                                            .SetFont(kabrioFont)
+                                            .SetFontSize(12)
+                                            .Add(new Paragraph(value));
+
                                         PreTreatmentMainTable.AddCell(cell);
                                     }
                                 }
 
                                 document.Add(PreTreatmentMainTable);
                             }
-
 
                             Table DyeHeadingTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             DyeHeadingTable.SetBorderRight(new SolidBorder(1));
@@ -299,8 +346,19 @@ namespace TetroONE.Models
                             document.Add(DyeHeadingTable);
 
                             if (data.DyeProductItemData != null && data.DyeProductItemData.Columns.Count > 0)
-                            { 
-                                float[] columnWidths = Enumerable.Repeat(100f / data.DyeProductItemData.Columns.Count, data.DyeProductItemData.Columns.Count).ToArray();
+                            {
+                                int columnCount = data.DyeProductItemData.Columns.Count;
+
+                                // Remove last column if IsRate = 0
+                                if (IsRate == 0)
+                                {
+                                    columnCount = columnCount - 1;
+                                }
+
+                                // Dynamic column widths
+                                float[] columnWidths = Enumerable
+                                    .Repeat(100f / columnCount, columnCount)
+                                    .ToArray();
 
                                 Table DyeMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
                                 DyeMainTable.SetBorder(new SolidBorder(1));
@@ -308,9 +366,16 @@ namespace TetroONE.Models
                                 // ---------------------------
                                 // HEADER ROW (Dynamic)
                                 // ---------------------------
-                                foreach (DataColumn column in data.DyeProductItemData.Columns)
+                                for (int i = 0; i < columnCount; i++)
                                 {
-                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
+                                    DataColumn column = data.DyeProductItemData.Columns[i];
+
+                                    Cell headerCell = new Cell()
+                                        .SetTextAlignment(TextAlignment.CENTER)
+                                        .SetFont(kabrioBoldFont)
+                                        .SetFontSize(12)
+                                        .SetBorderBottom(new SolidBorder(1))
+                                        .Add(new Paragraph(column.ColumnName));
 
                                     DyeMainTable.AddHeaderCell(headerCell);
                                 }
@@ -320,9 +385,19 @@ namespace TetroONE.Models
                                 // ---------------------------
                                 foreach (DataRow row in data.DyeProductItemData.Rows)
                                 {
-                                    foreach (var item in row.ItemArray)
+                                    for (int i = 0; i < columnCount; i++)
                                     {
-                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        string value = row[i]?.ToString() ?? "";
+
+                                        Cell cell = new Cell()
+                                            .SetBorder(Border.NO_BORDER)
+                                            .SetBorderLeft(new SolidBorder(1))
+                                            .SetBorderRight(new SolidBorder(1))
+                                            .SetTextAlignment(TextAlignment.CENTER)
+                                            .SetFont(kabrioFont)
+                                            .SetFontSize(12)
+                                            .Add(new Paragraph(value));
+
                                         DyeMainTable.AddCell(cell);
                                     }
                                 }
@@ -342,7 +417,18 @@ namespace TetroONE.Models
 
                             if (data.DyeBathProductItemData != null && data.DyeBathProductItemData.Columns.Count > 0)
                             {
-                                float[] columnWidths = Enumerable.Repeat(100f / data.DyeBathProductItemData.Columns.Count, data.DyeBathProductItemData.Columns.Count).ToArray();
+                                int columnCount = data.DyeBathProductItemData.Columns.Count;
+
+                                // Remove last column if IsRate == 0
+                                if (IsRate == 0)
+                                {
+                                    columnCount = columnCount - 1;
+                                }
+
+                                // Dynamic column widths
+                                float[] columnWidths = Enumerable
+                                    .Repeat(100f / columnCount, columnCount)
+                                    .ToArray();
 
                                 Table DyeBathMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
                                 DyeBathMainTable.SetBorder(new SolidBorder(1));
@@ -350,9 +436,16 @@ namespace TetroONE.Models
                                 // ---------------------------
                                 // HEADER ROW (Dynamic)
                                 // ---------------------------
-                                foreach (DataColumn column in data.DyeBathProductItemData.Columns)
+                                for (int i = 0; i < columnCount; i++)
                                 {
-                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
+                                    DataColumn column = data.DyeBathProductItemData.Columns[i];
+
+                                    Cell headerCell = new Cell()
+                                        .SetTextAlignment(TextAlignment.CENTER)
+                                        .SetFont(kabrioBoldFont)
+                                        .SetFontSize(12)
+                                        .SetBorderBottom(new SolidBorder(1))
+                                        .Add(new Paragraph(column.ColumnName));
 
                                     DyeBathMainTable.AddHeaderCell(headerCell);
                                 }
@@ -362,9 +455,19 @@ namespace TetroONE.Models
                                 // ---------------------------
                                 foreach (DataRow row in data.DyeBathProductItemData.Rows)
                                 {
-                                    foreach (var item in row.ItemArray)
+                                    for (int i = 0; i < columnCount; i++)
                                     {
-                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        string value = row[i]?.ToString() ?? "";
+
+                                        Cell cell = new Cell()
+                                            .SetBorder(Border.NO_BORDER)
+                                            .SetBorderLeft(new SolidBorder(1))
+                                            .SetBorderRight(new SolidBorder(1))
+                                            .SetTextAlignment(TextAlignment.CENTER)
+                                            .SetFont(kabrioFont)
+                                            .SetFontSize(12)
+                                            .Add(new Paragraph(value));
+
                                         DyeBathMainTable.AddCell(cell);
                                     }
                                 }
@@ -382,10 +485,20 @@ namespace TetroONE.Models
 
                             document.Add(AfterTreatmentHeadingTable);
 
-
                             if (data.AfterTreatmentProductItemData != null && data.AfterTreatmentProductItemData.Columns.Count > 0)
                             {
-                                float[] columnWidths = Enumerable.Repeat(100f / data.AfterTreatmentProductItemData.Columns.Count, data.AfterTreatmentProductItemData.Columns.Count).ToArray();
+                                int columnCount = data.AfterTreatmentProductItemData.Columns.Count;
+
+                                // Remove last column if IsRate == 0
+                                if (IsRate == 0)
+                                {
+                                    columnCount = columnCount - 1;
+                                }
+
+                                // Dynamic column widths
+                                float[] columnWidths = Enumerable
+                                    .Repeat(100f / columnCount, columnCount)
+                                    .ToArray();
 
                                 Table AfterTreatmentMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
                                 AfterTreatmentMainTable.SetBorder(new SolidBorder(1));
@@ -393,9 +506,16 @@ namespace TetroONE.Models
                                 // ---------------------------
                                 // HEADER ROW (Dynamic)
                                 // ---------------------------
-                                foreach (DataColumn column in data.AfterTreatmentProductItemData.Columns)
+                                for (int i = 0; i < columnCount; i++)
                                 {
-                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
+                                    DataColumn column = data.AfterTreatmentProductItemData.Columns[i];
+
+                                    Cell headerCell = new Cell()
+                                        .SetTextAlignment(TextAlignment.CENTER)
+                                        .SetFont(kabrioBoldFont)
+                                        .SetFontSize(12)
+                                        .SetBorderBottom(new SolidBorder(1))
+                                        .Add(new Paragraph(column.ColumnName));
 
                                     AfterTreatmentMainTable.AddHeaderCell(headerCell);
                                 }
@@ -405,16 +525,25 @@ namespace TetroONE.Models
                                 // ---------------------------
                                 foreach (DataRow row in data.AfterTreatmentProductItemData.Rows)
                                 {
-                                    foreach (var item in row.ItemArray)
+                                    for (int i = 0; i < columnCount; i++)
                                     {
-                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        string value = row[i]?.ToString() ?? "";
+
+                                        Cell cell = new Cell()
+                                            .SetBorder(Border.NO_BORDER)
+                                            .SetBorderLeft(new SolidBorder(1))
+                                            .SetBorderRight(new SolidBorder(1))
+                                            .SetTextAlignment(TextAlignment.CENTER)
+                                            .SetFont(kabrioFont)
+                                            .SetFontSize(12)
+                                            .Add(new Paragraph(value));
+
                                         AfterTreatmentMainTable.AddCell(cell);
                                     }
                                 }
 
                                 document.Add(AfterTreatmentMainTable);
                             }
-
 
                             Table FinishingHeadingTable = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
                             FinishingHeadingTable.SetBorderRight(new SolidBorder(1));
@@ -428,7 +557,18 @@ namespace TetroONE.Models
 
                             if (data.FinishingProductItemData != null && data.FinishingProductItemData.Columns.Count > 0)
                             {
-                                float[] columnWidths = Enumerable.Repeat(100f / data.FinishingProductItemData.Columns.Count, data.FinishingProductItemData.Columns.Count).ToArray();
+                                int columnCount = data.FinishingProductItemData.Columns.Count;
+
+                                // Remove last column if IsRate == 0
+                                if (IsRate == 0)
+                                {
+                                    columnCount = columnCount - 1;
+                                }
+
+                                // Dynamic column widths
+                                float[] columnWidths = Enumerable
+                                    .Repeat(100f / columnCount, columnCount)
+                                    .ToArray();
 
                                 Table FinishingMainTable = new Table(UnitValue.CreatePercentArray(columnWidths)).UseAllAvailableWidth();
                                 FinishingMainTable.SetBorder(new SolidBorder(1));
@@ -436,9 +576,16 @@ namespace TetroONE.Models
                                 // ---------------------------
                                 // HEADER ROW (Dynamic)
                                 // ---------------------------
-                                foreach (DataColumn column in data.FinishingProductItemData.Columns)
+                                for (int i = 0; i < columnCount; i++)
                                 {
-                                    Cell headerCell = new Cell().SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioBoldFont).SetFontSize(12).SetBorderBottom(new SolidBorder(1)).Add(new Paragraph(column.ColumnName));
+                                    DataColumn column = data.FinishingProductItemData.Columns[i];
+
+                                    Cell headerCell = new Cell()
+                                        .SetTextAlignment(TextAlignment.CENTER)
+                                        .SetFont(kabrioBoldFont)
+                                        .SetFontSize(12)
+                                        .SetBorderBottom(new SolidBorder(1))
+                                        .Add(new Paragraph(column.ColumnName));
 
                                     FinishingMainTable.AddHeaderCell(headerCell);
                                 }
@@ -448,9 +595,19 @@ namespace TetroONE.Models
                                 // ---------------------------
                                 foreach (DataRow row in data.FinishingProductItemData.Rows)
                                 {
-                                    foreach (var item in row.ItemArray)
+                                    for (int i = 0; i < columnCount; i++)
                                     {
-                                        Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderLeft(new SolidBorder(1)).SetBorderRight(new SolidBorder(1)).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(12).Add(new Paragraph(item?.ToString() ?? ""));
+                                        string value = row[i]?.ToString() ?? "";
+
+                                        Cell cell = new Cell()
+                                            .SetBorder(Border.NO_BORDER)
+                                            .SetBorderLeft(new SolidBorder(1))
+                                            .SetBorderRight(new SolidBorder(1))
+                                            .SetTextAlignment(TextAlignment.CENTER)
+                                            .SetFont(kabrioFont)
+                                            .SetFontSize(12)
+                                            .Add(new Paragraph(value));
+
                                         FinishingMainTable.AddCell(cell);
                                     }
                                 }
@@ -555,7 +712,7 @@ namespace TetroONE.Models
 
                             // Get page count BEFORE adding table
                             // Sample content (to test page break)
-                            
+
                             float signatureHeight = 60f;
 
                             // Create table

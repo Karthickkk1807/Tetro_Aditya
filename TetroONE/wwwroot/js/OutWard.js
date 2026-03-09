@@ -170,6 +170,12 @@ $(document).ready(async function () {
         //$('#toggleIconShipTo').removeClass('fa-chevron-up').addClass('fa-chevron-down');
         $('.ShipTo-edit').hide();
 
+        $('#ProductionPlanTopHeadbind, #OutWardTableBody, #FotterDiv .DynmicTableRow').css({
+            'pointer-events': 'auto',
+            'opacity': 1
+        });
+        $('#BtnSave').show();
+
         $('#OutWardModal').show();
     });
 
@@ -206,6 +212,7 @@ $(document).ready(async function () {
 
         $('#emptyDiv').removeClass('col-lg-4 col-md-4 col-6').addClass('col-lg-2 col-md-2 col-6');
         $('#OutWardStatusIdDiv').show();
+        $('#BtnSave').show();
 
         existFiles = [];
         formDataMultiple = new FormData();
@@ -841,6 +848,20 @@ function GetOutwardNotNullSuccess(response) {
     $('#InwardNo').val(header.InwardId);
 
     $('#ShipToId').prop('disabled', true);
+
+    if (![9, 10].includes(header.OutWardStatusId)) {
+        $('#BtnSave').show();
+        $('#ProductionPlanTopHeadbind, #OutWardTableBody, #FotterDiv .DynmicTableRow').css({
+            'pointer-events': 'auto',
+            'opacity': 1
+        });
+    } else {
+        $('#BtnSave').hide();
+        $('#ProductionPlanTopHeadbind, #OutWardTableBody, #FotterDiv .DynmicTableRow').css({
+            'pointer-events': 'none',
+            'opacity': 0.9
+        });
+    }
 
     //Common.ajaxCall("GET", "/Productions/GetOutWardTypeContactDetails", { OutwardType: parseInt(header.OutWardTo) }, function (responseOutWardType) {
     Common.ajaxCall("POST", "/Common/GetDropDown", JSON.stringify({ MasterInfoId: null, ModuleName: 'OutWardType' }), function (responseOutwardTo) {

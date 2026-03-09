@@ -696,9 +696,9 @@ namespace TetroONE.Controllers
 
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-                    
+
                     try
-                    { 
+                    {
                         SqlDataAdapter adapter = new SqlDataAdapter(command);
                         adapter.Fill(ds);
 
@@ -974,7 +974,7 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("JobCardPrint")]
-        public IActionResult JobCardPrint(int ModuleId, int NoOfCopies, string printType, string URL)
+        public IActionResult JobCardPrint(int ModuleId, int NoOfCopies, string printType, string URL, int IsRate)
         {
             try
             {
@@ -1064,8 +1064,7 @@ namespace TetroONE.Controllers
                                 string customFileName = $"JobCard_{LotNumber}.pdf";
                                 PDFJobCard pdfService = new PDFJobCard();
                                 byte[] pdfContent = null;
-
-                                pdfContent = pdfService.JobOrderPrint(NoOfCopies, data, URL);
+                                pdfContent = pdfService.JobOrderPrint(NoOfCopies, data, URL, IsRate);
 
                                 switch (printType.ToLower())
                                 {

@@ -621,7 +621,7 @@ $(document).ready(function () {
     });
     ///===============================off-canvas============================//
 
-    $(document).on('click', '.navbar-tab', function () {
+    $(document).on('click', '#myProfileTab .navbar-tab', function () {
 
         titleForHeaderTab = $(this).text().trim();
         $('.navbar-tab').removeClass('active');

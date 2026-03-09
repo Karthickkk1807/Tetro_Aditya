@@ -965,7 +965,7 @@ namespace TetroONE.Models
                             DetailsTable1.SetBorderBottom(Border.NO_BORDER);
                             DetailsTable1.SetBorderLeft(Border.NO_BORDER);
                             DetailsTable1.SetBorderRight(Border.NO_BORDER);
-                            DetailsTable1.SetBorderTop(Border.NO_BORDER); 
+                            DetailsTable1.SetBorderTop(Border.NO_BORDER);
 
                             DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("To : ").SetFont(kabrioFont).SetFontSize(10).SetFixedLeading(15).SetTextAlignment(TextAlignment.LEFT)));
                             DetailsTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph(data.ClientName).SetFont(kabrioBoldFont).SetFontSize(10).SetFixedLeading(10).SetTextAlignment(TextAlignment.LEFT)));
@@ -1054,7 +1054,7 @@ namespace TetroONE.Models
 
                                 // Add subtotal row at the end
                                 // Adjust the array length and values as per your column count and requirement
-                                string[] summaryRow = new string[] { "-", "-","-", "SUB TOTAL", data.Roll, data.Weight, "-", data.SubTotal };
+                                string[] summaryRow = new string[] { "-", "-", "-", "SUB TOTAL", data.Roll, data.Weight, "-", data.SubTotal };
 
                                 foreach (var cellValue in summaryRow)
                                 {
@@ -1073,7 +1073,7 @@ namespace TetroONE.Models
                             }
 
 
-                            Table BankAmountTable = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 })).UseAllAvailableWidth();
+                            Table BankAmountTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.3F, 33.3F, 33.3F })).UseAllAvailableWidth();
                             BankAmountTable.SetBorderBottom(new SolidBorder(1));
                             BankAmountTable.SetBorderLeft(new SolidBorder(1));
                             BankAmountTable.SetBorderRight(new SolidBorder(1));
@@ -1099,6 +1099,37 @@ namespace TetroONE.Models
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("IFSC").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.IFSCCode + ".").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+
+
+                            // Create a table with 3 columns, each taking a specific percentage of the available width
+                            Table QRCodeDetails = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).UseAllAvailableWidth();
+
+                            var upiId = data.UPIId;
+                            var payeeName = data.CompanyName;
+                            var amount = data.GrantTotal;
+                            var currency = "INR";
+                            string transactionId = $"{DateTime.UtcNow:yyyyMMddHHmmssfff}-{new Random().Next(1000, 9999)}";
+
+                            var transactionNote = "Payment For Adhithiya Textiles Process";
+                            var upiString = $"upi://pay?pa={upiId}&pn={payeeName}&am={amount}&cu={currency}&tn={transactionNote}";
+
+                            BarcodeQRCode qrCode = new BarcodeQRCode(upiString);
+                            Image qrCodeImage = new Image(qrCode.CreateFormXObject(pdf));
+
+                            qrCodeImage.SetHeight(70); // Set height to 30px
+                            qrCodeImage.SetWidth(70);  // Set width to 30px
+                            qrCodeImage.SetHorizontalAlignment(HorizontalAlignment.CENTER);
+
+                            QRCodeDetails.AddCell(new Cell().Add(qrCodeImage).SetBorder(Border.NO_BORDER).SetPaddingTop(5));
+                            QRCodeDetails.AddCell(new Cell().Add(new Paragraph("UPI ID : " + data.UPIId).SetTextAlignment(TextAlignment.CENTER).SetFont(kabrioFont).SetFontSize(9)).SetBorder(Border.NO_BORDER).SetPaddingTop(-5));
+
+                            // Add the image to the first row, first column
+                            Image pyamentPlaceholderImage = new Image(ImageDataFactory.Create("wwwroot/assets/ModuleImages/PDFImages/PaymentPlaceHolderImages.png")); // Replace with your image path
+                            pyamentPlaceholderImage.SetHeight(5);
+                            pyamentPlaceholderImage.SetWidth(80);
+                            pyamentPlaceholderImage.SetMarginLeft(-40);
+
+                            QRCodeDetails.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(pyamentPlaceholderImage).SetPaddingLeft(90));
 
                             Table BankAmountSubTable2 = new Table(UnitValue.CreatePercentArray(new float[] { 70, 15, 15 })).UseAllAvailableWidth();
                             BankAmountSubTable2.SetMarginTop(12);
@@ -1145,6 +1176,7 @@ namespace TetroONE.Models
                             BankAmountSubTable2.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetBorderTop(new SolidBorder(1)).Add(new Paragraph().Add(new Text(data.GrantTotal).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             BankAmountTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(BankAmountSubTable1));
+                            BankAmountTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(QRCodeDetails));
                             BankAmountTable.AddCell(new Cell().SetBorder(Border.NO_BORDER).SetPadding(0).Add(BankAmountSubTable2));
 
                             document.Add(BankAmountTable);

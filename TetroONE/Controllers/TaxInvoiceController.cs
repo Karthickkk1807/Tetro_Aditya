@@ -438,7 +438,7 @@ namespace TetroONE.Controllers
 							AccountNumber = Convert.ToString(dt1.Rows[0]["AccountNumber"]),
 							IFSCCode = Convert.ToString(dt1.Rows[0]["IFSCCode"]),
 							BankName = Convert.ToString(dt1.Rows[0]["BankName"]),
-							UPIId = Convert.ToString(dt1.Rows[0]["UPIId"]),
+							//UPIId = Convert.ToString(dt1.Rows[0]["UPIId"]),
 							BranchName = Convert.ToString(dt1.Rows[0]["BranchName"]),
 
 							TermsAndCondition = Convert.ToString(dt7.Rows[0]["TermsAndCondition"]),
@@ -599,6 +599,7 @@ namespace TetroONE.Controllers
                                     BranchName = dt5.Rows[0]["BranchName"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["BranchName"]) : null,
                                     AccountNumber = dt5.Rows[0]["AccountNumber"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["AccountNumber"]) : null,
                                     IFSCCode = dt5.Rows[0]["IFSCCode"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["IFSCCode"]) : null,
+                                    UPIId = dt5.Rows[0]["UPIId"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["UPIId"]) : null,
 
                                     SubTotal = dt6.Rows[0]["SubTotal"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["SubTotal"]) : null,
                                     CGST_Percentage = dt6.Rows[0]["CGST_Percentage"] != DBNull.Value ? Convert.ToString(dt6.Rows[0]["CGST_Percentage"]) : null,

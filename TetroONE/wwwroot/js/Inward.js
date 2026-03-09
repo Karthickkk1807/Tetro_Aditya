@@ -21,7 +21,7 @@ $(document).ready(async function () {
     Common.bindDropDown('InwardTypeId', 'InWardType');
     Common.bindDropDownParent('State', 'FromAddItem', 'State');
 
-    $('#ClientId,#ReceivedFrom, #ColorId').each(function () {
+    $('#ClientId,#ReceivedFrom, #ColorId, #StorageLocationId').each(function () {
         $(this).select2({
             dropdownParent: $(this).parent()
         });
@@ -160,6 +160,7 @@ $(document).ready(async function () {
         $('#ReceivedFrom').val('').trigger('change');
         $('#ColorId').val('').trigger('change');
         $('#ClientId').val('').trigger('change');
+        $('#StorageLocationId').val('').trigger('change');
 
         $('.Status-Div').hide();
         var currentDate = new Date();
@@ -199,6 +200,7 @@ $(document).ready(async function () {
         $('#ReceivedFrom').val('').trigger('change');
         $('#ColorId').val('').trigger('change');
         $('#ClientId').val('').trigger('change');
+        $('#StorageLocationId').val('').trigger('change');
 
         $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
         $('#AddAttachLable, #AddNotesLable').show();
