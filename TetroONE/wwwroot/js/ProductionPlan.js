@@ -20,8 +20,9 @@ var EditDyeBathChemicalProduct = [];
 var EditAfterTreatmentChemicalProduct = [];
 var EditFinishingChemicalProduct = [];
 
-
 $(document).ready(async function () {
+
+    $('#DownloadPDFModal').css('z-index', '1003');
 
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
@@ -29,6 +30,81 @@ $(document).ready(async function () {
     titleForHeaderPopRawMatrialTab = "Pre-Treatment";
 
     $('.datapiker').show();
+    $('#PDFIcon').hide();
+
+    var start = moment().startOf('month');
+    var end = moment(); // today
+
+    $('#reportrange span').html(
+        start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY')
+    );
+
+    $('.daterangepicker').on('show.daterangepicker', function () {
+        $('.ranges li[data-range-key="No Date"]').hide();
+    });
+
+    $('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        autoUpdateInput: false,
+        alwaysShowCalendars: true,
+        showCustomRangeLabel: true,
+        locale: {
+            format: 'DD-MM-YYYY'
+        },
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment()],
+            'Last Month': [
+                moment().subtract(1, 'month').startOf('month'),
+                moment().subtract(1, 'month').endOf('month')
+            ],
+            'No Date': [moment(), moment()]
+        }
+    }, cb);
+
+    // default load
+    cb(start, end);
+
+
+    // Apply event
+    $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+
+        if (picker.chosenLabel === 'No Date') {
+            $(this).find('span').html('No Date');
+            StartDate = null;
+            EndDate = null;
+        } else {
+            $(this).find('span').html(
+                picker.startDate.format('DD-MM-YYYY') +
+                ' - ' +
+                picker.endDate.format('DD-MM-YYYY')
+            );
+
+            StartDate = picker.startDate.format('YYYY-MM-DD');
+            EndDate = picker.endDate.format('YYYY-MM-DD');
+        }
+
+        console.log("StartDate:", StartDate);
+        console.log("EndDate:", EndDate);
+    });
+
+
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+
+    let displayedDate = new Date(currentYear, currentMonth);
+    updateMonthDisplay(displayedDate);
+    $('#increment-month-btn2').hide();
+
+    var fnData = Common.getDateFilter('dateDisplay2');
+    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
+
+    bindDropDownPrint('ReportName', 'GreyFabricCategory', 1);
 
     Common.bindDropDownParent('PreparedBy', 'FormStatus', 'SampleReceivedBy');
     Common.bindDropDownParent('ProductionPlanStatusId', 'FormStatus', 'ProductionPlanStatus');
@@ -40,14 +116,6 @@ $(document).ready(async function () {
 
     var processTypeDropdown = await Common.bindDropDownSync('ProcessType');
     ProcessTypeDropdown = JSON.parse(processTypeDropdown);
-
-    let currentDate = new Date();
-    let currentMonth = currentDate.getMonth();
-    let currentYear = currentDate.getFullYear();
-
-    let displayedDate = new Date(currentYear, currentMonth);
-    updateMonthDisplay(displayedDate);
-    $('#increment-month-btn2').hide();
 
     $('#decrement-month-btn2').click(function () {
         displayedDate.setMonth(displayedDate.getMonth() - 1);
@@ -120,9 +188,6 @@ $(document).ready(async function () {
         $('#tableFilter').val('');
     });
 
-    var fnData = Common.getDateFilter('dateDisplay2');
-    Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
-
     $(document).on('click', '#AddProductionPlan', function () {
         $('.Status-Div').hide();
 
@@ -163,6 +228,7 @@ $(document).ready(async function () {
         $('#ColourDiv').hide();
         $('#MachineDiv').hide();
         $('#ProductionPlanjobCardBtn').hide();
+        $('#ProductionPlanJobCardWithRateBtn').hide();
 
         $("#QRCode").html("");
         $("#AddNotesText").val('');
@@ -226,6 +292,7 @@ $(document).ready(async function () {
 
         $("#ProductionPlanSaveBtn span:first").text("Update");
         $('#ProductionPlanjobCardBtn').show();
+        $('#ProductionPlanJobCardWithRateBtn').show();
 
         $('.Status-Div').show();
         $('#MLRWaterLevelDiv').show();
@@ -280,11 +347,11 @@ $(document).ready(async function () {
                     if (response.status) {
                         var data = JSON.parse(response.data);
 
-                        EditPreTreatmentChemicalProduct = data[0];
-                        EditDyeChemicalProduct = data[1];
-                        EditDyeBathChemicalProduct = data[2];
-                        EditAfterTreatmentChemicalProduct = data[3];
-                        EditFinishingChemicalProduct = data[4];
+                        EditPreTreatmentChemicalProduct = (data[0]?.[0]?.ChemicalId != null) ? data[0] : [];
+                        EditDyeChemicalProduct = (data[1]?.[0]?.ChemicalId != null) ? data[1] : [];
+                        EditDyeBathChemicalProduct = (data[2]?.[0]?.ChemicalId != null) ? data[2] : [];
+                        EditAfterTreatmentChemicalProduct = (data[3]?.[0]?.ChemicalId != null) ? data[3] : [];
+                        EditFinishingChemicalProduct = (data[4]?.[0]?.ChemicalId != null) ? data[4] : [];
 
                         var fnData = Common.getDateFilter('dateDisplay2');
                         Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: parseInt(ProductionPlanId), FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanNotNullSuccess, null);
@@ -312,8 +379,9 @@ $(document).ready(async function () {
 
     $(document).on('click', '#MainTab .navbar-tab', function () {
         $('#tableFilter').val('');
+        $('#loader-pms').show();
         titleForHeaderProductTab = $(this).text().trim();
-        $('.navbar-tab').removeClass('active');
+        $('#MainTab .navbar-tab').removeClass('active');
         $(this).each(function () {
             if ($(this).text().trim() === titleForHeaderProductTab) {
                 $(this).addClass('active');
@@ -321,57 +389,83 @@ $(document).ready(async function () {
         });
         if (titleForHeaderProductTab == "Production Plan") {
             $('.datapiker').show();
+            $('#PDFIcon').hide();
             var fnData = Common.getDateFilter('dateDisplay2');
             Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(1), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
         }
         else if (titleForHeaderProductTab == "Grey Fabric Stock Info") {
             $('.datapiker').hide();
+            $('#PDFIcon').show();
             var fnData = Common.getDateFilter('dateDisplay2');
             Common.ajaxCall("GET", "/Productions/GetProductionPlan", { PlantId: parseInt(PlantMappingId), TypeId: parseInt(2), ProductionPlanId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionPlanSuccess, null);
         }
+        $('#loader-pms').hide();
     });
+
+
+    /*Please follow the sequence of tabs.*/
+    //$(document).on('click', '#ChemicalModal .navbar-tab', function (e) {
+
+    //    e.preventDefault();
+    //    e.stopImmediatePropagation();
+
+    //    var tabOrder = ["Pre-Treatment", "Dye", "DyeBath", "After-Treatment", "Finishing"];
+
+    //    var currentTabText = titleForHeaderPopRawMatrialTab ||
+    //        $('#ChemicalModal .navbar-tab.active').text().trim();
+
+    //    var clickedTabText = $(this).text().trim();
+
+    //    var currentIndex = tabOrder.indexOf(currentTabText);
+    //    var clickedIndex = tabOrder.indexOf(clickedTabText);
+
+    //    if (skipChemicalTabValidation) {
+    //        skipChemicalTabValidation = false;
+    //        activateChemicalTab(clickedTabText);
+    //        return;
+    //    }
+
+    //    if (!validateCurrentChemicalTab()) {
+    //        Common.errorMsg("Please fill all required fields in the current tab.");
+
+    //        // 🔁 Always activate the saved header tab
+    //        activateChemicalTab(currentTabText);
+    //        return false;
+    //    }
+
+    //    // ❌ If user tries to skip ahead more than one tab
+    //    if (clickedIndex > currentIndex + 1) {
+    //        Common.warningMsg("Please follow the sequence of tabs.");
+
+    //        // 👉 Activate next allowed tab automatically
+    //        var nextTabText = tabOrder[currentIndex + 1];
+    //        activateChemicalTab(nextTabText);
+    //        return false;
+    //    }
+
+    //    // ✅ Valid move (either next or previous)
+    //    activateChemicalTab(clickedTabText);
+    //});
 
     $(document).on('click', '#ChemicalModal .navbar-tab', function (e) {
 
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        var tabOrder = ["Pre-Treatment", "Dye", "DyeBath", "After-Treatment", "Finishing"];
-
         var currentTabText = titleForHeaderPopRawMatrialTab ||
             $('#ChemicalModal .navbar-tab.active').text().trim();
 
         var clickedTabText = $(this).text().trim();
 
-        var currentIndex = tabOrder.indexOf(currentTabText);
-        var clickedIndex = tabOrder.indexOf(clickedTabText);
-
-        if (skipChemicalTabValidation) {
-            skipChemicalTabValidation = false;
-            activateChemicalTab(clickedTabText);
-            return;
-        }
-
         if (!validateCurrentChemicalTab()) {
             Common.errorMsg("Please fill all required fields in the current tab.");
 
-            // 🔁 Always activate the saved header tab
             activateChemicalTab(currentTabText);
             return false;
         }
 
-        // ❌ If user tries to skip ahead more than one tab
-        if (clickedIndex > currentIndex + 1) {
-            Common.warningMsg("Please follow the sequence of tabs.");
-
-            // 👉 Activate next allowed tab automatically
-            var nextTabText = tabOrder[currentIndex + 1];
-            activateChemicalTab(nextTabText);
-            return false;
-        }
-
-        // ✅ Valid move (either next or previous)
         activateChemicalTab(clickedTabText);
+
     });
 
     $(document).on('click', '#AddNotesLable', function () {
@@ -459,7 +553,149 @@ $(document).ready(async function () {
         unloadPicker.set("minDate", loadTime);
         $("#UnLoadingDateTime").val('');
     });
+
+    /* ================= GLOBAL VARIABLES ================= */
+
+    var GlobalStartDate = null;
+    var GlobalEndDate = null;
+
+
+    /* ================= DATE RANGE APPLY EVENT ================= */
+
+    $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+
+        if (picker.chosenLabel === 'No Date') {
+
+            $(this).find('span').html('No Date');
+            GlobalStartDate = null;
+            GlobalEndDate = null;
+
+        } else {
+
+            $(this).find('span').html(
+                picker.startDate.format('DD-MM-YYYY') +
+                ' - ' +
+                picker.endDate.format('DD-MM-YYYY')
+            );
+
+            // Store globally
+            GlobalStartDate = picker.startDate.toISOString();
+            GlobalEndDate = picker.endDate.toISOString();
+        }
+
+        console.log("GlobalStartDate:", GlobalStartDate);
+        console.log("GlobalEndDate:", GlobalEndDate);
+    });
+
+
+    /* ================= VIEW BUTTON ================= */
+
+    $(document).on('click', '#ViewToDownloadGF', function () {
+
+        var start = moment().startOf('month');
+        var end = moment();
+
+        var drp = $('#reportrange').data('daterangepicker');
+
+        if (drp) {
+            drp.setStartDate(start);
+            drp.setEndDate(end);
+
+            // Update global values manually
+            GlobalStartDate = start.toISOString();
+            GlobalEndDate = end.toISOString();
+        }
+
+        $('#reportrange span').html(
+            start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY')
+        );
+
+        $('#reportrange').css('color', '#000');
+
+        $('#DownloadPDFModal').show();
+    });
+
+
+    /* ================= SAVE BUTTON ================= */
+
+    $(document).on('click', '#DownloadPDFSave', function () {
+
+        if (!GlobalStartDate || !GlobalEndDate) {
+            Common.warningMsg("Please select date range");
+            return;
+        }
+
+        var ReportCategory = $('#ReportName').val();
+        var Reportvalue = $('#ReportValue').val();
+
+        if (!ReportCategory) {
+            Common.warningMsg("Please select report category");
+            return;
+        }
+
+        var EditDataId = {
+            ReportCategory: ReportCategory,
+            Reportvalue: Reportvalue,
+            FromDate: GlobalStartDate,
+            ToDate: GlobalEndDate
+        };
+
+        loadGreyFabricStockPrint(EditDataId);
+    });
+
+    /* ================= REPORT NAME CHANGE ================= */
+
+    $(document).on('change', '#ReportName', function () {
+
+        var $thisVal = $(this).val();
+
+        if ($thisVal != '') {
+            $('#loader-pms').show();
+            bindDropDownValuesPrint('ReportValue', 'GreyFabric', parseInt($thisVal), 0);
+        }
+    });
+
+    /* ================= CLOSE MODAL ================= */
+
+    $(document).on('click', '#DownloadPDFClose', function () {
+        $('#DownloadPDFModal').hide();
+    });
 });
+
+/* ================= AJAX FUNCTION ================= */
+
+function loadGreyFabricStockPrint(EditDataId) {
+
+    $('#loader-pms').show();
+
+    $.ajax({
+        type: 'GET',
+        url: '/Productions/GreyFabricStockPrint',
+        data: EditDataId,
+        xhrFields: { responseType: 'blob' },
+
+        success: function (response) {
+
+            $('#ShareDropdownitems').hide();
+
+            var blob = new Blob([response], { type: 'application/pdf' });
+            var blobUrl = URL.createObjectURL(blob);
+
+            var newTab = window.open(blobUrl);
+
+            if (!newTab) {
+                Common.warningMsg("Popup blocked. Please allow popups.");
+            }
+
+            $('#loader-pms').hide();
+        },
+
+        error: function () {
+            $('#loader-pms').hide();
+            Common.errorMsg("JobCard print failed");
+        }
+    });
+}
 
 function saveProductionPlan(callback, options = {}) {
 
@@ -629,7 +865,7 @@ function activateChemicalTab(tabText) {
     titleForHeaderPopRawMatrialTab = tabText;
 
     // Activate the tab visually
-    $('.navbar-tab').removeClass('active');
+    $('#ChemicalModal .navbar-tab').removeClass('active');
     $('#ChemicalModal .navbar-tab').each(function () {
         if ($(this).text().trim() === tabText) {
             $(this).addClass('active');
@@ -828,6 +1064,21 @@ async function GetProductionPlanNotNullSuccess(response) {
         $('#MachineId').val(header.MachineId);
         $('#BatchDate').val(header.ProductionDate);
         $('#BatchNo').val(header.ProductionNo);
+
+        if (header.ProductionPlanStatusId == 6) {
+            $('#ProductionPlanStatusId option').each(function () {
+                if ($(this).val() !== "") {
+                    $(this).addClass('d-none');
+                }
+            });
+
+            $('#ProductionPlanStatusId').append('<option value="6">In_Production</option>');
+            $('#ProductionPlanStatusId option[value="6"]').removeClass('d-none');
+        } else {
+            $('#ProductionPlanStatusId option[value="6"]').remove();
+            $('#ProductionPlanStatusId option').removeClass('d-none');
+        }
+
         $('#ProductionPlanStatusId').val(header.ProductionPlanStatusId);
         $('#TotalWeight').val(header.TotalWeight);
         $('#UnLoadingDateTime').val(header.UnLoadingDateTime);
@@ -996,7 +1247,7 @@ function createChemicalRow(rowType, chemicalData) {
     let numberIncr = Math.random().toString(36).substring(2);
     let rowadd = $(`.RowOfChemical-${rowType}`).length;
 
-    let defaultOption = '<option value="">--Select--</option>';
+    let defaultOption = `<option value="" ${chemicalData?.ChemicalId == null ? 'selected' : ''}>--Select--</option>`;
 
     let editProducts = [];
     let masterProducts = [];
@@ -1075,8 +1326,8 @@ function createChemicalRow(rowType, chemicalData) {
                                placeholder="Ex: 8.3"
                                id="GPL${numberIncr}" 
                                name="GPL${numberIncr}" 
-                               value="${chemicalData.GPL != null ? Number(chemicalData.GPL).toFixed(3) : ''}"
-                               oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" 
+                               value="${chemicalData.GPL != null ? Number(chemicalData.GPL).toFixed(5) : ''}"
+                               oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" 
                                required/>
                     </div>
                 </div>
@@ -1089,7 +1340,7 @@ function createChemicalRow(rowType, chemicalData) {
                            placeholder="Ex: 0"
                            id="Qty${numberIncr}" 
                            name="Qty${numberIncr}" 
-                           value="${chemicalData.TotalQty != null ? Number(chemicalData.TotalQty).toFixed(3) : ''}"
+                           value="${chemicalData.TotalQty != null ? Number(chemicalData.TotalQty).toFixed(5) : ''}"
                            oninput="Common.allowOnlyNumberLength(this,3)" 
                            required/>
                 </div>
@@ -1171,6 +1422,7 @@ function LoadPopupItems(allItems) {
                         <label for="${uniqueId}" class="MachineName mb-0" style="color:${item.StatusColor || '#000'}!important"> ${item.MachineName || ''} </label>
                     </div>
                 </td>
+                <td><label class="Customer">${item.ClientDcNumber || ''}</label></td> 
                 <td><label class="Customer">${item.Customer || ''}</label></td> 
                 <td>
                     <label class="d-none InWardNo">${item.InWardId}</label>
@@ -1194,6 +1446,7 @@ function LoadPopupItems(allItems) {
         $("#ProductionPlanAddItem-table-body").append(row);
     });
 
+    $('#loader-pms').hide();
     $("#ProductionPlanAddItemModal").show();
 }
 
@@ -1448,6 +1701,7 @@ $(document).on("click", "#BtnAdd", function () {
 });
 
 $(document).on('click', '#AddItemBtn', function () {
+    $('#loader-pms').show();
 
     $("#TotalItemSelect").text('');
     $("#NoOfQty").text('');
@@ -1461,8 +1715,9 @@ $(document).on('click', '#AddItemBtn', function () {
             Color: ""
         },
         function (response) {
-
+            $('#loader-pms').hide();
             if (!response.status) return;
+            $('#loader-pms').show();
 
             var data = JSON.parse(response.data);
 
@@ -1883,7 +2138,12 @@ function calculateDyeQty($row) {
     let dyeValue = parseFloat($row.find('.Dye').val()) || 0;
     let DysType = $row.find('.DysType').val();
 
-    let totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+    //let totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+
+    let weightStr = $('#TotalWeight').val();
+    let cleaned = weightStr.replace(/,/g, '').replace(/[^\d.]/g, '');
+    let totalWeight = parseFloat(cleaned) || null;
+
     let mlr = parseFloat($('#MLR').val()) || 0;
 
     let waterLevel = totalWeight * mlr;
@@ -1895,7 +2155,7 @@ function calculateDyeQty($row) {
         totalDyeQty = (totalWeight * dyeValue) / 100;
     }
 
-    $row.find('.TotalDyeQty').val(totalDyeQty.toFixed(3));
+    $row.find('.TotalDyeQty').val(totalDyeQty.toFixed(5));
 }
 
 // Calculate chemical quantity
@@ -1904,7 +2164,12 @@ function calculateChemicalQty($row) {
 
     let value = parseFloat($row.find('.input-group input[type="text"]').first().val()) || 0;
     let DysType = $row.find('.DysType').val();
-    let totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+    //let totalWeight = parseFloat($('#TotalWeight').val()) || 0;
+
+    let weightStr = $('#TotalWeight').val();
+    let cleaned = weightStr.replace(/,/g, '').replace(/[^\d.]/g, '');
+    let totalWeight = parseFloat(cleaned) || null;
+
     let mlr = parseFloat($('#MLR').val()) || 0;
 
     let waterLevel = totalWeight * mlr;
@@ -1916,7 +2181,7 @@ function calculateChemicalQty($row) {
         qty = (totalWeight * value) / 100;
     }
 
-    $row.find('input[type="text"]').last().val(qty.toFixed(3));
+    $row.find('input[type="text"]').last().val(qty.toFixed(5));
 }
 
 function duplicateRowChemicalPre() {
@@ -1961,7 +2226,7 @@ function duplicateRowChemicalPre() {
                                  <option value="2">%</option>
                                  <option value="1">GPL</option>
                               </select>
-                              <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required />
+                              <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required />
                          </div>
                      </div>
                 </div>
@@ -2074,7 +2339,7 @@ function duplicateRowChemicalAfter() {
                                   <option value="2">%</option>
                                   <option value="1">GPL</option>
                                </select>
-                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required/>
+                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required/>
                           </div>
                       </div>
                   </div>
@@ -2187,7 +2452,7 @@ function duplicateRowChemicalDyeBath() {
                                   <option value="2">%</option>
                                   <option value="1">GPL</option>
                                </select>
-                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required/>
+                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required/>
                           </div>
                       </div>
                   </div>
@@ -2300,7 +2565,7 @@ function duplicateRowChemicalDye() {
                                   <option value="2">%</option>
                                   <option value="1">GPL</option>
                                </select>
-                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required/>
+                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required/>
                           </div>
                       </div>
                   </div>
@@ -2413,7 +2678,7 @@ function duplicateRowChemicalFinishing() {
                                   <option value="2">%</option>
                                   <option value="1">GPL</option>
                                </select>
-                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required/>
+                               <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required/>
                           </div>
                       </div>
                   </div>
@@ -2800,6 +3065,12 @@ $(document).keydown(function (event) {
         $('#ProductionPlanjobCardBtn').click();
     }
 
+    // Handling alt + v
+    if (event.altKey && event.key === 'r') {
+        event.preventDefault();
+        $('#ProductionPlanJobCardWithRateBtn').click();
+    }
+
     // Handling Ctrl + s
     if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
@@ -2902,7 +3173,7 @@ function duplicateRowChemicalAfterTesting() {
                             <option value="2">%</option>
                             <option value="1">GPL</option>
                         </select>
-                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required/>
+                        <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required/>
                     </div>
                 </div>
             </div>
@@ -2987,7 +3258,7 @@ function duplicateRowChemicalPreTesting() {
                                 <option value="2">%</option>
                                 <option value="1">GPL</option>
                             </select>
-                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required />
+                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required />
                         </div>
                     </div>
             </div> 
@@ -3057,7 +3328,7 @@ function duplicateRowChemicalDyeBathTesting() {
                                 <option value="2">%</option>
                                 <option value="1">GPL</option>
                             </select>
-                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required />
+                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required />
                         </div>
                     </div>
             </div> 
@@ -3126,7 +3397,7 @@ function duplicateRowChemicalDyeTesting() {
                                 <option value="2">%</option>
                                 <option value="1">GPL</option>
                             </select>
-                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required />
+                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required />
                         </div>
                     </div>
             </div> 
@@ -3196,7 +3467,7 @@ function duplicateRowChemicalFinishingTesting() {
                                 <option value="2">%</option>
                                 <option value="1">GPL</option>
                             </select>
-                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 2)" required />
+                            <input type="text" class="form-control" placeholder="Ex: 8.3" id="GPL${numberIncr}" name="GPL${numberIncr}" oninput="Common.allowOnlyNumbersAndAfterDecimalFiveVal(this, 2)" required />
                         </div>
                     </div>
             </div> 
@@ -3318,7 +3589,8 @@ $(document).on('click', '#ProductionPlanPreviewbtn', function () {
     $('#loader-pms').show();
     var ProductionPlanNo = $('#BatchNo').val();
     // URL to convert into QR
-    var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+    //var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+    var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
 
     $.ajax({
         url: '/Productions/GenerateQrPdf',
@@ -3357,6 +3629,8 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
     // Step 1: Save Production Plan
     saveProductionPlan(function (productionPlanId) {
 
+        $('#loader-pms').show();
+
         // Safety check
         if (!productionPlanId) {
             $('#loader-pms').hide();
@@ -3364,14 +3638,112 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
             return;
         }
 
-        var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+        //var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+        var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
 
         // Step 2: Prepare JobCard Print Data
         var EditData = {
             ModuleId: parseInt(productionPlanId),
             NoOfCopies: 1,
             printType: "Preview", // Options: "Print", "Download", "Print"
-            Url: scanUrl
+            Url: scanUrl,
+            IsRate: 0
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: '/Productions/JobCardPrint',
+            data: EditData,
+            xhrFields: { responseType: 'blob' },
+
+            success: function (response) {
+
+                $('#ShareDropdownitems').hide();
+
+                var blob = new Blob([response], { type: 'application/pdf' });
+                var blobUrl = URL.createObjectURL(blob);
+
+                // 🔹 PRINT TYPE HANDLER
+                if (EditData.printType === "Preview") {
+
+                    var newTab = window.open();
+                    if (newTab) {
+                        newTab.document.write(`
+                            <html>
+                            <head>
+                                <title>Production Plan Preview</title>
+                            </head>
+                            <body style="margin:0; padding:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
+                        newTab.document.close();
+                    } else {
+                        Common.warningMsg("Popup blocked. Please allow popups.");
+                    }
+
+                } else if (EditData.printType === "Download") {
+
+                    var link = document.createElement('a');
+                    link.href = blobUrl;
+                    link.download = 'Production Plan.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                } else if (EditData.printType === "Print") {
+
+                    var iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = blobUrl;
+                    document.body.appendChild(iframe);
+                    iframe.onload = function () {
+                        iframe.contentWindow.print();
+                    };
+                }
+
+                $('#loader-pms').hide();
+            },
+
+            error: function () {
+                $('#loader-pms').hide();
+                Common.errorMsg("JobCard print failed");
+            }
+        });
+
+    }, {
+        showSuccessMsg: false // ❌ Disable success message
+    });
+
+});
+
+$(document).on('click', '#ProductionPlanJobCardWithRateBtn', function () {
+
+    $('#loader-pms').show();
+
+    // Step 1: Save Production Plan
+    saveProductionPlan(function (productionPlanId) {
+
+        $('#loader-pms').show();
+
+        // Safety check
+        if (!productionPlanId) {
+            $('#loader-pms').hide();
+            Common.errorMsg("Production Plan ID not returned");
+            return;
+        }
+
+        //var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+        var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+
+        // Step 2: Prepare JobCard Print Data
+        var EditData = {
+            ModuleId: parseInt(productionPlanId),
+            NoOfCopies: 1,
+            printType: "Preview", // Options: "Print", "Download", "Print"
+            Url: scanUrl,
+            IsRate: 1
         };
 
         $.ajax({
@@ -3449,15 +3821,17 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 
 //    var ProductionPlanNo = $('#BatchNo').val();
 
-//    var scanUrl =
-//        "BEGIN:VCARD\n" +
-//        "VERSION:3.0\n" +
-//        "N:S;Vignesh;;;\n" +                       // Last Name; First Name
-//        "FN:Vignesh S\n" +                         // Full Name
-//        "TITLE:Regional Sales Manager - India\n" + // Job Title
-//        "TEL;TYPE=CELL:+918807966096\n" +         // Phone
-//        "EMAIL:vignesh.s@vahle.com\n" +           // Email
-//        "END:VCARD";
+//    //var scanUrl =
+//    //    "BEGIN:VCARD\n" +
+//    //    "VERSION:3.0\n" +
+//    //    "N:S;Vignesh;;;\n" +                       // Last Name; First Name
+//    //    "FN:Vignesh S\n" +                         // Full Name
+//    //    "TITLE:Regional Sales Manager - India\n" + // Job Title
+//    //    "TEL;TYPE=CELL:+918807966096\n" +         // Phone
+//    //    "EMAIL:vignesh.s@vahle.com\n" +           // Email
+//    //    "END:VCARD";
+
+//    var scanUrl = "https://tetrosoft.co.in/";
 
 //    $.ajax({
 //        url: '/Productions/GenerateQrContectPdf',
@@ -3492,7 +3866,6 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 //    });
 //});
 
-
 /*AvailableQuantity*/
 //<td>
 //    <div class="input-group" style="flex-wrap:nowrap;width:100px;">
@@ -3500,3 +3873,106 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
 //            <button class="btn btn-secondary p-0" type="button" style="padding:4px!important; border-top-left-radius:0; border-bottom-left-radius:0; font-size:12px; width:29px; height:26px;">KG</button>
 //    </div>
 //</td>
+
+function cb(start, end, label) {
+    if (label === 'No Date') {
+        $('#reportrange span').html('No Date');
+    } else {
+        $('#reportrange span').html(
+            start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY')
+        );
+        $('#reportrange').css('color', '#000'); // remove disabled look
+    }
+}
+
+function bindDropDownPrint(id, moduleName, ValuesOfid) {
+
+    var request = {
+        moduleName: moduleName
+    };
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status == true) {
+                bindDropDownSuccessPrint(response.data, id, ValuesOfid);
+            }
+        },
+        error: function (response) {
+
+        },
+    });
+}
+
+function bindDropDownSuccessPrint(response, controlid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        $('#' + controlid).empty();
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+        } else {
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+        }
+        bindDropDownValuesPrint('ReportValue', 'GreyFabric', 1, 0);
+    }
+}
+
+function bindDropDownValuesPrint(id, moduleName, MasterInfoId, ValuesOfid) {
+
+    $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: '/Inventory/GetDDMasterInfoValue',
+        data: {
+            moduleName: moduleName,
+            MasterInfoId: parseInt(MasterInfoId)
+        },
+        success: function (response) {
+            if (response.status === true) {
+                bindDropDownSuccessValuesPrint(response.data, id, ValuesOfid);
+            }
+        },
+        error: function (response) {
+            console.log("Error:", response);
+        }
+    });
+}
+
+function bindDropDownSuccessValuesPrint(response, controlid, ValuesOfid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        $('#' + controlid).empty();
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+        } else {
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+        }
+        $('#' + controlid).val(ValuesOfid).trigger('change');
+        $('#loader-pms').hide();
+    }
+}

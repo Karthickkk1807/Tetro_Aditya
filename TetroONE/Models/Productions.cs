@@ -367,4 +367,13 @@ namespace TetroONE.Models
         public DataTable AfterTreatmentProductItemData { get; set; }
         public DataTable FinishingProductItemData { get; set; } 
     }
+
+    public class GreyFabricPrint
+    {
+        public string? CompanyName { get; set; }
+        public string? FromDate { get; set; }
+        public string? ToDate { get; set; }
+
+        public DataTable DynamicItemData { get; set; }
+    }
 }

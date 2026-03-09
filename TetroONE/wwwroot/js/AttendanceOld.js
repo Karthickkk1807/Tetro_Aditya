@@ -753,11 +753,11 @@ function AttendanceLog(key, employeeId) {
 													<i class="fa fa-clock-o"></i> <label>${attendData.PunchIn}</label>
 												</p>
 											</div>
-											<div class="col-4">
+											<div class="col-6">
                                            ${attendData.InLocation != null ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.InLocation}</p>` : ''}
                                              </div>
                                         ${!!(attendData.DocumentFilePath && attendData.DocumentFilePath.trim()) ? `
-                                      <div class="col-2">
+                                      <div class="col-2 d-none">
                                           <img  data-id="${attendData.DocumentFilePath}"  class="camimg" src="/assets/commonimages/camera.svg" width="20px">
                                       </div>` : ``}
 										</div>
@@ -773,11 +773,11 @@ function AttendanceLog(key, employeeId) {
 													<i class="fa fa-clock-o"></i> <label>${attendData.PunchOut}</label>
 												</p>
 											</div>
-											<div class="col-4">
+											<div class="col-6">
                                            ${attendData.OutLocation != null ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.OutLocation}</p>` : ''}
                                             </div>
                                                ${!!(attendData.DocumentFilePath && attendData.DocumentFilePath.trim()) ? `
-                                     <div class="col-2">
+                                     <div class="col-2 d-none">
                                          <img data-id="${attendData.DocumentFilePath}" class="camimg" src="/assets/commonimages/camera.svg" width="20px">
                                      </div>` : ``}
 										</div>

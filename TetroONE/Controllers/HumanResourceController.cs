@@ -86,114 +86,114 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
-		[HttpPost]
-		[Route("InsertEmployee")]
-		public async Task<IActionResult> InsertEmployee()
-		{
-			_userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        [HttpPost]
+        [Route("InsertEmployee")]
+        public async Task<IActionResult> InsertEmployee()
+        {
+            _userId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-			InsertEmployee staticDetails = new InsertEmployee();
+            InsertEmployee staticDetails = new InsertEmployee();
 
-			staticDetails = JsonConvert.DeserializeObject<InsertEmployee>(Request.Form["StaticData"]);
+            staticDetails = JsonConvert.DeserializeObject<InsertEmployee>(Request.Form["StaticData"]);
 
-			List<AttendanceMachineMappingDetail>? staticData = JsonConvert.DeserializeObject<List<AttendanceMachineMappingDetail>?>(Request.Form["AttendanceMachineMapping"]);
-			DataTable attendanceMachineMappingDetail = GenericTetroONE.ToDataTable(staticData);
+            List<AttendanceMachineMappingDetail>? staticData = JsonConvert.DeserializeObject<List<AttendanceMachineMappingDetail>?>(Request.Form["AttendanceMachineMapping"]);
+            DataTable attendanceMachineMappingDetail = GenericTetroONE.ToDataTable(staticData);
 
-			List<EmployeeReportingPersonMappingDetails>? employeeReportingPersonMappingDetails = JsonConvert.DeserializeObject<List<EmployeeReportingPersonMappingDetails>?>(Request.Form["EmployeeReportingPersonMappingDetails"]);
-			DataTable EmployeeReportingPersonMappingDetails = GenericTetroONE.ToDataTable(employeeReportingPersonMappingDetails);
+            List<EmployeeReportingPersonMappingDetails>? employeeReportingPersonMappingDetails = JsonConvert.DeserializeObject<List<EmployeeReportingPersonMappingDetails>?>(Request.Form["EmployeeReportingPersonMappingDetails"]);
+            DataTable EmployeeReportingPersonMappingDetails = GenericTetroONE.ToDataTable(employeeReportingPersonMappingDetails);
 
-			string relativeFilePath = string.Empty, fileName = string.Empty;
+            string relativeFilePath = string.Empty, fileName = string.Empty;
 
-			string employeeImage = !string.IsNullOrEmpty(staticDetails.EmployeeImage) ? staticDetails.EmployeeImage.Split('.')[0] : "";
+            string employeeImage = !string.IsNullOrEmpty(staticDetails.EmployeeImage) ? staticDetails.EmployeeImage.Split('.')[0] : "";
 
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
 
-			if (!string.IsNullOrEmpty(staticDetails.EmployeeImage) && !Guid.TryParse(employeeImage, out _))
-			{
-				string guid = Guid.NewGuid().ToString();
-				string relativePath = Path.Combine("TetroOne");
-				fileName = guid + Path.GetExtension(staticDetails.EmployeeImage)?.ToLowerInvariant();
-				relativeFilePath = "..\\" + relativePath + "\\" + fileName;
-				relativeFilePath = relativeFilePath.Replace("\\", "/");
-			}
-			else
-			{
-				relativeFilePath = staticDetails.ExistingImage;
-			}
+            if (!string.IsNullOrEmpty(staticDetails.EmployeeImage) && !Guid.TryParse(employeeImage, out _))
+            {
+                string guid = Guid.NewGuid().ToString();
+                string relativePath = Path.Combine("TetroOne");
+                fileName = guid + Path.GetExtension(staticDetails.EmployeeImage)?.ToLowerInvariant();
+                relativeFilePath = "..\\" + relativePath + "\\" + fileName;
+                relativeFilePath = relativeFilePath.Replace("\\", "/");
+            }
+            else
+            {
+                relativeFilePath = staticDetails.ExistingImage;
+            }
 
-			List<documentName> documentNames = JsonConvert.DeserializeObject<List<documentName>>(Request.Form["documentName"]);
+            List<documentName> documentNames = JsonConvert.DeserializeObject<List<documentName>>(Request.Form["documentName"]);
 
-			IFormFileCollection file = Request.Form.Files;
-			var fileIds = Request.Form["file_id[]"];
-			List<EmployeeDocumentMapping> lstattachment = new List<EmployeeDocumentMapping>();
-			DataTable dtattachment = new DataTable();
+            IFormFileCollection file = Request.Form.Files;
+            var fileIds = Request.Form["file_id[]"];
+            List<EmployeeDocumentMapping> lstattachment = new List<EmployeeDocumentMapping>();
+            DataTable dtattachment = new DataTable();
 
-			foreach (var item in file)
-			{
-				var matchingDocument = documentNames.FirstOrDefault(d => d.DocumentFileName == item.FileName);
-				if (!lstattachment.Any(x => x.AttachmentExactFileName == item.FileName))
-				{
-					var attachment = GetFilePath(item.FileName);
-					lstattachment.Add(new EmployeeDocumentMapping()
-					{
-						EmployeeDocumentMappingId = null,
-						EmployeeId = null,
-						DocumentId = matchingDocument.DocumentId,
-						DocumentFileName = attachment.Item1,
-						DocumentFilePath = attachment.Item2,
-						AttachmentExactFileName = item.FileName,
-					});
-				}
-			}
+            foreach (var item in file)
+            {
+                var matchingDocument = documentNames.FirstOrDefault(d => d.DocumentFileName == item.FileName);
+                if (!lstattachment.Any(x => x.AttachmentExactFileName == item.FileName))
+                {
+                    var attachment = GetFilePath(item.FileName);
+                    lstattachment.Add(new EmployeeDocumentMapping()
+                    {
+                        EmployeeDocumentMappingId = null,
+                        EmployeeId = null,
+                        DocumentId = matchingDocument.DocumentId,
+                        DocumentFileName = attachment.Item1,
+                        DocumentFilePath = attachment.Item2,
+                        AttachmentExactFileName = item.FileName,
+                    });
+                }
+            }
 
-			bool isuploaded = await IsClaimAttachmentUploadedEmp(file, lstattachment);
-			foreach (var item in lstattachment)
-			{
-				item.DocumentFileName = item.AttachmentExactFileName;
-			}
+            bool isuploaded = await IsClaimAttachmentUploadedEmp(file, lstattachment);
+            foreach (var item in lstattachment)
+            {
+                item.DocumentFileName = item.AttachmentExactFileName;
+            }
 
-			var exist = Request.Form["Exist"].ToList();
-			if (exist != null && exist.Count > 0)
-			{
-				List<EmployeeDocumentMapping> lstexistattachment = ParseFormDataEmp(Request.Form["Exist"]);
-				if (lstexistattachment.Any())
-				{
-					foreach (var attachment in lstexistattachment)
-					{
-						if (lstexistattachment.Any(x => !string.IsNullOrEmpty(x.DocumentFileName)))
-						{
-							lstattachment.AddRange(lstexistattachment);
-						}
-					}
-				}
-			}
-			lstattachment = lstattachment.GroupBy(x => x.AttachmentExactFileName).Select(g => g.First()).ToList();
+            var exist = Request.Form["Exist"].ToList();
+            if (exist != null && exist.Count > 0)
+            {
+                List<EmployeeDocumentMapping> lstexistattachment = ParseFormDataEmp(Request.Form["Exist"]);
+                if (lstexistattachment.Any())
+                {
+                    foreach (var attachment in lstexistattachment)
+                    {
+                        if (lstexistattachment.Any(x => !string.IsNullOrEmpty(x.DocumentFileName)))
+                        {
+                            lstattachment.AddRange(lstexistattachment);
+                        }
+                    }
+                }
+            }
+            lstattachment = lstattachment.GroupBy(x => x.AttachmentExactFileName).Select(g => g.First()).ToList();
 
-			dtattachment = GenericTetroONE.ToDataTable(lstattachment);
-			dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
+            dtattachment = GenericTetroONE.ToDataTable(lstattachment);
+            dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
 
-			List<EmployeeDocumentMapping> lstdeleteattachment = new List<EmployeeDocumentMapping>();
-			var deletedFile = Request.Form["DeletedFile"].ToList();
-			if (deletedFile != null && deletedFile.Count > 0)
-			{
-				lstdeleteattachment = ParseFormDataEmp(Request.Form["DeletedFile"]);
-				if (lstdeleteattachment.Any())
-				{
-					lstdeleteattachment.AddRange(lstdeleteattachment);
-				}
-			}
+            List<EmployeeDocumentMapping> lstdeleteattachment = new List<EmployeeDocumentMapping>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormDataEmp(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstdeleteattachment.AddRange(lstdeleteattachment);
+                }
+            }
 
-			staticDetails.LoginUserId = _userId;
-			staticDetails.TVP_EmployeeDeviceMappingDetails = attendanceMachineMappingDetail;
-			staticDetails.TVP_EmployeeDeviceMappingDetails = attendanceMachineMappingDetail;
-			staticDetails.TVP_EmployeeReportingPersonMappingDetails = EmployeeReportingPersonMappingDetails;
-			staticDetails.EmployeeImage = relativeFilePath;
-			staticDetails.TVP_EmployeeDocumentMappingDetails = dtattachment;
+            staticDetails.LoginUserId = _userId;
+            staticDetails.TVP_EmployeeDeviceMappingDetails = attendanceMachineMappingDetail;
+            staticDetails.TVP_EmployeeDeviceMappingDetails = attendanceMachineMappingDetail;
+            staticDetails.TVP_EmployeeReportingPersonMappingDetails = EmployeeReportingPersonMappingDetails;
+            staticDetails.EmployeeImage = relativeFilePath;
+            staticDetails.TVP_EmployeeDocumentMappingDetails = dtattachment;
 
-			if (staticDetails.EmployeeId != null && staticDetails.EmployeeId != 0)
-			{
-				string[] exclude = { "attendanceMachineMappingDetails", "ExistingImage", "TVP_EmployeeDeviceMappingDetails", "EmployeeReportingPersonMappingDetails" };
-				response = GenericTetroONE.ExecuteReturnDataBioMetric(_connectionString, "[dbo].[USP_UpdateEmployeeDetails]", staticDetails, exclude);
+            if (staticDetails.EmployeeId != null && staticDetails.EmployeeId != 0)
+            {
+                string[] exclude = { "attendanceMachineMappingDetails", "ExistingImage", "TVP_EmployeeDeviceMappingDetails", "EmployeeReportingPersonMappingDetails" };
+                response = GenericTetroONE.ExecuteReturnDataBioMetric(_connectionString, "[dbo].[USP_UpdateEmployeeDetails]", staticDetails, exclude);
 
                 response.Data = fileName;
 
@@ -213,10 +213,10 @@ namespace TetroONE.Controllers
 
                 return Json(response);
             }
-			else
-			{
-				string[] exclude = { "attendanceMachineMappingDetails", "EmployeeId", "ExistingImage", "EmployeeStatusId", "EmployeeReportingPersonMappingDetails" };
-				response = GenericTetroONE.ExecuteReturnDataBioMetric(_connectionString, "[dbo].[USP_InsertEmployeeDetails]", staticDetails, exclude);
+            else
+            {
+                string[] exclude = { "attendanceMachineMappingDetails", "EmployeeId", "ExistingImage", "EmployeeStatusId", "EmployeeReportingPersonMappingDetails" };
+                response = GenericTetroONE.ExecuteReturnDataBioMetric(_connectionString, "[dbo].[USP_InsertEmployeeDetails]", staticDetails, exclude);
 
                 if (response.Status && response.Data != null)
                 {
@@ -242,13 +242,9 @@ namespace TetroONE.Controllers
                             {
                                 Biometric.AddEmployeeToBiomatric(employeeId, employeeName, cardNumber, serialNo, userName, userPassword, webAddress);
                             }
-
-                            
-
                         }
                     }
                 }
-
 
                 response.Data = fileName;
 
@@ -265,19 +261,11 @@ namespace TetroONE.Controllers
                         }
                     }
                 }
-
-
                 return Json(response);
-
-
             }
+        }
 
-			
-
-			
-		}
-
-		[HttpGet]
+        [HttpGet]
         [Route("Delete")]
         public IActionResult Delete(int EmployeeId)
         {
@@ -349,9 +337,9 @@ namespace TetroONE.Controllers
                 }
 
                 return Json(response);
-            } 
+            }
         }
-        
+
         [HttpGet]
         [Route("GetAutoGenerateId")]
         public IActionResult GetAutoGenerateId(int? PlantId, int? EmployeeTypeId)
@@ -533,7 +521,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetAttendanceLogDetails_MyTeam]", Get);
             return Json(response);
         }
-         
+
 
         [HttpGet]
         [Route("GetAttendanceInOut")]
@@ -897,7 +885,7 @@ namespace TetroONE.Controllers
         {
             request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
             request.AdvanceId = request.AdvanceId == 0 ? null : request.AdvanceId;
-         
+
             response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateAdvanceDetails]", request);
 
             return Json(response);
@@ -937,7 +925,7 @@ namespace TetroONE.Controllers
         {
             request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
             request.LoanId = request.LoanId == 0 ? null : request.LoanId;
-          
+
             response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_UpdateLoanDetails]", request);
 
             return Json(response);
@@ -956,7 +944,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteLoanDetails]", Get);
             return Json(response);
         }
-         
+
         [HttpGet]
         [Route("GetClaim")]
         public IActionResult GetClaim(int ClaimId)
@@ -1176,17 +1164,17 @@ namespace TetroONE.Controllers
                 }
             }
 
-			List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
-			var deletedFile = Request.Form["DeletedFile"].ToList();
-			if (deletedFile != null && deletedFile.Count > 0)
-			{
-				lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
-				if (lstdeleteattachment.Any())
-				{
-					lstdeleteattachment.AddRange(lstdeleteattachment);
-					//lstdeleteattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
-				}
-			}
+            List<AttachmentDetails> lstdeleteattachment = new List<AttachmentDetails>();
+            var deletedFile = Request.Form["DeletedFile"].ToList();
+            if (deletedFile != null && deletedFile.Count > 0)
+            {
+                lstdeleteattachment = ParseFormData(Request.Form["DeletedFile"]);
+                if (lstdeleteattachment.Any())
+                {
+                    lstdeleteattachment.AddRange(lstdeleteattachment);
+                    //lstdeleteattachment.RemoveAll(item1 => lstdeleteattachment.Any(item2 => item2.AttachmentId == item1.AttachmentId));
+                }
+            }
 
             dtattachment = GenericTetroONE.ToDataTable(lstattachment);
 
@@ -1204,21 +1192,21 @@ namespace TetroONE.Controllers
 
             response = GenericTetroONE.Execute(_connectionString, "[dbo].[USP_InsertUpdateCompanyDocumentDetails]", staticDetails, "existImagePath");
 
-			if (!response.Status)
-			{
-				foreach (var item in lstdeleteattachment)
-				{
-					var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
-					string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
-								.Replace("..", "").Replace("/", "\\");
-					if (System.IO.File.Exists(filePath))
-					{
-						System.IO.File.Delete(filePath);
-					}
-				}
-			}
-			return Json(response);
-		}
+            if (!response.Status)
+            {
+                foreach (var item in lstdeleteattachment)
+                {
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\TetroOne\");
+                    string filePath = directoryPath + Convert.ToString(item.AttachmentFilePath)
+                                .Replace("..", "").Replace("/", "\\");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
+            return Json(response);
+        }
 
 
         [HttpGet]
@@ -1364,21 +1352,21 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
-		[HttpGet]
-		[Route("GeneratePayslip")]
-		public IActionResult GeneratePayslip(int Month, int Year, int PayGroupId)
-		{
-			GeneratePayslip Get = new GeneratePayslip()
-			{
-				LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-				Month = Month,
-				Year = Year,
-				PayGroupId = PayGroupId
-			};
+        [HttpGet]
+        [Route("GeneratePayslip")]
+        public IActionResult GeneratePayslip(int Month, int Year, int PayGroupId)
+        {
+            GeneratePayslip Get = new GeneratePayslip()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                Month = Month,
+                Year = Year,
+                PayGroupId = PayGroupId
+            };
 
-			response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GeneratePayslipDetails]", Get);
-			return Json(response);
-		}
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GeneratePayslipDetails]", Get);
+            return Json(response);
+        }
 
         [HttpGet]
         [Route("GetTeamInfo")]

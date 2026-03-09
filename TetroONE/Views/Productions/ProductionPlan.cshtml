@@ -143,6 +143,10 @@
             </button>
         </div>
 
+        <div id="PDFIcon" class="pl-1">
+            <img src="~/assets/ModuleImages/Inventory/ProductionPFDIcon.png" alt="download Icon" style="width: 34px;cursor: pointer;" id="ViewToDownloadGF" />
+        </div>
+
         <div class="datapiker ml-2 mt-1" style="position: relative;">
             <div class="add-imp-exp-btn">
                 <div class="exportsiconpop">
@@ -425,6 +429,10 @@
                                 <i class="fas fa-print mr-1"></i> <span> Print QRCode</span><span class="shortcut-key">[ Alt + P ]</span>
                             </button>
 
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanJobCardWithRateBtn">
+                                <i class="fas fa-print mr-1"></i> <span> Job Card With Rate Print</span><span class="shortcut-key">[ Alt + R ]</span>
+                            </button>
+
                             <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="ProductionPlanjobCardBtn">
                                 <i class="fas fa-print mr-1"></i> <span> Job Card Print</span><span class="shortcut-key">[ Alt + V ]</span>
                             </button>
@@ -496,6 +504,7 @@
                                 <thead class="Additemthead">
                                     <tr>
                                         <th scope="col">Machine</th>
+                                        <th scope="col">DC No</th>
                                         <th scope="col">Customer</th>
                                         <th scope="col">Lot No</th>
                                         <th scope="col">Inward Type</th>
@@ -580,6 +589,55 @@
     </div>
 </div>
 
+
+@* ------------------------------DownloadPDF Info---------------------------------------------- *@
+<div id="DownloadPDFModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="HeaderTextInfo">DownloadPDF Info</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-8 d-flex justify-content-start" style="margin-top: 21px;">
+                        <div class="form-group">
+                            <div id="reportrange"
+                                 style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%; color: #a9a8a8;">
+                                <i class="fa fa-calendar"></i>&nbsp;
+                                <span>01-11-2025 - 30-11-2025</span>
+                                <i class="fa fa-caret-down"></i>
+                            </div>
+                            <label id="reportrange-error" class="error" style="display: none;">This field is required.</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-6 ">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="ReportName" name="ReportName" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-6 ">
+                        <div class="form-group">
+                            <label>Value</label>
+                            <select id="ReportValue" name="ReportValue" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" id="DownloadPDFSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Download PDF</button>
+                        <button type="button" id="DownloadPDFClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     var access = @Html.Raw(Json.Serialize(access));
     var LoginUserId = @LoginUserId;
@@ -617,5 +675,6 @@
 </script> *@
 
 <script src="~/assets/js/mdtimepicker.js"></script>
+<script src="~/assets/js/daterangepicker.min.js"></script>
 <script src="~/js/productionplan.js"></script>
 <script src="~/js/Inventory.js"></script> 

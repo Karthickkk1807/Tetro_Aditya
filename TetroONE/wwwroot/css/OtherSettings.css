@@ -1,4 +1,4 @@
-﻿#ProductionStagesTable, #UnitTable, #ProductCategoryTable, #QualityParameterTable, #CriteriaTable, #ModulePrefixTable, #DocumentTable, #ColorTable, #MachineTable, #ProductCategoryTable, #ProductSubCategoryTable, #AutoGeneratePrefixTable, #ExpenseType {
+﻿#ProductionStagesTable, #UnitTable, #ProductCategoryTable, #QualityParameterTable, #CriteriaTable, #ModulePrefixTable, #DocumentTable, #ColorTable, #MachineTable, #ProductCategoryTable, #ProductSubCategoryTable, #AutoGeneratePrefixTable, #ExpenseType, #DefaultProductId {
     width: 100% !important;
 }
 
@@ -54,7 +54,6 @@ input[type="checkbox"]:checked + .checkbox-label {
     padding-bottom: 8px !important;
 }
 
-
 #AttendanceMachineTable {
     width: 100% !important;
 }
@@ -62,9 +61,6 @@ input[type="checkbox"]:checked + .checkbox-label {
 #AttendanceMachineMappingTable {
     width: 100% !important;
 }
-
-
-
 
 input[switch] {
     display: none;
@@ -241,3 +237,27 @@ input[switch="warning"]:checked + label {
             max-width: 100px;
         }
     }
+
+
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 34px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 33px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    margin-top: 2px;
+}
+
+.select2-container--default .select2-results > .select2-results__options {
+    max-height: 141px !important;
+    overflow-y: auto;
+}

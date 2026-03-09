@@ -182,6 +182,79 @@
             </div>
         </div>
     </div>
+
+    @* ------------------------------DefaultProduct---------------------------------------------- *@
+    <div class="col-md-6">
+        <div class="card m-b-30">
+            <div class="card-header">
+                <h4 class="card-title float-left">DefaultProduct Info</h4>
+                <div class="Date-SearchColumn justify-content-end">
+                    <div class="d-flex">
+                        <div class="searchbar mt-1">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterDefaultProductTable" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+                            <div class="add-imp-exp-btn">
+                                <div class="exportsiconpop">
+                                    <span class="pop">
+                                        <a id="AddDefaultProduct" title="Add DefaultProduct" class="AddBtnDefaultProduct">
+                                            <img src="/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="DefaultProductTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @* ------------------------------OtherCharges---------------------------------------------- *@
+    <div class="col-md-6">
+        <div class="card m-b-30">
+            <div class="card-header">
+                <h4 class="card-title float-left">OtherCharges Info</h4>
+                <div class="Date-SearchColumn justify-content-end">
+                    <div class="d-flex">
+                        <div class="searchbar mt-1">
+                            <input type="text" class="searchbar__input" name="q" id="tableFilterOtherChargesTable" placeholder="Search">
+                            <button type="submit" class="searchbar__button">
+                                <img src="/assets/commonimages/search.svg" />
+                            </button>
+                        </div>
+                        <div class="datapiker ml-2 mt-1" style="position: relative;margin-top:5px;">
+                            <div class="add-imp-exp-btn">
+                                <div class="exportsiconpop">
+                                    <span class="pop">
+                                        <a id="AddOtherCharges" title="Add OtherCharges" class="AddBtnOtherCharges">
+                                            <img src="/assets/commonimages/addicon.svg" style="height: 25px; width: 25px;" />
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="OtherChargesTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -299,14 +372,14 @@
                         </div>
                         <div class="col-md-4 col-lg-4 col-sm-4 col-6">
                             <div class="form-group">
-                                <label>Color Code<span class="Asterisk"> *</span></label>
-                                <input type="text" id="ColorCode" name="ColorCode" class="form-control" placeholder="Ex: C001" required>
+                                <label>Color Code</label>
+                                <input type="text" id="ColorCode" name="ColorCode" class="form-control" placeholder="Ex: C001">
                             </div>
                         </div>
                         <div class="col-md-4 col-lg-4 col-sm-4 col-6">
                             <div class="form-group">
-                                <label>Color<span class="Asterisk"> *</span></label>
-                                <input type="text" id="PantoneCode" name="PantoneCode" class="form-control" placeholder="Ex: 14-0002 TCX" required>
+                                <label>Pantone Code</label>
+                                <input type="text" id="PantoneCode" name="PantoneCode" class="form-control" placeholder="Ex: 14-0002 TCX">
                             </div>
                         </div>
                         <div class="col-md-12 col-lg-12 col-sm-12 col-6">
@@ -413,6 +486,12 @@
                                 <input type="text" class="form-control" id="StartingFrom" name="StartingFrom" placeholder="Ex: 101" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
                             </div>
                         </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-6">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea type="text" id="AutoGeneratePrefixDescription" name="AutoGeneratePrefixDescription" rows="1" class="form-control" placeholder="Ex: Any Querys" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -420,6 +499,89 @@
                 <div class="row">
                     <div class="col-12">
                         <input type="button" class="btn btn-primary" id="AutoGeneratePrefixSave" nmae="AutoGeneratePrefixSave">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* ------------------------------DefaultProductDetails---------------------------------------------- *@
+<div id="DefaultProductModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="DefaultProductTextInfo">DefaultProduct Details</h2>
+                <span id="DefaultProductClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormDefaultProduct">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Process<span class="Asterisk"> *</span></label>
+                                <select class="form-control" id="ProcessId" name="ProcessId" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Product<span class="Asterisk"> *</span></label>
+                                <select class="form-control" id="ProductId" name="ProductId" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-6 col-6" id="DefaultIdDiv">
+                            <div class="form-group">
+                                <label>Default<span class="Asterisk"> *</span></label>
+                                <select class="form-control" id="DefaultId" name="DefaultId" required>
+                                    <option value="2">%</option>
+                                    <option value="1">GPL</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-6 col-6" id="BelowGSMValueDiv">
+                            <div class="form-group">
+                                <label>Below GSM Value<span class="Asterisk"> *</span></label>
+                                <input type="text" class="form-control" id="BelowGSMValue" name="BelowGSMValue" placeholder="Ex: 58.10" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-sm-6 col-6" id="AboveGSMValueDiv">
+                            <div class="form-group">
+                                <label>Above GSM Value<span class="Asterisk"> *</span></label>
+                                <input type="text" class="form-control" id="AboveGSMValue" name="AboveGSMValue" placeholder="Ex: 69.00" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-6" id="LightColorValueDiv">
+                            <div class="form-group">
+                                <label>Light Color Value<span class="Asterisk"> *</span></label>
+                                <input type="text" class="form-control" id="LightColorValue" name="LightColorValue" placeholder="Ex: 15.36" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-6" id="MediumColorValueDiv">
+                            <div class="form-group">
+                                <label>Medium Color Value<span class="Asterisk"> *</span></label>
+                                <input type="text" class="form-control" id="MediumColorValue" name="MediumColorValue" placeholder="Ex: 19.00" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-6" id="DarkColorValueDiv">
+                            <div class="form-group">
+                                <label>Dark Color Value<span class="Asterisk"> *</span></label>
+                                <input type="text" class="form-control" id="DarkColorValue" name="DarkColorValue" placeholder="Ex: 47.12" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-6" id="ProcessDescriptionDiv">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea type="text" id="ProcessDescription" name="ProcessDescription" rows="1" class="form-control" placeholder="Ex: Any Querys" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="DefaultProductSave" nmae="DefaultProductSave">
                     </div>
                 </div>
             </div>
@@ -458,6 +620,67 @@
                 <div class="row">
                     <div class="col-12">
                         <input type="button" class="btn btn-primary" id="MasterInfoSave" nmae="MasterInfoSave">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* ------------------------------OtherCharges---------------------------------------------- *@
+<div id="OtherChargesModal" class="modal show" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="">OtherCharges Info</h2>
+                <span id="OtherChargesModalClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormOtherCharges">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>OtherCharges Type<span id="Asterisk">*</span></label>
+                                <select class="form-control" id="OtherChargesType" name="OtherChargesType" required>
+                                    <option value="">--Select--</option>
+                                    <option value="Discount">Discount</option>
+                                    <option value="OtherCharges">Other Charges</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>OtherCharges Name<span id="Asterisk">*</span></label>
+                                <input type="text" id="OtherChargesName" name="OtherChargesName" class="form-control" placeholder="Ex: Transport" oninput="Common.allowOnlyTextLength(this,25)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6 d-flex justify-content-center">
+                            <div class="form-group">
+                                <label for="IsPercentage" class="font-weight-bold">
+                                    <b>
+                                        IsPercentage
+                                    </b>
+                                </label>
+                                <p>
+                                    <input type="checkbox" id="IsPercentage" name="IsPercentage" switch="bool">
+                                    <label for="IsPercentage" id="TextForLable" data-on-label="%" data-off-label="₹"></label>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label>Value<span id="Asterisk">*</span></label>
+                                <input type="text" id="Value" name="Value" class="form-control" placeholder="Ex: 500.00" oninput="Common.allowOnlyNumbersAndDecimalwithmaxlength(this,5)" required>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100" style="margin-top: -26px;">
+                <div class="row">
+                    <div class="col-12">
+                        <input type="button" class="btn btn-primary" id="SaveOtherCharges" value="Save">
                     </div>
                 </div>
             </div>

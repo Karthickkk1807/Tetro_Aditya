@@ -191,6 +191,37 @@
     .select2-container--bootstrap4.select2-container--multiple .select2-selection {
         cursor: pointer !important;
     }
+
+
+    .add-item-option {
+        text-align: center;
+        font-weight: 600;
+        color: blue
+    }
+
+    .select2-container .select2-selection--single {
+        box-sizing: border-box;
+        cursor: pointer;
+        display: block;
+        height: 34px;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        line-height: 33px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        margin-top: 2px;
+    }
+
+    .select2-container--default .select2-results > .select2-results__options {
+        max-height: 141px !important;
+        overflow-y: auto;
+    }
+
 </style>
 
 <div class="row quick-db m-b-5">
@@ -580,12 +611,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="px-3">
+                <div class="px-3" id="FotterDiv">
                     <div class="row DynmicTableRow">
                         <!--Notes & Terms Column-->
                         @* <div class="col-lg-12 col-md-9 col-sm-12 col-12 AddnotesDiv">
                             <div class="row mt-3 mb-3">
-                                <!--Add Notes-->
+                                <!--Add Notes-->    
                             </div>
                         </div> *@
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pt-3 pb-3" style="border-right: 1px solid #c7c7c7;">
@@ -697,6 +728,9 @@
                             <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="BtnSavePreviewbtn">
                                 <i class="fas fa-print mr-1"></i> <span>Save & Preview</span><span class="shortcut-key">[ Alt + P ]</span>
                             </button>
+                            <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="BtnSaveEPSONbtn">
+                                <i class="fas fa-print mr-1"></i> <span>EPSON Printer</span><span class="shortcut-key">[ Alt + P ]</span>
+                            </button>
                             <button type="button" class="btn quickbillbtn-outline mr-2 mt-lg-0 mt-2" id="BtnCancel">
                                 <i class="fas fa-times mr-1"></i> <span>Cancel</span><span class="shortcut-key">[ Alt + C ]</span>
                             </button>
@@ -707,6 +741,82 @@
         </div>
     </div>
 </div>
+
+
+@* ------------------------------Fabric Info---------------------------------------------- *@
+<div id="FabricInfoModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="HeaderTextInfo">Fabric Info</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormFabricInfo">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="">Fabric Name<span id="Asterisk">*</span></label>
+                                <input type="text" id="FabricName" name="FabricName" class="form-control" placeholder="Ex: Single Jersey" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="">Fabric Description</label>
+                                <textarea type="text" id="FabricDescription" name="FabricDescription" rows="1" class="form-control" placeholder="Ex: About Single Jersey" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" id="FabricSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
+                        <button type="button" id="FabricClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------Process Info---------------------------------------------- *@
+<div id="ProcessInfoModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="HeaderTextInfo">Process Info</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormProcessInfo">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="">Process Name<span id="Asterisk">*</span></label>
+                                <input type="text" id="ProcessName" name="ProcessName" class="form-control" placeholder="Ex: Dryer" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                            <div class="form-group">
+                                <label id="">Dryer Description</label>
+                                <textarea type="text" id="ProcessDescription" name="ProcessDescription" rows="1" class="form-control" placeholder="Ex: About Dryer" oninput="Common.allowAllCharacters(this,250)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" id="ProcessSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
+                        <button type="button" id="ProcessClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     var access = @Html.Raw(Json.Serialize(access));

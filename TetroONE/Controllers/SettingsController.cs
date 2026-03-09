@@ -351,23 +351,23 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetMasterInfoDetails]", Get);
             return Json(response);
         }
-        
+
         [HttpPost]
         [Route("InsertUpdateMasterInfo")]
         public IActionResult InsertUpdateMasterInfo([FromBody] InsertUpdateMasterInfo request)
         {
             request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-             
+
             string[] Exculuted = (request.MasterInfoId != null)
                 ? new string[] { "" }
-                : new string[] { "MasterInfoId"};
+                : new string[] { "MasterInfoId" };
 
             string storedProcedure = (request.MasterInfoId != null)
                 ? "[dbo].[USP_UpdateMasterInfoDetails]"
                 : "[dbo].[USP_InsertMasterInfoDetails]";
 
-            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted); 
-            return Json(response); 
+            response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request, Exculuted);
+            return Json(response);
         }
 
         public class DeleteMasterInfo { public int LoginUserId { get; set; } public int? MasterInfoId { get; set; } public string ModuleName { get; set; } }
@@ -385,7 +385,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteMasterInfoDetails]", Delete);
             return Json(response);
         }
-         
+
         /*=================================================================Color=====================================================================*/
 
         [HttpGet]
@@ -629,19 +629,19 @@ namespace TetroONE.Controllers
 
         /*=================================================================DefaultProduct=====================================================================*/
 
-        //[HttpGet]
-        //[Route("GetDefaultProduct")]
-        //public IActionResult GetDefaultProduct(int DefaultProductId)
-        //{
-        //    GetDefaultProduct Get = new GetDefaultProduct()
-        //    {
-        //        LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-        //        DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId
-        //    };
+        [HttpGet]
+        [Route("GetDefaultProduct")]
+        public IActionResult GetDefaultProduct(int DefaultProductId)
+        {
+            GetDefaultProduct Get = new GetDefaultProduct()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId
+            };
 
-        //    response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetColorDetails]", Get);
-        //    return Json(response);
-        //}
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetDefaultProductDetails]", Get);
+            return Json(response);
+        }
 
         [HttpPost]
         [Route("InsertDefaultProductDetails")]
@@ -663,12 +663,11 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("DeleteDefaultProduct")]
-        public IActionResult DeleteDefaultProduct(int DefaultProductId, int ProcessId)
+        public IActionResult DeleteDefaultProduct(int DefaultProductId)
         {
             DeleteDefaultProduct Get = new DeleteDefaultProduct()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
-                ProcessId = ProcessId,
                 DefaultProductId = DefaultProductId == 0 ? null : DefaultProductId,
             };
 
@@ -676,6 +675,58 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
+        /*=================================================================End DefaultProduct=====================================================================*/
+
+        /*=================================================================DefaultProduct=====================================================================*/
+
+        [HttpGet]
+        [Route("GetOtherCharges")]
+        public IActionResult GetOtherCharges(int OtherChargesId)
+        {
+            GetOtherCharges Get = new GetOtherCharges()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                OtherChargesId = OtherChargesId == 0 ? null : OtherChargesId,
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetOtherChargesDetails]", Get);
+            return Json(response);
+        }
+
+        [HttpPost]
+        [Route("InsertUpdateOtherCharges")]
+        public IActionResult InsertUpdateOtherCharges([FromBody] InsertUpdateOtherCharges request)
+        {
+            request.LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string[] Exculuted = (request.OtherChargesId != null && request.OtherChargesId != 0)
+                ? new string[] { "" }
+                : new string[] { "OtherChargesId" };
+
+            string storedProcedure = (request.OtherChargesId != null && request.OtherChargesId != 0)
+                ? "[dbo].[USP_UpdateOtherChargesDetails]"
+                : "[dbo].[USP_InsertOtherChargesDetails]";
+
+            response = GenericTetroONE.Execute(_connectionString, storedProcedure, request, Exculuted);
+
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("DeleteOtherCharges")]
+        public IActionResult DeleteOtherCharges(int OtherChargesId)
+        {
+            GetOtherCharges Get = new GetOtherCharges()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                OtherChargesId = OtherChargesId
+            };
+
+            string[] exclude = { "" };
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_DeleteOtherChargesDetails]", Get, exclude);
+
+            return Json(response);
+        }
         /*=================================================================End DefaultProduct=====================================================================*/
 
     }

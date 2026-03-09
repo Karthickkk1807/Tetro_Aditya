@@ -18,6 +18,9 @@ $(document).ready(async function () {
     updateMonthDisplay(displayedDate);
     $('#increment-month-btn2').hide();
 
+    var fnData = Common.getDateFilter('dateDisplay2');
+    Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
+
     $('#decrement-month-btn2').click(function () {
         displayedDate.setMonth(displayedDate.getMonth() - 1);
         updateMonthDisplay(displayedDate);
@@ -88,9 +91,6 @@ $(document).ready(async function () {
         $('#ToDate').removeAttr('max');
         $('#tableFilter').val('');
     });
-
-    var fnData = Common.getDateFilter('dateDisplay2');
-    Common.ajaxCall("GET", "/Productions/GetProductionLogDetails", { PlantId: parseInt(PlantMappingId), ProductionPlanId: null, ProductionLogId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetProductionLogSuccess, null);
 
     $(document).on('click', '.btn-edit', function () {
         productionPlanLogId = 0;
@@ -290,7 +290,8 @@ function GetProductionLogNotNullSuccess(response) {
 
         $("#QRCode").html("");
 
-        var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
+        var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
+        //var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
         //var scanUrl = "https://localhost:44366/ProductionQRCode/QRCodePop" + "?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
 
         new QRCode(document.getElementById("QRCode"), {

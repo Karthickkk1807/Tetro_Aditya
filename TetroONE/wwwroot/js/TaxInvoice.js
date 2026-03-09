@@ -418,8 +418,13 @@ function BindTheDataOfTable(data) {
         const Weight = item.Weight ? parseFloat(item.Weight).toFixed(3) : "-";
         const Rate = item.Rate ? parseFloat(item.Rate).toFixed(2) : "";
 
-        let total = 0;
+        let actionTd = "-";
 
+        if (!item.InWardNo) {
+            actionTd = `<button class="btn DynrowRemove DynrowTaxRemove removeRowBtn"><i class="fas fa-trash-alt"></i></button>`;
+        }
+
+        let total = 0;
         if (InWardNo !== "-" && OutwardNo !== "-" && Weight === "-" && Rate !== "") {
             total = parseFloat(Rate);
         }
@@ -439,6 +444,7 @@ function BindTheDataOfTable(data) {
                 <td><input type="text" class="form-control DisabledTextBox Weight" value="${Weight}" /></td> 
                 <td><input type="text" class="form-control Rate" value="${Rate}" id="${numberIncr}" name="${numberIncr}" required/></td> 
                 <td><input type="text" class="form-control DisabledTextBox Amount" value="${formatRupee(total)}" /></td>
+                <td style="text-align: center;">${actionTd}</td>
             </tr>
         `;
 
@@ -448,6 +454,13 @@ function BindTheDataOfTable(data) {
     UpdateSaleTableSerialNumbers();
     CalculateSubtotal();
 }
+
+$(document).on('click', '.DynrowTaxRemove', function () {
+    $(this).closest("tr").remove();
+
+    UpdateSaleTableSerialNumbers();
+    CalculateSubtotal();
+});
 
 function UpdateSaleTableSerialNumbers() {
     $('#SaleProductTablebody .SaleProductRow').each(function (index) {
@@ -864,6 +877,8 @@ async function GetNotNullSale(response) {
             var EditDataId = { MasterInfoId: parseInt(data[0][0].ClientId), ModuleName: "SaleInward" }
             Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (responseSaleInward) {
                 if (responseSaleInward.status);
+                $('#loader-pms').show();
+
                 Common.bindDropDownSuccess(responseSaleInward.data, "InwardId");
                 $('#InwardId').val(data[0][0].InWardId);
 
@@ -896,6 +911,8 @@ async function GetNotNullSale(response) {
 }
 
 async function BindOutWardFabricDataSequentially(fabricData) {
+
+    $('#loader-pms').show();
 
     if (!fabricData || fabricData.length === 0) {
         CalculateSubtotal();
@@ -935,6 +952,12 @@ async function BindOutWardFabricDataSequentially(fabricData) {
                 const Rate = item.Rate ? parseFloat(item.Rate).toFixed(2) : "";
                 let total = 0;
 
+                let actionTd = "-";
+
+                if (item.InWardNo == '-') {
+                    actionTd = `<button class="btn DynrowRemove DynrowTaxRemove removeRowBtn"><i class="fas fa-trash-alt"></i></button>`;
+                }
+
                 if (InWardNo !== "-" && OutwardNo !== "-" && Weight === "-" && Rate !== "") {
                     total = parseFloat(Rate);
                 } else if (Weight !== "-" && Rate !== "") {
@@ -953,6 +976,7 @@ async function BindOutWardFabricDataSequentially(fabricData) {
                         <td><input type="text" class="form-control DisabledTextBox Weight" value="${Weight}" /></td>
                         <td><input type="text" class="form-control Rate" value="${Rate}" id="${numberIncr}" name="${numberIncr}" required /></td>
                         <td><input type="text" class="form-control DisabledTextBox Amount" value="${formatRupee(total)}" /></td>
+                        <td style="text-align: center;">${actionTd}</td>
                     </tr>
                 `;
 
