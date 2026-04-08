@@ -9,6 +9,8 @@ var formDataMultiple = new FormData();
 
 $(document).ready(async function () {
 
+    $('#InWardNo').prop('disabled', false);
+
     bindDropDownClientAddItem('ClientId', 'Client');
     Common.bindDropDown('TransactionId', 'TransactionType');
     //Common.bindDropDown('ReceivedFrom', 'JobWorker');
@@ -137,6 +139,8 @@ $(document).ready(async function () {
         $('.dynamic-item-row_Second').remove();
         duplicateFabric();
 
+        $('#InWardNo').prop('disabled', false);
+
         deletedFiles = [];
         existFiles = [];
         formDataMultiple = new FormData();
@@ -188,6 +192,8 @@ $(document).ready(async function () {
         formDataMultiple = new FormData();
         $('#selectedFiles').empty();
         $('#ExistselectedFiles').empty();
+
+        $('#InWardNo').prop('disabled', true);
 
         $('#ModalHeading').text('Edit InWard Details');
         $("#BtnSave span:first").text("Update");

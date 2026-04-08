@@ -290,7 +290,8 @@ function GetProductionLogNotNullSuccess(response) {
 
         $("#QRCode").html("");
 
-        var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
+        var scanUrl = "http://103.181.21.202:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
+        //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
         //var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
         //var scanUrl = "https://localhost:44366/ProductionQRCode/QRCodePop" + "?ProductionPlanId=" + productionPlanId + "&PlantMappingId=" + PlantMappingId;
 

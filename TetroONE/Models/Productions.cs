@@ -106,6 +106,7 @@ namespace TetroONE.Models
         public int? ReceivedBy { get; set; }
         public int? InWardStatusId { get; set; }
         public string? Notes { get; set; }
+        public string? OrderNumber { get; set; }
         public List<InwardFabricDetails> InwardFabricDetails { get; set; }
         public DataTable TVP_InwardFabricDetails { get; set; }
         public List<InwardFabricProcessMappingDetails> InwardFabricProcessMappingDetails { get; set; }
@@ -325,6 +326,105 @@ namespace TetroONE.Models
         public string? DriverName { get; set; }
 
         public DataTable ProductItemData { get; set; }
+    }
+
+    public class OutWardEPSONPrint1
+    {
+        public string? CompanyName { get; set; }
+        public string? CompanyAddress1 { get; set; }
+        public string? CompanyAddress2 { get; set; }
+        public string? CompanyPhone { get; set; }
+        public string? CompanyGST { get; set; }
+        public string? CompanyPAN { get; set; }
+
+        public string? ClientName { get; set; }
+        public string? DCNo { get; set; }
+        public string? ClientAddress1 { get; set; }
+        public string? DCDate { get; set; }
+        public string? ClientAddress2 { get; set; }
+        public string? Time { get; set; }
+        public string? ClientAddress3 { get; set; }
+        public string? ClientType { get; set; }
+        public string? ClientGST { get; set; }
+        public string? ClientPAN { get; set; }
+
+        public string? YourDCNo { get; set; }
+        public string? Colour { get; set; }
+        public string? OrderNO { get; set; }
+        public string? Process { get; set; }
+        public string? InwardNo { get; set; }
+        public string? VehicleNo { get; set; }
+        public string? ActualNo { get; set; }
+        public string? ApprxGoodsValue { get; set; }
+
+        public string? TotalRoll { get; set; }
+        public string? TotalInwardWt { get; set; }
+        public string? TotalDeliveryWt { get; set; }
+
+        public string? Driver { get; set; }
+
+        public DataTable ProductItemData { get; set; }
+    }
+
+    public class ProductItem
+    {
+        public string FabricQuality { get; set; }
+        public string Dia { get; set; }
+        public string Roll { get; set; }
+        public string InwardWt { get; set; }
+        public string DeliveryWt { get; set; }
+    }
+
+    public class OutWardEPSONPrint
+    {
+        public string CompanyName { get; set; }
+        public string CompanyAddress1 { get; set; }
+        public string CompanyAddress2 { get; set; }
+        public string CompanyPhone { get; set; }
+        public string CompanyGST { get; set; }
+        public string CompanyPAN { get; set; }
+
+        public string ClientName { get; set; }
+        public string DCNo { get; set; }
+        public string ClientAddress1 { get; set; }
+        public string DCDate { get; set; }
+        public string ClientAddress2 { get; set; }
+        public string Time { get; set; }
+        public string ClientAddress3 { get; set; }
+        public string ClientType { get; set; }
+        public string ClientGST { get; set; }
+        public string ClientPAN { get; set; }
+
+        public string YourDCNo { get; set; }
+        public string Colour { get; set; }
+        public string OrderNO { get; set; }
+        public string Process { get; set; }
+        public string InwardNo { get; set; }
+        public string VehicleNo { get; set; }
+        public string ActualNo { get; set; }
+        public string ApprxGoodsValue { get; set; }
+
+        public string TotalRoll { get; set; }
+        public string TotalInwardWt { get; set; }
+        public string TotalDeliveryWt { get; set; }
+
+        public string Driver { get; set; }
+
+        public List<ProductItem> ProductItemData { get; set; }
+    }
+
+    public static class PrintQueueStore
+    {
+        public static List<PrintQueueItem> Queue = new List<PrintQueueItem>();
+        public static readonly object Lock = new object();
+    }
+
+    public class PrintQueueItem
+    {
+        public int Id { get; set; }
+        public OutWardEPSONPrint Data { get; set; }
+        public bool IsPrinted { get; set; }
+        public bool IsProcessing { get; set; }
     }
 
     public class JobCardPrint

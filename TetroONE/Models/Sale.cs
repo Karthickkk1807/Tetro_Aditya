@@ -51,6 +51,7 @@ namespace TetroONE.Models
         public int? SaleStatusId { get; set; }
         public string? Notes { get; set; }
         public int? TaxInfoId { get; set; }
+        public DataTable TVP_SaleInWardMappingDetails { get; set; }
         public DataTable TVP_SaleOutWardMappingDetails { get; set; }
         public DataTable TVP_SaleOutWardFabricDetails { get; set; }
         public DataTable TVP_PurchaseSaleOtherChargesMappingDetails { get; set; } 
@@ -62,6 +63,13 @@ namespace TetroONE.Models
         public int? SaleOutWardMappingId { get; set; }
         public int? SaleId { get; set; }
         public int? OutWardId { get; set; }
+    }
+     
+    public class SaleInWardMappingDetails
+    {
+        public int? SaleInWardMappingId { get; set; }
+        public int? SaleId { get; set; }
+        public int? InWardId { get; set; } 
     }
      
     public class SaleOutWardFabricDetails

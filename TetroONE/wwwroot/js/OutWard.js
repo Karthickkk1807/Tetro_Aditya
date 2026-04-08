@@ -9,6 +9,8 @@ var formDataMultiple = new FormData();
 
 $(document).ready(async function () {
 
+    $('#OutwardNo').prop('disabled', false);
+
     PlantMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
     Common.bindDropDown('InwardNo', 'InwardNo');
@@ -125,6 +127,8 @@ $(document).ready(async function () {
         $('#ShipToId').prop('disabled', true);
         $('#ShipFromId').prop('disabled', true);
 
+        $('#OutwardNo').prop('disabled', false);
+
         //$('#ShipToId').empty().append($('<option>', { value: '', text: '--Select--', }));
         $('#OutWardTo').empty().append($('<option>', { value: '', text: '--Select--', }));
 
@@ -140,6 +144,9 @@ $(document).ready(async function () {
         $('#ExistselectedFiles').empty();
         $('.Status-Div').hide();
         $('#AddNotesText').val('');
+
+        $('#BtnSavePreviewbtn').hide();
+        $('#BtnSaveEPSONbtn').hide();
 
         Common.removevalidation('TopStatic');
         Common.removevalidation('FormShipping');
@@ -204,6 +211,8 @@ $(document).ready(async function () {
         $('#ShipToId').prop('disabled', false);
         $('#ShipFromId').prop('disabled', false);
 
+        $('#OutwardNo').prop('disabled', true);
+
         //$('#ShipToId').empty().append($('<option>', { value: '', text: '--Select--', }));
         $('#OutWardTo').empty().append($('<option>', { value: '', text: '--Select--', }));
         $('#ModalHeading').text('Edit OutWard Details');
@@ -213,6 +222,9 @@ $(document).ready(async function () {
         $('#emptyDiv').removeClass('col-lg-4 col-md-4 col-6').addClass('col-lg-2 col-md-2 col-6');
         $('#OutWardStatusIdDiv').show();
         $('#BtnSave').show();
+
+        $('#BtnSavePreviewbtn').show();
+        $('#BtnSaveEPSONbtn').show();
 
         existFiles = [];
         formDataMultiple = new FormData();
@@ -558,25 +570,65 @@ $(document).ready(async function () {
         });
     });
 
+    $.getJSON("https://api.ipify.org?format=json", function (data) {
+        console.log("Your IP:", data.ip);
+    });
+
     $(document).on('click', '#BtnSaveEPSONbtn', function () {
+        $('#loader-pms').show();
+
         $.ajax({
             type: 'GET',
             url: '/EPSON/PrintDotMatrix',
-            data: { PrinterName: "EPSON FX-2175 ESC/P" },
-            //data: { PrinterName: "EPSON FX-2175 (Copy 1)" },
-            success: function (res) {
-
-                if (res.success) {
-                    Common.successMsg("EPSON Printed Successfully");
-                } else {
-                    Common.warningMsg(res.message);
-                }
+            data: {
+                ModuleId: parseInt(OutWardId)
             },
-            error: function () {
-                Common.warningMsg("Print Failed");
+            success: function (res) {
+                if (res.success) {
+                    setTimeout(function () {
+                        Common.successMsg("EPSON FX-2175 is Printing...");
+                        $('#loader-pms').hide();
+                    }, 5000);
+                } else {
+                    $('#loader-pms').hide();
+                    Common.errorMsg(res.message);
+                }
             }
         });
+
     });
+
+    //$(document).on('click', '#BtnSaveEPSONbtn', function () {
+
+    //    $.ajax({
+    //        type: 'GET',
+    //        url: '/EPSON/PrintDotMatrix',
+    //        data: {
+    //            ModuleId: parseInt(OutWardId)
+    //        },
+    //        success: function (res) {
+    //            if (res.success) {
+    //                fetch("http://localhost:5000/", {   // 👉 change to CLIENT IP in real use
+    //                    method: "POST",
+    //                    headers: {
+    //                        "Content-Type": "application/json"
+    //                    },
+    //                    body: JSON.stringify(res.data)
+    //                })
+    //                    .then(() => {
+    //                        Common.successMsg("Printed Successfully");
+    //                    })
+    //                    .catch(() => {
+    //                        Common.warningMsg("Printer App not running");
+    //                    });
+
+    //            } else {
+    //                Common.errorMsg(res.message);
+    //            }
+    //        }
+    //    });
+
+    //});
 
     $(document).on('click', '.btn-delete', async function () {
         var response = await Common.askConfirmation();
@@ -2086,3 +2138,45 @@ function bindDropDownMultiAddItemSuccess(response, controlid) {
         }
     }
 }
+
+/*============================================================BULK DATA MOVE FROM EXCELSHEET TO SQL TABLE INSERT CODE==========================================================*/
+let excelData = [];
+
+$("#fileUpload").on("change", function (e) {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+
+    reader.onload = function (e) {
+        let data = new Uint8Array(e.target.result);
+        let workbook = XLSX.read(data, { type: 'array' });
+
+        let sheetName = workbook.SheetNames[0];
+        let sheet = workbook.Sheets[sheetName];
+
+        excelData = XLSX.utils.sheet_to_json(sheet);
+
+        console.log(excelData);
+    };
+
+    reader.readAsArrayBuffer(file);
+});
+
+$("#uploadBtn").click(function () {
+    $('#loader-pms').show();
+    $.ajax({
+        url: '/DataMoveFromExcelSheet/UploadExcelData',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(excelData),
+        success: function (res) {
+            $('#loader-pms').hide();
+            Common.successMsg("Uploaded!");
+        },
+        error: function (err) {
+            $('#loader-pms').hide();
+            Common.errorMsg(err);
+        }
+    });
+});
+
+/*=========================================================END BULK DATA MOVE FROM EXCELSHEET TO SQL TABLE INSERT CODE==========================================================*/

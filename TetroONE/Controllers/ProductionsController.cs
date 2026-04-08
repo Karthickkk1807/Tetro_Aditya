@@ -219,6 +219,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@NoofFabric", staticDetails.NoofFabric);
                     command.Parameters.AddWithValue("@TotalQty", staticDetails.TotalQty);
                     command.Parameters.AddWithValue("@TotalRolls", staticDetails.TotalRolls);
+                    command.Parameters.AddWithValue("@OrderNumber", staticDetails.OrderNumber);
                     command.Parameters.AddWithValue("@ReceivedBy", staticDetails.ReceivedBy);
                     command.Parameters.AddWithValue("@Notes", staticDetails.Notes == null ? (object)DBNull.Value : staticDetails.Notes);
 
@@ -784,7 +785,6 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
-
         //-------------------------------------------------------------------------ProductionPlan---------------------------------------------------------------------------------
 
         [HttpGet]
@@ -865,11 +865,7 @@ namespace TetroONE.Controllers
                                     Address1 = dt1.Rows[0]["Address1"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Address1"]) : null,
                                     Address2 = dt1.Rows[0]["Address2"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Address2"]) : null,
                                     Phone = dt1.Rows[0]["Phone"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Phone"]) : null,
-                                    PFCodeNo = dt1.Rows[0]["PFCodeNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["PFCodeNo"]) : null,
-                                    ESICodeNo = dt1.Rows[0]["ESICodeNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["ESICodeNo"]) : null,
-                                    Email = dt1.Rows[0]["Email"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["Email"]) : null,
                                     GSTin = dt1.Rows[0]["GSTin"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["GSTin"]) : null,
-                                    MSMERegistrationNo = dt1.Rows[0]["MSMERegistrationNo"] != DBNull.Value ? Convert.ToString(dt1.Rows[0]["MSMERegistrationNo"]) : null,
 
                                     OutwardToName = dt2.Rows[0]["OutwardToName"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["OutwardToName"]) : null,
                                     Address = dt2.Rows[0]["Address"] != DBNull.Value ? Convert.ToString(dt2.Rows[0]["Address"]) : null,
@@ -888,7 +884,7 @@ namespace TetroONE.Controllers
                                     VehicleNo = dt5.Rows[0]["VehicleNo"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["VehicleNo"]) : null,
                                     DriverName = dt5.Rows[0]["DriverName"] != DBNull.Value ? Convert.ToString(dt5.Rows[0]["DriverName"]) : null,
 
-                                    ProductItemData = dt4,
+                                    ProductItemData = dt4
                                 };
 
                                 string DCNo = dt3.Rows[0]["DCNo"] != DBNull.Value ? Convert.ToString(dt3.Rows[0]["DCNo"]) : null;

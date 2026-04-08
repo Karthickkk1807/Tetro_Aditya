@@ -46,9 +46,6 @@ namespace TetroONE.Controllers
             return View();
         }
 
-
-
-
         [HttpGet]
         [Route("GetAsset")]
         public IActionResult GetAsset(int BranchId, int AssetTypeId, int AssetId)

@@ -307,9 +307,11 @@ $(document).on('change', '#ClientColumn #ClientId', async function () {
             BillToAddress(response);
 
             var EditDataId = { MasterInfoId: parseInt(ClientId), ModuleName: "SaleInward" }
+            //var EditDataId = { MasterInfoId: parseInt(ClientId), ModuleName: "TaxInvoiceMulti" }
             Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (response) {
                 if (response.status);
-                Common.bindDropDownSuccess(response.data, "InwardId");
+                Common.bindDropDownMultiSuccess(response.data, "InwardId");
+                //Common.bindDropDownSuccess(response.data, "InwardId");
             }, null);
         } else {
             BillToAddressClear();
@@ -318,14 +320,20 @@ $(document).on('change', '#ClientColumn #ClientId', async function () {
     }
 });
 
-$(document).on('change', '#InwardId', async function () {
-    var $ThisInwardId = $(this).val();
-    if ($ThisInwardId != "") {
-        var EditDataId = { MasterInfoId: parseInt($ThisInwardId), ModuleName: "SaleOutward" }
+$(document).on('select2:select', '#InwardId', function (e) {
+    if (TriggerValues) {
+        var currentSelectedId = e.params.data.id;
+        var EditDataId = {MasterInfoId: parseInt(currentSelectedId),ModuleName: "SaleOutward"};
+
         Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (response) {
-            if (response.status);
-            $('#OutwardId').prop('disabled', false);
-            Common.bindDropDownMultiSuccess(response.data, "OutwardId");
+            if (response.status) {
+                $('#OutwardId').prop('disabled', false);
+                if ($('#OutwardId option[value="change"]').length == 1) {
+                    $('#OutwardId').empty();
+                }
+                bindDropDownMultiSuccess(response.data, "OutwardId");
+                $('#OutwardId').trigger('change');
+            }
         }, null);
     } else {
         TableCommonData();
@@ -333,10 +341,18 @@ $(document).on('change', '#InwardId', async function () {
     }
 });
 
+$(document).on('select2:unselect', '#InwardId', function (e) {
+    var removedId = e.params.data.id;
+    $('#OutwardId option[data-inward="' + removedId + '"]').remove();
+    if ($('#OutwardId option').length == 0) {
+        $('#OutwardId').empty().append($('<option>', { value: 'change', text: '--No Outward--' })).val('change').trigger('change').prop('disabled', true);
+    }
+    $('#OutwardId').trigger('change');
+});
+
 $(document).on('change', '#OutwardId', function () {
     if (TriggerValues) {
         var selectedOutwardIds = $(this).val() || [];
-        var inwardId = $('#InwardId').val();
 
         $('#SaleProductTablebody .SaleProductRow').each(function () {
             var rowOutwardId = $(this).find('.OutWardIdTable').text().trim();
@@ -348,7 +364,7 @@ $(document).on('change', '#OutwardId', function () {
         UpdateSaleTableSerialNumbers();
         CalculateSubtotal();
 
-        if (selectedOutwardIds.length === 0 || inwardId === "") {
+        if (selectedOutwardIds.length === 0) {
             TableCommonData();
             return;
         }
@@ -367,11 +383,11 @@ $(document).on('change', '#OutwardId', function () {
         });
 
         newIdsToLoad.forEach(function (outwardId) {
+            var inwardId = $('#OutwardId option[value="' + outwardId + '"]').data('inward');
             var EditDataId = {
                 InWardId: parseInt(inwardId),
                 OutWardId: parseInt(outwardId)
             };
-
             Common.ajaxCall("GET", "/Sale/GetOutwardDetails_ByInWardId", EditDataId, function (response) {
                 if (response.status) {
                     var data = JSON.parse(response.data);
@@ -442,7 +458,7 @@ function BindTheDataOfTable(data) {
                 <td><input type="text" class="form-control DisabledTextBox ColourProcess" value="${ColourProcess}" /></td> 
                 <td><input type="text" class="form-control DisabledTextBox Roll" value="${Roll}" /></td> 
                 <td><input type="text" class="form-control DisabledTextBox Weight" value="${Weight}" /></td> 
-                <td><input type="text" class="form-control Rate" value="${Rate}" id="${numberIncr}" name="${numberIncr}" required/></td> 
+                <td><input type="text" class="form-control Rate" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" value="${Rate}" id="${numberIncr}" name="${numberIncr}" required/></td> 
                 <td><input type="text" class="form-control DisabledTextBox Amount" value="${formatRupee(total)}" /></td>
                 <td style="text-align: center;">${actionTd}</td>
             </tr>
@@ -733,6 +749,19 @@ function saveSaleOrder(callback, options = {}) {
         });
     }
 
+    // Prepare SaleInwardMappingDetails
+    const SaleInwardMappingDetails = [];
+    const InwardId = $('#InwardId').val();
+    if (Array.isArray(InwardId) && InwardId.length > 0) {
+        InwardId.forEach(id => {
+            SaleInwardMappingDetails.push({
+                SaleInWardMappingId: null,
+                SaleId: EditSaleId > 0 ? EditSaleId : null,
+                InWardId: parseInt(id) || null,
+            });
+        });
+    }
+
     // Prepare SaleOutWardFabricDetails
     const SaleOutWardFabricDetails = [];
     $('#SaleProductTablebody .SaleProductRow').each(function () {
@@ -774,6 +803,7 @@ function saveSaleOrder(callback, options = {}) {
 
     // Append data to FormData
     formDataMultiple.append("SaleDetailsStatic", JSON.stringify(SaleDetailsStatic));
+    formDataMultiple.append("SaleInwardMappingDetails", JSON.stringify(SaleInwardMappingDetails));
     formDataMultiple.append("SaleOutWardMappingDetails", JSON.stringify(SaleOutWardMappingDetails));
     formDataMultiple.append("SaleOutWardFabricDetails", JSON.stringify(SaleOutWardFabricDetails));
     formDataMultiple.append("PurchaseSaleOtherChargesMappingDetails", JSON.stringify(PurchaseSaleOtherChargesMappingDetails));
@@ -847,68 +877,183 @@ $(document).on('click', '.btn-delete', async function () {
 
 /* ========================================= NOT NULL GET ========================================== */
 
+//async function GetNotNullSale(response) {
+//    if (response.status) {
+//        var data = JSON.parse(response.data);
+//        var dataMultiplOutWard = data[1];
+//        var dataMultiplInward = data[5];
+//        var dataMainTable = data[2];
+//        var dataOtherSett = data[3];
+
+//        $('#TaxInvoiceNumber').val(data[0][0].SaleNo);
+//        $('#InvoiceDate').val(formatDateForInput(data[0][0].SaleDate));
+//        $('#BillFrom').val(data[0][0].BillFrom).trigger('change');
+//        $('#roundOff').val(data[0][0].RoundOffValue);
+//        $('#GrantTotal').val(data[0][0].GrantTotal);
+//        $('#DueDate').val(formatDateForInput(data[0][0].DueDate));
+//        $('#SaleStatusId').val(data[0][0].SaleStatusId);
+//        $('#TaxInfoId').val(data[0][0].TaxInfoId);
+
+//        toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "#HideNotes");
+//        toggleFieldForAttachment(data[4][0].AttachmentId, "#AddAttachment", "#AddAttachLable", "#hideAttach");
+
+//        Inventory.bindAttachments(data[4]);
+
+//        var responseClient = await Common.getAsycData("/Common/ClientDetailsByClientId?clientId=" + parseInt(data[0][0].ClientId));
+//        if (responseClient !== null) {
+//            BillToAddress(responseClient);
+//            $('#ClientId').val(data[0][0].ClientId).trigger('change');
+//            $('#loader-pms').show();
+
+//            var EditDataId = { MasterInfoId: parseInt(data[0][0].ClientId), ModuleName: "SaleInward" }
+//            Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (responseSaleInward) {
+//                if (responseSaleInward.status);
+//                $('#loader-pms').show();
+
+//                Common.bindDropDownMultiSuccess(responseSaleInward.data, "InwardId");
+//                //Common.bindDropDownSuccess(responseSaleInward.data, "InwardId");
+
+//                var selectedValues = [];
+//                if (Array.isArray(dataMultiplInward)) {
+//                    selectedValues = dataMultiplInward.map(function (item) {
+//                        return item.InWardId;
+//                    });
+//                } else if (dataMultiplInward) {
+//                    selectedValues.push(dataMultiplInward.InWardId);
+//                }
+//                $('#InwardId').val(selectedValues).trigger('change');
+
+//                //var EditDataId = { MasterInfoId: parseInt(data[0][0].InWardId), ModuleName: "SaleOutward" }
+//                var EditDataId = { MasterInfoId: parseInt(selectedValues), ModuleName: "SaleOutward" }
+//                Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (responseSaleOutward) {
+//                    if (responseSaleOutward.status);
+//                    $('#OutwardId').prop('disabled', false);
+//                    $('#OutwardId').empty();
+
+//                    bindDropDownMultiSuccess(responseSaleOutward.data, "OutwardId");
+
+//                    var selectedValues = [];
+//                    if (Array.isArray(dataMultiplOutWard)) {
+//                        selectedValues = dataMultiplOutWard.map(function (item) {
+//                            return item.OutWardId;
+//                        });
+//                    } else if (dataMultiplOutWard) {
+//                        selectedValues.push(dataMultiplOutWard.OutWardId);
+//                    }
+
+//                    $('#OutwardId').val(selectedValues).trigger('change');
+
+//                    BindOutWardFabricDataSequentially(dataMainTable);
+//                    OtherChangesNotNull(dataOtherSett);
+
+//                    TriggerValues = true;
+//                    $('#loader-pms').hide();
+//                }, null);
+//            }, null);
+//        }
+//    }
+//}
+
+
 async function GetNotNullSale(response) {
-    if (response.status) {
+    if (!response.status) return;
+
+    try {
         var data = JSON.parse(response.data);
-        var dataMultipl = data[1];
+
+        var dataMultiplOutWard = data[1];
+        var dataMultiplInward = data[5];
         var dataMainTable = data[2];
         var dataOtherSett = data[3];
+        var saleInfo = data[0][0];
+        var attachments = data[4];
 
-        $('#TaxInvoiceNumber').val(data[0][0].SaleNo);
-        $('#InvoiceDate').val(formatDateForInput(data[0][0].SaleDate));
-        $('#BillFrom').val(data[0][0].BillFrom).trigger('change');
-        $('#roundOff').val(data[0][0].RoundOffValue);
-        $('#GrantTotal').val(data[0][0].GrantTotal);
-        $('#DueDate').val(formatDateForInput(data[0][0].DueDate));
-        $('#SaleStatusId').val(data[0][0].SaleStatusId);
-        $('#TaxInfoId').val(data[0][0].TaxInfoId);
+        // Fill basic fields
+        $('#TaxInvoiceNumber').val(saleInfo.SaleNo);
+        $('#InvoiceDate').val(formatDateForInput(saleInfo.SaleDate));
+        $('#BillFrom').val(saleInfo.BillFrom).trigger('change');
+        $('#roundOff').val(saleInfo.RoundOffValue);
+        $('#GrantTotal').val(saleInfo.GrantTotal);
+        $('#DueDate').val(formatDateForInput(saleInfo.DueDate));
+        $('#SaleStatusId').val(saleInfo.SaleStatusId);
+        $('#TaxInfoId').val(saleInfo.TaxInfoId);
 
-        toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "#HideNotes");
-        toggleFieldForAttachment(data[4][0].AttachmentId, "#AddAttachment", "#AddAttachLable", "#hideAttach");
+        toggleField(saleInfo.Notes, "#Notes", "#AddNotes", "#AddNotesLable", "#HideNotes");
+        toggleFieldForAttachment(attachments[0].AttachmentId, "#AddAttachment", "#AddAttachLable", "#hideAttach");
+        Inventory.bindAttachments(attachments);
 
-        Inventory.bindAttachments(data[4]);
-
-        var responseClient = await Common.getAsycData("/Common/ClientDetailsByClientId?clientId=" + parseInt(data[0][0].ClientId));
+        // Get client details
+        const responseClient = await Common.getAsycData(`/Common/ClientDetailsByClientId?clientId=${saleInfo.ClientId}`);
         if (responseClient !== null) {
             BillToAddress(responseClient);
-            $('#ClientId').val(data[0][0].ClientId).trigger('change');
+            $('#ClientId').val(saleInfo.ClientId).trigger('change');
             $('#loader-pms').show();
 
-            var EditDataId = { MasterInfoId: parseInt(data[0][0].ClientId), ModuleName: "SaleInward" }
-            Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (responseSaleInward) {
-                if (responseSaleInward.status);
-                $('#loader-pms').show();
+            // Load Inward dropdown
+            const EditDataIdInward = { MasterInfoId: parseInt(saleInfo.ClientId), ModuleName: "SaleInward" };
+            const responseSaleInward = await ajaxCallAsync("GET", "/Inventory/GetDDMasterInfoValue", EditDataIdInward);
 
-                Common.bindDropDownSuccess(responseSaleInward.data, "InwardId");
-                $('#InwardId').val(data[0][0].InWardId);
+            if (responseSaleInward && responseSaleInward.status) {
+                Common.bindDropDownMultiSuccess(responseSaleInward.data, "InwardId");
 
-                var EditDataId = { MasterInfoId: parseInt(data[0][0].InWardId), ModuleName: "SaleOutward" }
-                Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (responseSaleOutward) {
-                    if (responseSaleOutward.status);
-                    $('#OutwardId').prop('disabled', false);
-                    Common.bindDropDownMultiSuccess(responseSaleOutward.data, "OutwardId");
-                    
-                    var selectedValues = [];
-                    if (Array.isArray(dataMultipl)) {
-                        selectedValues = dataMultipl.map(function (item) {
-                            return item.OutWardId;
-                        });
-                    } else if (dataMultipl) {
-                        selectedValues.push(dataMultipl.OutWardId);
+                // select saved inward values
+                let selectedInwardValues = [];
+                if (Array.isArray(dataMultiplInward)) {
+                    selectedInwardValues = dataMultiplInward.map(item => item.InWardId);
+                } else if (dataMultiplInward) {
+                    selectedInwardValues.push(dataMultiplInward.InWardId);
+                }
+
+                $('#InwardId').val(selectedInwardValues).trigger('change');
+
+                // Clear and enable Outward dropdown
+                $('#OutwardId').prop('disabled', false).empty();
+
+                // Fetch Outwards for each selected Inward sequentially
+                for (let inwardId of selectedInwardValues) {
+                    const EditDataIdOutward = { MasterInfoId: parseInt(inwardId), ModuleName: "SaleOutward" };
+                    const responseSaleOutward = await ajaxCallAsync("GET", "/Inventory/GetDDMasterInfoValue", EditDataIdOutward);
+
+                    if (responseSaleOutward && responseSaleOutward.status) {
+                        // append options
+                        bindDropDownMultiSuccess(responseSaleOutward.data, "OutwardId");
                     }
+                }
 
-                    $('#OutwardId').val(selectedValues).trigger('change');
+                // select saved Outward values
+                let selectedOutwardValues = [];
+                if (Array.isArray(dataMultiplOutWard)) {
+                    selectedOutwardValues = dataMultiplOutWard.map(item => item.OutWardId);
+                } else if (dataMultiplOutWard) {
+                    selectedOutwardValues.push(dataMultiplOutWard.OutWardId);
+                }
 
-                    BindOutWardFabricDataSequentially(dataMainTable);
-                    OtherChangesNotNull(dataOtherSett);
+                $('#OutwardId').val(selectedOutwardValues).trigger('change');
 
-                    TriggerValues = true;
-                    $('#loader-pms').hide();
-                }, null);
-            }, null);
+                // Bind main table data and other settings
+                BindOutWardFabricDataSequentially(dataMainTable);
+                OtherChangesNotNull(dataOtherSett);
+
+                TriggerValues = true;
+                $('#loader-pms').hide();
+            }
         }
+    } catch (err) {
+        console.error("GetNotNullSale error:", err);
+        $('#loader-pms').hide();
     }
 }
+
+function ajaxCallAsync(method, url, data) {
+    return new Promise((resolve, reject) => {
+        Common.ajaxCall(method, url, data, function (response) {
+            resolve(response);
+        }, function (err) {
+            reject(err);
+        });
+    });
+}
+
 
 async function BindOutWardFabricDataSequentially(fabricData) {
 
@@ -974,7 +1119,7 @@ async function BindOutWardFabricDataSequentially(fabricData) {
                         <td><input type="text" class="form-control DisabledTextBox ColourProcess" value="${ColourProcess}" /></td>
                         <td><input type="text" class="form-control DisabledTextBox Roll" value="${Roll}" /></td>
                         <td><input type="text" class="form-control DisabledTextBox Weight" value="${Weight}" /></td>
-                        <td><input type="text" class="form-control Rate" value="${Rate}" id="${numberIncr}" name="${numberIncr}" required /></td>
+                        <td><input type="text" class="form-control Rate" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 3)" value="${Rate}" id="${numberIncr}" name="${numberIncr}" required /></td>
                         <td><input type="text" class="form-control DisabledTextBox Amount" value="${formatRupee(total)}" /></td>
                         <td style="text-align: center;">${actionTd}</td>
                     </tr>
@@ -1555,7 +1700,7 @@ $(document).on('click', '#btnPrintSale', function () {
             NoOfCopies: 1,
             printType: "Print"
         };
-        
+
         $.ajax({
             type: 'GET',
             url: '/Sale/SaleOrderPrint',
@@ -1648,3 +1793,26 @@ $(document).on('click', '#btnPreviewSale', function () {
         showSuccessMsg: false
     });
 });
+
+function bindDropDownMultiSuccess(response, controlid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        var dataValue = data[0];
+
+        if (dataValue != null && dataValue.length > 0 && !dataValue[0].hasOwnProperty('TetroONEnocount')) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[2]; // OutwardNo
+
+            $.each(dataValue, function (index, item) {
+
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],          // OutwardId
+                    text: item[textproperty],            // OutwardNo
+                    'data-inward': item.InwardId         // store InwardId reference
+                }));
+            });
+        } else {
+            $('#' + controlid).empty();
+        }
+    }
+}
