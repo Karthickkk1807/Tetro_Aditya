@@ -818,7 +818,7 @@ function AttendanceLog(key, employeeId) {
                                            ${attendData.OutLocation != null ? `<img src="/assets/commonimages/map-pin.svg" width="20px"><p class="text-dark">${attendData.OutLocation}</p>` : ''}
                                             </div>
                                                ${!!(attendData.DocumentFilePath && attendData.DocumentFilePath.trim()) ? `
-                                     <div class="col-2d-none">
+                                     <div class="col-2 d-none">
                                          <img data-id="${attendData.DocumentFilePath}" class="camimg" src="/assets/commonimages/camera.svg" width="20px">
                                      </div>` : ``}
 										</div>
@@ -920,7 +920,6 @@ function attendanceTeamSuccess(response) {
     }
 }
 
-
 function attendanceEmployeeSuccess(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
@@ -937,7 +936,7 @@ function attendanceEmployeeSuccess(response) {
         $('#EmployeeCounterValBox4').text(data[0][0][AttendanceCounterBox[3]]);
 
         $('#loader-pms').hide();
-        var columns = Common.bindColumn(data[1], ['EmployeeId', 'Status_Colour', 'EmployeeTypeId', 'EODStatus_Colour']);
+        var columns = Common.bindColumn(data[1], ['EmployeeId', 'Status_Colour', 'EmployeeTypeId', 'EODStatus_Colour', 'EODStatus']);
         bindTable('EmployeeTable', data[1], columns, -1, '380px', true);
     }
 }

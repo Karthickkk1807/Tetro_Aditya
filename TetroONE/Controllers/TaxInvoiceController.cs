@@ -249,9 +249,13 @@ namespace TetroONE.Controllers
 			dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
 
 			SaleDetailsStatic SaleDetailsStatic = JsonConvert.DeserializeObject<SaleDetailsStatic>(Request.Form["SaleDetailsStatic"]);
+			List<SaleInWardMappingDetails>? SaleInwardMappingDetails = JsonConvert.DeserializeObject<List<SaleInWardMappingDetails>?>(Request.Form["SaleInwardMappingDetails"]);
 			List<SaleOutWardMappingDetails>? SaleOutWardMappingDetails = JsonConvert.DeserializeObject<List<SaleOutWardMappingDetails>?>(Request.Form["SaleOutWardMappingDetails"]);
 			List<SaleOutWardFabricDetails>? SaleOutWardFabricDetails = JsonConvert.DeserializeObject<List<SaleOutWardFabricDetails>?>(Request.Form["SaleOutWardFabricDetails"]);
 			List<PurchaseSaleOtherChargesMappingDetails>? PurchaseSaleOtherChargesMappingDetails = JsonConvert.DeserializeObject<List<PurchaseSaleOtherChargesMappingDetails>?>(Request.Form["PurchaseSaleOtherChargesMappingDetails"]);
+
+			DataTable saleInwardMappingDetails = new DataTable();
+            saleInwardMappingDetails = GenericTetroONE.ToDataTable(SaleInwardMappingDetails);
 
 			DataTable saleOutWardMappingDetails = new DataTable();
             saleOutWardMappingDetails = GenericTetroONE.ToDataTable(SaleOutWardMappingDetails);
@@ -279,6 +283,7 @@ namespace TetroONE.Controllers
                 Notes = SaleDetailsStatic.Notes,
                 TaxInfoId = SaleDetailsStatic.TaxInfoId,
 
+                TVP_SaleInWardMappingDetails = saleInwardMappingDetails,
                 TVP_SaleOutWardMappingDetails = saleOutWardMappingDetails,
                 TVP_SaleOutWardFabricDetails = saleOutWardFabricDetails,
                 TVP_PurchaseSaleOtherChargesMappingDetails = purchaseSaleOtherChargesMappingDetails,

@@ -339,9 +339,10 @@ $(document).ready(async function () {
                 var data = JSON.parse(response.data);
 
                 PreTreatmentChemicalProduct = data[0];
-                DyeBathChemicalProduct = data[1];
-                AfterTreatmentChemicalProduct = data[2];
-                FinishingChemicalProduct = data[3];
+                DyeChemicalProduct = data[1];
+                DyeBathChemicalProduct = data[2];
+                AfterTreatmentChemicalProduct = data[3];
+                FinishingChemicalProduct = data[4];
 
                 Common.ajaxCall("GET", "/Productions/GetDefaultChemicalDetails", { ProcessType: null, ProductionPlanId: parseInt(ProductionPlanId), ColourValue: null }, function (response) {
                     if (response.status) {
@@ -1074,8 +1075,29 @@ async function GetProductionPlanNotNullSuccess(response) {
 
             $('#ProductionPlanStatusId').append('<option value="6">In_Production</option>');
             $('#ProductionPlanStatusId option[value="6"]').removeClass('d-none');
-        } else {
+        } else if (header.ProductionPlanStatusId == 9) {
+            $('#ProductionPlanStatusId option').each(function () {
+                if ($(this).val() !== "") {
+                    $(this).addClass('d-none');
+                }
+            });
+
+            $('#ProductionPlanStatusId').append('<option value="9">Delivered</option>');
+            $('#ProductionPlanStatusId option[value="6"]').removeClass('d-none'); 
+        }else if (header.ProductionPlanStatusId == 8) {
+            $('#ProductionPlanStatusId option').each(function () {
+                if ($(this).val() !== "") {
+                    $(this).addClass('d-none');
+                }
+            });
+
+            $('#ProductionPlanStatusId').append('<option value="8">Yet to Deliver</option>');
+            $('#ProductionPlanStatusId option[value="6"]').removeClass('d-none'); 
+        }
+        else {
             $('#ProductionPlanStatusId option[value="6"]').remove();
+            $('#ProductionPlanStatusId option[value="8"]').remove();
+            $('#ProductionPlanStatusId option[value="9"]').remove();
             $('#ProductionPlanStatusId option').removeClass('d-none');
         }
 
@@ -1240,9 +1262,9 @@ async function GetProductionPlanNotNullSuccess(response) {
 function createChemicalRow(rowType, chemicalData) {
 
     // 🔴 Skip appending if Dye and ChemicalId is null
-    if (rowType === 'Dye' && !chemicalData?.ChemicalId) {
-        return; // Stop execution completely
-    }
+    //if (rowType === 'Dye' && !chemicalData?.ChemicalId) {
+    //    return; // Stop execution completely
+    //}
 
     let numberIncr = Math.random().toString(36).substring(2);
     let rowadd = $(`.RowOfChemical-${rowType}`).length;
@@ -1267,7 +1289,8 @@ function createChemicalRow(rowType, chemicalData) {
 
         case 'Dye':
             editProducts = EditDyeChemicalProduct || [];
-            masterProducts = EditDyeChemicalProduct || []; // 🔥 IMPORTANT
+            masterProducts = DyeChemicalProduct || []; // 🔥 IMPORTANT
+            //masterProducts = EditDyeChemicalProduct || []; // 🔥 IMPORTANT
             break;
 
         case 'DyeBath':
@@ -1748,6 +1771,7 @@ $(document).on('click', '#AddItemBtn', function () {
                     </tr>
                 `);
                 $("#ProductionPlanAddItemModal").show();
+                $('#loader-pms').hide();
                 return;
             }
 
@@ -3590,7 +3614,8 @@ $(document).on('click', '#ProductionPlanPreviewbtn', function () {
     var ProductionPlanNo = $('#BatchNo').val();
     // URL to convert into QR
     //var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
-    var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+    //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+    var scanUrl = "http://103.181.21.202:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
 
     $.ajax({
         url: '/Productions/GenerateQrPdf',
@@ -3639,7 +3664,8 @@ $(document).on('click', '#ProductionPlanjobCardBtn', function () {
         }
 
         //var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
-        var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+        //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+        var scanUrl = "http://103.181.21.202:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
 
         // Step 2: Prepare JobCard Print Data
         var EditData = {
@@ -3735,7 +3761,8 @@ $(document).on('click', '#ProductionPlanJobCardWithRateBtn', function () {
         }
 
         //var scanUrl = "http://103.174.10.91:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
-        var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+        //var scanUrl = "http://103.174.10.91:8108/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
+        var scanUrl = "http://103.181.21.202:8123/ProductionQRCode/ProductionQRCodeLogin?ProductionPlanId=" + ProductionPlanId + "&PlantMappingId=" + PlantMappingId;
 
         // Step 2: Prepare JobCard Print Data
         var EditData = {

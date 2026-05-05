@@ -1,158 +1,306 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using System;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Drawing.Drawing2D;
-using System.IO;
 using System.Linq;
+using System.Text;
+using TetroONE.Models;
 
 public class DotMatrixPrinter
 {
     private readonly IWebHostEnvironment _env;
+    private OutWardEPSONPrint _data;
 
     public DotMatrixPrinter(IWebHostEnvironment env)
     {
         _env = env;
     }
 
-    public void PrintSlip(string PrinterName)
+    // ✅ MAIN METHOD
+    public void PrintSlip(string printerName, OutWardEPSONPrint data)
     {
-        //string printerName = "EPSON FX-2175"; // EXACT NAME FROM WINDOWS
-        //string printerName = "EPSON FX-2175 (Copy 1)"; // EXACT NAME FROM WINDOWS
-        string printerName = PrinterName;
+        _data = data;
 
-        // Check printer exists
-        if (!PrinterSettings.InstalledPrinters.Cast<string>()
-            .Any(p => p.Equals(printerName, StringComparison.OrdinalIgnoreCase)))
+        // 🔍 Step 1: Auto detect if empty
+        if (string.IsNullOrWhiteSpace(printerName))
         {
-            throw new Exception("Printer not found: " + printerName);
+            printerName = DetectEpsonPrinter();
         }
 
+        // ❌ Step 2: If still empty → error
+        if (string.IsNullOrWhiteSpace(printerName))
+        {
+            throw new Exception("EPSON Printer not found!");
+        }
+
+        // 🔍 Step 3: Validate printer exists
+        bool printerExists = PrinterSettings.InstalledPrinters
+            .Cast<string>()
+            .Any(p => p.Equals(printerName, StringComparison.OrdinalIgnoreCase));
+
+        if (!printerExists)
+        {
+            throw new Exception(
+                "Printer not found: " + printerName +
+                "\n\nAvailable Printers:\n" + GetAllPrinters());
+        }
+
+        // 🖨 Step 4: Print
         PrintDocument pd = new PrintDocument();
         pd.PrinterSettings.PrinterName = printerName;
 
-        // Continuous Paper Size (Adjust if needed)
-        PaperSize customSize = new PaperSize("DotMatrix", 850, 1400);
-        pd.DefaultPageSettings.PaperSize = customSize;
+        // Silent print (no popup)
+        pd.PrintController = new StandardPrintController();
 
+        // Dot matrix paper size
+        PaperSize paper = new PaperSize("DotMatrix", 984, 591);
+        pd.DefaultPageSettings.PaperSize = paper;
         pd.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
 
         pd.PrintPage += PrintPage;
 
-        pd.PrintController = new StandardPrintController(); // Silent Print
-
         pd.Print();
+    }
+
+    // ✅ AUTO DETECT EPSON
+    private string DetectEpsonPrinter()
+    {
+        return PrinterSettings.InstalledPrinters
+            .Cast<string>()
+            .FirstOrDefault(p => p.ToUpper().Contains("EPSON"));
+    }
+
+    // ✅ DEBUG LIST
+    private string GetAllPrinters()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        foreach (string p in PrinterSettings.InstalledPrinters)
+        {
+            sb.AppendLine(p);
+        }
+
+        return sb.ToString();
     }
 
     private void PrintPage(object sender, PrintPageEventArgs e)
     {
         Graphics g = e.Graphics;
 
-        Font headerFont = new Font("Courier New", 14, FontStyle.Bold);
-        Font boldFont = new Font("Courier New", 11, FontStyle.Bold);
-        Font normalFont = new Font("Courier New", 10);
+        Pen pen = new Pen(Color.Black, 1);
 
-        Pen dashPen = new Pen(Color.Black, 1);
-        dashPen.DashStyle = DashStyle.Dash;
+        int left = 40;
+        int right = e.PageBounds.Width - 40;
+        int top = 20;
 
-        int paperWidth = e.PageBounds.Width;
-        int paperHeight = e.PageBounds.Height;
+        int addressLeft = left + 20;
+        int y = top;
 
-        int sideMargin = 70;
+        Font titleFont = new Font("Courier New", 20, FontStyle.Bold);
+        Font bold = new Font("Courier New", 10, FontStyle.Bold);
+        Font text = new Font("Courier New", 10);
 
-        int slipWidth = paperWidth - (sideMargin * 2);
-        int slipHeight = paperHeight - 40;
+        g.DrawLine(pen, left, y, right, y);
+        y += 10;
 
-        int startX = sideMargin;
-        int y = 20;
+        g.DrawString(_data.CompanyName, titleFont, Brushes.Black, left + 170, y);
+        y += 30;
 
-        // OUTER BORDER
-        g.DrawRectangle(dashPen, startX, y, slipWidth, slipHeight);
+        int rightHeader = right - 220;
 
-        y += 20;
+        g.DrawString(_data.CompanyAddress1, bold, Brushes.Black, addressLeft, y);
+        g.DrawString("GST : " + _data.CompanyGST, bold, Brushes.Black, rightHeader, y);
+        y += 18;
 
-        StringFormat center = new StringFormat();
-        center.Alignment = StringAlignment.Center;
+        g.DrawString(_data.CompanyAddress2, bold, Brushes.Black, addressLeft, y);
+        g.DrawString("PAN : " + _data.CompanyPAN, bold, Brushes.Black, rightHeader, y);
+        y += 18;
 
-        g.DrawString("ADHITHIYA TEXTILES PROCESS",
-            headerFont,
-            Brushes.Black,
-            new RectangleF(startX, y, slipWidth, 30),
-            center);
+        g.DrawString("PHONE : " + _data.CompanyPhone, bold, Brushes.Black, addressLeft, y);
+
+        y += 25;
+        g.DrawLine(pen, left, y, right, y);
+
+        y += 8;
+        g.DrawString("DELIVERY NOTE - DYEING SAC/HSN : 998821", bold, Brushes.Black, left + 250, y);
+
+        y += 18;
+        g.DrawLine(pen, left, y, right, y);
+
+        int mid = left + 470;
+        int sectionTop = y;
+
+        y += 10;
+
+        int rightText = mid + 15;
+
+        g.DrawString("To. " + _data.ClientName, text, Brushes.Black, addressLeft, y);
+        g.DrawString("DC No : " + _data.DCNo, text, Brushes.Black, rightText, y);
+
+        y += 18;
+        g.DrawString(_data.ClientAddress1 + " ,", text, Brushes.Black, addressLeft, y);
+        g.DrawString("DC Date : " + _data.DCDate, text, Brushes.Black, rightText, y);
+
+        y += 18;
+        g.DrawString(_data.ClientAddress2 + " ,", text, Brushes.Black, addressLeft, y);
+        g.DrawString("Time : " + _data.Time, text, Brushes.Black, rightText, y);
+
+        y += 18;
+        g.DrawString(_data.ClientAddress3 + " .", text, Brushes.Black, addressLeft, y);
+        g.DrawString("Delivery to : " + _data.ClientType, text, Brushes.Black, rightText, y);
+
+        y += 18;
+        g.DrawString("GST : " + _data.ClientGST + "  PAN : " + _data.ClientPAN, text, Brushes.Black, addressLeft, y);
 
         y += 30;
 
-        string address =
-    @"SF 418-A, Palavanjipalayam Road, Veerapandi
-Palladam(TK) Tirupur - 641605
-Phone : 9489880088
-GSTIN : 33AAAFF3819N1ZE";
+        int sectionBottom = y;
 
-        g.DrawString(address,
-            normalFont,
-            Brushes.Black,
-            new RectangleF(startX, y, slipWidth, 60),
-            center);
+        g.DrawLine(pen, left, sectionBottom, right, sectionBottom);
+        g.DrawLine(pen, mid, sectionTop, mid, sectionBottom);
 
-        y += 80;
+        //--------------------------------
+        // TABLE HEADER
+        //--------------------------------
 
-        g.DrawString("DELIVERY NOTE - DYEING",
-            boldFont,
-            Brushes.Black,
-            new RectangleF(startX, y, slipWidth, 30),
-            center);
+        y = sectionBottom + 10;
+
+        int fabricWidth = 220;
+        int diaWidth = 70;
+        int rollWidth = 70;
+        int inwardWidth = 120;
+        int deliveryWidth = 120;
+
+        int c1 = left;
+        int c2 = c1 + fabricWidth;
+        int c3 = c2 + diaWidth;
+        int c4 = c3 + rollWidth;
+        int c5 = c4 + inwardWidth;
+        int c6 = c5 + deliveryWidth;
+
+        g.DrawString("Fabric Quality", bold, Brushes.Black, c1 + 5, y);
+        g.DrawString("Dia", bold, Brushes.Black, c2 + 5, y);
+        g.DrawString("Roll", bold, Brushes.Black, c3 + 5, y);
+        g.DrawString("Inward Wt", bold, Brushes.Black, c4 + 5, y);
+        g.DrawString("Delivery Wt", bold, Brushes.Black, c5 + 5, y);
+        g.DrawString("Details", bold, Brushes.Black, c6 + 5, y);
+
+        y += 18;
+        g.DrawLine(pen, left, y, right, y);
+
+        //--------------------------------
+        // TABLE DATA
+        //--------------------------------
+
+        ////DataTable dt = _data.ProductItemData;
+        int rowHeight = 18;
+
+        ////y += 10;
+
+        ////foreach (DataRow row in dt.Rows)
+        ////{
+        ////    g.DrawString(row["FabricQuality"]?.ToString(), text, Brushes.Black, c1 + 5, y);
+        ////    g.DrawString(row["Dia"]?.ToString(), text, Brushes.Black, c2 + 5, y);
+        ////    g.DrawString(row["Roll"]?.ToString(), text, Brushes.Black, c3 + 5, y);
+        ////    g.DrawString(row["InwardWt"]?.ToString(), text, Brushes.Black, c4 + 5, y);
+        ////    g.DrawString(row["DeliveryWt"]?.ToString(), text, Brushes.Black, c5 + 5, y);
+
+        ////    y += rowHeight;
+        ////}
+
+        //--------------------------------
+        // DETAILS
+        //--------------------------------
+
+        int dy = sectionBottom + 28;
+
+        g.DrawString("Your DC No : " + _data.YourDCNo, text, Brushes.Black, c6 + 5, dy);
+        dy += rowHeight;
+
+        g.DrawString("Date : " + _data.DCDate, text, Brushes.Black, c6 + 5, dy);
+        dy += rowHeight;
+
+        g.DrawString("Colour : " + _data.Colour, text, Brushes.Black, c6 + 5, dy);
+        dy += rowHeight;
+
+        g.DrawString("Order No : " + _data.OrderNO, text, Brushes.Black, c6 + 5, dy);
+        dy += rowHeight;
+
+        //--------------------------------
+        // PROCESS (AUTO WRAP)
+        //--------------------------------
+
+        string processText = "Process : " + _data.Process;
+        int processWidth = right - c6 - 20;
+
+        RectangleF rect = new RectangleF(c6 + 5, dy, processWidth, 100);
+
+        StringFormat format = new StringFormat();
+        format.Alignment = StringAlignment.Near;
+        format.LineAlignment = StringAlignment.Near;
+
+        g.DrawString(processText, text, Brushes.Black, rect, format);
+
+        SizeF size = g.MeasureString(processText, text, processWidth);
+        dy += (int)size.Height + 5;
+
+        //--------------------------------
+
+        g.DrawString("Inward No : " + _data.InwardNo, text, Brushes.Black, c6 + 5, dy);
+        dy += rowHeight;
+
+        g.DrawString("Vehicle No : " + _data.VehicleNo, text, Brushes.Black, c6 + 5, dy);
+
+        y = Math.Max(y, dy);
+
+        //--------------------------------
+        // TOTAL
+        //--------------------------------
+
+        y += 15;
+        g.DrawLine(pen, left, y, right, y);
+
+        y += 10;
+
+        g.DrawString("TOTAL =>", bold, Brushes.Black, c2 - 30, y);
+        g.DrawString(_data.TotalRoll, bold, Brushes.Black, c3, y);
+        g.DrawString(_data.TotalInwardWt, bold, Brushes.Black, c4, y);
+        g.DrawString(_data.TotalDeliveryWt, bold, Brushes.Black, c5, y);
+
+        g.DrawString("Actual Wt : " + _data.ActualNo, text, Brushes.Black, c6, y);
+
+        y += 16;
+        g.DrawString("Apprx Goods Value : " + _data.ApprxGoodsValue, text, Brushes.Black, c6, y);
+
+        //--------------------------------
+        // SIGNATURE
+        //--------------------------------
+
+        y += 24;
+        g.DrawLine(pen, left, y, right, y);
+
+        y += 10;
+
+        g.DrawString("Received", bold, Brushes.Black, left + 40, y);
+        g.DrawString("Driver", bold, Brushes.Black, left + 220, y);
+        g.DrawString("Delivered By", bold, Brushes.Black, left + 380, y);
+        g.DrawString("For ADHITHIYA TEXTILES PROCESS", bold, Brushes.Black, right - 320, y);
+
+        y += 18;
+        g.DrawString(_data.Driver, text, Brushes.Black, left + 210, y);
 
         y += 40;
 
-        int tableX = startX + 20;
-        int tableY = y;
+        //--------------------------------
+        // BORDER
+        //--------------------------------
 
-        int col1 = 260;
-        int col2 = 80;
-        int col3 = 80;
-        int col4 = 130;
-        int col5 = 130;
+        int bottomBorder = Math.Min(y, e.PageBounds.Height - 10);
 
-        int rowHeight = 30;
-
-        // HEADER ROW
-        g.DrawRectangle(dashPen, tableX, tableY, col1, rowHeight);
-        g.DrawRectangle(dashPen, tableX + col1, tableY, col2, rowHeight);
-        g.DrawRectangle(dashPen, tableX + col1 + col2, tableY, col3, rowHeight);
-        g.DrawRectangle(dashPen, tableX + col1 + col2 + col3, tableY, col4, rowHeight);
-        g.DrawRectangle(dashPen, tableX + col1 + col2 + col3 + col4, tableY, col5, rowHeight);
-
-        g.DrawString("Fabric Quality", boldFont, Brushes.Black, tableX + 10, tableY + 8);
-        g.DrawString("Dia", boldFont, Brushes.Black, tableX + col1 + 20, tableY + 8);
-        g.DrawString("Roll", boldFont, Brushes.Black, tableX + col1 + col2 + 20, tableY + 8);
-        g.DrawString("Inward Wt", boldFont, Brushes.Black, tableX + col1 + col2 + col3 + 10, tableY + 8);
-        g.DrawString("Delivery Wt", boldFont, Brushes.Black, tableX + col1 + col2 + col3 + col4 + 10, tableY + 8);
-
-        tableY += rowHeight;
-
-        // DATA ROW
-        g.DrawRectangle(dashPen, tableX, tableY, col1, rowHeight);
-        g.DrawRectangle(dashPen, tableX + col1, tableY, col2, rowHeight);
-        g.DrawRectangle(dashPen, tableX + col1 + col2, tableY, col3, rowHeight);
-        g.DrawRectangle(dashPen, tableX + col1 + col2 + col3, tableY, col4, rowHeight);
-        g.DrawRectangle(dashPen, tableX + col1 + col2 + col3 + col4, tableY, col5, rowHeight);
-
-        g.DrawString("LYCRA DURBY SINGLE JERSY", normalFont, Brushes.Black, tableX + 10, tableY + 8);
-        g.DrawString("38", normalFont, Brushes.Black, tableX + col1 + 25, tableY + 8);
-        g.DrawString("1", normalFont, Brushes.Black, tableX + col1 + col2 + 25, tableY + 8);
-        g.DrawString("5.000", normalFont, Brushes.Black, tableX + col1 + col2 + col3 + 20, tableY + 8);
-        g.DrawString("4.900", normalFont, Brushes.Black, tableX + col1 + col2 + col3 + col4 + 20, tableY + 8);
-
-        tableY += rowHeight + 40;
-
-        g.DrawString("TOTAL :", boldFont, Brushes.Black, startX + slipWidth - 220, tableY);
-        g.DrawString("7.500", boldFont, Brushes.Black, startX + slipWidth - 140, tableY);
-
-        tableY += 80;
-
-        g.DrawString("Received By", normalFont, Brushes.Black, startX + 40, tableY);
-        g.DrawString("Driver", normalFont, Brushes.Black, startX + (slipWidth / 2) - 40, tableY);
-        g.DrawString("For Adhithiya Textiles Process", normalFont, Brushes.Black, startX + slipWidth - 260, tableY);
+        g.DrawLine(pen, left, bottomBorder, right, bottomBorder);
+        g.DrawLine(pen, left, top, left, bottomBorder);
+        g.DrawLine(pen, right, top, right, bottomBorder);
 
         e.HasMorePages = false;
     }
