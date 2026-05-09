@@ -6,7 +6,7 @@
 		public int? PermissionId { get; set; }
 	}
 
-	public class InserUpdatetPermission
+	public class	InserUpdatetPermission
 	{
 		public int LoginUserId { get; set; }
 		public int? PermissionId { get; set; }
