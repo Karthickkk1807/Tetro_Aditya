@@ -348,7 +348,7 @@ $(document).ready(function () {
                 }
 
             }, null);
-        }
+        }   
     });
 
     $('#SaveCheckList').click(function () {
@@ -1882,7 +1882,7 @@ function bindTableAttendanceImage(tableid, data, columns, scrollType, editcolumn
     $('#tableFilterAdmin' + tableid).on('keyup', function () {
         table.search($(this).val()).draw();
     });
-    $('.sorting').click();
+    //$('.sorting').click();
     setTimeout(function () {
         var table = $('#' + tableid).DataTable();
         Common.autoAdjustColumns(table);

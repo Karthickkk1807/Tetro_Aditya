@@ -194,7 +194,7 @@ $(document).on('click', '#customBtn_SaleData', function () {
 
     var currentDate = new Date().toISOString().slice(0, 10);
     $('#InvoiceDate').attr("max", currentDate);
-    $('#InvoiceDate').val(currentDate);
+    $('#InvoiceDate').val(currentDate).trigger('change');
 
     var currentDate = new Date().toISOString().slice(0, 10);
     $('#DueDate').attr("min", currentDate);
@@ -224,6 +224,25 @@ $(document).on('click', '#customBtn_SaleData', function () {
 
     $('#loader-pms').hide();
     $('#TaxInvoiceModal').show();
+});
+
+$(document).on('change', '#InvoiceDate', function () {
+    var selectedDate = $(this).val();
+
+    if (selectedDate) {
+
+        var date = new Date(selectedDate);
+
+        date.setDate(date.getDate() + 15);
+
+        var year = date.getFullYear();
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        var nextDay = year + '-' + month + '-' + day;
+
+        $('#DueDate').val(nextDay);
+        //$('#DueDate').attr('min', nextDay);
+    }
 });
 
 $('#SaleData').on('click', '.btn-edit', function () {

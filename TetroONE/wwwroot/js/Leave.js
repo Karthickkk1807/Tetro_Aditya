@@ -111,7 +111,7 @@ $(document).ready(function () {
             Common.removevalidation('FormLeave')
             leaveId = $(this).data('id');
             $('#SaveLeave').text('Update').removeClass('btn-success').addClass('btn-update');
-            $('#SaveLeave').show();
+            $('#SaveLeave').hide();
             $('#LeaveHeader').text('Leave Info');
             $('#StatusCol').show();
             $('#LevEmployeeId').val(null).trigger('change');
@@ -310,16 +310,16 @@ function editSuccessLeave(response) {
         if (isAdminAccess != "True") {
             if ($("#LeaveStatusId option:selected").text() == "Approved") {
                 $('#FromDate').prop('disabled', true);
-                $('#IsHalfDay').prop('disabled', true);
+                $('#IsHalfDay').prop('disabled', true);               
             } else if ($("#LeaveStatusId option:selected").text() == "Rejected") {
                 $('#FromDate').prop('disabled', true);
                 $('#IsHalfDay').prop('disabled', true);
-                $('#LeaveStatusId').prop('disabled', true);
+                $('#LeaveStatusId').prop('disabled', true);               
             }
             else {
                 $('#FromDate').prop('disabled', false);
                 $('#IsHalfDay').prop('disabled', false);
-                $('#LeaveStatusId').prop('disabled', false);
+                $('#LeaveStatusId').prop('disabled', false);                
             }
         }
     }

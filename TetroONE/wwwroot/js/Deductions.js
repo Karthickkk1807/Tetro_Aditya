@@ -735,7 +735,6 @@ function advancelimitamount() {
         $('#RemainingAmount').val(totalval);
 
     }
-
 }
 
 async function GetLoanlimit() {
