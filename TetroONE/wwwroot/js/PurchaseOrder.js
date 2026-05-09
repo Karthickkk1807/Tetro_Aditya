@@ -93,7 +93,7 @@ $(document).ready(function () {
 
     var fnData = Common.getDateFilter('dateDisplay2');
     Common.ajaxCall("GET", "/PurchaseOrder/GetPurchaseOrder", { PlantId: parseInt(PlantMappingId), PurchaseOrderId: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() }, GetPurchaseOrderSuccess, null);
-
+    
     $(document).on('click', '#AddPurchaseOrderBtn', function () {
         EditPurchaseId = 0;
         $('#POTopHeadbind').empty();
@@ -115,11 +115,6 @@ $(document).ready(function () {
         $("#btnPordersaveprintbtn span:first").text("Save & Print");
         $("#btnPreviewPorder span:first").text("Save & Preview");
 
-        var currentDate = new Date();
-        var formattedDate = currentDate.toISOString().slice(0, 10);
-        $('#PurchaseOrderDate').val(formattedDate);
-        $('#ExpectedDeliveryDate').attr('min', formattedDate);
-
         TriggerValues = true;
         EditPurchaseId = 0;
         ProductIdArray = [];
@@ -137,11 +132,17 @@ $(document).ready(function () {
         }, null);
 
         ClearInputs(); // Clear inputs
-
         $('#PurchaseOrderModal').show();
-        $("#PurchaseOrderModal .modal-body").animate({ scrollTop: 0 }, "fast");
-    });
+        var today = new Date().toISOString().split('T')[0];
 
+        $('#PurchaseOrderDate').val(today);
+        $('#PurchaseOrderDate').trigger('change');
+
+        
+        $("#PurchaseOrderModal .modal-body").animate({ scrollTop: 0 }, "fast");
+        
+    });
+  
     $(document).on('click', '#toggleShipTo, #toggleIconShipTo', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -164,6 +165,17 @@ $(document).ready(function () {
         VendorAlignmentOpen();
         $('#BillFrom').val('1').trigger('change');
         $('#AlternativeCompanyAddress').val(PlantMappingId).trigger('change');
+
+        var poDate = $('#PurchaseOrderDate').val();
+
+        if (!poDate) {
+
+            var today = new Date().toISOString().split('T')[0];
+
+            $('#PurchaseOrderDate').val(today);
+        }
+
+        $('#PurchaseOrderDate').trigger('change');
     });
 
     $(document).on('change', '#VendorColumn #Vendor', async function () {
@@ -171,6 +183,15 @@ $(document).ready(function () {
             var BillToId = $('#VendorColumn #Vendor').val();
             $('#POProductTablebody .ProductTableRow').remove();
             ClearInputs(); // Clear inputs
+
+            var poDate = $('#PurchaseOrderDate').val();
+
+            if (!poDate) {
+                var today = new Date().toISOString().split('T')[0];
+                $('#PurchaseOrderDate').val(today);
+            }
+
+            $('#PurchaseOrderDate').trigger('change');
 
             if (BillToId != "" || BillToId != null) {
                 var response = await Common.getAsycData("/Common/VendorDetailsByVendorId?vendorId=" + parseInt(BillToId));
@@ -889,8 +910,21 @@ $(document).ready(function () {
 
     $(document).on('change', '#PurchaseOrderDate', function () {
         var selectedDate = $(this).val();
-        $('#ExpectedDeliveryDate').attr('min', selectedDate);
-        $('#ExpectedDeliveryDate').val(selectedDate);
+
+        if (selectedDate) {
+            
+            var date = new Date(selectedDate);
+
+            date.setDate(date.getDate() + 1);
+
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            var nextDay = year + '-' + month + '-' + day;
+
+            $('#ExpectedDeliveryDate').val(nextDay);
+            $('#ExpectedDeliveryDate').attr('min', nextDay);
+        }
     });
 });
 

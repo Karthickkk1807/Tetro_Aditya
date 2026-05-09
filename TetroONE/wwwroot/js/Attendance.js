@@ -348,7 +348,7 @@ $(document).ready(function () {
                 }
 
             }, null);
-        }
+        }   
     });
 
     $('#SaveCheckList').click(function () {
@@ -1883,7 +1883,7 @@ function bindTableAttendanceImage(tableid, data, columns, scrollType, editcolumn
     $('#tableFilterAdmin' + tableid).on('keyup', function () {
         table.search($(this).val()).draw();
     });
-    $('.sorting').click();
+    //$('.sorting').click();
     setTimeout(function () {
         var table = $('#' + tableid).DataTable();
         Common.autoAdjustColumns(table);
@@ -1898,7 +1898,10 @@ function getRows(data) {
                 if (employee[key] == 'Absent') {
                     employee[key] = '<a title="Absent" flow="left"><img class="xmark" src="/assets/commonimages/absent.svg"  onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
                 } else if (employee[key] == 'Present') {
-                    employee[key] = '<a title="Present" flow="left"><img class="xmark" src="/assets/commonimages/present.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Present" flow="left">' +
+                        '<img class="xmark" src="/assets/commonimages/present.svg" ' +
+                        'onclick="AttendanceLog(\'' + key + '\', \'' + employee.EmployeeId + '\')">' +
+                        '</a>';
                 } else if (employee[key] == 'WeekOff') {
                     employee[key] = '<a title="WeekOff" flow="left"><img class="xmark" src="/assets/commonimages/weekoff.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
                 } else if (employee[key] == 'Holiday') {

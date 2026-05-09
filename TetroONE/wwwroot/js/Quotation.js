@@ -125,7 +125,7 @@ $(document).ready(async function () {
         $('.Status-Div').hide();
         var currentDate = new Date();
         var formattedDate = currentDate.toISOString().slice(0, 10);
-        $('#QuotationDate').val(formattedDate);
+        $('#QuotationDate').val(formattedDate).trigger('change');
         $('#ReMarks').attr('rows', 1);
 
         deletedFiles = [];
@@ -419,6 +419,25 @@ $(document).ready(async function () {
         const classMap = [".ProcessTypeId"];
         const changedClass = classMap.find(c => $(this).hasClass(c.substring(1)));
         refreshProductProcessTypedowns(changedClass);
+    });
+
+    $(document).on('change', '#QuotationDate', function () {
+        var selectedDate = $(this).val();
+
+        if (selectedDate) {
+
+            var date = new Date(selectedDate);
+
+            date.setDate(date.getDate() + 90);
+
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            var nextDay = year + '-' + month + '-' + day;
+
+            $('#ValidTo').val(nextDay);
+            //$('#ValidTo').attr('min', nextDay);
+        }
     });
 });
 

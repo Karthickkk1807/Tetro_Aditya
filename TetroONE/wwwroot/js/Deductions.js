@@ -595,8 +595,6 @@ function editAdvanceSuccess(response) {
                 $('#AdvanceDate,#AdvanceAmount,#AdvanceStatusId').prop('disabled', false);
             }
         }
-
-
     }
 }
 
@@ -720,7 +718,6 @@ function advancelimitamount() {
         $('#RemainingAmount').val(totalval);
 
     }
-
 }
 
 
