@@ -598,7 +598,75 @@
             }
         }
     },
+    bindDropDownParentforChosenLPC: function (id, parent, moduleName) {
+        var request = {
+            moduleName: moduleName
+        };
+        $.ajax({
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: '/Common/GetDropDown',
+            data: JSON.stringify(request),
+            success: function (response) {
+                if (response.status == true) {
+                    Common.bindParentDropDownSuccessForChosenLPC(response.data, id, parent);
+                }
+            },
+            error: function (response) {
 
+            },
+        });
+    },
+    bindParentDropDownSuccessForChosenLPC: function (response, controlid, parent) {
+        if (response != null) {
+            var data = JSON.parse(response);
+            var dataValue = data[0];
+            if (dataValue != null && dataValue.length > 0 && !dataValue[0].hasOwnProperty('airlogix')) {
+                $('#' + parent + ' #' + controlid).empty(); // Clear existing options
+                var valueproperty = Object.keys(dataValue[0])[0];
+                var textproperty = Object.keys(dataValue[0])[1];
+
+                // Add an empty option to mimic the default behavior of Chosen
+                $('#' + parent + ' #' + controlid).append($('<option>', {
+                    value: '',
+                    text: '-- Select --',
+                    css: {
+                        'font-weight': '400'
+                    }
+                }));
+
+                // Iterate over the data and add options to the chosen dropdown
+                $.each(dataValue, function (index, item) {
+                    $('#' + parent + ' #' + controlid).append($('<option>', {
+                        value: item[valueproperty],
+                        text: item[textproperty],
+                    }));
+                });
+
+                // Trigger Chosen to update the dropdown
+                $('#' + parent + ' #' + controlid).trigger('chosen:updated');
+            } else {
+                // Clear existing options and add an empty default option
+                $('#' + parent + ' #' + controlid).empty();
+                $('#' + parent + ' #' + controlid).append($('<option>', {
+                    value: '',
+                    text: '-- Select --',
+                    css: {
+                        'font-weight': '400'
+                    }
+                }));
+
+                // Trigger Chosen to update the dropdown
+                $('#' + parent + ' #' + controlid).trigger('chosen:updated');
+            }
+            if (dataValue[0].No != '') {
+                $('#' + parent + ' #' + controlid).prop('disabled', false);
+            } else {
+                $('#' + parent + ' #' + controlid).prop('disabled', true);
+            }
+        }
+    },
     bindDropDownParentAsync: function (id, parent, moduleName) {
         return new Promise((resolve, reject) => {
             $.ajax({
