@@ -4,15 +4,17 @@ var formDataMultiple = new FormData();
 var advanceId = 0;
 var loanId = 0;
 var claimId = 0;
+var IsEdit = true;
+
 $(document).ready(function () {
     var today = new Date().toISOString().split('T')[0];
     $('#FromDate, #ToDate').attr('max', today);
 
     Common.ajaxCall("GET", "/HumanResource/GetAdvance", { AdvanceId: null }, getSuccess, null);
 
-    Common.bindDropDownParent('RequestedBy', 'FormClaim', 'LeaveEmployee');
-    Common.bindDropDownParent('EmployeeId', 'FormAdvance', 'LeaveEmployee');
-    Common.bindDropDownParent('LoanEmployeeId', 'FormLoan', 'LeaveEmployee');
+    Common.bindDropDownParentforChosenLPC('RequestedBy', 'FormClaim', 'LeavePermissioRepEmployee');
+    Common.bindDropDownParentforChosenLPC('EmployeeId', 'FormAdvance', 'LeavePermissioRepEmployee');
+    Common.bindDropDownParentforChosenLPC('LoanEmployeeId', 'FormLoan', 'LeavePermissioRepEmployee');
     Common.bindDropDownParent('ClaimTypeId', 'FormClaim', 'ClaimType');
 
     Common.ajaxCall("GET", "/HumanResource/GetExpenseNo", { ModuleId: null, ModuleName: "Expense" }, function (response) {
@@ -115,12 +117,13 @@ $(document).ready(function () {
             claimId = $(this).data('id');
             deletedFiles = [];
             existFiles = [];
-            $('#FormClaim #RequestedBy').prop('disabled', false);
-            $('#FormClaim #RequestedBy').val(null).trigger('change');
-            if (isAdminAccess != "True") {
-                $('#FormClaim #RequestedBy').val(UserId).trigger('change');
-                $('#FormClaim #RequestedBy').prop('disabled', true);
-            }
+            IsEdit = false;
+            //$('#FormClaim #RequestedBy').prop('disabled', false);
+            //$('#FormClaim #RequestedBy').val(null).trigger('change');
+            //if (isAdminAccess != "True") {
+            //    $('#FormClaim #RequestedBy').val(UserId).trigger('change');
+            //    $('#FormClaim #RequestedBy').prop('disabled', true);
+            //}
             Common.ajaxCall("POST", "/Leave/GetStatus", JSON.stringify({ ModuleName: 'ClaimStatus', ModuleId: claimId }), function (response) {
                 Common.bindDropDownSuccess(response.data, 'ClaimStatusId');
                 Common.ajaxCall("GET", "/HumanResource/GetClaim", { ClaimId: claimId }, editClaimIdSuccess, null);
@@ -131,6 +134,7 @@ $(document).ready(function () {
             advanceId = $(this).data('id');
             $('#FormAdvance #EmployeeId').val(null).trigger('change');
             $('#FormAdvance #EmployeeId').prop('disabled', false);
+            IsEdit = false;
             if (isAdminAccess != "True") {
                 $('#FormAdvance #EmployeeId').val(UserId).trigger('change');
                 $('#FormAdvance #EmployeeId').prop('disabled', true);
@@ -143,7 +147,7 @@ $(document).ready(function () {
             $('#LoanStatusCol').show();
             $('#AddDeductions').attr('title', 'Add Loan');
             loanId = $(this).data('id');
-
+            IsEdit = false;
             $('#FormLoan #LoanEmployeeId').val(null).trigger('change');
             $('#FormLoan #LoanEmployeeId').prop('disabled', false);
 
@@ -195,13 +199,18 @@ $(document).ready(function () {
             claimId = 0;
             deletedFiles = [];
             existFiles = [];
-            $('#FormClaim #RequestedBy').val(null).trigger('change');
+            IsEdit = true;
+            if ($('#RequestedBy').prop('disabled')) {
+                $('#RequestedBy option:eq(1)').prop('selected', true);
+                $('#RequestedBy').trigger('change');
+            }
+            //$('#FormClaim #RequestedBy').val(null).trigger('change');
             $('#ClaimDate,#ExpenseId,#ClaimTypeId,#ClaimAmount,#ApprovedAmount,#ClaimStatusId,#FormClaim #RequestedBy').prop('disabled', false);
             $('#DiffAmount').css('color', '');
-            if (isAdminAccess != "True") {
-                $('#FormClaim #RequestedBy').val(UserId).trigger('change');
-                $('#FormClaim #RequestedBy').prop('disabled', true);
-            }
+            //if (isAdminAccess != "True") {
+            //    $('#FormClaim #RequestedBy').val(UserId).trigger('change');
+            //    $('#FormClaim #RequestedBy').prop('disabled', true);
+            //}
             Common.ajaxCall("GET", "/Common/GetAutoGenerate", { FranchiseId: null, ModuleName: "Claim" }, function (response) {
                 if (response.status) {
                     var data = JSON.parse(response.data);
@@ -225,6 +234,7 @@ $(document).ready(function () {
                 $('#FormAdvance #EmployeeId').prop('disabled', true);
             }
             advanceId = 0;
+            IsEdit = true;
             $('#advanceCanvas #canvasHeader').text("Add Advance");
             $('#advanceCmtCol').hide();
             $('#AdvanceStatusCol').hide();
@@ -244,7 +254,7 @@ $(document).ready(function () {
             $('#FormLoan #LoanEmployeeId').val(null).trigger('change');
             $('#FormLoan #LoanEmployeeId').prop('disabled', false);
             $('#LoanDate,#LoanAmount,#NoOfDues,#LoanStatusId').prop('disabled', false);
-
+            IsEdit = true;
             if (isAdminAccess != "True") {
                 $('#FormLoan #LoanEmployeeId').val(UserId).trigger('change');
                 $('#FormLoan #LoanEmployeeId').prop('disabled', true);
@@ -388,17 +398,21 @@ $(document).ready(function () {
     });
 
     $('#AdvanceAmount').on('input', function () {
-        GetAdvancelimit();
-        advancelimitamount();
-        var advanceval = Common.parseFloatInputValue('AdvanceAmount');
-        if (advanceval == null || advanceval == "") {
-            $('#RemainingAmount').val("");
+        if (IsEdit == true) {
+            GetAdvancelimit();
+            advancelimitamount();
+            var advanceval = Common.parseFloatInputValue('AdvanceAmount');
+            if (advanceval == null || advanceval == "") {
+                $('#RemainingAmount').val("");
+            }
         }
     });
 
     $('#FormAdvance #EmployeeId').on('change', async function () {
-        GetAdvancelimit();
-        $('#AdvanceAmount').prop('disabled', false);
+        if (IsEdit == true) {
+            GetAdvancelimit();
+            $('#AdvanceAmount').prop('disabled', false);
+        }
     });
 
 
@@ -544,6 +558,7 @@ function editClaimIdSuccess(response) {
                 liElement.append(downloadLink);
                 liElement.append(deleteButton);
                 ulElement.append(liElement);
+                IsEdit = true;
             }
         });
 
@@ -557,6 +572,7 @@ function editClaimIdSuccess(response) {
                 $('#ClaimDate,#ExpenseId,#ClaimTypeId,#ClaimAmount,#ApprovedAmount').prop('disabled', fasle);
             }
         }
+        IsEdit = true;
     }
 }
 
@@ -594,6 +610,7 @@ function editAdvanceSuccess(response) {
             else {
                 $('#AdvanceDate,#AdvanceAmount,#AdvanceStatusId').prop('disabled', false);
             }
+            IsEdit = true;
         }
     }
 }
@@ -635,7 +652,7 @@ function editLoanSuccess(response) {
             }
         }
 
-        GetLoanlimit();
+        IsEdit = true;
     }
 }
 
@@ -719,9 +736,6 @@ function advancelimitamount() {
 
     }
 }
-
-
-
 
 async function GetLoanlimit() {
     var resquest = {

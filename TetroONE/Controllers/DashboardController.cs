@@ -132,8 +132,6 @@ namespace TetroONE.Controllers
 
         }
 
-
-
         [HttpGet]
         [Route("GetDropDown")]
         public IActionResult GetDropDown(DateTime FromDate, DateTime ToDate)

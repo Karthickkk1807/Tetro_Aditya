@@ -2,13 +2,13 @@
 var remHours;
 
 $(document).ready(function () {
-    Common.bindDropDownParent('PerEmployeeId', 'FormPermission', 'LeaveEmployee');
+    Common.bindDropDownParentforChosenLPC('PerEmployeeId', 'FormPermission', 'LeavePermissioRepEmployee');
 
     $('#SavePermission').click(function () {
         if ($('#FormPermission').valid()) {
             var objvalue = {};
 
-            objvalue.PermissionId = permissionId == 0 ? null : permissionId;
+            objvalue.PermissionId = permissionId == 0 ? null : permissionId;    
             objvalue.Type = $('#Type').val();
             objvalue.EmployeeId = Common.parseInputValue('PerEmployeeId');
             objvalue.NumberOfHours = $('#NoOfHoursId').val();

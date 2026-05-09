@@ -4,7 +4,7 @@ var compOffId = 0;
 var isHalfVal = null;
 
 $(document).ready(function () {
-    Common.bindDropDownParent('LevEmployeeId', 'FormLeave', 'LeaveEmployee');
+    Common.bindDropDownParentforChosenLPC('LevEmployeeId', 'FormLeave', 'LeavePermissioRepEmployee');
     Common.bindDropDownParent('LeaveTypeId', 'FormLeave', 'LeaveType');
 
     Common.ajaxCall("GET", "/Leave/GetLeave", { LeaveId: null, }, LeaveSuccess, null);
@@ -67,16 +67,20 @@ $(document).ready(function () {
             $('#LeaveComments').hide();
             $('#Comments').val('');
             $('#LevEmployeeId').val(null).trigger('change');
-            $('#LevEmployeeId').prop('disabled', false);
+            //$('#LevEmployeeId').prop('disabled', false);
             $('#FromDate').prop('disabled', false);
             $('#IsHalfDay').prop('disabled', false);
             $('#LeaveStatusId').prop('disabled', false);
             $('#LeaveTypeId').val('3');
+            if ($('#LevEmployeeId').prop('disabled')) {
+                $('#LevEmployeeId option:eq(1)').prop('selected', true);
+                $('#LevEmployeeId').trigger('change');
+            }
 
             isHalfVal = null;
             if (isAdminAccess != "True") {
-                $('#LevEmployeeId').val(UserId).trigger('change');
-                $('#LevEmployeeId').prop('disabled', true);
+                //$('#LevEmployeeId').val(UserId).trigger('change');
+                //$('#LevEmployeeId').prop('disabled', true);
             }
             $('#LeaveDescCol').removeClass('col-md-12 col-lg-12 col-sm-12 col-12').addClass('col-md-6 col-lg-6 col-sm-6 col-6');
         }
@@ -111,11 +115,11 @@ $(document).ready(function () {
             $('#LeaveHeader').text('Leave Info');
             $('#StatusCol').show();
             $('#LevEmployeeId').val(null).trigger('change');
-            $('#LevEmployeeId').prop('disabled', false);
-            if (isAdminAccess != "True") {
-                $('#LevEmployeeId').val(UserId).trigger('change');
-                $('#LevEmployeeId').prop('disabled', true);
-            }
+            //$('#LevEmployeeId').prop('disabled', false);
+            //if (isAdminAccess != "True") {
+                //$('#LevEmployeeId').val(UserId).trigger('change');
+                //$('#LevEmployeeId').prop('disabled', true);
+            //}
             $('#FromDate').prop('disabled', false);
             $('#IsHalfDay').prop('disabled', false);
             $('#LeaveDescCol').removeClass('col-md-6 col-lg-6 col-sm-6 col-6').addClass('col-md-12 col-lg-12 col-sm-12 col-12');

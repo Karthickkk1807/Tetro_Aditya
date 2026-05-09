@@ -914,9 +914,8 @@ function attendanceTeamSuccess(response) {
         $('#TeamCounterValBox4').text(data[0][0][AttendanceCounterBox[3]]);
 
         $('#loader-pms').hide();
-        var columns = Common.bindColumn(data[1], ['EmployeeId', 'Status_Colour', 'EmployeeTypeId', 'EODStatus_Colour']);
+        var columns = Common.bindColumn(data[1], ['EmployeeId', 'Status_Colour', 'EmployeeTypeId', 'EODStatus_Colour', 'EODStatus']);
         bindTable('TeamTable', data[1], columns, -1, '380px', true);
-
     }
 }
 
@@ -1890,50 +1889,48 @@ function bindTableAttendanceImage(tableid, data, columns, scrollType, editcolumn
     }, 100);
 }
 
-
 function getRows(data) {
     $.each(data, function (index, employee) {
         for (var key in employee) {
             if (key !== 'EmployeeId' && key !== 'EmployeeImage' && key !== 'EmployeeName') {
+                var dayKey = key.split(' ')[0];
+
                 if (employee[key] == 'Absent') {
-                    employee[key] = '<a title="Absent" flow="left"><img class="xmark" src="/assets/commonimages/absent.svg"  onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Absent" flow="left"><img class="xmark" src="/assets/commonimages/absent.svg"  onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 } else if (employee[key] == 'Present') {
-                    employee[key] = '<a title="Present" flow="left">' +
-                        '<img class="xmark" src="/assets/commonimages/present.svg" ' +
-                        'onclick="AttendanceLog(\'' + key + '\', \'' + employee.EmployeeId + '\')">' +
-                        '</a>';
+                    employee[key] = '<a title="Present" flow="left"><img class="xmark" src="/assets/commonimages/present.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 } else if (employee[key] == 'WeekOff') {
-                    employee[key] = '<a title="WeekOff" flow="left"><img class="xmark" src="/assets/commonimages/weekoff.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="WeekOff" flow="left"><img class="xmark" src="/assets/commonimages/weekoff.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 } else if (employee[key] == 'Holiday') {
-                    employee[key] = '<a title="Holiday" flow="left"><img class="xmark" src="/assets/commonimages/Attendance-holiday.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Holiday" flow="left"><img class="xmark" src="/assets/commonimages/Attendance-holiday.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
                 else if (employee[key] == 'Leave') {
-                    employee[key] = '<a title="Leave" flow="left"><img class="xmark" src="/assets/commonimages/leavemark.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Leave" flow="left"><img class="xmark" src="/assets/commonimages/leavemark.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
                 else if (employee[key] == 'Leave/Present') {
-                    employee[key] = '<a title="Leave/Present" flow="left"><img class="xmark" src="/assets/commonimages/leavepresent.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Leave/Present" flow="left"><img class="xmark" src="/assets/commonimages/leavepresent.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
                 else if (employee[key] == 'Leave/Absent') {
-                    employee[key] = '<a title="Leave/Absent" flow="left"><img class="xmark" src="/assets/commonimages/leaveabsent.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Leave/Absent" flow="left"><img class="xmark" src="/assets/commonimages/leaveabsent.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
                 else if (employee[key] == 'Absent/Leave') {
-                    employee[key] = '<a title="Absent/Leave" flow="left"><img class="xmark" src="/assets/commonimages/absentleave.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Absent/Leave" flow="left"><img class="xmark" src="/assets/commonimages/absentleave.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
                 else if (employee[key] == 'Present/Leave') {
-                    employee[key] = '<a title="Present/Leave" flow="left"><img class="xmark" src="/assets/commonimages/presentleave.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Present/Leave" flow="left"><img class="xmark" src="/assets/commonimages/presentleave.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
                 else if (employee[key] == 'YetToRegularize') {
-                    employee[key] = '<a title="YetToRegularize" flow="left"><img class="xmark" src="/assets/commonimages/yettoregularize.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="YetToRegularize" flow="left"><img class="xmark" src="/assets/commonimages/yettoregularize.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
                 else if (employee[key] == 'HalfDay') {
-                    employee[key] = '<a title="HalfDay" flow="left"><img class="xmark" src="/assets/commonimages/halfday.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="HalfDay" flow="left"><img class="xmark" src="/assets/commonimages/halfday.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 } else if (employee[key] == 'CompOff') {
-                    employee[key] = '<a title="CompOff" flow="left"><img class="xmark" src="/assets/commonimages/compensatoryofficon.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="CompOff" flow="left"><img class="xmark" src="/assets/commonimages/compensatoryofficon.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 } else if (employee[key] == 'Leave/CompOff') {
-                    employee[key] = '<a title="Leave/CompOff" flow="left"><img class="xmark" src="/assets/commonimages/leavecompoffIcon.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="Leave/CompOff" flow="left"><img class="xmark" src="/assets/commonimages/leavecompoffIcon.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
                 else if (employee[key] == 'CompOff/Leave') {
-                    employee[key] = '<a title="CompOff/Leave" flow="left"><img class="xmark" src="/assets/commonimages/compOffleaveicon.svg" onclick=AttendanceLog("' + key + '","' + employee.EmployeeId + '")></img></a>';
+                    employee[key] = '<a title="CompOff/Leave" flow="left"><img class="xmark" src="/assets/commonimages/compOffleaveicon.svg" onclick=AttendanceLog("' + dayKey + '","' + employee.EmployeeId + '")></img></a>';
                 }
 
             }
