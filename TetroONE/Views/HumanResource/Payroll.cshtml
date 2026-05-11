@@ -188,7 +188,31 @@
                     </div>
                 </div>
 
-                <div class="card-action mt-3 paygroupCol">
+                <div class="ftdate WeeklyDivShow">
+                    <div class="row" id="fromtodateCol" style="margin-top: 21px;" @* style="display:none; *@">
+                        <div class="col-6" id="frmDate">
+                            <div class="form-group d-flex align-items-center">
+                                <label class="pr-1">From:</label>
+                                <input type="date" class="form-control" id="FromDate" name="FromDate" />
+                            </div>
+                        </div>
+                        <div class="col-6" id="toDate">
+                            <div class="form-group mx-2 d-flex align-items-center">
+                                <label class="pr-1" id="toLbl">To:</label>
+                                <input type="date" class="form-control" id="ToDate" name="ToDate" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto paygroupCol WeeklyDivShow">
+                    <div class="form-group">
+                        <label>Contractor <span id="Asterisk">*</span></label>
+                        <select class="form-control" id="ContractorId" name="ContractorId">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-action mt-3 paygroupCol" style="margin-top: 21px !important;">
                     <input type="button" class="btn btn-success m-r-20 text-white" id="GeneratePaySlip" value="Generate" />
                 </div>
 

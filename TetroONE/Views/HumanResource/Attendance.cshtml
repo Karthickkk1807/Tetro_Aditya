@@ -50,7 +50,8 @@
 		margin-bottom: 10px;
 	}
 </style>
-@if (isAdmin)
+
+@*@if (isAdmin)
 {
 	<ul class="nav nav-tabs pl-2" id="myTab" role="tablist">
 		<li class="nav-item submenu" role="presentation">
@@ -65,7 +66,21 @@
 			<a class="nav-link navbar-tab" id="AdminView-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="" aria-selected="true">Admin View</a>
 		</li>
 	</ul>
-}
+}*@
+
+<ul class="nav nav-tabs pl-2" id="myTab" role="tablist">
+	<li class="nav-item submenu" role="presentation">
+		<a class="nav-link navbar-tab active" id="Mine-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="" aria-selected="true">Mine</a>
+	</li>
+
+	<li class="nav-item submenu" role="presentation">
+		<a class="nav-link navbar-tab" id="EmployeeView-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="" aria-selected="true">Team</a>
+	</li>
+
+	<li class="nav-item submenu" role="presentation">
+		<a class="nav-link navbar-tab" id="AdminView-TabBtn" data-bs-toggle="tab" role="tab" aria-controls="" aria-selected="true">Admin View</a>
+	</li>
+</ul>
 
 <div class="row" id="EmployeeCheckInCheckOutCol">
 	<div class="col-lg-3 col-md-12" id="checkInOutCol">

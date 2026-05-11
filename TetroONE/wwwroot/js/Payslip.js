@@ -14,7 +14,6 @@ $(document).ready(function () {
         updateMonthDisplay(displayedDate);
         $('#increment-month-btn2').show();
 
-
         var activeTabText = $('.nav-link.navbar-tab.active').text().trim();
 
         if (activeTabText == 'PF') {
@@ -24,7 +23,6 @@ $(document).ready(function () {
         } else {
             GetPayslip();
         }
-
     });
 
     $('#increment-month-btn2').click(function () {
@@ -72,10 +70,21 @@ $(document).ready(function () {
             } else {
                 GetPayslip();
             }
-
         }
     });
+
     Common.bindDropDown('PayGroupId', 'PayGroup');
+    Common.bindDropDown('ContractorId', 'Contractor');
+    $('.WeeklyDivShow').hide();
+
+    $(document).on('change', '#PayGroupId', function () {
+        var $ThisVal = $(this).val();
+        if ($ThisVal != '' && $ThisVal == 2) {
+            $('.WeeklyDivShow').show();
+        } else {
+            $('.WeeklyDivShow').hide();
+        }
+    });
 
     GetPayslip();
 
@@ -83,17 +92,20 @@ $(document).ready(function () {
         GetPayslip();
         $('#showButton').hide()
         $('.paygroupCol').show();
+        $('.WeeklyDivShow').hide();
     });
     $('#PF-TabBtn').click(function () {
         GetPayOutCome("PF");
         $('#showButton').show();
         $('.paygroupCol').hide();
+        $('.WeeklyDivShow').hide();
     });
 
     $('#ESI-TabBtn').click(function () {
         GetPayOutCome("ESI");
         $('#showButton').show()
         $('.paygroupCol').hide();
+        $('.WeeklyDivShow').hide();
     });
 
 
@@ -235,43 +247,89 @@ $(document).ready(function () {
             Common.warningMsg("Choose a PayGroup");
             return false;
         }
+
+        if ($('#PayGroupId').val() == 2) {
+            if ($('.WeeklyDivShow #FromDate').val() == '') {
+                Common.warningMsg("Fill the FromDate");
+                return false;
+            }
+            else if ($('.WeeklyDivShow #ToDate').val() == '') {
+                Common.warningMsg("Fill the ToDate");
+                return false;
+            }
+            else if ($('.WeeklyDivShow #ContractorId').val() == '') {
+                Common.warningMsg("Choose a Contractor");
+                return false;
+            }
+        }
+
         var month;
         var Gyear;
-        if (isAdmin == "True") {
-            var dateString = $('#dateDisplay2').text();
-            var monthString = dateString.split(' ')[0];
-            var yearString = dateString.split(' ')[1];
-            Gyear = parseInt(yearString);
-            var monthMap = {
-                "January": 1,
-                "February": 2,
-                "March": 3,
-                "April": 4,
-                "May": 5,
-                "June": 6,
-                "July": 7,
-                "August": 8,
-                "September": 9,
-                "October": 10,
-                "November": 11,
-                "December": 12
-            };
 
-            month = monthMap[monthString];
+        const today = new Date();
+        Gyear = today.getFullYear();
+        month = today.getMonth() + 1;
+        const startOfMonth = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            1
+        );
+
+        var ContractorId = parseInt($('#ContractorId').val());
+
+        if (ContractorId == NaN)
+            ContractorId = '';
+
+        if (ContractorId == 1) {
+            Common.ajaxCall("GET", "/HumanResource/PaySlipGenerate", { PayGroupType: parseInt(paygroupid), ContractorId: ContractorId, PayslipDate: startOfMonth.toISOString(), StartDate: StartDate, EndDate: EndDate }, function (response) {
+                if (response.status) {
+                    Common.successMsg(response.message);
+                    Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
+                }
+            }, null);
         } else {
-            const today = new Date();
-            Gyear = today.getFullYear();
-            month = today.getMonth() + 1;
+            Common.ajaxCall("GET", "/HumanResource/PaySlipGenerate", { PayGroupType: parseInt(paygroupid), ContractorId: ContractorId, PayslipDate: startOfMonth.toISOString(), StartDate: null, EndDate: null }, function (response) {
+                if (response.status) {
+                    Common.successMsg(response.message);
+                    Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
+                }
+            }, null);
         }
-        Common.ajaxCall("GET", "/HumanResource/GeneratePayslip", { Month: month, Year: Gyear, PayGroupId: paygroupid }, function (response) {
-            if (response.status) {
-                Common.successMsg(response.message);
-                Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
+        //var month;
+        //var Gyear;
+        //if (isAdmin == "True") {
+        //    var dateString = $('#dateDisplay2').text();
+        //    var monthString = dateString.split(' ')[0];
+        //    var yearString = dateString.split(' ')[1];
+        //    Gyear = parseInt(yearString);
+        //    var monthMap = {
+        //        "January": 1,
+        //        "February": 2,
+        //        "March": 3,
+        //        "April": 4,
+        //        "May": 5,
+        //        "June": 6,
+        //        "July": 7,
+        //        "August": 8,
+        //        "September": 9,
+        //        "October": 10,
+        //        "November": 11,
+        //        "December": 12
+        //    };
 
-            }
-        }, null);
+        //    month = monthMap[monthString];
+        //} else {
+        //    const today = new Date();
+        //    Gyear = today.getFullYear();
+        //    month = today.getMonth() + 1;
+        //}
+        //Common.ajaxCall("GET", "/HumanResource/GeneratePayslip", { Month: month, Year: Gyear, PayGroupId: paygroupid }, function (response) {
+        //    if (response.status) {
+        //        Common.successMsg(response.message);
+        //        Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
 
-
+        //    }
+        //}, null);
     });
 
 });
@@ -411,16 +469,16 @@ function GetPayOutCome(moduleName) {
             { title: "ReasonCodeforZeroWorkingDay", data: "ReasonCodeforZeroWorkingDay" },
             { title: "LastWorkingDay", data: "LastWorkingDay" }
         ];
-         
+
         $("#CounterTextBox1").text('TotalESIAmount');
         $("#CounterTextBox2").text('CurrentMonthESI');
         $("#CounterTextBox3").text('EmployerShare');
         $("#CounterTextBox4").text('AdvanceAmount');
 
         $('#CounterValBox1').text('₹ 12,500.00');
-        $('#CounterValBox2').text('₹ 1,200.00'); 
-        $('#CounterValBox3').text('₹ 750.00');   
-        $('#CounterValBox4').text('₹ 500.00');   
+        $('#CounterValBox2').text('₹ 1,200.00');
+        $('#CounterValBox3').text('₹ 750.00');
+        $('#CounterValBox4').text('₹ 500.00');
 
         $('#PayRollTableMain').empty('');
         var html = `<div class="table-responsive">
@@ -557,9 +615,9 @@ function GetPayOutCome(moduleName) {
         $("#CounterTextBox4").text('AdvanceAmount');
 
         $('#CounterValBox1').text('₹ 15,177.20');
-        $('#CounterValBox2').text('₹ 7,588.60'); 
-        $('#CounterValBox3').text('₹ 7,588.60'); 
-        $('#CounterValBox4').text('₹ 5,000.00'); 
+        $('#CounterValBox2').text('₹ 7,588.60');
+        $('#CounterValBox3').text('₹ 7,588.60');
+        $('#CounterValBox4').text('₹ 5,000.00');
 
 
         bindTablePayOutComeDetails('PayslipTable', pfData, pfColumns, null, "375px");
