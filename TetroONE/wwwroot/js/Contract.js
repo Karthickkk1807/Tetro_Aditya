@@ -78,8 +78,25 @@ $(document).ready(function () {
             });
             objvalue.contactPersonDetails = ContactPerson;
 
+            var ProcessPriceList = [];
+            var ClosestDivProcessPriceList = $('#FormProcessPriceMapping #BindProcessPriceMapping input[type="checkbox"]:checked');
+            $.each(ClosestDivProcessPriceList, function (index, element) {
+                var container = $(element).closest('.d-flex');
+                var processId = $(element).data('id');
+                var processTypeMappingId = container.find('.ProcessTypeMappingId').data('process-type-mapping-id');
+                var Rate = container.find('.dynamicinput').val();
+                ProcessPriceList.push({
+                    ContractorProcessTypeMappingId: parseInt(processTypeMappingId) || null,
+                    ProcessTypeId: parseInt(processId) || null,
+                    Rate: parseFloat(Rate) || null,
+                });
+            });
+
+            objvalue.ContractorProcessTypeMappingDetails = ProcessPriceList;
+
             formDataMultiple.append("ContractorData", JSON.stringify(objvalue));
             formDataMultiple.append("ContractorContactPersonDetails", JSON.stringify(ContactPerson));
+            formDataMultiple.append("ContractorProcessTypeMappingDetails", JSON.stringify(ProcessPriceList));
             formDataMultiple.append("Exist", JSON.stringify(existFiles));
             formDataMultiple.append("DeletedFile", JSON.stringify(deletedFiles));
             $.ajax({
@@ -182,9 +199,60 @@ $(document).on('click', '#AddContract', function () {
 
     contractId = 0;
     $('#TransactionsHide').hide();
+    $('#HideEmployeeMappingInfo').hide();
 
     $('#ContractCanvas.collapse').removeClass('show');
     $('#collapse1').addClass('show');
+
+    Common.ajaxCall('POST', '/Common/GetDropDown', JSON.stringify({ MasterInfoId: null, ModuleName: "ProcessType" }), function ProcessTypeSuccess(response) {
+        if (response.status) {
+            var data = JSON.parse(response.data);
+            $('#BindProcessPriceMapping').empty('');
+            if (data[0][0].ProcessTypeId != null && data[0][0].ProcessTypeId != undefined) {
+                $.each(data[0], function (index, values) {
+                    var html = `
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-12 mt-2">
+                            <div class="d-flex">
+                                <div style="display: flex; align-items: center; width: 166px;">
+                                    <input type="hidden" class="ProcessTypeMappingId" data-process-type-mapping-id="" id="ProcessTypeMappingId-${values.ProcessTypeId}" name="ProcessTypeMappingId" value="" />
+                                    <input type="checkbox" data-id="${values.ProcessTypeId}" name="ProcessTypeId-${values.ProcessTypeId}" value="${values.ProcessTypeName}" id="ProcessTypeId-${values.ProcessTypeId}">
+                                    <label for="ProcessTypeId-${values.ProcessTypeId}" class="checkbox-label_1 ml-1"> ${values.ProcessTypeName} </label>
+                                </div>
+
+                                <div class="d-flex ml-3 blur-target">
+                                    <input type="text" class="form-control dynamicinput" style="width: 61px;" placeholder="0.00" id="Amount-${values.ProcessTypeId}" name="Amount" oninput="allowOnlyNumbersAndAfterDecimalTwoValForClient(this,8)" value="" />
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    $('#BindProcessPriceMapping').append(html);
+                });
+            } else {
+                $('#BindProcessPriceMapping').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
+            }
+        }
+    }, null);
+});
+
+$(document).on('hover', 'input[type="checkbox"]', function (event) {
+    const parent = $(this).closest('.d-flex');
+    if (event.type === 'mouseenter') {
+        parent.find('.blur-target .dynamicinput, .blur-target').css('filter', 'blur(0)');
+    } else if (event.type === 'mouseleave') {
+        if (!$(this).is(':checked')) {
+            parent.find('.blur-target .dynamicinput, .blur-target').css('filter', 'blur(1px)');
+        }
+    }
+});
+
+$(document).on('change', 'input[type="checkbox"]', function () {
+    const parent = $(this).closest('.d-flex');
+    if ($(this).is(':checked')) {
+        parent.find('.blur-target .dynamicinput, .blur-target').css('filter', 'blur(0)');
+    } else {
+        parent.find('.blur-target .dynamicinput, .blur-target').css('filter', 'blur(1px)');
+    }
 });
 
 $(document).on('click', '.btn-edit', function () {
@@ -206,6 +274,7 @@ $(document).on('click', '.btn-edit', function () {
     $('#SaveContract').text('Update').addClass('btn-update').removeClass('btn-success');
     $('#IsActiveHide').show();
     $('#TransactionsHide').show();
+    $('#HideEmployeeMappingInfo').show();
 
     $('#RemarksDiv').removeClass('col-md-12 col-lg-12 col-sm-12 col-12').addClass('col-md-7 col-lg-7 col-sm-7 col-12');
 
@@ -219,7 +288,7 @@ $(document).on('click', '.btn-edit', function () {
     Common.ajaxCall("GET", "/Contact/GetContractor", { ContractorId: parseInt(contractId) }, editSuccess, null);
 
     Common.ajaxCall("Post", "/Common/GetDropDownNotNull", JSON.stringify({ MasterInfoId: parseInt(contractId), ModuleName: "ContractorDetails" }), EmployeeListSuccess, null);
-     
+
     $('#ContractCanvas.collapse').removeClass('show');
     $('#collapse1').addClass('show');
 });
@@ -248,6 +317,32 @@ function editSuccess(response) {
         $('#Email').val(data[0][0].Email);
         $('#ContactNumber').val(data[0][0].ContactNumber);
         $('#State').val(data[0][0].StateId);
+
+        $('#BindProcessPriceMapping').empty('');
+        if (data[4] != null && data[4].length > 0) {
+            $.each(data[4], function (index, values) {
+                var isChecked = values.IsActive ? 'checked' : '';
+                var blurStyle = values.IsActive ? 'blur(0px)' : 'blur(1px)';
+                var html = `
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-12 mt-2">
+                        <div class="d-flex">
+                            <div style="display: flex; align-items: center; width: 220px;">
+                                <input type="hidden" class="ProcessTypeMappingId" data-process-type-mapping-id="${values.ContractorProcessTypeMappingId || ''}" id="ProcessTypeMappingId-${values.ProcessTypeId}" name="ProcessTypeMappingId" value="${values.ContractorProcessTypeMappingId || ''}" />
+                                <input type="checkbox" data-id="${values.ProcessTypeId}" name="ProcessTypeId-${values.ProcessTypeId}" value="${values.ProcessTypeName}" id="ProcessTypeId-${values.ProcessTypeId}" ${isChecked}>
+                                <label for="ProcessTypeId-${values.ProcessTypeId}" class="checkbox-label_1 ml-1"> ${values.ProcessTypeName} </label>
+                            </div>
+                            <div class="d-flex ml-3 blur-target">
+                                <input type="text" class="form-control dynamicinput" style="width: 61px; filter: ${blurStyle};" placeholder="0.00" id="Amount-${values.ProcessTypeId}" name="Amount" oninput="allowOnlyNumbersAndAfterDecimalTwoValForClient(this,8)" value="${parseFloat(values.Rate || 0.00).toFixed(2)}" />
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $('#BindProcessPriceMapping').append(html);
+            });
+        } else {
+            $('#BindProcessPriceMapping').append(`<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>`);
+        }
 
         $('#FormContractContact').empty('');
         $.each(data[1], function (index, value) {
@@ -363,9 +458,11 @@ function EmployeeListSuccess(response) {
         var data = JSON.parse(response.data);
         var employee = data[0]; // Extract the actual array of products
         var htmlDynamicEmployee = '';
+        $('#EmployeeList').empty();
+
         if (data[0][0].Employee != null && data[0][0].Employee != "") {
             $.each(employee, function (index, employee) {
-                var Employee = employee.Employee; 
+                var Employee = employee.Employee;
 
                 htmlDynamicEmployee += `
                 <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
@@ -780,13 +877,13 @@ $(document).on('input', '.Email', function () {
 function CanvasOpenFirstShowingContract() {
     $('#ContractCanvas').addClass('show');
     $('#collapse1').collapse('show');
-    $('#collapse2, #collapse3, #collapse4, #collapse5').collapse('hide');
+    $('#collapse2, #collapse3, #collapse4, #collapse5, #collapse60').collapse('hide');
     $('#ContractCanvas .offcanvas-body').animate({ scrollTop: 0 }, 'fast');
     $('html, body').animate({
         scrollTop: $('#ContractCanvas').offset().top
     }, 'fast');
 }
-  
+
 function isNoDataRow(data) {
     if (!Array.isArray(data) || data.length === 0) {
         return true;

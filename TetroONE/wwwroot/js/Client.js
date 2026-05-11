@@ -183,6 +183,7 @@ $(document).on('click', '#AddClient', function () {
     $("#FormClient")[0].reset();
 
     $('#TransactionsHide').hide();
+    $('#ProcessPriceHide').hide();
     Common.removevalidation('FormClient');
     Common.removeMessage('FormClient');
 
@@ -295,6 +296,23 @@ function editSuccess(response) {
         else
             $('#FormClient #IsActive').prop('checked', false);
 
+        $('#FromProcessPriceInfo #ProcessPriceMappping').empty('');
+        if (data[4][0].ProcessTypeId != null && data[4][0].ProcessTypeId != undefined) {
+            $.each(data[4], function (index, value) {
+                var html = `
+                            <div class="col-md-6 col-lg-6 col-sm-6 col-6 mt-2">
+                                <li>
+                                    <lable class="ProcessTypeId d-none"></lable>
+                                    <label style="font-size: 13px !important;">${value.ProcessTypeName}</label>
+                                    <label style="font-size: 13px !important;font-weight: 600;"> - ${Number(value.Price).toFixed(2)}</label>
+                                </li>
+                            </div>`
+                $('#FromProcessPriceInfo #ProcessPriceMappping').append(html);
+            });
+        } else {
+            $('#FromProcessPriceInfo #ProcessPriceMappping').append('<div class="col-12 d-flex justify-content-center"><img src="/assets/commonimages/nodata.svg" style="margin-right: 10px;">No records found</div>');
+        }
+
         $('#FormContactClient').empty('');
         $.each(data[1], function (index, value) {
             var rowadd = $('.Vendorcontact').length;
@@ -390,6 +408,7 @@ function editSuccess(response) {
         });
 
         $('#TransactionsHide').show();
+        $('#ProcessPriceHide').show();
         $('#TransactionsInfo').empty('');
         var html =
             `

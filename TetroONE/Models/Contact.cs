@@ -234,6 +234,15 @@ namespace TetroONE.Models
         public string? AccountNumber { get; set; }
         public bool? IsActive { get; set; }
         public List<ContactPersonDetails> contactPersonDetails { get; set; }
+        public List<ContractorProcessTypeMappingDetails> ContractorProcessTypeMappingDetails { get; set; }
         public DataTable TVP_ContactPersonDetails { get; set; }
+        public DataTable TVP_ContractorProcessTypeMappingDetails { get; set; }
+    }
+
+    public class ContractorProcessTypeMappingDetails
+    {
+        public int? ContractorProcessTypeMappingId { get; set;}
+        public int? ProcessTypeId { get; set;}
+        public decimal? Rate { get; set;}
     }
 }

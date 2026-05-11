@@ -138,6 +138,15 @@ namespace TetroONE.Models
 		public int? Year { get; set; }
 		public int? PayGroupId { get; set; }
 	}
+	public class PaySlipGenerate
+    {
+		public int LoginUserId { get; set; }
+		public int? PayGroupType { get; set; }
+		public int? ContractorId { get; set; }
+		public DateTime? PayslipDate { get; set; }
+		public DateTime? StartDate { get; set; }
+		public DateTime? EndDate { get; set; }
+	}
 	public class GetPayOutComeDetails
     {
         public int LoginUserId { get; set; }

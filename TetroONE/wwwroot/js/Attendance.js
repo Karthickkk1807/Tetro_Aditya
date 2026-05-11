@@ -943,6 +943,13 @@ function attendanceEmployeeSuccess(response) {
 function GetInOutData(response) {
     if (response.status) {
         var data = JSON.parse(response.data);
+
+        if (data[3][0].AdminView == 1 && data[3][0].Main == 1 && data[3][0].Team == 1) {
+            $('#myTab').show();
+        } else {
+            $('#myTab').hide();
+        }
+
         if (data[0][0].PunchInAt != null && data[0][0].PunchInAt != "") {
             $('#PunchInAt').html(data[0][0].PunchInAt).css('color', '#575962');
         } else {

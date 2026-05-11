@@ -196,13 +196,13 @@
                                             <label>Country</label>
                                             <input type="text" class="form-control" placeholder="Ex: India" id="Country" name="Country" oninput="Common.allowOnlyTextLength(this,20)" required />
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div class="col-md-3 col-lg-3 col-sm-3 col-6">
                                         <div class="form-group">
                                             <label>Zipcode</label>
                                             <input type="text" class="form-control" placeholder="Ex: 600028" id="ZipCode" name="ZipCode" oninput="Common.allowOnlyNumberLength(this,6)" />
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Contact No<span id="Asterisk">*</span></label>
@@ -239,7 +239,7 @@
                                                 <input type="text" class="form-control" id="CurrentCreditLimit" name="CurrentCreditLimit" placeholder="Credit" oninput="Common.allowOnlyNumberLength(this, 9)" disabled>
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
                                     @* <div class="col-md-12 col-lg-12 col-sm-12 col-12 justify-content-center" style="margin-top: 8px; display: flex;" id="IsActiveHide">
                                         <div class="form-group">
                                             <input type="checkbox" id="IsActive" name="IsActive">
@@ -327,6 +327,31 @@
                                 </button>
                             </div>
                             <form id="FormContactClient">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="accordion" id="ProcessPriceHide">
+                    <div class="accordion-header">
+                        <h2 id="Styleentery" class="mb-0 Styleentery">
+                            <a data-toggle="collapse" data-target="#collapse90" aria-expanded="true" aria-controls="collapseOne90" class="">
+                                <p class="d-flex align-items-center justify-content-between mb-0 px-3 py-2">
+                                    <strong class="text-white">
+                                        Process Price Mapping Info
+                                    </strong>
+                                    <i class="fas fa-angle-down text-white"></i>
+                                </p>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="collapse90" class="collapse" aria-labelledby="headingOne" data-parent="#styleAccordion1" style="">
+                        <div id="Styleenterydetalis" class="card-body">
+                            <form id="FromProcessPriceInfo">
+                                <div class="row" id="ProcessPriceMappping" style="margin-left: 4px;">
+                                </div>
                             </form>
                         </div>
                     </div>

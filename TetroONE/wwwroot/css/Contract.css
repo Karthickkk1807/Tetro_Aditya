@@ -36,3 +36,17 @@ input[type="checkbox"]:checked + .checkbox-label {
     left: 33px;
     bottom: -5px;
 }
+
+.checkbox-label_1, .dynamicinput, .dynamicinputselect {
+    filter: blur(1px);
+    transition: filter 0.3s ease-in-out;
+}
+
+input[type="checkbox"]:checked + label.checkbox-label_1, input[type="checkbox"]:checked ~ .dynamicinput, input[type="checkbox"]:checked ~ .dynamicinputselect {
+    filter: blur(0);
+}
+
+.checkbox-label_1, .dynamicinput, .dynamicinputselect {
+    filter: blur(1px);
+    transition: filter 0.3s ease-in-out;
+}

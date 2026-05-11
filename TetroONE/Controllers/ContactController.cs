@@ -327,8 +327,10 @@ namespace TetroONE.Controllers
             dtattachment = GenericTetroONE.ToDataTable(lstattachment);
             dtattachment = GenericTetroONE.RemoveColumn(dtattachment, "AttachmentExactFileName");
 
-            List<ContactPersonDetails>? staticData = JsonConvert.DeserializeObject<List<ContactPersonDetails>?>(Request.Form["ContractorContactPersonDetails"]);
+            List<ContactPersonDetails>? staticData = JsonConvert.DeserializeObject<List<ContactPersonDetails>?>(Request.Form["ContractorContactPersonDetails"]); 
             DataTable ClientContactPersonDetails = GenericTetroONE.ToDataTable(staticData);
+            List<ContractorProcessTypeMappingDetails>? staticData1 = JsonConvert.DeserializeObject<List<ContractorProcessTypeMappingDetails>?>(Request.Form["ContractorProcessTypeMappingDetails"]);
+            DataTable ContractorProcessTypeMappingDetails = GenericTetroONE.ToDataTable(staticData1);
 
             var spName = string.Empty;
             if (staticDetails.ContractorId != null && staticDetails.ContractorId != 0)
@@ -367,6 +369,7 @@ namespace TetroONE.Controllers
                     command.Parameters.AddWithValue("@AccountNumber", staticDetails.AccountNumber);
                     command.Parameters.AddWithValue("@TVP_ContactPersonDetails", ClientContactPersonDetails);
                     command.Parameters.AddWithValue("@TVP_AttachmentDetails", dtattachment);
+                    command.Parameters.AddWithValue("@TVP_ContractorProcessTypeMappingDetails", ContractorProcessTypeMappingDetails);
 
                     if (staticDetails.ContractorId > 0)
                     {
@@ -424,7 +427,6 @@ namespace TetroONE.Controllers
         }
 
         //===============================================================================================End Vendor==========================================================================================================
-
 
         //===============================================================================================Client==========================================================================================================
 

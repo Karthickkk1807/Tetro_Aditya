@@ -1249,10 +1249,6 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
-
-
-
-
         private (string, string) GetFilePath(string reqfilename)
         {
             string guid = Guid.NewGuid().ToString();
@@ -1351,7 +1347,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "USP_DD_GetMasterInfoDetails", Get);
             return Json(response);
         }
-
+        
         [HttpGet]
         [Route("GeneratePayslip")]
         public IActionResult GeneratePayslip(int Month, int Year, int PayGroupId)
@@ -1363,8 +1359,24 @@ namespace TetroONE.Controllers
                 Year = Year,
                 PayGroupId = PayGroupId
             };
-
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GeneratePayslipDetails]", Get);
+            return Json(response);
+        }
+        
+        [HttpGet]
+        [Route("PaySlipGenerate")]
+        public IActionResult PaySlipGenerate(int PayGroupType, int? ContractorId, DateTime? PayslipDate, DateTime? StartDate, DateTime? EndDate)
+        {
+            PaySlipGenerate Get = new PaySlipGenerate()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                PayGroupType = PayGroupType,
+                ContractorId = ContractorId,
+                PayslipDate = PayslipDate,
+                StartDate = StartDate,
+                EndDate = EndDate
+            };
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_InsertPaySlipGenerateDetails]", Get);
             return Json(response);
         }
 
