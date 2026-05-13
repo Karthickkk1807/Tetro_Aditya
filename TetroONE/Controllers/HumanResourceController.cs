@@ -682,12 +682,14 @@ namespace TetroONE.Controllers
 
         [HttpGet]
         [Route("GetPayslip")]
-        public IActionResult GetPayslip(int PaySlipId, int Month, int Year)
+        public IActionResult GetPayslip(int PaySlipId, int PayGroupType, int ContractorId, int Month, int Year)
         {
             GetPayslip Get = new GetPayslip()
             {
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
                 PaySlipId = PaySlipId == 0 ? null : PaySlipId,
+                PayGroupType = PayGroupType == 0 ? 1 : PayGroupType,
+                ContractorId = ContractorId,
                 Month = Month,
                 Year = Year,
             };
@@ -1347,7 +1349,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "USP_DD_GetMasterInfoDetails", Get);
             return Json(response);
         }
-        
+
         [HttpGet]
         [Route("GeneratePayslip")]
         public IActionResult GeneratePayslip(int Month, int Year, int PayGroupId)
@@ -1362,7 +1364,7 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GeneratePayslipDetails]", Get);
             return Json(response);
         }
-        
+
         [HttpGet]
         [Route("PaySlipGenerate")]
         public IActionResult PaySlipGenerate(int PayGroupType, int? ContractorId, DateTime? PayslipDate, DateTime? StartDate, DateTime? EndDate)
@@ -1372,7 +1374,7 @@ namespace TetroONE.Controllers
                 LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
                 PayGroupType = PayGroupType,
                 ContractorId = ContractorId,
-                PayslipDate = PayslipDate,
+                PayslipDate = PayslipDate?.AddDays(1),
                 StartDate = StartDate,
                 EndDate = EndDate
             };

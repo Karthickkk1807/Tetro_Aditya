@@ -325,7 +325,7 @@ $(document).on('change', '#ClientColumn #ClientId', async function () {
         if (response !== null) {
             BillToAddress(response);
 
-            var EditDataId = { MasterInfoId: parseInt(ClientId), ModuleName: "SaleInward" }
+            var EditDataId = { MasterInfoId: parseInt(ClientId), ModuleName: "SaleInwardInsert" }
             //var EditDataId = { MasterInfoId: parseInt(ClientId), ModuleName: "TaxInvoiceMulti" }
             Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (response) {
                 if (response.status);
@@ -342,7 +342,7 @@ $(document).on('change', '#ClientColumn #ClientId', async function () {
 $(document).on('select2:select', '#InwardId', function (e) {
     if (TriggerValues) {
         var currentSelectedId = e.params.data.id;
-        var EditDataId = {MasterInfoId: parseInt(currentSelectedId),ModuleName: "SaleOutward"};
+        var EditDataId = { MasterInfoId: parseInt(currentSelectedId), ModuleName: "SaleOutwardInsert"};
 
         Common.ajaxCall("GET", "/Inventory/GetDDMasterInfoValue", EditDataId, function (response) {
             if (response.status) {

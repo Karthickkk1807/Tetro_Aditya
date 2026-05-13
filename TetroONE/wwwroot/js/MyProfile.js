@@ -490,6 +490,9 @@ function ManageUserSuccess(response) {
                     else if (user.UserGroupName == "GeneralUser") {
                         backgroundColor = '#1558f321';
                     }
+                    else if (user.UserGroupName == "Labour") {
+                        backgroundColor = '#5206ff38';
+                    }
                     else if (user.UserGroupName == "Vendor") {
                         backgroundColor = '#bdeead63';
                     }
@@ -530,7 +533,7 @@ function ManageUserSuccess(response) {
                     <div class="col-sm-6 col-md-6 col-lg-4 managee-user-sepe-grid">
                         <a href="#" onclick="manageUserClick(${user.UserId}); return false;">
                             <div class="box_shadow card-stats card-round p-0" style="margin-bottom: 20px !important;">
-                                <div class="card-body p-0-imp" style="box-shadow: 5px;background-color: ${backgroundColor};">
+                                <div class="card-body p-0-imp" style="box-shadow: 5px;background-color: ${backgroundColor}; padding-top: 0px !important">
                                     <div class="row">
                                         <div class="col-3 col-sm-3 col-md-3 ml-1">
                                             <div class="icon-big text-center">
@@ -730,8 +733,8 @@ $(document).on('click', '.navbar-tab', function () {
     });
     Common.ajaxCall("GET", "/Myprofile/GetManageUser", { ModuleName: titleForHeaderTab }, ManageUserSuccess, null);
 });
-$(document).on('change', '#ManageUserForm #UserTypeId', function () {
 
+$(document).on('change', '#ManageUserForm #UserTypeId', function () {
     if (ignoreUserTypeChangeEvent) {
         ignoreUserTypeChangeEvent = false;
         return; 

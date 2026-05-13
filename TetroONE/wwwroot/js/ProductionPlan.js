@@ -1083,8 +1083,8 @@ async function GetProductionPlanNotNullSuccess(response) {
             });
 
             $('#ProductionPlanStatusId').append('<option value="9">Delivered</option>');
-            $('#ProductionPlanStatusId option[value="6"]').removeClass('d-none'); 
-        }else if (header.ProductionPlanStatusId == 8) {
+            $('#ProductionPlanStatusId option[value="6"]').removeClass('d-none');
+        } else if (header.ProductionPlanStatusId == 8) {
             $('#ProductionPlanStatusId option').each(function () {
                 if ($(this).val() !== "") {
                     $(this).addClass('d-none');
@@ -1092,7 +1092,7 @@ async function GetProductionPlanNotNullSuccess(response) {
             });
 
             $('#ProductionPlanStatusId').append('<option value="8">Yet to Deliver</option>');
-            $('#ProductionPlanStatusId option[value="6"]').removeClass('d-none'); 
+            $('#ProductionPlanStatusId option[value="6"]').removeClass('d-none');
         }
         else {
             $('#ProductionPlanStatusId option[value="6"]').remove();
@@ -1541,6 +1541,20 @@ $(document).on("click", "#BtnAdd", function () {
         return;
     }
 
+    let colours = [];
+
+    $('.ItemCheckbox:checked').each(function () {
+        let colour = $(this).closest('tr').find('.Colour').text().trim();
+        colours.push(colour);
+    });
+
+    let allSameColour = colours.every(c => c === colours[0]);
+    if (!allSameColour) {
+        $('#loader-pms').hide();
+        Common.warningMsg('Please Choose the same Color.');
+        return false;
+    }
+
     // 🔹 Calculate total KG
     let FinalValues = 0;
 
@@ -1729,55 +1743,47 @@ $(document).on('click', '#AddItemBtn', function () {
     $("#TotalItemSelect").text('');
     $("#NoOfQty").text('');
 
-    Common.ajaxCall("GET",
-        "/Productions/GetFabricDetailsProductionPlan",
-        {
-            PlantId: parseInt(PlantMappingId),
-            IsUpdate: null,
-            KG: 1,
-            Color: ""
-        },
-        function (response) {
-            $('#loader-pms').hide();
-            if (!response.status) return;
-            $('#loader-pms').show();
+    Common.ajaxCall("GET", "/Productions/GetFabricDetailsProductionPlan", { PlantId: parseInt(PlantMappingId), IsUpdate: null, KG: 1, Color: "" }, function (response) {
+        $('#loader-pms').hide();
+        if (!response.status) return;
+        $('#loader-pms').show();
 
-            var data = JSON.parse(response.data);
+        var data = JSON.parse(response.data);
 
-            if (!data || !data[0] || data[0].length === 0) {
-                Common.warningMsg('No grey fabric stock is available.');
-                return;
-            }
+        if (!data || !data[0] || data[0].length === 0) {
+            Common.warningMsg('No grey fabric stock is available.');
+            return;
+        }
 
-            var items = data[0];
+        var items = data[0];
 
-            // Store detail rows
-            storedNonGroupedItems = items.filter(x => x.IsGrouped === 0);
-            storedNonGroupedInWardIds = storedNonGroupedItems.map(x => x.InWardId);
+        // Store detail rows
+        storedNonGroupedItems = items.filter(x => x.IsGrouped === 0);
+        storedNonGroupedInWardIds = storedNonGroupedItems.map(x => x.InWardId);
 
-            // Only grouped rows for popup
-            const groupedItems = items.filter(x => x.IsGrouped === 1);
+        // Only grouped rows for popup
+        const groupedItems = items.filter(x => x.IsGrouped === 1);
 
-            const filteredData = groupedItems.filter(item =>
-                !AlreadyAddedIds.includes(item.InwardFabricId?.toString())
-            );
+        const filteredData = groupedItems.filter(item =>
+            !AlreadyAddedIds.includes(item.InwardFabricId?.toString())
+        );
 
-            if (filteredData.length === 0) {
-                $("#ProductionPlanAddItem-table-body").html(`
+        if (filteredData.length === 0) {
+            $("#ProductionPlanAddItem-table-body").html(`
                     <tr>
                         <td colspan="13" class="text-center text-danger fw-bold py-2">
                             No records found
                         </td>
                     </tr>
                 `);
-                $("#ProductionPlanAddItemModal").show();
-                $('#loader-pms').hide();
-                return;
-            }
+            $("#ProductionPlanAddItemModal").show();
+            $('#loader-pms').hide();
+            return;
+        }
 
-            LoadPopupItems(filteredData);
+        LoadPopupItems(filteredData);
 
-        }, null);
+    }, null);
 });
 
 $(document).on('click', '.DynremoveBtn', function () {
@@ -3544,21 +3550,32 @@ function StatusActivitySuccess(response) {
             class: `timeline-stage ${statusClass}`
         });
 
-        var $marker = $('<div>', { class: 'stage-marker' });
 
+        // Common wrapper
+        var $markerWrapper = $('<div>', {
+            class: 'stage-marker-wrapper'
+        });
+
+        // Marker
+        var $marker = $('<div>', {
+            class: 'stage-marker'
+        });
+
+        // Status outside marker
         var $statusSpan = $('<span>', {
             class: 'stage-status',
             text: status,
             css: { color: color }
         });
 
-        $marker.append($statusSpan);
+        // Append both into common wrapper
+        $markerWrapper.append($marker, $statusSpan);
 
         var $content = $('<div>', { class: 'stage-content' });
         $('<span>', { class: 'stage-approver', text: user }).appendTo($content);
         $('<span>', { class: 'stage-datetime', text: formattedDate }).appendTo($content);
 
-        $stage.append($marker).append($content);
+        $stage.append($markerWrapper).append($content);
         $timeline.append($stage);
 
         progressStatuses.push(status);

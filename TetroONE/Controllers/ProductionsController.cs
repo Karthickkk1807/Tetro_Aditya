@@ -1153,11 +1153,12 @@ namespace TetroONE.Controllers
                         command.Parameters.AddWithValue("@LoginUserId", _employeeId);
                         command.Parameters.AddWithValue("@ReportCategory", ReportCategory);
                         command.Parameters.AddWithValue("@Reportvalue", Reportvalue);
-                        command.Parameters.AddWithValue("@FromDate", FromDate);
+                        command.Parameters.AddWithValue("@FromDate", FromDate.AddDays(1));
                         command.Parameters.AddWithValue("@ToDate", ToDate);
 
                         command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
                         command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
+                        
                         DataSet ds = new DataSet();
 
                         using (SqlDataAdapter adapter = new SqlDataAdapter(command))

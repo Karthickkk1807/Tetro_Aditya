@@ -64,10 +64,14 @@ $(document).ready(function () {
         if ($thisVal == 2) {
             $('#DivContractorId').show();
             $('#ContractorId').prop('required', true);
+            $('#DepartmentId').val('3');
+            $('#UserGroupId').val('8').trigger('change');
         }
         else {
             $('#DivContractorId').hide();
             $('#ContractorId').prop('required', false);
+            $('#DepartmentId').val('');
+            $('#UserGroupId').val('').trigger('change');
         }
     });
 
@@ -558,7 +562,7 @@ $(document).ready(function () {
                 }
             }, null);
 
-            Common.ajaxCall("GET", "/HumanResource/GetUserTypeId", { PayTypeId: parseInt(employeeType) }, function (response) {
+            Common.ajaxCall("GET", "/HumanResource/GetUserTypeId", { EmployeeTypeId: parseInt(employeeType) }, function (response) {
                 if (response.status) {
                     var data = JSON.parse(response.data);
                     $('#UserTypeId').val(data[0][0].UserTypeId);

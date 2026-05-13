@@ -128,6 +128,8 @@ namespace TetroONE.Models
     {
         public int LoginUserId { get; set; }
         public int? PaySlipId { get; set; }
+        public int? PayGroupType { get; set; }
+        public int? ContractorId { get; set; }
         public int? Month { get; set; }
         public int? Year { get; set; }
     }
