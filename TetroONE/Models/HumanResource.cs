@@ -133,6 +133,21 @@ namespace TetroONE.Models
         public int? Month { get; set; }
         public int? Year { get; set; }
     }
+
+    public class GetESIDetails
+    {
+        public int LoginUserId { get; set; }
+        public int? PlantId { get; set; }
+        public DateTime? ESIDate { get; set; }
+    }
+
+    public class GetProvidentFundDetails
+    {
+        public int LoginUserId { get; set; }
+        public int? PlantId { get; set; }
+        public DateTime? ProvidentFundDate { get; set; } 
+    }
+
 	public class GeneratePayslip
 	{
 		public int LoginUserId { get; set; }

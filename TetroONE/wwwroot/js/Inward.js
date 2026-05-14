@@ -340,7 +340,6 @@ $(document).ready(async function () {
 
             });
 
-
             formDataMultiple.append("InwardStaticData", JSON.stringify(objvalue));
             formDataMultiple.append("InwardFabricDetails", JSON.stringify(FabricMapping));
             formDataMultiple.append("InwardFabricProcessMappingDetails", JSON.stringify(FabricProcessMapping));
@@ -903,8 +902,7 @@ function GetInwardNotNullSuccess(response) {
         `).join('');
 
         let rowHTML = `
-        <tr class="${isParentRow ? 'dynamic-item-row' : 'dynamic-item-row_Second'}"
-            data-id="${uid}" data-rowno="${currentRowNo}"> 
+        <tr class="${isParentRow ? 'dynamic-item-row' : 'dynamic-item-row_Second'}" data-id="${uid}" data-rowno="${currentRowNo}"> 
             <td class="sno"></td> 
             <td>
                 ${isParentRow ? `<select class="form-control FabricSelect"><option value="">--Select--</option>${FabricHTML}</select>` : ""}
@@ -913,10 +911,10 @@ function GetInwardNotNullSuccess(response) {
             <td>
                 <label class="InwardFabricProcessMappingId d-none">${processMappingId || ''}</label> 
                 <select multiple class="select2 Process" data-coreui-search="true" required>${ProcessTypeDropdown[0].map(p =>
-            `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
-                                    ${p.ProcessTypeName}
-                             </option>`
-        ).join('')}
+                `<option value="${p.ProcessTypeId}" ${selectedProcesses.includes(p.ProcessTypeId) ? 'selected' : ''}>
+                                        ${p.ProcessTypeName}
+                                 </option>`
+            ).join('')}
                  <option value="AddItemProcess">+ Add Item</option>
                 </select>
             </td> 

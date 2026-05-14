@@ -187,6 +187,7 @@ namespace TetroONE.Models
         public int? RowNo { get; set; }
         public decimal? OutWardQty { get; set; }
         public int? OutwardId { get; set; }
+        public bool? IsStockTally { get; set; } 
     }
 
     public class OutwardFabricProcessMappingDetails

@@ -698,6 +698,35 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
+        [HttpGet]
+        [Route("GetESIDetails")]
+        public IActionResult GetESIDetails(int PlantId, DateTime? ESIDate)
+        {
+            GetESIDetails Get = new GetESIDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                PlantId = PlantId,
+                ESIDate = ESIDate?.AddDays(1),
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetESIDetails]", Get);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("GetProvidentFundDetails")]
+        public IActionResult GetProvidentFundDetails(int PlantId, DateTime? ProvidentFundDate)
+        {
+            GetProvidentFundDetails Get = new GetProvidentFundDetails()
+            {
+                LoginUserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                PlantId = PlantId,
+                ProvidentFundDate = ProvidentFundDate?.AddDays(1),
+            };
+
+            response = GenericTetroONE.GetData(_connectionString, "[dbo].[USP_GetProvidentFundDetails]", Get);
+            return Json(response);
+        }
 
         [HttpGet]
         [Route("GetPayOutComeDetails")]

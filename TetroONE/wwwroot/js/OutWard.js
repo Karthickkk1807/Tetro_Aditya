@@ -466,7 +466,8 @@ $(document).ready(async function () {
                 NoOfRolls: parseInt(row.find(".RollsInput").val()) || null,
                 Width: parseInt(row.find(".WidthSelect").val()) || null,
                 OutwardId: OutWardId > 0 ? parseInt(OutWardId) : null,
-                RowNo: currentGroupRowNo
+                RowNo: currentGroupRowNo,
+                IsStockTally: row.find(".StockTallyToggle").is(":checked") ? true : false
             });
 
             (row.find("select.Process").val() || []).forEach(pid => {
@@ -1044,11 +1045,19 @@ function GetOutwardNotNullSuccess(response) {
                 </select>
             </td>
 
-            <td><input class="form-control DiaInput" value="${item.Dia || ''}"></td>
-            <td><input class="form-control GsmInput" value="${item.GSM || ''}"></td>
+            <td><input class="form-control DiaInput" value="${item.Dia || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"></td>
+            <td><input class="form-control GsmInput" value="${item.GSM || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"></td>
             <td><input class="form-control QtyInput" value="${item.ProductionPlanQty != null ? item.ProductionPlanQty.toFixed(3) : ''}" disabled></td>
-            <td><input class="form-control PartInput" value="${item.PartQty != null ? item.PartQty.toFixed(3) : ''}"></td>
-            <td><input class="form-control OutWardQty" value="${item.OutWardQty != null ? item.OutWardQty.toFixed(3) : ''}"></td>
+            <td><input class="form-control PartInput" value="${item.PartQty != null ? item.PartQty.toFixed(3) : ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
+            <td>
+                <div class="d-flex align-items-center gap-3">
+                    <input type="text" class="form-control OutWardQty" value="${item.OutWardQty != null ? item.OutWardQty.toFixed(3) : ''}" style="width:60px;" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)">
+                        <label class="switch" style="margin-left: 10px;">
+                            <input type="checkbox" class="StockTallyToggle" ${item.IsStockTally ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                </div>
+            </td>
             <td><input class="form-control Loss" value="${lossValue}" required></td>
             <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td> 
             <td>
@@ -1179,11 +1188,19 @@ function GetProductionPlanNotNullSuccess(response) {
                     </select>
                 </td>
 
-                <td><input class="form-control DiaInput" value="${item.Dia || ''}"></td>
-                <td><input class="form-control GsmInput" value="${item.GSM || ''}"></td>
+                <td><input class="form-control DiaInput" value="${item.Dia || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"></td>
+                <td><input class="form-control GsmInput" value="${item.GSM || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 2)"></td>
                 <td><input class="form-control QtyInput" value="${item.Quantity || ''}" disabled></td>
-                <td><input class="form-control PartInput" value="${item.Quantity || ''}"></td>
-                <td><input class="form-control OutWardQty" value="${item.OutWardQty || ''}"></td>
+                <td><input class="form-control PartInput" value="${item.Quantity || ''}" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td>
+                <td>
+                    <div class="d-flex align-items-center gap-3">
+                        <input type="text" class="form-control OutWardQty" value="${item.OutWardQty || ''}" style="width:60px;" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)">
+                            <label class="switch" style="margin-left: 10px;">
+                                <input type="checkbox" class="StockTallyToggle">
+                                <span class="slider"></span>
+                            </label>
+                    </div>
+                </td>
                 <td><input class="form-control Loss" value="" required></td>
                 <td><input class="form-control RollsInput" value="${item.NoOfRolls || ''}"></td>
 
@@ -1294,7 +1311,15 @@ function duplicateFabric() {
             <td><input type="text" class="form-control GsmInput" id="Gsm_${uid}" name="Gsm_${uid}" placeholder="GSM" required oninput="Common.allowOnlyNumbersAndAfterDecimalTwoVal(this, 4)"></td> 
             <td><input type="text" class="form-control QtyInput" id="Qty_${uid}" name="Qty_${uid}" placeholder="0" disabled oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
             <td><input type="text" class="form-control PartInput" id="Part_${uid}" name="Part_${uid}" placeholder="0" disabled oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
-            <td><input type="text" class="form-control OutWardQty" id="OutWardQty${uid}" name="OutWardQty${uid}" placeholder="0" required oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)"></td> 
+            <td>
+                <div class="d-flex align-items-center gap-3">
+                    <input type="text" class="form-control OutWardQty" id="OutWardQty${uid}" name="OutWardQty${uid}" placeholder="0" style="width:60px;" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)">
+                        <label class="switch" style="margin-left: 10px;">
+                            <input type="checkbox" class="StockTallyToggle">
+                            <span class="slider"></span>
+                        </label>
+                </div>
+            </td>
             <td><input class="form-control Loss" value="" required></td>
             <td><input type="text" class="form-control RollsInput" id="Rolls_${uid}" name="Rolls_${uid}" placeholder="No. of Rolls" required oninput="Common.allowOnlyNumberLength(this,3)" ></td> 
             <td>
