@@ -410,9 +410,16 @@
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Order No</label>
-                                            <input type="text" class="form-control" placeholder="Ex: ORDER/NO-1234" id="OrderNumber" name="OrderNumber" />
+                                            <select class="form-control" id="OrderNumber" name="OrderNumber">
+                                            </select>
                                         </div>
                                     </div>
+                                    @*<div class="col-md-2 col-lg-2 col-sm-6 col-6">
+                                        <div class="form-group">
+                                            <label>Order No</label>
+                                            <input type="text" class="form-control" placeholder="Ex: ORDER/NO-1234" id="OrderNumber" name="OrderNumber" />
+                                        </div>
+                                    </div>*@
                                     <div class="col-md-2 col-lg-2 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Color<span id="Asterisk">*</span></label>
@@ -619,7 +626,7 @@
 </div>
 
 @* ------------------------------AddItemModal---------------------------------------------- *@
-<div id="   " class="modal" data-bs-keyboard="false">
+<div id="AddItemModal" class="modal" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
@@ -807,6 +814,37 @@
                     <div class="col-12">
                         <button type="button" id="ProcessSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
                         <button type="button" id="ProcessClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ------------------------------OrderNumber Info---------------------------------------------- *@
+<div id="OrderNumberModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
+    <div class="modal-dialog modal-dialog-centered modal-sm" data-bs-loader-pms="static" data-bs-keyboard="false">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center justify-content-between">
+                <h2 id="HeaderTextInfo">Order Number Info</h2>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
+                <form id="FormOrderNumber">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <label id="">Order Number<span id="Asterisk">*</span></label>
+                                <input type="text" id="AddOrderNumber" name="AddOrderNumber" class="form-control" placeholder="Ex: Men Cloth HSN-009" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" id="OrderNumberSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
+                        <button type="button" id="OrderNumberClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

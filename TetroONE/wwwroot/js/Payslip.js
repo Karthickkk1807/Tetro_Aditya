@@ -1,6 +1,7 @@
 ﻿var FranchiseMappingId = parseInt(localStorage.getItem('FranchiseId'));
 
 $(document).ready(function () {
+
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
@@ -72,9 +73,10 @@ $(document).ready(function () {
             }
         }
     });
-
+    
     Common.bindDropDown('PayGroupId', 'PayGroup');
     Common.bindDropDown('ContractorId', 'Contractor');
+    $('#PayGroupId').val('1').trigger('change');
     $('.WeeklyDivShow').hide();
 
     $(document).on('change', '#PayGroupId', function () {
@@ -241,103 +243,167 @@ $(document).ready(function () {
         });
     });
 
+    //$('#GeneratePaySlip').click(function () {
+    //    var paygroupid = $('#PayGroupId').val();
+    //    if (paygroupid == "") {
+    //        Common.warningMsg("Choose a PayGroup");
+    //        return false;
+    //    }
+
+    //    if ($('#PayGroupId').val() == 2) {
+    //        if ($('.WeeklyDivShow #FromDate').val() == '') {
+    //            Common.warningMsg("Fill the FromDate");
+    //            return false;
+    //        }
+    //        else if ($('.WeeklyDivShow #ToDate').val() == '') {
+    //            Common.warningMsg("Fill the ToDate");
+    //            return false;
+    //        }
+    //        else if ($('.WeeklyDivShow #ContractorId').val() == '') {
+    //            Common.warningMsg("Choose a Contractor");
+    //            return false;
+    //        }
+    //    }
+
+    //    var month;
+    //    var Gyear;
+
+    //    const today = new Date();
+    //    Gyear = today.getFullYear();
+    //    month = today.getMonth() + 1;
+    //    const startOfMonth = new Date(
+    //        today.getFullYear(),
+    //        today.getMonth(),
+    //        1
+    //    );
+
+    //    const iso = startOfMonth.toISOString();
+    //    const [datePart] = iso.split('T');
+
+    //    var ContractorId = parseInt($('#ContractorId').val());
+
+    //    if (ContractorId == NaN)
+    //        ContractorId = '';
+
+    //    if (ContractorId == 1) {
+    //        Common.ajaxCall("GET", "/HumanResource/PaySlipGenerate", { PayGroupType: parseInt(paygroupid), ContractorId: ContractorId, PayslipDate: datePart, StartDate: StartDate, EndDate: EndDate }, function (response) {
+    //            if (response.status) {
+    //                Common.successMsg(response.message);
+    //                Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
+    //            }
+    //        }, null);
+    //    } else {
+    //        Common.ajaxCall("GET", "/HumanResource/PaySlipGenerate", { PayGroupType: parseInt(paygroupid), ContractorId: ContractorId, PayslipDate: datePart, StartDate: null, EndDate: null }, function (response) {
+    //            if (response.status) {
+    //                Common.successMsg(response.message);
+    //                Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
+    //            }
+    //        }, null);
+    //    }
+    //    //var month;
+    //    //var Gyear;
+    //    //if (isAdmin == "True") {
+    //    //    var dateString = $('#dateDisplay2').text();
+    //    //    var monthString = dateString.split(' ')[0];
+    //    //    var yearString = dateString.split(' ')[1];
+    //    //    Gyear = parseInt(yearString);
+    //    //    var monthMap = {
+    //    //        "January": 1,
+    //    //        "February": 2,
+    //    //        "March": 3,
+    //    //        "April": 4,
+    //    //        "May": 5,
+    //    //        "June": 6,
+    //    //        "July": 7,
+    //    //        "August": 8,
+    //    //        "September": 9,
+    //    //        "October": 10,
+    //    //        "November": 11,
+    //    //        "December": 12
+    //    //    };
+
+    //    //    month = monthMap[monthString];
+    //    //} else {
+    //    //    const today = new Date();
+    //    //    Gyear = today.getFullYear();
+    //    //    month = today.getMonth() + 1;
+    //    //}
+    //    //Common.ajaxCall("GET", "/HumanResource/GeneratePayslip", { Month: month, Year: Gyear, PayGroupId: paygroupid }, function (response) {
+    //    //    if (response.status) {
+    //    //        Common.successMsg(response.message);
+    //    //        Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
+
+    //    //    }
+    //    //}, null);
+    //});
+
     $('#GeneratePaySlip').click(function () {
+
         var paygroupid = $('#PayGroupId').val();
+
         if (paygroupid == "") {
             Common.warningMsg("Choose a PayGroup");
             return false;
         }
 
-        if ($('#PayGroupId').val() == 2) {
+        if (paygroupid == 2) {
+
             if ($('.WeeklyDivShow #FromDate').val() == '') {
                 Common.warningMsg("Fill the FromDate");
                 return false;
             }
-            else if ($('.WeeklyDivShow #ToDate').val() == '') {
+            if ($('.WeeklyDivShow #ToDate').val() == '') {
                 Common.warningMsg("Fill the ToDate");
                 return false;
             }
-            else if ($('.WeeklyDivShow #ContractorId').val() == '') {
+            if ($('.WeeklyDivShow #ContractorId').val() == '') {
                 Common.warningMsg("Choose a Contractor");
                 return false;
             }
         }
 
-        var month;
-        var Gyear;
-
         const today = new Date();
-        Gyear = today.getFullYear();
-        month = today.getMonth() + 1;
-        const startOfMonth = new Date(
-            today.getFullYear(),
-            today.getMonth(),
-            1
-        );
 
-        var ContractorId = parseInt($('#ContractorId').val());
+        const month = today.getMonth() + 1;
+        const Gyear = today.getFullYear();
 
-        if (ContractorId == NaN)
-            ContractorId = '';
+        const text = document.getElementById("dateDisplay2").innerText;
+        const startOfMonth = new Date(`1 ${text}`);
+        const payslipDate = startOfMonth.toISOString();
 
-        if (ContractorId == 1) {
-            Common.ajaxCall("GET", "/HumanResource/PaySlipGenerate", { PayGroupType: parseInt(paygroupid), ContractorId: ContractorId, PayslipDate: startOfMonth.toISOString(), StartDate: StartDate, EndDate: EndDate }, function (response) {
-                if (response.status) {
-                    Common.successMsg(response.message);
-                    Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
-                }
-            }, null);
-        } else {
-            Common.ajaxCall("GET", "/HumanResource/PaySlipGenerate", { PayGroupType: parseInt(paygroupid), ContractorId: ContractorId, PayslipDate: startOfMonth.toISOString(), StartDate: null, EndDate: null }, function (response) {
-                if (response.status) {
-                    Common.successMsg(response.message);
-                    Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
-                }
-            }, null);
+        var ContractorId = parseInt($('#ContractorId').val(), 10);
+
+        if (isNaN(ContractorId)) {
+            ContractorId = null;
         }
-        //var month;
-        //var Gyear;
-        //if (isAdmin == "True") {
-        //    var dateString = $('#dateDisplay2').text();
-        //    var monthString = dateString.split(' ')[0];
-        //    var yearString = dateString.split(' ')[1];
-        //    Gyear = parseInt(yearString);
-        //    var monthMap = {
-        //        "January": 1,
-        //        "February": 2,
-        //        "March": 3,
-        //        "April": 4,
-        //        "May": 5,
-        //        "June": 6,
-        //        "July": 7,
-        //        "August": 8,
-        //        "September": 9,
-        //        "October": 10,
-        //        "November": 11,
-        //        "December": 12
-        //    };
 
-        //    month = monthMap[monthString];
-        //} else {
-        //    const today = new Date();
-        //    Gyear = today.getFullYear();
-        //    month = today.getMonth() + 1;
-        //}
-        //Common.ajaxCall("GET", "/HumanResource/GeneratePayslip", { Month: month, Year: Gyear, PayGroupId: paygroupid }, function (response) {
-        //    if (response.status) {
-        //        Common.successMsg(response.message);
-        //        Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
+        var StartDate = $('.WeeklyDivShow #FromDate').val() || null;
+        var EndDate = $('.WeeklyDivShow #ToDate').val() || null;
 
-        //    }
-        //}, null);
+        Common.ajaxCall("GET", "/HumanResource/PaySlipGenerate", { PayGroupType: parseInt(paygroupid, 10), ContractorId: ContractorId, PayslipDate: payslipDate, StartDate: StartDate, EndDate: EndDate }, function (response) {
+            if (response.status) {
+                Common.successMsg(response.message);
+                Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, PayGroupType: parseInt(paygroupid), ContractorId: ContractorId, Month: month, Year: Gyear }, PayslipSuccess, null);
+            }
+            else {
+                Common.errorMsg(response.message);
+            }
+        }, null);
     });
 
+    $(document).on('change', '#ContractorId', function () {
+        var $ThisVal = $(this).val();
+        if ($ThisVal != '') {
+            GetPayslip();
+        } 
+    });
 });
-
 
 function GetPayslip() {
     var month;
     var Gyear;
+    var $ContractorId = $('#ContractorId').val();
+    var $PayGroupType = $('#PayGroupId').val();
     if (isAdmin == "True") {
         var dateString = $('#dateDisplay2').text();
         var monthString = dateString.split(' ')[0];
@@ -364,7 +430,7 @@ function GetPayslip() {
         Gyear = today.getFullYear();
         month = today.getMonth() + 1;
     }
-    Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, Month: month, Year: Gyear }, PayslipSuccess, null);
+    Common.ajaxCall("GET", "/HumanResource/GetPayslip", { PaySlipId: null, PayGroupType: parseInt($PayGroupType), ContractorId: parseInt($ContractorId), Month: month, Year: Gyear,  }, PayslipSuccess, null);
 }
 
 function GetPayOutCome(moduleName) {
@@ -397,78 +463,12 @@ function GetPayOutCome(moduleName) {
         month = today.getMonth() + 1;
     }
     if (moduleName == "ESI") {
-        var sampleData = [
-            {
-                Month: "October 2025",
-                EmployeeName: "Renugadevi ( SFL_008 )",
-                TotalMonthlyWages: 5000,
-                ReasonCodeforZeroWorkingDay: "Sick Leave",
-                LastWorkingDay: "2025-09-25"
-            },
-            {
-                Month: "October 2025",
-                EmployeeName: "Maragathamani ( SFL_021 )",
-                TotalMonthlyWages: 28000,
-                ReasonCodeforZeroWorkingDay: "None",
-                LastWorkingDay: "2025-09-30"
-            },
-            {
-                Month: "October 2025",
-                EmployeeName: "Santhosh ( SFL_016 )",
-                TotalMonthlyWages: 0,
-                ReasonCodeforZeroWorkingDay: "Planned Vacations",
-                LastWorkingDay: "2025-09-05"
-            },
-            {
-                Month: "October 2025",
-                EmployeeName: "R Vijaya ( SFL_019 )",
-                TotalMonthlyWages: 17000,
-                ReasonCodeforZeroWorkingDay: "Casual Leave",
-                LastWorkingDay: "2025-09-05"
-            },
-            {
-                Month: "October 2025",
-                EmployeeName: "Shalini ( SFL_015 )",
-                TotalMonthlyWages: 0,
-                ReasonCodeforZeroWorkingDay: "NA",
-                LastWorkingDay: "NA"
-            },
-            {
-                Month: "October 2025",
-                EmployeeName: "Thulasimani ( SFL_002 )",
-                TotalMonthlyWages: 1500,
-                ReasonCodeforZeroWorkingDay: "NA",
-                LastWorkingDay: "NA"
-            },
-            {
-                Month: "October 2025",
-                EmployeeName: "Murugathal ( SFL_004 )",
-                TotalMonthlyWages: 1500,
-                ReasonCodeforZeroWorkingDay: "NA",
-                LastWorkingDay: "NA"
-            },
-            {
-                Month: "October 2025",
-                EmployeeName: "Mahalakshmi ( SFL_006 )",
-                TotalMonthlyWages: 1500,
-                ReasonCodeforZeroWorkingDay: "NA",
-                LastWorkingDay: "NA"
-            },
-            {
-                Month: "October 2025",
-                EmployeeName: "Renugadevi ( SFL_008 )",
-                TotalMonthlyWages: 1500,
-                ReasonCodeforZeroWorkingDay: "NA",
-                LastWorkingDay: "NA"
-            }
-        ];
-        var columns = [
-            { title: "Month", data: "Month" },
-            { title: "EmployeeName", data: "EmployeeName" },
-            { title: "TotalMonthlyWages", data: "TotalMonthlyWages" },
-            { title: "ReasonCodeforZeroWorkingDay", data: "ReasonCodeforZeroWorkingDay" },
-            { title: "LastWorkingDay", data: "LastWorkingDay" }
-        ];
+
+        $('#PayRollTableMain').empty('');
+        var html = `<div class="table-responsive">
+                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PayslipTable"></table>
+                </div>`;
+        $('#PayRollTableMain').append(html);
 
         $("#CounterTextBox1").text('TotalESIAmount');
         $("#CounterTextBox2").text('CurrentMonthESI');
@@ -480,134 +480,24 @@ function GetPayOutCome(moduleName) {
         $('#CounterValBox3').text('₹ 750.00');
         $('#CounterValBox4').text('₹ 500.00');
 
-        $('#PayRollTableMain').empty('');
-        var html = `<div class="table-responsive">
-                    <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PayslipTable"></table>
-                </div>`;
-        $('#PayRollTableMain').append(html);
+        const text = document.getElementById("dateDisplay2").innerText;
+        const startOfMonth = new Date(`1 ${text}`);
+        const payslipDate = startOfMonth.toISOString();
 
-        bindTablePayOutComeDetails('PayslipTable', sampleData, columns, null, "375px");
-    } else if (moduleName == "PF") {
-        var pfColumns = [
-            { title: "EmployeeName", data: "EmployeeName" },
-            { title: "GrossWages", data: "GrossWages" },
-            { title: "EPFWages", data: "EPFWages" },
-            { title: "EPSWages", data: "EPSWages" },
-            { title: "EEShareRemitted", data: "EEShareRemitted" },
-            { title: "EPSContributionRemitted", data: "EPSContributionRemitted" },
-            { title: "ERShareRemitte", data: "ERShareRemitte" },
-            { title: "NCPDays", data: "NCPDays" },
-            { title: "Advance", data: "Advance" }
-        ];
-
-        var pfData = [
-            {
-                EmployeeName: "Kaliyammal ( SFL_022 )",
-                GrossWages: 25000,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1800,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 1550,
-                NCPDays: 0,
-                Advance: 0
-            },
-            {
-                EmployeeName: "Stella merry ( SFL_023 )",
-                GrossWages: 22000,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1800,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 1550,
-                NCPDays: 2,
-                Advance: 2000
-            },
-            {
-                EmployeeName: "R Vijaya ( SFL_019 )",
-                GrossWages: 20000,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1800,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 1550,
-                NCPDays: 0,
-                Advance: 0
-            },
-            {
-                EmployeeName: "Latha ( SFL_018 )",
-                GrossWages: 18000,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1800,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 1550,
-                NCPDays: 1,
-                Advance: 1500
-            },
-            {
-                EmployeeName: "Santhosh ( SFL_016 )",
-                GrossWages: 19500,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1800,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 1550,
-                NCPDays: 0,
-                Advance: 0
-            },
-            {
-                EmployeeName: "Shanmugam ( SFL_010 )",
-                GrossWages: 22000,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1800,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 1550,
-                NCPDays: 0,
-                Advance: 1000
-            },
-            {
-                EmployeeName: "Senthil kumar ( SFL_009 )",
-                GrossWages: 28000,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1800,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 1550,
-                NCPDays: 0,
-                Advance: 1000
-            },
-            {
-                EmployeeName: "Kalyani ( SFL_007 )",
-                GrossWages: 26000,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1239,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 1290,
-                NCPDays: 0,
-                Advance: 0
-            },
-            {
-                EmployeeName: "Renugadevi ( SFL_008 )",
-                GrossWages: 29000,
-                EPFWages: 15000,
-                EPSWages: 15000,
-                EEShareRemitted: 1800,
-                EPSContributionRemitted: 1250,
-                ERShareRemitte: 12660,
-                NCPDays: 0,
-                Advance: 16700
+        Common.ajaxCall("GET", "/HumanResource/GetESIDetails", { PlantId: FranchiseMappingId, ESIDate: payslipDate }, function (response) {
+            if (response.status) {
+                var data = JSON.parse(response.data);
+                var columns = Common.bindColumn(data[0], ['PaySlipId', 'EmployeeId', 'Status_Colour']);
+                bindTablePayOutComeDetails('PayslipTable', data[0], columns, PaySlipId, "375px")
             }
-        ];
+        }, null);
+    } else if (moduleName == "PF") {
 
         $('#PayRollTableMain').empty('');
         var html = `<div class="table-responsive">
                     <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="PayslipTable"></table>
                 </div>`;
         $('#PayRollTableMain').append(html);
-
 
         $("#CounterTextBox1").text('TotalAmount');
         $("#CounterTextBox2").text('EmployeeShare');
@@ -619,8 +509,17 @@ function GetPayOutCome(moduleName) {
         $('#CounterValBox3').text('₹ 7,588.60');
         $('#CounterValBox4').text('₹ 5,000.00');
 
+        const text = document.getElementById("dateDisplay2").innerText;
+        const startOfMonth = new Date(`1 ${text}`);
+        const payslipDate = startOfMonth.toISOString();
 
-        bindTablePayOutComeDetails('PayslipTable', pfData, pfColumns, null, "375px");
+        Common.ajaxCall("GET", "/HumanResource/GetProvidentFundDetails", { PlantId: FranchiseMappingId, ProvidentFundDate: payslipDate }, function (response) {
+            if (response.status) {
+                var data = JSON.parse(response.data);
+                var columns = Common.bindColumn(data[0], ['PaySlipId', 'EmployeeId', 'Status_Colour']);
+                bindTablePayOutComeDetails('PayslipTable', data[0], columns, PaySlipId, "375px")
+            }
+        }, null);
     }
     //Common.ajaxCall("GET", "/HumanResource/GetPayOutComeDetails", { ModuleName: moduleName, Month: month, Year: Gyear }, function (response) {
     //    if (response.status) {
@@ -636,25 +535,15 @@ function PayslipSuccess(response) {
         var data = JSON.parse(response.data);
         var PayslipCounterBox = Object.keys(data[0][0]);
 
-        //$("#CounterTextBox1").text(PayslipCounterBox[0]);
-        //$("#CounterTextBox2").text(PayslipCounterBox[1]);
-        //$("#CounterTextBox3").text(PayslipCounterBox[2]);
-        //$("#CounterTextBox4").text(PayslipCounterBox[3]);
+        $("#CounterTextBox1").text(PayslipCounterBox[0]);
+        $("#CounterTextBox2").text(PayslipCounterBox[1]);
+        $("#CounterTextBox3").text(PayslipCounterBox[2]);
+        $("#CounterTextBox4").text(PayslipCounterBox[3]);
 
-        //$('#CounterValBox1').text(data[0][0][PayslipCounterBox[0]]);
-        //$('#CounterValBox2').text(data[0][0][PayslipCounterBox[1]]);
-        //$('#CounterValBox3').text(data[0][0][PayslipCounterBox[2]]);
-        //$('#CounterValBox4').text(data[0][0][PayslipCounterBox[3]]);
-
-        $("#CounterTextBox1").text('Total Earning');
-        $("#CounterTextBox2").text('Total Deduction');
-        $("#CounterTextBox3").text('Net Pay');
-        $("#CounterTextBox4").text('No of Month Processed');
-
-        $('#CounterValBox1').text('₹ 126476.62');
-        $('#CounterValBox2').text('₹ 3225.81');
-        $('#CounterValBox3').text('₹ 123250.81');
-        $('#CounterValBox4').text('1');
+        $('#CounterValBox1').text(data[0][0][PayslipCounterBox[0]]);
+        $('#CounterValBox2').text(data[0][0][PayslipCounterBox[1]]);
+        $('#CounterValBox3').text(data[0][0][PayslipCounterBox[2]]);
+        $('#CounterValBox4').text(data[0][0][PayslipCounterBox[3]]);
 
         $('#PayRollTableMain').empty('');
         var html = `<div class="table-responsive">

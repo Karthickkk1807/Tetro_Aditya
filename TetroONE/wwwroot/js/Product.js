@@ -229,7 +229,7 @@ $(document).ready(async function () {
             $('#AddProduct').show();
             Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }, ProductSuccess, null);
         }
-        else if (titleForHeaderProductTab == "Un-Processed") {
+        else if (titleForHeaderProductTab == "Grey Fabric") {
             $('#ProcessBtnhide').hide();
             $('#AddProduct').hide();
             $('#ProductDynamic').empty('');
@@ -241,7 +241,7 @@ $(document).ready(async function () {
             $('#ProductDynamic').append(html);
             Common.ajaxCall("GET", "/Product/GetProduct", { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(2) }, ProductSuccess, null);
         }
-        else if (titleForHeaderProductTab == "Processed") {
+        else if (titleForHeaderProductTab == "Processed Fabric") {
             $('#ProcessBtnhide').hide();
             $('#AddProduct').hide();
             $('#ProductDynamic').empty('');
@@ -333,12 +333,12 @@ $(document).ready(async function () {
 
     $(document).on('change', '#ProductTypeId', function () {
         var ProductTypeIdVal = $(this).val();
-        if (ProductTypeIdVal == 2) { 
+        if (ProductTypeIdVal == 2) {
             $('#ProductProcessHide').show();
             $('#RawMaterialInfoHide').show();
             $('.ProductDescription').addClass('col-lg-12 col-md-12 col-sm-12 col-12').removeClass('col-lg-6 col-md-6 col-sm-6 col-6');
         }
-        else { 
+        else {
             $('#ProductProcessHide').hide();
             $('#RawMaterialInfoHide').hide();
             $('.ProductDescription').addClass('col-lg-6 col-md-6 col-sm-6 col-6').removeClass('col-lg-12 col-md-12 col-sm-12 col-12');
@@ -928,7 +928,7 @@ function ProductSuccess(response) {
             $('#CounterImage4').prop('src', '/assets/moduleimages/inventory/rawproducticon_4.svg');
             var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
             bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', true, access);
-        } else if (activeTabText.includes("Un-Processed")) {
+        } else if (activeTabText.includes("Grey Fabric")) {
             $('#CounterImage1').prop('src', '/assets/moduleimages/inventory/fgproducticon_1.svg');
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
@@ -936,7 +936,7 @@ function ProductSuccess(response) {
             var columns = Common.bindColumn(data[1], ['ProductId', 'StockInHand_Colour']);
             var access1 = { create: false, delete: false, update: false, view: false }
             bindTableProduct('ProductTable', data[1], columns, -1, 'ProductId', '330px', false, access1);
-        } else if (activeTabText.includes("Processed")) {
+        } else if (activeTabText.includes("Processed Fabric")) {
             $('#CounterImage1').prop('src', '/assets/moduleimages/inventory/fgproducticon_1.svg');
             $('#CounterImage2').prop('src', '/assets/moduleimages/inventory/fgproducticon_2.svg');
             $('#CounterImage3').prop('src', '/assets/moduleimages/inventory/fgproducticon_3.svg');
@@ -972,9 +972,9 @@ function ProductInsertUpdateSuccess(response) {
             PassingData = { PlantId: parseInt(PlantMappingId), ProductTypeId: parseInt(1) }
             $('#ProcessBtnhide').show();
             Common.ajaxCall("GET", "/Product/GetProduct", PassingData, ProductSuccess, null);
-        } else if (titleForHeaderProductTab == "Un-Processed") {
+        } else if (titleForHeaderProductTab == "Grey Fabric") {
             $('#ProcessBtnhide').hide();
-        } else if (titleForHeaderProductTab == "Processed") {
+        } else if (titleForHeaderProductTab == "Processed Fabric") {
             $('#ProcessBtnhide').hide();
         }
     }

@@ -62,6 +62,5 @@ namespace TetroONE.Controllers
             response = GenericTetroONE.ExecuteReturnDataArray(_connectionString, storedProcedure, request);
             return Json(response);
         }
-
     }
 }

@@ -865,6 +865,16 @@
                                                         </a>
                                                     </li>
                                                 }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.OutWard.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="OutWardReturn" asp-action="OutWardReturn">
+                                                            <i>
+                                                                <img src="~/assets/sidebaricons/outward.svg" width="20" />
+                                                            </i> <span class="sub-item">OutWard Return</span>
+                                                        </a>
+                                                    </li>
+                                                }
                                             </ul>
                                         </div>
                                     </li>
@@ -1308,6 +1318,10 @@
                                             <div class="d-flex align-items-center">
                                                 <div class="role-box GeneralUserBorder"></div>
                                                 <label class="ps-2">GeneralUser</label>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="role-box LabourUserBorder"></div>
+                                                <label class="ps-2">Labour</label>
                                             </div>
                                             <div class="d-flex align-items-center">
                                                 <div class="role-box VendorBorder"></div>

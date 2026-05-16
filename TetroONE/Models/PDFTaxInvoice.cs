@@ -1068,10 +1068,8 @@ namespace TetroONE.Models
                                             .SetFontSize(10)
                                             .SetTextAlignment(TextAlignment.CENTER)));
                                 }
-
                                 document.Add(mainTable);
                             }
-
 
                             Table BankAmountTable = new Table(UnitValue.CreatePercentArray(new float[] { 33.3F, 33.3F, 33.3F })).UseAllAvailableWidth();
                             BankAmountTable.SetBorderBottom(new SolidBorder(1));
@@ -1079,26 +1077,26 @@ namespace TetroONE.Models
                             BankAmountTable.SetBorderRight(new SolidBorder(1));
                             BankAmountTable.SetBorderTop(Border.NO_BORDER);
 
-                            Table BankAmountSubTable1 = new Table(UnitValue.CreatePercentArray(new float[] { 15, 10, 75 })).UseAllAvailableWidth();
+                            Table BankAmountSubTable1 = new Table(UnitValue.CreatePercentArray(new float[] { 30, 5, 65 })).UseAllAvailableWidth();
                             BankAmountSubTable1.SetBorder(Border.NO_BORDER);
 
                             BankAmountSubTable1.AddCell(new Cell(1, 3).SetBorder(Border.NO_BORDER).Add(new Paragraph("Bank Details  :-").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT).SetUnderline()));
 
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("A/C No").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
-                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.AccountNumber + ",").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.AccountNumber /*+ ","*/).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Bank").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
-                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.BankName + ",").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.BankName /*+ ","*/).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("Branch").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
-                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.BranchName + ",").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.BranchName /*+ ","*/).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph("IFSC").SetFont(kabrioBoldFont).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
                             BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(": ").SetFont(kabrioBoldFont)).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
-                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.IFSCCode + ".").SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
+                            BankAmountSubTable1.AddCell(new Cell().SetBorder(Border.NO_BORDER).Add(new Paragraph().Add(new Text(data.IFSCCode /*+ "."*/).SetFont(kabrioFont)).SetFontSize(9).SetTextAlignment(TextAlignment.LEFT)));
 
 
                             // Create a table with 3 columns, each taking a specific percentage of the available width

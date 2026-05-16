@@ -193,7 +193,7 @@ $(document).ready(function () {
             var EditDataId = { ProductId: 0, ProductTypeId: parseInt(1), PlantId: parseInt(PlantMappingId), Dia: null, GSM: null, Width: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
             Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
 
-        } else if (titleForHeaderProductTab == "Un-Processed") {
+        } else if (titleForHeaderProductTab == "Grey Fabric") {
             $('#ManageStockDynamic').empty('');
             var html = ` 
                 <div class="table-responsive">
@@ -206,7 +206,7 @@ $(document).ready(function () {
             var fnData = Common.getDateFilter('dateDisplay2');
             var EditDataId = { ProductId: 0, ProductTypeId: parseInt(2), PlantId: parseInt(PlantMappingId), Dia: null, GSM: null, Width: null, FromDate: fnData.startDate.toISOString(), ToDate: fnData.endDate.toISOString() };
             Common.ajaxCall("GET", "/Inventory/GetManageStock", EditDataId, ManageStockSuccess, null);
-        } else if (titleForHeaderProductTab == "Processed") {
+        } else if (titleForHeaderProductTab == "Processed Fabric") {
             $('#ManageStockDynamic').empty('');
             var html = ` 
                 <div class="table-responsive">
@@ -244,8 +244,8 @@ $(document).ready(function () {
 
         ProductTypeId =
             titleForHeaderProductTab === "Raw Material" ? 1 :
-                titleForHeaderProductTab === "Un-Processed" ? 2 :
-                    titleForHeaderProductTab === "Processed" ? 3 :
+                titleForHeaderProductTab === "Grey Fabric" ? 2 :
+                    titleForHeaderProductTab === "Processed Fabric" ? 3 :
                         0;
         var dia = null, gsm = null, width = null;
 
@@ -299,8 +299,8 @@ $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
 
     ProductTypeId =
         titleForHeaderProductTab === "Raw Material" ? 1 :
-            titleForHeaderProductTab === "Un-Processed" ? 2 :
-                titleForHeaderProductTab === "Processed" ? 3 :
+            titleForHeaderProductTab === "Grey Fabric" ? 2 :
+                titleForHeaderProductTab === "Processed Fabric" ? 3 :
                     0;
     var dia = null, gsm = null, width = null;
 
@@ -340,7 +340,7 @@ $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
             var columns = Common.bindColumn(data[0], ['MappingManageStockId', '']);
             bindTableEditManageStock('EditManageStockTable', data[0], columns, '330px');
         }
-         
+
     }, null);
 
 });
@@ -354,12 +354,12 @@ function ManageStockSuccess(response) {
         $("#CounterTextBox2").text(CounterBox[1]);
         $("#CounterTextBox3").text(CounterBox[2]);
         $("#CounterTextBox4").text(CounterBox[3]);
-        
+
         $('#CounterValBox1').text(data[0][0][CounterBox[0]]);
         $('#CounterValBox2').text(data[0][0][CounterBox[1]]);
         $('#CounterValBox3').text(data[0][0][CounterBox[2]]);
         $('#CounterValBox4').text(data[0][0][CounterBox[3]]);
-        
+
         //var activeTabText = $('.nav-link.navbar-tab.active').text().trim();
         $('#ManageStockDynamic').empty('');
         var html = ` 

@@ -187,6 +187,7 @@ namespace TetroONE.Models
         public int? RowNo { get; set; }
         public decimal? OutWardQty { get; set; }
         public int? OutwardId { get; set; }
+        public bool? IsStockTally { get; set; } 
     }
 
     public class OutwardFabricProcessMappingDetails
@@ -475,5 +476,64 @@ namespace TetroONE.Models
         public string? ToDate { get; set; }
 
         public DataTable DynamicItemData { get; set; }
+    }
+    
+    public class GetInwardReturn
+    {
+        public int LoginUserId { get; set; }
+        public int? PlantId { get; set; }
+        public int? InwardReturnId { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+    }
+
+    public class InsertUpdateInwardReturnDetails
+    {
+        public int LoginUserId { get; set; }
+        public int? InwardReturnId { get; set; } 
+        public DateTime? InwardReturnDate { get; set; }
+        public string? InwardReturnNo { get; set; }
+        public int? InwardReturnBy { get; set; }
+        public string? PackingSlipNo { get; set; }
+        public string? ShipFrom { get; set; }
+        public string? ShipTo { get; set; }
+        public string? ShipToAddress { get; set; }
+        public string? ShipToCity { get; set; }
+        public string? ShiptoMobileNo { get; set; }
+        public string? ShipToPlaceOfSupply { get; set; }
+        public int? NoofFabric { get; set; }
+        public decimal? TotalReturnQty { get; set; }
+        public decimal? TotalRolls { get; set; }
+        public string? Notes { get; set; }
+        public string? VehicleNo { get; set; }
+        public string? DriverName { get; set; }
+        public int? InwardId { get; set; }
+        public int? PlantId { get; set; }
+        public int? ReturnStatusId { get; set; }
+        public decimal? TotalInwardQty { get; set; }
+        public decimal? TotalOutwardQty { get; set; }
+        public int? OutWardTo { get; set; }
+        public List<InwardReturnFabricDetails> InwardReturnFabricDetails { get; set; }
+        public DataTable TVP_InwardReturnFabricDetails { get; set; }
+    }
+    
+    public class InwardReturnFabricDetails
+    {
+        public int? InwardReturnFabricId { get; set; }
+        public int? FabricTypeId { get; set; }
+        public decimal? Dia { get; set; }
+        public decimal? GSM { get; set; }
+        public int? NoOfRolls { get; set; }
+        public decimal? InwardQty { get; set; }
+        public decimal? OutwardQty { get; set; }
+        public decimal? ReturnQty { get; set; }
+        public decimal? ProQty { get; set; }
+        public decimal? InwardRTNQty { get; set; } 
+    }
+
+    public class DeleteInWardReturnDetails 
+    {
+        public int LoginUserId { get; set; }
+        public int? InWardReturnId { get; set; }
     }
 }

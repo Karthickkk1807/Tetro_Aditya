@@ -18,7 +18,7 @@ public class EPSONController : BaseController
 
     // ✅ ADD TO QUEUE
     [HttpGet("PrintDotMatrix")]
-    public IActionResult PrintDotMatrix(int ModuleId)
+    public IActionResult PrintDotMatrix(int ModuleId, string ModuleName)
     {
         try
         {
@@ -31,7 +31,7 @@ public class EPSONController : BaseController
                     command.CommandType = CommandType.StoredProcedure;
 
                     command.Parameters.AddWithValue("@LoginUserId", _employeeId);
-                    command.Parameters.AddWithValue("@ModuleName", "Outward EPSON");
+                    command.Parameters.AddWithValue("@ModuleName", ModuleName);
                     command.Parameters.AddWithValue("@ModuleId", ModuleId);
 
                     command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;

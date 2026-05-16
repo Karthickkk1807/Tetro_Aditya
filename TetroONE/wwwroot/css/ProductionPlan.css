@@ -179,7 +179,7 @@ textarea.form-controltext {
     cursor: pointer !important;
 }
 
-.dateTimePicker{
+.dateTimePicker {
     background: white !important;
 }
 
@@ -224,6 +224,10 @@ textarea.form-controltext {
         display: none;
     }
 
+.stage-marker-wrapper {
+    z-index: 2;
+    position: relative;
+}
 /* DOT */
 .stage-marker {
     width: 13px;
@@ -241,8 +245,9 @@ textarea.form-controltext {
     font-weight: 700;
     background-color: #e4e4e4;
     padding: 5px 8px;
+    margin: -30px 0px 0px 15px;
     border-radius: 5px;
-    position: absolute;
+    position: unset;
     left: -1px;
     top: 0px;
     white-space: nowrap;
@@ -268,7 +273,7 @@ textarea.form-controltext {
     overflow-y: auto;
     display: block;
 }
- 
+
 #ProductionPlanProductTable .form-control {
     padding: 2px 6px !important;
     height: 28px !important;

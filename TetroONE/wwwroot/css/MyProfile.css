@@ -416,6 +416,10 @@ input[type="checkbox"]:checked + .checkbox-label {
     background-color: #1558f321;
 }
 
+.LabourUserBorder {
+    background-color: #5206ff38;
+}
+
 .ExecutiveBorder {
     background-color: #00000021;
 }
