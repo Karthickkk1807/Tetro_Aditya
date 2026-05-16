@@ -338,7 +338,6 @@ namespace TetroONE.Controllers
             return Json(response);
         }
 
-
         [HttpGet]
         [Route("GetOutWardTypeContactDetails")]
         public IActionResult GetOutWardTypeContactDetails(int OutwardType)
@@ -1158,7 +1157,7 @@ namespace TetroONE.Controllers
 
                         command.Parameters.Add("@Status", SqlDbType.Bit).Direction = ParameterDirection.Output;
                         command.Parameters.Add("@Message", SqlDbType.NVarChar, 500).Direction = ParameterDirection.Output;
-                        
+
                         DataSet ds = new DataSet();
 
                         using (SqlDataAdapter adapter = new SqlDataAdapter(command))
@@ -1341,20 +1340,37 @@ namespace TetroONE.Controllers
                 document.Add(new Paragraph("\n"));
 
                 // ===== Contact Text (Styled) =====
-                Paragraph name = new Paragraph("Name : RAMESH KUMAR")
+                //Paragraph name = new Paragraph("Name : RAMESH KUMAR")
+                //    .SetFontSize(12)
+                //    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+
+                //Paragraph title = new Paragraph("Managing Director")
+                //    .SetFontSize(16)   // BIGGER FONT
+                //    .SetBold()         // DIFFERENT STYLE
+                //    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+
+                //Paragraph phone = new Paragraph("Contact Number : +91-99940 66096")
+                //    .SetFontSize(12)
+                //    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+
+                //Paragraph email = new Paragraph("Email : ramesh.kumar@vahle.com")
+                //    .SetFontSize(12)
+                //    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+
+                Paragraph name = new Paragraph("Name : Syed Faizal Hussain")
                     .SetFontSize(12)
                     .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
 
-                Paragraph title = new Paragraph("Managing Director")
-                    .SetFontSize(16)   // BIGGER FONT
-                    .SetBold()         // DIFFERENT STYLE
+                Paragraph title = new Paragraph("Senior Sales Engineer")
+                    .SetFontSize(16)
+                    .SetBold()
                     .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
 
-                Paragraph phone = new Paragraph("Contact Number : +91-99940 66096")
+                Paragraph phone = new Paragraph("Contact Number : +91 88079 66096")
                     .SetFontSize(12)
                     .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
 
-                Paragraph email = new Paragraph("Email : ramesh.kumar@vahle.com")
+                Paragraph email = new Paragraph("Email : syed.faizal@vahle.com")
                     .SetFontSize(12)
                     .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
 
@@ -1453,8 +1469,71 @@ namespace TetroONE.Controllers
                     }
                 }
             }
-
             return Ok(new { MachineName = (string?)null, NoOfChambers = (int?)null, ChamberWeight = (decimal?)null });
+        }
+
+        [HttpGet]
+        [Route("InsertOrderNumberDetails")]
+        public IActionResult InsertOrderNumberDetails(string OrderNo)
+        {
+            _employeeId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            string query = @"
+                            INSERT INTO [dbo].[OrderNumberDetails](OrderNumberName, CreatedBy)
+                            VALUES(@OrderNo, @CreatedBy);
+                        
+                            SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@OrderNo", OrderNo);
+                    cmd.Parameters.AddWithValue("@CreatedBy", _employeeId);
+                    conn.Open();
+
+                    // Get inserted identity value
+                    int OrderNumberId = (int)cmd.ExecuteScalar();
+
+                    if (OrderNumberId > 0)
+                    {
+                        return Ok(new
+                        {
+                            status = true,
+                            message = "Order Number Inserted successfully",
+                            data = OrderNumberId
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new
+                        {
+                            status = false,
+                            message = "Insert failed"
+                        });
+                    }
+                }
+            }
+            catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601)
+            {
+                // ✅ Unique constraint violation — return friendly response to UI
+                return Ok(new
+                {
+                    status = false,
+                    message = "Order Number already exists",
+                    data = 0
+                });
+            }
+            catch (Exception ex)
+            {
+                // ✅ Any other unexpected error
+                return Ok(new
+                {
+                    status = false,
+                    message = "Something went wrong: " + ex.Message,
+                    data = 0
+                });
+            }
         }
     }
 }

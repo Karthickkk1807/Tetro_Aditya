@@ -12,6 +12,7 @@ $(document).ready(async function () {
     $('#InWardNo').prop('disabled', false);
 
     bindDropDownClientAddItem('ClientId', 'Client');
+    bindDropDownOrderNoAddItem('OrderNumber', 'OrderNo');
     Common.bindDropDown('TransactionId', 'TransactionType');
     //Common.bindDropDown('ReceivedFrom', 'JobWorker');
     Common.bindDropDown('ReceivedFrom', 'Client');
@@ -23,7 +24,7 @@ $(document).ready(async function () {
     Common.bindDropDown('InwardTypeId', 'InWardType');
     Common.bindDropDownParent('State', 'FromAddItem', 'State');
 
-    $('#ClientId,#ReceivedFrom, #ColorId, #StorageLocationId').each(function () {
+    $('#ClientId,#ReceivedFrom, #ColorId, #StorageLocationId, #OrderNumber').each(function () {
         $(this).select2({
             dropdownParent: $(this).parent()
         });
@@ -165,6 +166,7 @@ $(document).ready(async function () {
         $('#ColorId').val('').trigger('change');
         $('#ClientId').val('').trigger('change');
         $('#StorageLocationId').val('').trigger('change');
+        $('#OrderNumber').val('').trigger('change');
 
         $('.Status-Div').hide();
         var currentDate = new Date();
@@ -207,6 +209,7 @@ $(document).ready(async function () {
         $('#ColorId').val('').trigger('change');
         $('#ClientId').val('').trigger('change');
         $('#StorageLocationId').val('').trigger('change');
+        $('#OrderNumber').val('').trigger('change');
 
         $('#AddAttachment, #AddNotes, #HideAttachlable, #HideNotesLable').hide();
         $('#AddAttachLable, #AddNotesLable').show();
@@ -263,6 +266,8 @@ $(document).ready(async function () {
 
             objvalue.InWardId = InWardId > 0 ? parseInt(InWardId) : null;
             objvalue.PlantId = parseInt(PlantMappingId);
+
+            objvalue.OrderNumber = $('#OrderNumber option:selected').text() || null;
 
             objvalue.InWardNo = $('#InWardNo').val();
             objvalue.PaymentTypeId = parseInt($('#PaymentTypeId').val()) || null;
@@ -818,6 +823,70 @@ $(document).ready(async function () {
             }
         }, null);
     });
+
+    $(document).on('change', '#OrderNumber', function () {
+        let OrderNumber = $(this).val();
+        if (OrderNumber == 'AddItemOrderNo') {
+            $('#FormOrderNumber')[0].reset();
+            Common.removevalidation('FormOrderNumber');
+            Common.removeMessage('FormOrderNumber');
+            $('#OrderNumberModal').show();
+        }
+    });
+
+    $(document).on('click', '#OrderNumberClose', function () {
+        $('#OrderNumberModal').hide();
+        $('#OrderNumber').val('').trigger('change');
+        Common.removevalidation('FormOrderNumber');
+        Common.removeMessage('FormOrderNumber');
+    });
+
+    $("#OrderNumberSave").click(function (e) {
+        if ($("#FormOrderNumber").valid()) {
+            var $OrderNoValu = $('#AddOrderNumber').val();
+
+            Common.ajaxCall("GET", "/Productions/InsertOrderNumberDetails", { OrderNo: $OrderNoValu }, function (response) {
+                if (response.status) {
+                    var data = JSON.parse(response.data);
+                    var OrderNoId = data;
+                    var ResponseMessage = response.message;
+
+                    var request = {
+                        moduleName: 'OrderNo'
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        url: '/Common/GetDropDown',
+                        data: JSON.stringify(request),
+                        success: function (response) {
+                            if (response.status == true) {
+                                bindDropDownSuccessOrderNoAddItem(response.data, 'OrderNumber');
+
+                                $('#OrderNumber').val(OrderNoId).trigger('change');
+
+                                $('#FormOrderNumber')[0].reset();
+                                Common.removevalidation('FormOrderNumber');
+                                Common.removeMessage('FormOrderNumber');
+                                $('#OrderNumberModal').hide();
+
+                                Common.successMsg(ResponseMessage);
+                            } else {
+                                Common.errorMsg(response.message);
+                            }
+                        },
+                        error: function (response) {
+                            Common.errorMsg(response.message);
+                        },
+                    });
+                }
+                else {
+                    Common.errorMsg(response.message);
+                }
+            }, null);
+        }
+    });
 });
 
 function GetInwardSuccess(response) {
@@ -852,6 +921,8 @@ function GetInwardNotNullSuccess(response) {
     var data = JSON.parse(response.data);
 
     Common.bindData(data[0]);
+
+    $('#OrderNumber').val(data[0][0].OrderNoId || '').trigger('change');
 
     Inventory.toggleField(data[0][0].Notes, "#Notes", "#AddNotes", "#AddNotesLable", "HideNotesLable");
     Inventory.toggleFieldForAttachment(data[3][0].AttachmentId, "#AddAttachLable", "#AddAttachment", "HideAttachlable");
@@ -1620,6 +1691,60 @@ function bindDropDownSuccessClientAddItem(response, controlid) {
             });
             $('#' + controlid).append($('<option>', {
                 value: 'AddItem',
+                text: '+ Add Item',
+                class: 'add-item-option'
+            }));
+        } else {
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+        }
+    }
+}
+
+function bindDropDownOrderNoAddItem(id, moduleName) {
+
+    var request = {
+        moduleName: moduleName
+    };
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: '/Common/GetDropDown',
+        data: JSON.stringify(request),
+        success: function (response) {
+            if (response.status == true) {
+                bindDropDownSuccessOrderNoAddItem(response.data, id);
+            }
+        },
+        error: function (response) {
+
+        },
+    });
+}
+
+function bindDropDownSuccessOrderNoAddItem(response, controlid) {
+    if (response != null) {
+        var data = JSON.parse(response);
+        $('#' + controlid).empty();
+        var dataValue = data[0];
+        if (dataValue != null && dataValue.length > 0) {
+            var valueproperty = Object.keys(dataValue[0])[0];
+            var textproperty = Object.keys(dataValue[0])[1];
+            $('#' + controlid).append($('<option>', {
+                value: '',
+                text: '--Select--',
+            }));
+            $.each(dataValue, function (index, item) {
+                $('#' + controlid).append($('<option>', {
+                    value: item[valueproperty],
+                    text: item[textproperty],
+                }));
+            });
+            $('#' + controlid).append($('<option>', {
+                value: 'AddItemOrderNo',
                 text: '+ Add Item',
                 class: 'add-item-option'
             }));

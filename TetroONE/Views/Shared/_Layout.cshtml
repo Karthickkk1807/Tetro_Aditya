@@ -865,6 +865,16 @@
                                                         </a>
                                                     </li>
                                                 }
+                                                @if (access.Any(x => x.ToLower() == UserScreen.OutWard.ToLower()))
+                                                {
+                                                    <li>
+                                                        <a asp-controller="OutWardReturn" asp-action="OutWardReturn">
+                                                            <i>
+                                                                <img src="~/assets/sidebaricons/outward.svg" width="20" />
+                                                            </i> <span class="sub-item">OutWard Return</span>
+                                                        </a>
+                                                    </li>
+                                                }
                                             </ul>
                                         </div>
                                     </li>

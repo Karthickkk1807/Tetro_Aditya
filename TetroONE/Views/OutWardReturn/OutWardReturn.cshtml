@@ -7,7 +7,7 @@
 <link href="~/css/outward.css" rel="stylesheet" />
 
 <style>
-    #OutWardTable {
+    #OutWardReturnTable {
         width: 100% !important;
         margin-top: 12px !important;
     }
@@ -221,7 +221,6 @@
         max-height: 141px !important;
         overflow-y: auto;
     }
-
 </style>
 
 <div class="row quick-db m-b-5">
@@ -307,7 +306,6 @@
     </div>
 </div>
 
-
 <div id="filter-Column" class="Date-SearchColumn">
     <div class="month-piker d-flex">
         <div class="dropdown">
@@ -351,10 +349,6 @@
             </div>
         </div>
     </div>
-    <div class="d-none">
-        <input type="file" id="fileUpload" class="btn" />
-        <button id="uploadBtn" class="btn mr-2">Upload</button>
-    </div>
     <div class="d-flex justify-content-end">
         <div class="searchbar">
             <input type="text" class="searchbar__input" name="q" id="tableFilter" placeholder="Search">
@@ -370,7 +364,7 @@
                         if (access.Create)
                         {
                             <span class="pop">
-                                <a id="AddOutWard" title="Add OutWard">
+                                <a id="AddOutWardReturn" title="Add OutWard Return">
                                     <img src="~/assets/CommonImages/addicon.svg" style="height: 25px; width: 25px;" />
                                 </a>
                             </span>
@@ -384,23 +378,22 @@
 
 <div id="MainGrid">
     <div class="table-responsive">
-        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="OutWardTable"></table>
+        <table class="table table-rounded dataTable data-table table-striped tableResponsive" id="OutWardReturnTable"></table>
     </div>
 </div>
 
-
-<div id="OutWardModal" class="modal" data-bs-loader-pms="static" data-bs-keyboard="false">
+<div id="OutWardReturnModal" class="modal" data-bs-loader-pms="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center justify-content-between">
-                <h2 id="ModalHeading">OutWard Details</h2>
-                <span id="OutWardClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
+                <h2 id="ModalHeading">OutWard Return Details</h2>
+                <span id="OutWardReturnClose" class="close" style="font-size:30px;cursor:pointer;color:white;" title="Close">×</span>
             </div>
 
             <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
                 <div class="Status-Div">
                     <fieldset class="expensefild_1">
-                        <legend class="w-auto">Outward Status</legend>
+                        <legend class="w-auto">Outward Return Status</legend>
                         <div class="horizontal-timeline">
                             <div class="timeline-progress-line-fill"></div>
                             <div class="timeline-progress-line"></div>
@@ -414,27 +407,20 @@
                                 <div class="row mt-2">
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Outward No<span id="Asterisk">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Ex: OUTW/NO/001" id="OutwardNo" name="OutwardNo" maxlength="50" required disabled />
+                                            <label>Outward Return No<span id="Asterisk">*</span></label>
+                                            <input type="text" class="form-control" placeholder="Ex: OUT_RET/NO/001" id="OutwardReturnNo" name="OutwardReturnNo" maxlength="50" required disabled />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
-                                            <label>Outward Date<span id="Asterisk">*</span></label>
-                                            <input type="date" class="form-control" id="OutwardDate" name="OutwardDate" required />
+                                            <label>Outward Return Date<span id="Asterisk">*</span></label>
+                                            <input type="date" class="form-control" id="OutwardReturnDate" name="OutwardReturnDate" required />
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                                         <div class="form-group">
                                             <label>Inward No<span id="Asterisk">*</span></label>
                                             <select class="form-control" id="InwardNo" name="InwardNo" required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                                        <div class="form-group">
-                                            <label>Production Plan No<span id="Asterisk">*</span></label>
-                                            <select class="form-control" id="ProductionPlanId" name="ProductionPlanId" required>
                                             </select>
                                         </div>
                                     </div>
@@ -574,16 +560,15 @@
                                             <thead class="Dynthead">
                                                 <tr>
                                                     <th>S.No</th>
-                                                    <th>Fabric<span style="visibility: hidden;">111111111</span></th>
-                                                    <th>Process<span style="visibility: hidden;">1111111111111111</span></th>
+                                                    <th>Fabric<span style="visibility: hidden;">111111111111111111111</span></th>
                                                     <th>Dia<span style="visibility: hidden;">11</span></th>
                                                     <th>GSM<span style="visibility: hidden;">11</span></th>
-                                                    <th>Pro_Qty (KG)<span style="visibility: hidden;"></span></th>
-                                                    <th>Part_Qty (KG)<span style="visibility: hidden;"></span></th>
-                                                    <th>Out_Qty (KG)<span style="visibility: hidden;"></span></th>
-                                                    <th>Loss (%) <span style="visibility: hidden;">1</span></th>
+                                                    <th>Inward Qty (KG)<span style="visibility: hidden;"></span></th>
+                                                    <th>Pro Qty (KG)<span style="visibility: hidden;"></span></th>
+                                                    <th>Outward Qty (KG)<span style="visibility: hidden;"></span></th>
+                                                    <th>Inward RTN Qty (KG)<span style="visibility: hidden;"></span></th>
+                                                    <th>Return Qty (KG)<span style="visibility: hidden;"></span></th>
                                                     <th>#Rolls<span style="visibility: hidden;"></span></th>
-                                                    <th>Width<span style="visibility: hidden;">1111</span></th>
                                                     <th style="text-align: center;">
                                                         Action<span style="visibility: hidden;">1</span><span>
                                                             <button id="dyanmicplusbtn" class="btn AddStockBtn d-none" type="button" onclick="duplicateFabric(this)">
@@ -600,12 +585,16 @@
                                                 </tr>
 
                                                 <tr id="SubtotalRow" style="background-color: #e4edf5;">
-                                                    <td colspan="5"><div class="summary-label"><a>NoOfFabric</a></div></td>
-                                                    <td style="padding: 4px;" id="FabricTotalDiv"> <input type="text" id="NoofFabric" name="NoofFabric" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td colspan="3"><div class="summary-label"><a>NoOfFabric</a></div></td>
+                                                    <td style="padding: 4px;" id="FabricTotalDiv"> <input type="text" id="NoofFabric" name="NoofFabric" class="form-control" placeholder="0" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td style="padding: 4px;" id="TotalInwardDiv"> <input type="text" id="TotalInward" name="TotalInward" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td style="padding: 4px;" id="TotalProDiv"> <input type="text" id="TotalPro" name="TotalPro" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
                                                     <td style="padding: 4px;" id="QtyTotalDiv"> <input type="text" id="TotalQty" name="TotalQty" class="form-control" placeholder="0.00" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td style="padding: 4px;" id="TotalInwardRetDiv"> <input type="text" id="TotalInwardRet" name="TotalInwardRet" class="form-control" placeholder="0.00" oninput="Common.allowOnlyNumbersAndAfterDecimalThreeVal(this, 4)" style="background: #fbfbfb !important;" disabled></td>
+                                                    <td style="padding: 4px;" id="TotalReturnDiv"> <input type="text" id="TotalReturn" name="TotalReturn" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
                                                     <td style="padding: 4px;" id="NoOfRollsTotalDiv"> <input type="text" id="TotalRolls" name="TotalRolls" class="form-control" placeholder="0.00" style="background: #fbfbfb !important;" disabled></td>
 
-                                                    <td colspan="4"></td>
+                                                    <td colspan="1"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -746,86 +735,10 @@
     </div>
 </div>
 
-
-@* ------------------------------Fabric Info---------------------------------------------- *@
-<div id="FabricInfoModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
-    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h2 id="HeaderTextInfo">Fabric Info</h2>
-            </div>
-            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
-                <form id="FormFabricInfo">
-                    <div class="row">
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                            <div class="form-group">
-                                <label id="">Fabric Name<span id="Asterisk">*</span></label>
-                                <input type="text" id="FabricName" name="FabricName" class="form-control" placeholder="Ex: Single Jersey" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                            <div class="form-group">
-                                <label id="">Fabric Description</label>
-                                <textarea type="text" id="FabricDescription" name="FabricDescription" rows="1" class="form-control" placeholder="Ex: About Single Jersey" oninput="Common.allowAllCharacters(this,250)"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
-                <div class="row">
-                    <div class="col-12">
-                        <button type="button" id="FabricSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
-                        <button type="button" id="FabricClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@* ------------------------------Process Info---------------------------------------------- *@
-<div id="ProcessInfoModal" class="modal" data-backdrop="static" style="padding-right: 3px;">
-    <div class="modal-dialog modal-dialog-centered modal-md" data-bs-loader-pms="static" data-bs-keyboard="false">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-between">
-                <h2 id="HeaderTextInfo">Process Info</h2>
-            </div>
-            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; overflow-x: hidden; padding: 0px 0px 10px 0px;">
-                <form id="FormProcessInfo">
-                    <div class="row">
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                            <div class="form-group">
-                                <label id="">Process Name<span id="Asterisk">*</span></label>
-                                <input type="text" id="ProcessName" name="ProcessName" class="form-control" placeholder="Ex: Dryer" autocomplete="off" required oninput="Common.allowAllCharacters(this,50)">
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-sm-6 col-6">
-                            <div class="form-group">
-                                <label id="">Dryer Description</label>
-                                <textarea type="text" id="ProcessDescription" name="ProcessDescription" rows="1" class="form-control" placeholder="Ex: About Dryer" oninput="Common.allowAllCharacters(this,250)"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center align-items-center w-100">
-                <div class="row">
-                    <div class="col-12">
-                        <button type="button" id="ProcessSave" class="btn modal-close-btn mr-2" style="background-color: green; color:white">Save</button>
-                        <button type="button" id="ProcessClose" class="btn modal-close-btn" style="background-color: #FF0000;" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     var access = @Html.Raw(Json.Serialize(access));
     var LoginUserId = @LoginUserId;
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="~/js/Inventory.js"></script>
-<script src="~/js/outward.js"></script>
+<script src="~/js/outwardreturn.js"></script>

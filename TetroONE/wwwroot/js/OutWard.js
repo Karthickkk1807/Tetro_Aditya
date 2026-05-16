@@ -548,13 +548,13 @@ $(document).ready(async function () {
                     var newTab = window.open();
                     if (newTab) {
                         newTab.document.write(`
-                        <html>
-                        <head><title>Outward Preview</title></head>
-                        <body style="margin:0;">
-                            <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
-                        </body>
-                        </html>
-                    `);
+                            <html>
+                            <head><title>Outward Preview</title></head>
+                            <body style="margin:0;">
+                                <embed src="${blobUrl}" type="application/pdf" width="100%" height="100%" />
+                            </body>
+                            </html>
+                        `);
                         newTab.document.close();
                     }
 
@@ -582,7 +582,8 @@ $(document).ready(async function () {
             type: 'GET',
             url: '/EPSON/PrintDotMatrix',
             data: {
-                ModuleId: parseInt(OutWardId)
+                ModuleId: parseInt(OutWardId),
+                ModuleName :"Outward EPSON"
             },
             success: function (res) {
                 if (res.success) {
@@ -1917,8 +1918,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+/*========================================================End Attachment=================================================================*/
 
-/*------------------------------------------------------------------Avoid the Duplicate to select----------------------------------------------------------------*/
+/*========================================================Avoid the Duplicate to select=================================================================*/
 
 $(document).on("change", ".FabricSelect", function () {
 
@@ -1946,6 +1948,8 @@ function refreshProductDropdowns(selector) {
         });
     });
 }
+
+/*========================================================End Avoid the Duplicate to select=================================================================*/
 
 function bindDropDownWidth(id, moduleName, callback) {
 
